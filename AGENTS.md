@@ -33,6 +33,8 @@
 | .github/pull_request_template.md | 固定 PR 说明 |
 | .github/workflows/repository-checks.yml | 仓库基础检查，不运行应用或部署 |
 | scripts/check_repository.py | 文档存在性和本地链接检查 |
+| app/hr/ | HR 独立开发目录，当前只有初始化说明 |
+| app/candidate/ | Candidate 独立开发目录，当前只有初始化说明 |
 
 从仓库根目录执行：
 
@@ -112,7 +114,7 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 - 开展产品功能、页面、交互、演示数据或验收相关工作前，先阅读 [产品蓝图](docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md) 和 [UI 与交互基线](docs/product/EvidenceBridge_BASELINE.md)。视觉工作还须查看两份文档链接的原始概念图。
 - 产品蓝图负责产品定位、角色流程、功能范围和演示闭环；Baseline 负责视觉、交互、共享状态语义和固定演示场景；[PROJECT_PLAN.md](PROJECT_PLAN.md) 记录技术选择、实施阶段和待决事项；本文件负责开发与协作规则。产品细节不重复维护多套。
 - 图 1 是候选人核心工作台参考，图 2 是双端页面与流程参考。已知差异按 Baseline 落实：深色侧栏、HR 蓝色、Candidate 绿色；候选人核心输入采用调查板，不照搬图 2 的单一大文本框。图片外围注释不作为产品界面内容；图中的共享后端示意不构成必须建设真实后端的要求。其他实质冲突先指出具体位置并确认。
-- HR 与 Candidate 由用户和朋友分别设计、实现；不预设哪位负责哪一端。计划以 `app/hr/`、`app/candidate/` 分隔模块；路径在技术栈确认后落实，目前尚未创建应用目录或代码。
+- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录，目前仅有初始化说明，尚无应用代码。目录名不预设框架；技术栈、根目录构建配置和共享模块仍须先约定。
 - 双方在各自本地副本、独立分支中开发，通过 PR 整合。默认只修改本次负责的一端；接手另一端、修改重叠或触及共享部分时先协调，禁止同时写同一工作副本。
 - 两端共用产品基线、基础组件风格、状态命名和演示场景。跨端的任务、提交、证据、审核状态及演示重置方式须先约定输入输出与文件归属，再并行实现；共享外壳、组件、数据结构或接口变更遵循第 2 节的确认规则。
 - MVP 是面向浏览器演示的 Web 应用，优先候选人工作台、HR 证据审核与完整补证闭环；允许静态数据、本地状态和预生成 AI 输出。模拟演示通过不等于真实 AI、持久化或生产后端已经验证。
