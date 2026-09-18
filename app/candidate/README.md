@@ -54,3 +54,5 @@ Vitest 覆盖状态迁移、提交校验、数据一致性与损坏草稿恢复�
 - `npm run build` 当前有图表依赖导致的约 681 KB 主包体积提示（gzip 约 201 KB），不影响本地构建或演示。
 
 视觉核对与已知差异见 [design-qa.md](design-qa.md)。默认不修改 HR 端；涉及共享组件或跨端数据时先协调。
+
+排错：端口占用或缺少依赖看启动终端；运行时错误看浏览器控制台；测试失败看 `test-results/` 的截图和 trace（`npx playwright show-trace <trace.zip>`）。

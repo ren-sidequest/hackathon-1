@@ -1,6 +1,6 @@
 # hackathon-1
 
-`ren-sidequest` 的黑客松项目 **EvidenceBridge**：找出候选人材料中的能力证据缺口，通过定向工作样本任务补充证据，供 HR 人工审核。MVP 是前端演示优先的浏览器 Web 应用；产品文档与概念图已接入，Candidate 独立前端演示已实现，HR 端仍可独立初始化。
+`ren-sidequest` 的黑客松项目 **EvidenceBridge**：找出候选人材料中的能力证据缺口，通过定向工作样本任务补充证据，供 HR 人工审核。MVP 是前端演示优先的浏览器 Web 应用；产品文档与概念图已接入，HR 与 Candidate 的独立前端演示均已实现，跨端集成仍待约定。
 
 ## 从这里开始
 
@@ -18,7 +18,7 @@
 
 开工不要求汇报朋友在做什么；接手同一分支、修改重叠或共用接口受影响时再协调。双方各用自己的 GitHub 账号和本地副本，无需安装同一套个人 Skill。
 
-HR 与 Candidate 由两位协作者分别设计和实现，各自分支、各自 PR。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个开发目录。Candidate 使用 React / TypeScript / Vite，HR 仍保留初始化说明；两端共享产品基线，尚无真实数据联通或统一根构建。
+HR 与 Candidate 由两位协作者分别设计和实现，各自分支、各自 PR。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个开发目录。Candidate 使用 React / TypeScript / Vite，HR 使用 React + Vite；两端共享产品基线，尚无真实数据联通或统一根构建。
 
 ## 当前检查
 
@@ -29,7 +29,7 @@ git diff --check
 
 Windows 若 `python3` 不可用，执行 `python scripts/check_repository.py`。
 
-这些命令仅检查协作及产品文档、本地链接（含概念图路径）和工作区空白错误；另有 Candidate Actions 执行应用测试与构建。**通过不代表图片内容正确或应用测试、构建、演示、部署成功。**
+这些命令仅检查协作及产品文档、本地链接（含概念图路径）和工作区空白错误；HR 与 Candidate 另有各自的 Actions 执行应用测试与构建。**通过不代表图片内容正确或应用测试、构建、演示、部署成功。**
 
 Candidate 本地运行（Node.js 24 LTS）：
 
@@ -40,6 +40,15 @@ npm run dev
 ```
 
 打开 `http://127.0.0.1:5173`。使用 **Load Demo Application** 开始完整流程，或通过 **Demo controls** 快速载入工作台。测试、构建、本机预览和三分钟演示步骤见 [Candidate README](app/candidate/README.md)。项目总方案中的“待定”仍表示未决定的事项。
+
+HR 应用入口（Node.js 22.12+，回到仓库根目录执行）：
+
+```sh
+npm ci --prefix app/hr
+npm run dev --prefix app/hr
+```
+
+浏览器打开 `http://127.0.0.1:5186`。测试、生产构建、预览及 3 分钟演示脚本见 [HR README](app/hr/README.md)。HR 端本地模拟任务发送、候选人工作样本和 AI 证据，浏览器刷新保留状态。
 
 ## 本机 GitNexus MCP
 
@@ -58,4 +67,4 @@ Codex 需要信任并重新打开该项目才能加载项目级配置。连接�
 
 ## 下一步
 
-HR 可在自己的目录独立开发；Candidate 已有本地补证演示和重置入口。连接双端前，需要另行约定共享数据、任务投递与审核同步。不要复制其他项目的业务、运行目录、凭据或部署配置。
+HR 与 Candidate 均已有独立本地演示和重置入口。连接双端前，需要另行约定共享数据、任务投递与审核同步。不要复制其他项目的业务、运行目录、凭据或部署配置。

@@ -9,7 +9,7 @@
 - 读取本文件及工作目录适用的规则，按任务需要查看总方案和相关模块资料，不每次全仓库审计。
 - 对照实际代码、依赖清单、锁文件和 CI 核对文档；发现过时、冲突或缺失时说明具体差异，仅询问影响执行的关键问题。
 - 默认只明确用户自己这次做什么、改什么、预期效果是什么。不要求汇报朋友正在做什么；接手同分支、改动重叠或共用接口受影响时再协调。
-- 产品方向已确定为 EvidenceBridge，产品依据见第 11 节；Candidate 已批准采用 React + TypeScript + Vite，HR 技术栈仍待确定。业务编码前先确定相关需求与技术选择，不把占位项当成已批准的方案。新增加的真实启动／测试命令及时补入本文件。
+- 产品方向已确定为 EvidenceBridge，产品依据见第 11 节；Candidate 已批准采用 React + TypeScript + Vite，HR 使用 React 19 + Vite 7。业务编码前先确定相关需求与技术选择，不把占位项当成已批准的方案。新增加的真实启动／测试命令及时补入本文件。
 - 识别本次执行终点：只审阅、本地修改并测试，或提交／推送并创建 PR。明确授权的步骤不反复询问；范围不清时先做已明确的部分，抵达下一项未授权操作前确认。
 
 ## 2. 分支与改动保护
@@ -33,9 +33,10 @@
 | .github/pull_request_template.md | 固定 PR 说明 |
 | .github/workflows/repository-checks.yml | 仓库基础检查，不运行应用或部署 |
 | scripts/check_repository.py | 文档存在性和本地链接检查 |
-| app/hr/ | HR 独立开发目录，当前只有初始化说明 |
+| app/hr/ | HR 独立 React + Vite 应用、演示数据与工作流测试 |
 | app/candidate/ | Candidate 独立 React / TypeScript / Vite 应用，含演示数据与测试 |
 | .github/workflows/candidate-checks.yml | Candidate 单元测试、构建与 Chromium 浏览器测试 |
+| .github/workflows/hr-checks.yml | HR 工作流测试与构建 |
 
 从仓库根目录执行：
 
@@ -56,7 +57,19 @@ npm run test:e2e
 npm run preview -- --port 4173 --strictPort
 ```
 
-开发服务为 `http://127.0.0.1:5173`，构建预览为 `http://127.0.0.1:4173`；仅本机访问。CI 使用 Node.js 24，安装 Chromium 后运行测试。演示操作、存储边界及日志位置见 [Candidate README](app/candidate/README.md)。HR 尚无启动配置；根目录没有统一 Node 构建。
+开发服务为 `http://127.0.0.1:5173`，构建预览为 `http://127.0.0.1:4173`；仅本机访问。CI 使用 Node.js 24，安装 Chromium 后运行测试。演示操作、存储边界及日志位置见 [Candidate README](app/candidate/README.md)。根目录没有统一 Node 构建。
+
+HR 端使用 Node.js 22.12+ / npm、React 19 + Vite 7，依赖锁定在 `app/hr/package-lock.json`。从仓库根目录执行：
+
+```sh
+npm ci --prefix app/hr
+npm run dev --prefix app/hr
+npm test --prefix app/hr
+npm run build --prefix app/hr
+npm run preview --prefix app/hr
+```
+
+开发与构建预览均使用 `http://127.0.0.1:5186`，不能同时占用该端口。HR 的 Node 工作流测试与构建接入 `.github/workflows/hr-checks.yml`；演示步骤和边界见 [HR README](app/hr/README.md)。跨端同步尚未实现。
 
 Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；两者执行同一检查脚本。
 
@@ -67,7 +80,7 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 - 提交审阅前先运行相关本地测试、自查 diff，再推送。新增或变化的测试入口与行为说明随同一 PR 更新。
 - 自动测试优先使用合成数据、隔离环境和可控模拟。真实账号、收费接口、设备动作或影响他人的外部写入需单独明确范围。
 - 如实区分通过、失败、未执行、环境阻塞和 CI 待完成；构建成功不等于功能正确，模拟通过不等于真实环境通过。
-- 仓库基础检查仅验证文档；Candidate 另有单元、浏览器和构建检查，通过基础检查不代表应用测试、演示或部署通过。现有检查失败时先查原因，不删除校验或伪造成功。
+- 仓库基础检查仅验证文档；HR 与 Candidate 另有各自的应用检查，通过基础检查不代表应用测试、演示或部署通过。现有检查失败时先查原因，不删除校验或伪造成功。
 
 ## 5. 提交与 PR：固定说明区域
 
@@ -127,7 +140,7 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 - 开展产品功能、页面、交互、演示数据或验收相关工作前，先阅读 [产品蓝图](docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md) 和 [UI 与交互基线](docs/product/EvidenceBridge_BASELINE.md)。视觉工作还须查看两份文档链接的原始概念图。
 - 产品蓝图负责产品定位、角色流程、功能范围和演示闭环；Baseline 负责视觉、交互、共享状态语义和固定演示场景；[PROJECT_PLAN.md](PROJECT_PLAN.md) 记录技术选择、实施阶段和待决事项；本文件负责开发与协作规则。产品细节不重复维护多套。
 - 图 1 是候选人核心工作台参考，图 2 是双端页面与流程参考。已知差异按 Baseline 落实：深色侧栏、HR 蓝色、Candidate 绿色；候选人核心输入采用调查板，不照搬图 2 的单一大文本框。图片外围注释不作为产品界面内容；图中的共享后端示意不构成必须建设真实后端的要求。其他实质冲突先指出具体位置并确认。
-- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录。Candidate 已实现独立 React / TypeScript / Vite 本地演示；HR 仍为初始化说明。根目录统一构建配置和共享模块尚未建立，变更前仍须约定。
+- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录。Candidate 已实现独立 React / TypeScript / Vite 本地演示；HR 已有独立 React + Vite 本地演示。根目录统一构建配置和共享模块尚未建立，变更前仍须约定。
 - 双方在各自本地副本、独立分支中开发，通过 PR 整合。默认只修改本次负责的一端；接手另一端、修改重叠或触及共享部分时先协调，禁止同时写同一工作副本。
 - 两端共用产品基线、基础组件风格、状态命名和演示场景。跨端的任务、提交、证据、审核状态及演示重置方式须先约定输入输出与文件归属，再并行实现；共享外壳、组件、数据结构或接口变更遵循第 2 节的确认规则。
 - MVP 是面向浏览器演示的 Web 应用，优先候选人工作台、HR 证据审核与完整补证闭环；允许静态数据、本地状态和预生成 AI 输出。模拟演示通过不等于真实 AI、持久化或生产后端已经验证。
