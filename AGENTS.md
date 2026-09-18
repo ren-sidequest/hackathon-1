@@ -9,7 +9,7 @@
 - 读取本文件及工作目录适用的规则，按任务需要查看总方案和相关模块资料，不每次全仓库审计。
 - 对照实际代码、依赖清单、锁文件和 CI 核对文档；发现过时、冲突或缺失时说明具体差异，仅询问影响执行的关键问题。
 - 默认只明确用户自己这次做什么、改什么、预期效果是什么。不要求汇报朋友正在做什么；接手同分支、改动重叠或共用接口受影响时再协调。
-- 产品方向已确定为 EvidenceBridge，产品依据见第 11 节；技术栈仍待确定。业务编码前先确定相关需求与技术选择，不把占位项当成已批准的方案。新增加的真实启动／测试命令及时补入本文件。
+- 产品方向已确定为 EvidenceBridge，产品依据见第 11 节；Candidate 已批准采用 React + TypeScript + Vite，HR 技术栈仍待确定。业务编码前先确定相关需求与技术选择，不把占位项当成已批准的方案。新增加的真实启动／测试命令及时补入本文件。
 - 识别本次执行终点：只审阅、本地修改并测试，或提交／推送并创建 PR。明确授权的步骤不反复询问；范围不清时先做已明确的部分，抵达下一项未授权操作前确认。
 
 ## 2. 分支与改动保护
@@ -34,7 +34,8 @@
 | .github/workflows/repository-checks.yml | 仓库基础检查，不运行应用或部署 |
 | scripts/check_repository.py | 文档存在性和本地链接检查 |
 | app/hr/ | HR 独立开发目录，当前只有初始化说明 |
-| app/candidate/ | Candidate 独立开发目录，当前只有初始化说明 |
+| app/candidate/ | Candidate 独立 React / TypeScript / Vite 应用，含演示数据与测试 |
+| .github/workflows/candidate-checks.yml | Candidate 单元测试、构建与 Chromium 浏览器测试 |
 
 从仓库根目录执行：
 
@@ -43,7 +44,19 @@ python3 scripts/check_repository.py
 git diff --check
 ```
 
-应用依赖安装、启动、单元测试、集成测试和构建命令目前**未配置**。技术栈确定后在这里记录真实命令与运行条件，并把相关检查接入 CI；不套用其他项目的 Node／Python 版本或脚本。
+Candidate 使用 Node.js 24 LTS（最低 22.12）、npm；以下命令在 `app/candidate` 执行，依赖和锁文件只属于本端：
+
+```sh
+npm ci
+npm run dev
+npm test
+npm run build
+npx playwright install chromium
+npm run test:e2e
+npm run preview -- --port 4173 --strictPort
+```
+
+开发服务为 `http://127.0.0.1:5173`，构建预览为 `http://127.0.0.1:4173`；仅本机访问。CI 使用 Node.js 24，安装 Chromium 后运行测试。演示操作、存储边界及日志位置见 [Candidate README](app/candidate/README.md)。HR 尚无启动配置；根目录没有统一 Node 构建。
 
 Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；两者执行同一检查脚本。
 
@@ -54,7 +67,7 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 - 提交审阅前先运行相关本地测试、自查 diff，再推送。新增或变化的测试入口与行为说明随同一 PR 更新。
 - 自动测试优先使用合成数据、隔离环境和可控模拟。真实账号、收费接口、设备动作或影响他人的外部写入需单独明确范围。
 - 如实区分通过、失败、未执行、环境阻塞和 CI 待完成；构建成功不等于功能正确，模拟通过不等于真实环境通过。
-- 仓库当前只有文档和检查脚本，基础检查通过不代表应用测试、构建、演示或部署通过。现有检查失败时先查原因，不删除校验或伪造成功。
+- 仓库基础检查仅验证文档；Candidate 另有单元、浏览器和构建检查，通过基础检查不代表应用测试、演示或部署通过。现有检查失败时先查原因，不删除校验或伪造成功。
 
 ## 5. 提交与 PR：固定说明区域
 
@@ -80,7 +93,7 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 - 合并后按约定同步干净本地副本；朋友自行同步自己的电脑，不声称已替其完成操作。
 - 项目默认双方各自本地运行。安装开发依赖、启动测试、更新 Git 代码和更新正在演示的运行版本是不同动作。
 - 部署另行确认目标电脑、可追踪的已合并版本和运行方式；先保留必要的恢复信息与上一个可用版本，不直接覆盖正在演示的成果。
-- 不因测试通过或 PR 合并而自动部署、迁移数据库或重启服务。当前没有应用部署脚本。
+- 不因测试通过或 PR 合并而自动部署、迁移数据库或重启服务。Candidate 可运行已构建的 Vite preview 作为本机演示服务，尚无生产部署脚本。
 
 ## 8. 公开仓库与交接
 
@@ -97,7 +110,7 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 - Codex 使用本机忽略文件 `.codex/config.toml` 中的项目级 `gitnexus` 服务，覆盖本项目内继承的同名服务入口；不得为此改写用户级配置。配置与注册表不随 Git 同步，其他机器需各自配置。
 - MCP 查询明确指定 `repo: "hackathon-1"`。先确认服务列出的仓库路径是本工作副本，再按需使用 query、context、impact 和 detect_changes；不能把其他项目或分支的索引当成本项目证据。
 - 切分支、拉取代码或修改相关代码后刷新索引；status 主要检查索引提交，还须核对未提交工作区。无结果不证明代码不存在，静态关系不代替测试或运行时验证。
-- 当前仅有文档和仓库检查脚本；索引成功只说明这些文件可检索，不代表已有业务接口、应用测试或部署。
+- 索引覆盖当前仓库代码与文档；索引成功只说明文件可检索，不代表应用运行、测试或部署通过。
 
 ## 10. 沟通与工程复盘
 
@@ -114,7 +127,7 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 - 开展产品功能、页面、交互、演示数据或验收相关工作前，先阅读 [产品蓝图](docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md) 和 [UI 与交互基线](docs/product/EvidenceBridge_BASELINE.md)。视觉工作还须查看两份文档链接的原始概念图。
 - 产品蓝图负责产品定位、角色流程、功能范围和演示闭环；Baseline 负责视觉、交互、共享状态语义和固定演示场景；[PROJECT_PLAN.md](PROJECT_PLAN.md) 记录技术选择、实施阶段和待决事项；本文件负责开发与协作规则。产品细节不重复维护多套。
 - 图 1 是候选人核心工作台参考，图 2 是双端页面与流程参考。已知差异按 Baseline 落实：深色侧栏、HR 蓝色、Candidate 绿色；候选人核心输入采用调查板，不照搬图 2 的单一大文本框。图片外围注释不作为产品界面内容；图中的共享后端示意不构成必须建设真实后端的要求。其他实质冲突先指出具体位置并确认。
-- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录，目前仅有初始化说明，尚无应用代码。目录名不预设框架；技术栈、根目录构建配置和共享模块仍须先约定。
+- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录。Candidate 已实现独立 React / TypeScript / Vite 本地演示；HR 仍为初始化说明。根目录统一构建配置和共享模块尚未建立，变更前仍须约定。
 - 双方在各自本地副本、独立分支中开发，通过 PR 整合。默认只修改本次负责的一端；接手另一端、修改重叠或触及共享部分时先协调，禁止同时写同一工作副本。
 - 两端共用产品基线、基础组件风格、状态命名和演示场景。跨端的任务、提交、证据、审核状态及演示重置方式须先约定输入输出与文件归属，再并行实现；共享外壳、组件、数据结构或接口变更遵循第 2 节的确认规则。
 - MVP 是面向浏览器演示的 Web 应用，优先候选人工作台、HR 证据审核与完整补证闭环；允许静态数据、本地状态和预生成 AI 输出。模拟演示通过不等于真实 AI、持久化或生产后端已经验证。
