@@ -154,9 +154,9 @@ function App() {
     const status = isVerified(state)
       ? "Verified through targeted task"
       : "Uncertain";
-    download(
-      "alex-chen-evidence-report.md",
-      `# EvidenceBridge · Evidence report\n\nAlex Chen · Junior Data Analyst\nHarbourCart Pty Ltd\n\n## Requirement mapping\n- SQL: Supported\n- Data Analysis: Supported\n- Business Problem Solving: ${status}\n\n## Current workflow\n${workflowLabel(state)}\n\n## Evidence sources\n${requirements.map((r) => `${r.title}: ${r.source}\n${r.summary}`).join("\n\n")}\n\n${
+    setModal({
+      type: "export",
+      content: `# EvidenceBridge · Evidence report\n\nAlex Chen · Junior Data Analyst\nHarbourCart Pty Ltd\n\n## Requirement mapping\n- SQL: Supported\n- Data Analysis: Supported\n- Business Problem Solving: ${status}\n\n## Current workflow\n${workflowLabel(state)}\n\n## Evidence sources\n${requirements.map((r) => `${r.title}: ${r.source}\n${r.summary}`).join("\n\n")}\n\n${
         hasSubmission(state)
           ? "## Targeted work sample\nConversion Drop Investigation\n\n" +
             Object.values(workSections)
@@ -164,8 +164,7 @@ function App() {
               .join("\n\n")
           : ""
       }\n\n## Human review\n${state.stage === "reviewed" ? `${workflowLabel(state)} · Jamie Morgan\n${state.notes || "Observed evidence supports the targeted requirement."}\n${prettyTime(state.reviewedAt)}` : "Pending"}\n\n## Remaining uncertainty\n${isVerified(state) ? "Causal explanations remain unvalidated; this task demonstrates problem-solving behavior in a bounded scenario." : state.stage === "reviewed" ? state.notes : requirements[2].uncertainty}\n\nDemo data · Pre-generated evidence · HR workspace\n`,
-    );
-    notify("Evidence report export ready.");
+    });
   };
   const reviewed = state.stage === "reviewed";
   const verified = isVerified(state) && reportView === "current";
@@ -1425,6 +1424,42 @@ function App() {
   }
 
   const modalContent = () => {
+    if (modal.type === "export")
+      return (
+        <Modal
+          title="Export evidence report"
+          onClose={() => setModal(null)}
+          wide
+        >
+          <p>
+            The current evidence report, including sources and the latest human
+            review.
+          </p>
+          <label className="input-label" htmlFor="export-content">
+            Markdown preview
+          </label>
+          <textarea
+            id="export-content"
+            className="code-snippet"
+            rows="16"
+            readOnly
+            value={modal.content}
+          />
+          <div className="modal-actions">
+            <Button onClick={() => setModal(null)}>Close preview</Button>
+            <Button
+              variant="primary"
+              icon="download"
+              onClick={() =>
+                download("alex-chen-evidence-report.md", modal.content)
+              }
+            >
+              Download Markdown
+            </Button>
+          </div>
+        </Modal>
+      );
+
     if (modal.type === "reset")
       return (
         <Modal title="Reset the HR demo?" onClose={() => setModal(null)}>

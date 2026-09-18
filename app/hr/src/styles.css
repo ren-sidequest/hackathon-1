@@ -3013,3 +3013,14 @@ textarea:read-only {
     display: none;
   }
 }
+/* Keep feedback clear of the sticky human-review actions. */
+.toast {
+  top: 82px;
+  bottom: auto;
+  left: auto;
+  right: 24px;
+  transform: none;
+  max-width: min(440px, calc(100vw - 96px));
+  width: max-content;
+  animation: none;
+}
