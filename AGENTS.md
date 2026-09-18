@@ -33,7 +33,7 @@
 | .github/pull_request_template.md | 固定 PR 说明 |
 | .github/workflows/repository-checks.yml | 仓库基础检查，不运行应用或部署 |
 | scripts/check_repository.py | 文档存在性和本地链接检查 |
-| app/hr/ | HR 独立开发目录，当前只有初始化说明 |
+| app/hr/ | HR 独立 React + Vite 应用、演示数据与工作流测试 |
 | app/candidate/ | Candidate 独立开发目录，当前只有初始化说明 |
 
 从仓库根目录执行：
@@ -43,7 +43,17 @@ python3 scripts/check_repository.py
 git diff --check
 ```
 
-应用依赖安装、启动、单元测试、集成测试和构建命令目前**未配置**。技术栈确定后在这里记录真实命令与运行条件，并把相关检查接入 CI；不套用其他项目的 Node／Python 版本或脚本。
+HR 端使用 Node.js 22.12+ / npm、React 19 + Vite 7，依赖锁定在 `app/hr/package-lock.json`。从仓库根目录执行：
+
+```sh
+npm ci --prefix app/hr
+npm run dev --prefix app/hr
+npm test --prefix app/hr
+npm run build --prefix app/hr
+npm run preview --prefix app/hr
+```
+
+开发与构建预览均使用 `http://127.0.0.1:5186`，不能同时占用该端口。HR 的 Node 工作流测试与构建接入 `.github/workflows/hr-checks.yml`；演示步骤和边界见 [HR README](app/hr/README.md)。Candidate 端尚未配置应用命令，跨端同步尚未实现。
 
 Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；两者执行同一检查脚本。
 
@@ -54,7 +64,7 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 - 提交审阅前先运行相关本地测试、自查 diff，再推送。新增或变化的测试入口与行为说明随同一 PR 更新。
 - 自动测试优先使用合成数据、隔离环境和可控模拟。真实账号、收费接口、设备动作或影响他人的外部写入需单独明确范围。
 - 如实区分通过、失败、未执行、环境阻塞和 CI 待完成；构建成功不等于功能正确，模拟通过不等于真实环境通过。
-- 仓库当前只有文档和检查脚本，基础检查通过不代表应用测试、构建、演示或部署通过。现有检查失败时先查原因，不删除校验或伪造成功。
+- 仓库文档检查与 HR 应用测试分别执行；基础检查通过不代表应用测试、构建、演示或部署通过。现有检查失败时先查原因，不删除校验或伪造成功。
 
 ## 5. 提交与 PR：固定说明区域
 
@@ -97,7 +107,7 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 - Codex 使用本机忽略文件 `.codex/config.toml` 中的项目级 `gitnexus` 服务，覆盖本项目内继承的同名服务入口；不得为此改写用户级配置。配置与注册表不随 Git 同步，其他机器需各自配置。
 - MCP 查询明确指定 `repo: "hackathon-1"`。先确认服务列出的仓库路径是本工作副本，再按需使用 query、context、impact 和 detect_changes；不能把其他项目或分支的索引当成本项目证据。
 - 切分支、拉取代码或修改相关代码后刷新索引；status 主要检查索引提交，还须核对未提交工作区。无结果不证明代码不存在，静态关系不代替测试或运行时验证。
-- 当前仅有文档和仓库检查脚本；索引成功只说明这些文件可检索，不代表已有业务接口、应用测试或部署。
+- 索引成功只说明当前文件可检索，不代替 HR 工作流测试、生产构建或浏览器演示验证。
 
 ## 10. 沟通与工程复盘
 
@@ -114,7 +124,7 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 - 开展产品功能、页面、交互、演示数据或验收相关工作前，先阅读 [产品蓝图](docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md) 和 [UI 与交互基线](docs/product/EvidenceBridge_BASELINE.md)。视觉工作还须查看两份文档链接的原始概念图。
 - 产品蓝图负责产品定位、角色流程、功能范围和演示闭环；Baseline 负责视觉、交互、共享状态语义和固定演示场景；[PROJECT_PLAN.md](PROJECT_PLAN.md) 记录技术选择、实施阶段和待决事项；本文件负责开发与协作规则。产品细节不重复维护多套。
 - 图 1 是候选人核心工作台参考，图 2 是双端页面与流程参考。已知差异按 Baseline 落实：深色侧栏、HR 蓝色、Candidate 绿色；候选人核心输入采用调查板，不照搬图 2 的单一大文本框。图片外围注释不作为产品界面内容；图中的共享后端示意不构成必须建设真实后端的要求。其他实质冲突先指出具体位置并确认。
-- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录，目前仅有初始化说明，尚无应用代码。目录名不预设框架；技术栈、根目录构建配置和共享模块仍须先约定。
+- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录。HR 已有本地独立 React + Vite 应用，Candidate 仍保留初始化说明；根目录构建配置、共享模块与跨端接口仍须先约定。
 - 双方在各自本地副本、独立分支中开发，通过 PR 整合。默认只修改本次负责的一端；接手另一端、修改重叠或触及共享部分时先协调，禁止同时写同一工作副本。
 - 两端共用产品基线、基础组件风格、状态命名和演示场景。跨端的任务、提交、证据、审核状态及演示重置方式须先约定输入输出与文件归属，再并行实现；共享外壳、组件、数据结构或接口变更遵循第 2 节的确认规则。
 - MVP 是面向浏览器演示的 Web 应用，优先候选人工作台、HR 证据审核与完整补证闭环；允许静态数据、本地状态和预生成 AI 输出。模拟演示通过不等于真实 AI、持久化或生产后端已经验证。
