@@ -15,6 +15,8 @@ DOCUMENTS = (
     "PROJECT_PLAN.md",
     "AGENTS.md",
     ".github/pull_request_template.md",
+    "docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md",
+    "docs/product/EvidenceBridge_BASELINE.md",
 )
 LINK = re.compile(r"!?\[[^\]\n]*\]\(([^)\s]+)\)")
 
