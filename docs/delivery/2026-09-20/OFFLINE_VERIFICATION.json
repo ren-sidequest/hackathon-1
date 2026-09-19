@@ -1,0 +1,53 @@
+{
+  "at": "2026-09-19T17:52:58.896Z",
+  "network": "browser context offline:true",
+  "hashesChecked": 48,
+  "videos": [
+    {
+      "src": "runs/2026-09-19T17-35-12.116Z/video/full-operation-hr.webm",
+      "durationSeconds": 80.36,
+      "width": 1440,
+      "height": 1000,
+      "currentTime": 0.375415,
+      "readyState": 4,
+      "seekTargetSeconds": 40.18,
+      "seekActualSeconds": 40.18
+    },
+    {
+      "src": "runs/2026-09-19T17-35-12.116Z/video/full-operation-candidate.webm",
+      "durationSeconds": 80.4,
+      "width": 1440,
+      "height": 1000,
+      "currentTime": 0.376825,
+      "readyState": 4,
+      "seekTargetSeconds": 40.2,
+      "seekActualSeconds": 40.2
+    },
+    {
+      "src": "runs/2026-09-19T17-35-12.116Z/video/technical-rehearsal-1.webm",
+      "durationSeconds": 343.2,
+      "width": 1440,
+      "height": 1000,
+      "currentTime": 0.379834,
+      "readyState": 4,
+      "seekTargetSeconds": 150,
+      "seekActualSeconds": 150
+    },
+    {
+      "src": "runs/2026-09-19T17-35-12.116Z/video/technical-rehearsal-2.webm",
+      "durationSeconds": 342.36,
+      "width": 1440,
+      "height": 1000,
+      "currentTime": 0.376553,
+      "readyState": 4,
+      "seekTargetSeconds": 150,
+      "seekActualSeconds": 150
+    }
+  ],
+  "images": 24,
+  "externalRequests": [],
+  "errors": [],
+  "relocatedArchiveTest": true,
+  "zipCheck": "No errors detected in compressed data of [LOCAL_ARCHIVE]",
+  "status": "passed"
+}
