@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import './styles.css';
 import '../../shared/tokens.css';
 import '../../shared/shell.css';
+import '../../shared/connected.css';
 import { initializeTheme } from '../../shared/preferences';
 document.documentElement.dataset.role = 'candidate';
 initializeTheme();
-ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);
+const standalone = import.meta.env.VITE_APP_MODE === 'standalone';
+const App = standalone ? lazy(() => import('./App')) : lazy(() => import('./ApiApp'));
+ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><Suspense fallback={<p>Loading EvidenceBridge…</p>}>{standalone && <p className="eb-feedback">Standalone simulation · no shared API connection</p>}<App /></Suspense></React.StrictMode>);

@@ -1,6 +1,6 @@
 # hackathon-1
 
-`ren-sidequest` 的黑客松项目 **EvidenceBridge**：找出候选人材料中的能力证据缺口，通过定向工作样本任务补充证据，供 HR 人工审核。MVP 是前端演示优先的浏览器 Web 应用；产品文档与概念图已接入，HR 与 Candidate 的独立前端演示均已实现，共享后端已交付单轮基线，本轮按修订 3 扩展为 V1 + 最多一次 V2，双端 UI API 接入待小傅完成。
+`ren-sidequest` 的黑客松项目 **EvidenceBridge**：找出候选人材料中的能力证据缺口，通过定向工作样本任务补充证据，供 HR 人工审核。MVP 是前端演示优先的浏览器 Web 应用；产品文档与概念图已接入，HR 与 Candidate 的独立前端演示均已实现，共享后端已交付单轮基线，本轮按修订 3 扩展为 V1 + 最多一次 V2，双端 UI 已接入 API 2.0；启动和交接见 [前端接入说明](docs/FRONTEND_API_HANDOFF.md)，独立模拟模式需显式启用。
 
 ## 从这里开始
 

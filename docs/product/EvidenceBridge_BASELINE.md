@@ -1,5 +1,9 @@
 # EvidenceBridge UI / Product Baseline
 
+> API 2.0 连接版执行边界：版本最多 V1 + 一次 V2，只有 V1 补证审核开放 V2；任务、资源、指标和报告以服务端响应为准。预设申请资料不视为真实上传；私人笔记不进入 API。既有独立模拟流程保留于显式 standalone 模式；详见 [前端接入交接](../FRONTEND_API_HANDOFF.md)。
+
+> **最新目标为修订 5：**四人共用流程、评估标准与原文解释、Mark／NE、规则百分比、同技能比较和独立人工保留已批准，后续按两份实施清单增量完成。下方单 Alex／无评分等旧范围仅描述当前基础，不是新版限制；本 PR 先交付 API 2.0 接入，不声称已完成四人版本。
+
 ## Repository References / 仓库引用
 
 本文件是两端共享的 UI 与交互基线；产品流程见 [Product Blueprint](EvidenceBridge_PRODUCT_BLUEPRINT.md)，技术决策与实施安排见 [项目计划](../../PROJECT_PLAN.md)，开发规则见 [AGENTS.md](../../AGENTS.md)。HR 与 Candidate 分别设计实现，同时遵守本基线。

@@ -30,6 +30,9 @@ export function ThemeSwitch() {
     };
     system.addEventListener('change', update);
     window.addEventListener('storage', storage);
+    // A lazy-loaded app may mount after another tab changes the preference.
+    preference.current = readPreference(themeKey);
+    update();
     return () => { system.removeEventListener('change', update); window.removeEventListener('storage', storage); };
   }, []);
   const toggle = () => {

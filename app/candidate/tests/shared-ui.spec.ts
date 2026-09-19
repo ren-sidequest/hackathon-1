@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 for (const role of ['candidate', 'hr'] as const) {
-  const url = role === 'candidate' ? 'http://127.0.0.1:5273' : 'http://127.0.0.1:5286';
+  const url = role === 'candidate' ? 'http://127.0.0.1:5573' : 'http://127.0.0.1:5586';
   test(`${role}: keyboard theme toggle, collapse, refresh and business-state isolation`, async ({ page }, info) => {
     const errors: string[] = [];
     page.on('pageerror', error => errors.push(error.message));
@@ -108,7 +108,7 @@ for (const role of ['candidate', 'hr'] as const) {
 }
 
 test('Candidate dark workbench, charts, dialogs and all routes', async ({ page }, info) => {
-  await page.goto('http://127.0.0.1:5273');
+  await page.goto('http://127.0.0.1:5573');
   await page.getByRole('switch', { name: 'Night mode' }).click();
   await page.getByRole('button', { name: 'Demo controls' }).click();
   await page.getByRole('button', { name: 'Open populated workspace' }).click();
@@ -120,12 +120,12 @@ test('Candidate dark workbench, charts, dialogs and all routes', async ({ page }
   await expect(page.getByRole('dialog')).toHaveCSS('background-color', 'rgb(20, 32, 52)');
   await page.keyboard.press('Escape');
   for (const route of ['home', 'tasks', 'resources', 'sample', 'status']) {
-    await page.goto(`http://127.0.0.1:5273/#${route}`);
+    await page.goto(`http://127.0.0.1:5573/#${route}`);
     await expect(page.locator('h1')).toBeVisible();
     await expect(page.getByRole('switch', { name: 'Night mode' })).toBeChecked();
   }
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('http://127.0.0.1:5273/#workspace');
+  await page.goto('http://127.0.0.1:5573/#workspace');
   await page.screenshot({ path: info.outputPath('candidate-dark-mobile.png'), fullPage: true, animations: 'disabled' });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
@@ -133,7 +133,7 @@ test('Candidate dark workbench, charts, dialogs and all routes', async ({ page }
 test('HR dark task → submission → human confirmation preserves the existing workflow', async ({ page }, info) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto('http://127.0.0.1:5286');
+  await page.goto('http://127.0.0.1:5586');
   await page.getByRole('switch', { name: 'Night mode' }).click();
   await page.getByRole('button', { name: 'Review targeted task' }).click();
   await page.getByRole('button', { name: 'Confirm & Send to Candidate' }).click();
