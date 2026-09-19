@@ -1,0 +1,91 @@
+name: Publish team preview
+
+# Explicit releases only; ordinary main pushes do not replace the shared demo.
+on:
+  push:
+    branches: [codex/pages-preview]
+    paths: ['.github/workflows/pages-preview.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out the approved application release
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 8b0231e9592052223e1512125387b14188fcda26
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            app/candidate/package-lock.json
+            app/hr/package-lock.json
+      - name: Install locked dependencies
+        run: |
+          npm ci --prefix app/candidate --no-audit --no-fund
+          npm ci --prefix app/hr --no-audit --no-fund
+      - name: Test both applications
+        run: |
+          npm test --prefix app/candidate
+          npm test --prefix app/hr
+      - name: Test Candidate browser workflows
+        working-directory: app/candidate
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:e2e
+      - name: Build both public subpaths
+        run: |
+          npm run build --prefix app/candidate -- --base=/hackathon-1/candidate/
+          npm run build --prefix app/hr -- --base=/hackathon-1/hr/
+      - name: Assemble preview artifact
+        run: |
+          mkdir -p "$RUNNER_TEMP/pages/candidate" "$RUNNER_TEMP/pages/hr"
+          cp -R app/candidate/dist/. "$RUNNER_TEMP/pages/candidate/"
+          cp -R app/hr/dist/. "$RUNNER_TEMP/pages/hr/"
+          cat > "$RUNNER_TEMP/pages/index.html" <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>EvidenceBridge team preview</title>
+          <main>
+            <h1>EvidenceBridge team preview</h1>
+            <ul>
+              <li><a href="./candidate/">Open Candidate</a></li>
+              <li><a href="./hr/">Open HR</a></li>
+            </ul>
+            <p>Independent demos. Progress stays in this browser; the two roles do not sync.</p>
+          </main>
+          </html>
+          HTML
+          git rev-parse HEAD > "$RUNNER_TEMP/pages/source-commit.txt"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ runner.temp }}/pages
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

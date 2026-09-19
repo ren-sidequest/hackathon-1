@@ -22,6 +22,8 @@ HR 与 Candidate 由两位协作者分别设计和实现，各自分支、各自
 
 ## 当前检查
 
+组员公网预览的链接、发布方式与演示边界见 [GitHub Pages 预览说明](docs/team-preview.md)。两端独立保存浏览器进度，尚无跨端同步。
+
 ```sh
 python3 scripts/check_repository.py
 git diff --check

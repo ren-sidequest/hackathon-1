@@ -73,6 +73,15 @@ npm run preview --prefix app/hr
 
 Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；两者执行同一检查脚本。
 
+GitHub Pages 组员预览使用独立发布工作流，具体版本、链接和恢复方式见 [预览说明](docs/team-preview.md)。从根目录构建公网子路径：
+
+```sh
+npm run build --prefix app/candidate -- --base=/hackathon-1/candidate/
+npm run build --prefix app/hr -- --base=/hackathon-1/hr/
+```
+
+仅构建不会发布；部署工作流只打包明确选定的已合并应用版本，不随普通 main 推送自动更新演示。
+
 ## 4. 开发与验证
 
 - 开始前简要说明本次修改范围和验证办法；完成后按实际修改和测试汇报。
