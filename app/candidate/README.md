@@ -1,5 +1,7 @@
 # EvidenceBridge Candidate
 
+> 默认运行 API 2.0 连接版：任务、提交和审核来自共享后端，本浏览器只保存私人调查草稿。完整启动、接口映射、限制和验证见 [前端接入交接](../../docs/FRONTEND_API_HANDOFF.md)。下文原有上传和本地模拟审核路径仅适用于显式 `VITE_APP_MODE=standalone`，不代表连接版功能。
+
 Candidate 端独立 React / TypeScript / Vite Web 应用。使用 Lucide、Recharts、普通 CSS 和浏览器本地状态，实现申请 → 定向任务 → 调查工作台 → 工作样本 → 提交与审核结果演示。
 
 开发前阅读 [仓库规则](../../AGENTS.md)、[产品蓝图](../../docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md) 和 [UI 与交互基线](../../docs/product/EvidenceBridge_BASELINE.md)。技术栈与共享数据约定见 [项目计划](../../PROJECT_PLAN.md)。

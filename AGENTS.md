@@ -70,7 +70,7 @@ npm run build --prefix app/hr
 npm run preview --prefix app/hr
 ```
 
-开发与构建预览均使用 `http://127.0.0.1:5186`，不能同时占用该端口。HR 的 Node 工作流测试与构建接入 `.github/workflows/hr-checks.yml`；演示步骤和边界见 [HR README](app/hr/README.md)。跨端同步尚未实现。
+开发与构建预览均使用 `http://127.0.0.1:5186`，不能同时占用该端口。HR 的 Node 工作流测试与构建接入 `.github/workflows/hr-checks.yml`；演示步骤和边界见 [HR README](app/hr/README.md)。两端默认通过 API 2.0 共享案例；旧独立模拟需显式 VITE_APP_MODE=standalone。
 
 Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；两者执行同一检查脚本。
 
@@ -179,3 +179,20 @@ node scripts/verify-revisions.mjs
 - 两端共用产品基线、基础组件风格、状态命名和演示场景。跨端的任务、提交、证据、审核状态及演示重置方式须先约定输入输出与文件归属，再并行实现；共享外壳、组件、数据结构或接口变更遵循第 2 节的确认规则。
 - MVP 是面向浏览器演示的 Web 应用，优先候选人工作台、HR 证据审核与完整补证闭环；允许静态数据、本地状态和预生成 AI 输出。模拟演示通过不等于真实 AI、持久化或生产后端已经验证。
 - 阅读产品资料不构成提交、推送、合并、部署或调用外部付费服务的额外授权；以当前任务明确的执行范围为准。
+
+
+## API 2.0 前端接入补充
+
+本机联调默认 Candidate 5173、HR 5186、后端 8787；Node.js 24 可满足三端。具体映射和边界见 [前端交接](docs/FRONTEND_API_HANDOFF.md)。app/shared 现同时承载轻量外观和 API 客户端源代码，仍不新增根级 npm 项目或依赖。既有“跨端未接入”的历史描述以此补充为准。
+
+新增根目录命令：
+
+```sh
+python scripts/frontend-types.py
+python scripts/package_frontend.py --output frontend-api2.zip
+npm ci --prefix app/backend
+npm run dev --prefix app/backend
+npm run test:api --prefix app/candidate
+```
+
+API 浏览器测试使用独立内存数据库 / 8789 后端和 5373 / 5386 前端，无外部模型调用；test:e2e 使用 5473 standalone，test:ui 使用 5573 / 5586 standalone，均不复用已运行服务。新共享 TypeScript 与 HR ApiApp 由 Candidate build 一并严格检查；生成的 api-types.ts 来自提交中的 OpenAPI。

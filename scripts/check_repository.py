@@ -28,6 +28,7 @@ DOCUMENTS = (
     "docs/backend/TEST_RESULTS.md",
     "docs/backend/SECURITY_REVIEW.md",
     "docs/backend/REVISION_PLAN.md",
+    "docs/FRONTEND_API_HANDOFF.md",
 )
 LINK = re.compile(r"!?\[[^\]\n]*\]\(([^)\s]+)\)")
 

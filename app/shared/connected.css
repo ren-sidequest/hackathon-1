@@ -1,0 +1,77 @@
+.eb-connected { color: var(--text-primary); background: var(--page-bg); min-height: 100dvh; font-size: 14px; line-height: 1.6; }
+.eb-connected *, .eb-dialog * { box-sizing: border-box; }
+.eb-main { min-height: 100dvh; }
+.eb-api-topbar { display:flex; align-items:center; gap:14px; padding:18px 30px; min-height:68px; border-bottom:1px solid var(--border); background:var(--surface); }
+.eb-api-topbar>small { margin-left:auto; color:var(--text-muted); }
+.eb-content { padding:30px; max-width:1680px; margin:auto; }
+.eb-heading { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:22px; }
+.eb-heading h1 { font-size:28px; letter-spacing:-.7px; margin:4px 0; }
+.eb-heading h2,.eb-heading h3 { margin:0; }
+.eb-connected h2 { font-size:20px; margin:0 0 12px; }
+.eb-connected h3 { font-size:16px; margin:20px 0 10px; }
+.eb-connected h4 { font-size:14px; margin:0 0 7px; }
+.eb-connected p { margin:10px 0; }
+.eb-panel { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; margin-bottom:20px; min-width:0; }
+.eb-muted,.eb-connected small { color:var(--text-secondary); }
+.eb-preserve,.eb-dialog pre { white-space:pre-wrap; overflow-wrap:anywhere; }
+.eb-actions { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:18px; }
+.eb-action { display:inline-flex; justify-content:center; align-items:center; gap:8px; border:1px solid var(--border-strong); padding:9px 14px; border-radius:7px; background:var(--surface); color:var(--text-primary); font:inherit; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; }
+.eb-action:hover { background:var(--surface-hover); }
+.eb-action.primary { color:var(--on-accent); background:var(--role-primary); border-color:var(--role-primary); }
+.eb-action.danger { color:var(--danger-text); }
+.eb-action:disabled { opacity:.55; cursor:not-allowed; }
+.eb-connected :is(button,a,input,textarea,select):focus-visible,.eb-dialog :is(button,a,input,textarea,select):focus-visible { outline:3px solid var(--focus-ring); outline-offset:2px; }
+.eb-connected :is(input,textarea,select),.eb-dialog :is(input,textarea,select) { border:1px solid var(--border-strong); border-radius:6px; background:var(--surface); color:var(--text-primary); padding:10px; font:inherit; max-width:100%; }
+.eb-field { display:block; font-weight:600; margin:16px 0 6px; }
+.eb-connected textarea,.eb-dialog textarea { width:100%; resize:vertical; min-height:115px; }
+.eb-dialog input { width:100%; }
+.eb-dialog { width:min(820px,calc(100vw - 32px)); max-height:88dvh; margin:auto; padding:24px; border:1px solid var(--border-strong); border-radius:14px; color:var(--text-primary); background:var(--surface); box-shadow:0 24px 80px #0005; }
+.eb-dialog::backdrop { background:#07101fa6; }
+.eb-dialog header { display:flex; align-items:center; justify-content:space-between; gap:15px; margin-bottom:18px; }
+.eb-dialog pre { background:var(--surface-soft); padding:18px; border-radius:8px; font-size:13px; max-height:52vh; overflow:auto; }
+.eb-dialog mark { background:var(--warning-bg); color:var(--warning-text); text-decoration:underline; text-decoration-thickness:2px; }
+.eb-api-status { border:1px solid var(--border); background:var(--surface); padding:12px 18px; border-radius:10px; margin-bottom:24px; }
+.eb-api-status-line { display:flex; align-items:center; justify-content:space-between; gap:12px; font-size:12px; color:var(--text-secondary); }
+.eb-feedback { margin:14px 0; padding:12px 16px; border:1px solid var(--warning-border); background:var(--warning-bg); color:var(--warning-text); border-radius:8px; overflow-wrap:anywhere; }
+.eb-feedback small { display:block; }
+.eb-chip { display:inline-block; padding:4px 10px; border-radius:99px; font-size:12px; color:var(--success-text); background:var(--success-bg); white-space:nowrap; }
+.eb-chip.is-warning { color:var(--warning-text); background:var(--warning-bg); }
+.eb-two-column { display:grid; grid-template-columns:minmax(0,2fr) minmax(260px,1fr); gap:24px; align-items:start; }
+.eb-resources>div { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; border-bottom:1px solid var(--border); padding:14px 0; }
+.eb-resources>div:last-child { border:0; }
+.eb-resources small { display:block; flex-basis:100%; font-size:12px; }
+.eb-source-link { border:0; padding:0; font:inherit; color:var(--text-link); background:transparent; cursor:pointer; text-align:left; overflow-wrap:anywhere; }
+.eb-version-picker { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+.eb-finding { border-left:3px solid var(--role-border); padding:12px 16px; margin:12px 0; background:var(--surface-soft); border-radius:5px; overflow-wrap:anywhere; }
+.eb-events { list-style:none; padding:0; }
+.eb-events li { border-left:2px solid var(--border-strong); padding:0 0 20px 18px; overflow-wrap:anywhere; }
+.eb-events time { display:block; font-size:12px; color:var(--text-muted); }
+.eb-citation { display:block; width:100%; border:1px solid var(--blue-border); background:var(--blue-soft); color:var(--text-link); text-align:left; padding:12px; margin:8px 0; border-radius:7px; cursor:pointer; font:inherit; white-space:pre-wrap; overflow-wrap:anywhere; }
+.eb-review-note { border-color:var(--role-border); background:var(--role-soft); }
+.eb-table-scroll { overflow:auto; }
+.eb-connected table,.eb-dialog table { width:100%; border-collapse:collapse; font-size:12px; }
+.eb-connected th,.eb-connected td,.eb-dialog th,.eb-dialog td { padding:12px 10px; border-bottom:1px solid var(--border); text-align:left; }
+.eb-connected th,.eb-dialog th { color:var(--text-secondary); background:var(--surface-soft); }
+.eb-tabs { display:flex; flex-wrap:wrap; gap:6px; padding-bottom:16px; }
+.eb-tabs button[aria-selected=true] { background:var(--role-soft); border-color:var(--role-border); color:var(--role-primary); }
+.eb-workbench { display:grid; grid-template-columns:220px minmax(0,1.5fr) minmax(280px,1fr); gap:18px; align-items:start; }
+.eb-workbench>.eb-panel { padding:18px; }
+.eb-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:16px 0; }
+.eb-metric { border:1px solid var(--border); border-radius:8px; padding:14px; background:var(--surface-soft); }
+.eb-metric strong { display:block; font-size:22px; }
+.eb-metric small { display:block; font-size:11px; }
+.eb-chart { height:240px; min-width:0; margin:18px 0; }
+.eb-board-heading { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.eb-board-heading h3 { margin:12px 0; }
+.eb-form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.eb-footer { padding:24px 0; border-top:1px solid var(--border); color:var(--text-muted); font-size:12px; margin-top:30px; }
+.eb-draft-summary { min-height:160px !important; }
+.eb-code { padding:16px; background:var(--surface-soft); white-space:pre-wrap; overflow-wrap:anywhere; font-size:12px; }
+.eb-channel-bar { display:grid; grid-template-columns:95px 1fr 65px; align-items:center; gap:10px; margin:12px 0; }
+.eb-channel-bar i { display:block; background:var(--role-primary); height:8px; border-radius:4px; }
+.eb-skip { position:fixed; top:-60px; z-index:100; }
+.eb-skip:focus { top:8px; left:8px; }
+.eb-toast { position:fixed; bottom:24px; right:24px; z-index:110; padding:14px 20px; border:1px solid var(--border-strong); background:var(--surface); color:var(--text-primary); border-radius:9px; max-width:calc(100vw - 32px); box-shadow:0 6px 30px #0003; }
+@media(max-width:1200px) { .eb-workbench { grid-template-columns:180px minmax(0,1fr); } .eb-board { grid-column:1/-1; } }
+@media(max-width:850px) { .eb-two-column { grid-template-columns:1fr; } .eb-content { padding:20px; } }
+@media(max-width:700px) { .eb-workbench { grid-template-columns:1fr; } .eb-heading { align-items:flex-start; flex-wrap:wrap; } .eb-heading h1 { font-size:24px; } .eb-api-topbar { padding:14px 16px; } .eb-content { padding:16px; } .eb-form-row { grid-template-columns:1fr; } .eb-api-topbar>small { display:none; } .eb-panel { padding:18px; } .eb-api-status-line { flex-wrap:wrap; } }
