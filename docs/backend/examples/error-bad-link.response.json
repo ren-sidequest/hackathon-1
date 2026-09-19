@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "PREVIOUS_SUBMISSION_MISMATCH",
+    "message": "The previous submission ID and fingerprint must match the permitted version.",
+    "requestId": "ebb2b2e8-3efa-4a69-857e-5bcd44826fab",
+    "retryable": false
+  }
+}

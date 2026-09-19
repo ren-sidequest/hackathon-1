@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "REVIEW_LIMIT_REACHED",
+    "message": "V2 requires a terminal decision: confirm or evidence_still_insufficient.",
+    "requestId": "9e1a86be-7ad9-404d-a1e7-3ac3f903f685",
+    "retryable": false
+  }
+}

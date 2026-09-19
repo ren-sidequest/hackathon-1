@@ -19,6 +19,15 @@ DOCUMENTS = (
     "docs/product/EvidenceBridge_BASELINE.md",
     "app/hr/README.md",
     "app/candidate/README.md",
+    "app/backend/README.md",
+    "docs/backend/API.md",
+    "docs/backend/ADR.md",
+    "docs/backend/DATA.md",
+    "docs/backend/HANDOFF.md",
+    "docs/backend/ACCEPTANCE.md",
+    "docs/backend/TEST_RESULTS.md",
+    "docs/backend/SECURITY_REVIEW.md",
+    "docs/backend/REVISION_PLAN.md",
 )
 LINK = re.compile(r"!?\[[^\]\n]*\]\(([^)\s]+)\)")
 

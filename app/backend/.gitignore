@@ -1,0 +1,6 @@
+var/
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+*.sqlite.lock
+*.sqlite.lock.reclaim

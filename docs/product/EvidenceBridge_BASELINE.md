@@ -17,8 +17,23 @@
 - 图 1 用于核心工作台的布局、密度和模块参考；图 2 用于双端页面与流程参考。外围编号、中文说明和示意连线不作为产品界面内容。
 - 已知图文差异以本文件的明确规范为准：共享随日夜主题变化的侧栏、HR 蓝色、Candidate 绿色；分析图表可使用共享蓝色，侧栏明暗以当前主题为准，不照搬候选人蓝色主按钮。
 - 候选人主要输入采用图 1 的结构化 Investigation Board，不采用图 2 的单一大文本框任务页。
-- 图 2 的 Shared Backend / Data 仅表示两端共享数据关系；MVP 可使用本地模拟状态，不因此要求真实后端。
+- 图 2 的 Shared Backend / Data 本身只表达共享数据关系；当前正式任务/V1/V2/审核以已确认修订 3 的共享 API 为准，辅助模拟须明确标识。
 - 图片中的个人、公司和数据用于概念演示，不作为真实候选人评价或运行结果。其他实质冲突先确认，不自行改变产品要求。
+
+## 当前执行范围：修订 3 有限两版（2026-09-19）
+
+用户已确认本节覆盖早期仅前端模拟/单轮约定；视觉布局、主题、调查板与固定人物场景继续保留。正式任务、作品、分析、审核与报告使用共享 API 2.0；下面保留的前端展示优先原则不把正式双端同步降回各自 localStorage。实现结果与联调完成情况以[实际测试](../backend/TEST_RESULTS.md)为准，不由文档更新推断。
+
+- 一个 HarbourCart / Junior Data Analyst / Alex Chen 案例、三个要求、Business Problem Solving 一个缺口、同一 Conversion Drop Investigation 与 datasetVersion。
+- V1 可直接 Confirm 或 Evidence Still Insufficient 终局；仅 V1 Needs More Evidence 提供具体缺证意见，并开放同 session/task 的一次 V2。V2 只允许 Confirm / Evidence Still Insufficient；不开放 V3 或重开原审核。
+- V1 More 后目标仍 Uncertain，状态为 awaiting_revision。Candidate 看到真实 comment、在隔离的 V2 草稿补充；V1 正式作品和既有分析/审核保持不变，不重新出题/更换资源或从头重做。
+- V2 创建独立 submissionId/指纹，analysis 初始 not_started、review=null。最多两版作品及各自分析/意见只读回看；引用先选版本再定位，旧观察不显示为 V2 结果。
+- UI 读取 workflow.canSubmit/canResubmit/nextSubmissionVersion/allowedReviewDecisions/isTerminal 控制动作；remainingSubmissions 只是额度，不代表终局后仍可提交。
+- 只有当前版人工 Confirm 更新目标要求；SQL 与 Data Analysis 保持初始支持。两种不足仍 Uncertain，提交/AI 成功不自动确认，不构成录用决定。
+- 申请/初始报告/任务仍明确 preset；AI 仅做各版工作样本五维观察。保留上传外观时不把任意本地文件伪装成已被预置报告分析。私人 notes 留本地；真实模型实验与双端浏览器验收分别记录。
+
+固定两版只读回看属于本轮；无限轮次、复杂 diff、通用历史、PDF/OCR、动态出题、账号/多租户、通知与公网部署仍后置。见[实施计划](../backend/REVISION_PLAN.md)、[API](../backend/API.md)与[前端接入](../backend/HANDOFF.md)。
+
 
 ---
 
@@ -60,9 +75,9 @@ Allowed and encouraged for the demo:
 - Deterministic process timelines
 - Pre-generated AI outputs
 - Mocked loading states and transitions
-- Front-end-only cross-role state when sufficient for the demo
+- Labelled front-end-only visual previews; formal cross-role V1/V2 workflow state comes from the shared API
 
-A real API, database, authentication system, persistent storage layer, production file pipeline, or production-grade AI orchestration is optional and should only be added if it directly improves the demonstrated experience.
+The approved lightweight API and SQLite persistence support formal V1/V2 evidence handoff. Authentication platforms, production file pipelines and production-grade orchestration remain outside this scope.
 
 ### Implementation rule
 
@@ -629,8 +644,10 @@ Do **not** turn the product into a numeric ranking system.
 Review actions:
 
 - Confirm
-- Needs More Evidence
+- Needs More Evidence (V1 only; one V2 revision)
 - Evidence Still Insufficient
+
+V2 exposes only Confirm and Evidence Still Insufficient. Historical V1/V2 work, observations and decisions are read-only.
 
 #### E. Updated Evidence Report
 
@@ -734,7 +751,7 @@ Do not spend disproportionate time on:
 - Production analytics engine
 - Full AI orchestration
 
-If a front-end simulation communicates the intended behavior clearly, that is sufficient for the MVP.
+Labelled visual simulations may support the demo; formal V1/V2 submission, feedback and final report acceptance require the shared API workflow described above.
 
 ---
 

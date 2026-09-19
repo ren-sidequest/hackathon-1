@@ -1,0 +1,284 @@
+{
+  "schemaVersion": "2.0",
+  "generatedAt": "2026-09-19T04:15:55.584Z",
+  "kind": "generated-synthetic-manual-fixture",
+  "modelCalls": 0,
+  "scope": "Two independent in-memory scenarios: direct V1 completion and same-session V1/V2 revision. IDs, timestamps and fingerprints belong to this generated run, never application constants.",
+  "requests": [
+    {
+      "scenario": "direct-v1",
+      "name": "health",
+      "method": "GET",
+      "path": "/healthz",
+      "status": 200,
+      "responseFile": "health.response.json"
+    },
+    {
+      "scenario": "direct-v1",
+      "name": "initial",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200,
+      "responseFile": "initial.response.json"
+    },
+    {
+      "scenario": "direct-v1",
+      "name": "send",
+      "method": "POST",
+      "path": "/api/demo/task/send",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-send-v2"
+      },
+      "requestFile": "send.request.json",
+      "responseFile": "send.response.json"
+    },
+    {
+      "scenario": "direct-v1",
+      "name": "submission",
+      "method": "POST",
+      "path": "/api/demo/submission",
+      "status": 201,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-submission-v2"
+      },
+      "requestFile": "submission.request.json",
+      "responseFile": "submission.response.json"
+    },
+    {
+      "scenario": "direct-v1",
+      "name": "analysis",
+      "method": "POST",
+      "path": "/api/demo/analysis",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-analysis-v2"
+      },
+      "requestFile": "analysis.request.json",
+      "responseFile": "analysis.response.json"
+    },
+    {
+      "scenario": "direct-v1",
+      "name": "review",
+      "method": "POST",
+      "path": "/api/demo/review",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-review-v2"
+      },
+      "requestFile": "review.request.json",
+      "responseFile": "review.response.json"
+    },
+    {
+      "scenario": "direct-v1",
+      "name": "reviewed",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200,
+      "responseFile": "reviewed.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "revision-initial",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200,
+      "responseFile": "revision-initial.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "revision-send",
+      "method": "POST",
+      "path": "/api/demo/task/send",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-revision-send-v2"
+      },
+      "requestFile": "revision-send.request.json",
+      "responseFile": "revision-send.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "revision-v1-submission",
+      "method": "POST",
+      "path": "/api/demo/submission",
+      "status": 201,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-revision-v1-submission-v2"
+      },
+      "requestFile": "revision-v1-submission.request.json",
+      "responseFile": "revision-v1-submission.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "revision-v1-analysis",
+      "method": "POST",
+      "path": "/api/demo/analysis",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-revision-v1-analysis-v2"
+      },
+      "requestFile": "revision-v1-analysis.request.json",
+      "responseFile": "revision-v1-analysis.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "revision-v1-more",
+      "method": "POST",
+      "path": "/api/demo/review",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-revision-v1-more-v2"
+      },
+      "requestFile": "revision-v1-more.request.json",
+      "responseFile": "revision-v1-more.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "awaiting-revision",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200,
+      "responseFile": "awaiting-revision.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "error-bad-link",
+      "method": "POST",
+      "path": "/api/demo/submission",
+      "status": 409,
+      "errorCode": "PREVIOUS_SUBMISSION_MISMATCH",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-error-bad-link-v2"
+      },
+      "requestFile": "error-bad-link.request.json",
+      "responseFile": "error-bad-link.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "revision-v2-submission",
+      "method": "POST",
+      "path": "/api/demo/submission",
+      "status": 201,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-revision-v2-submission-v2"
+      },
+      "requestFile": "revision-v2-submission.request.json",
+      "responseFile": "revision-v2-submission.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "error-old-id",
+      "method": "POST",
+      "path": "/api/demo/analysis",
+      "status": 409,
+      "errorCode": "STALE_SUBMISSION",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-error-old-id-v2"
+      },
+      "requestFile": "error-old-id.request.json",
+      "responseFile": "error-old-id.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "revision-v2-analysis",
+      "method": "POST",
+      "path": "/api/demo/analysis",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-revision-v2-analysis-v2"
+      },
+      "requestFile": "revision-v2-analysis.request.json",
+      "responseFile": "revision-v2-analysis.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "error-v2-more",
+      "method": "POST",
+      "path": "/api/demo/review",
+      "status": 409,
+      "errorCode": "REVIEW_LIMIT_REACHED",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-error-v2-more-v2"
+      },
+      "requestFile": "error-v2-more.request.json",
+      "responseFile": "error-v2-more.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "revision-v2-review",
+      "method": "POST",
+      "path": "/api/demo/review",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-revision-v2-review-v2"
+      },
+      "requestFile": "revision-v2-review.request.json",
+      "responseFile": "revision-v2-review.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "revision-history",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200,
+      "responseFile": "revision-history.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "error-v3",
+      "method": "POST",
+      "path": "/api/demo/submission",
+      "status": 400,
+      "errorCode": "INVALID_REQUEST",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-error-v3-v2"
+      },
+      "requestFile": "error-v3.request.json",
+      "responseFile": "error-v3.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "error-submission-limit",
+      "method": "POST",
+      "path": "/api/demo/submission",
+      "status": 409,
+      "errorCode": "SUBMISSION_LIMIT_REACHED",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-error-submission-limit-v2"
+      },
+      "requestFile": "error-submission-limit.request.json",
+      "responseFile": "error-submission-limit.response.json"
+    },
+    {
+      "scenario": "same-session-v1-v2",
+      "name": "reset",
+      "method": "POST",
+      "path": "/api/demo/reset",
+      "executed": false,
+      "note": "Explicit reset is a new demo session, never a substitute for resubmission. Set a local admin token, read the latest session and use a fresh key.",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "replace-with-random-uuid",
+        "X-Demo-Admin-Token": "<LOCAL_ADMIN_TOKEN>"
+      },
+      "requestFile": "reset.request.json"
+    }
+  ]
+}

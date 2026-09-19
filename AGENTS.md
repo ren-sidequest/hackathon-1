@@ -82,6 +82,31 @@ npm run test:ui --prefix app/candidate
 
 自动启动 Candidate `5273` / HR `5286`，截图与失败 trace 见 `.ci-results/shared-ui/`。主题、侧栏接口和存储边界见 [共享 UI 说明](app/shared/README.md)。
 
+### 共享后端（2026-09-19 修订 3：有限两版）
+
+目录 `app/backend/`：TypeScript + Fastify + SQLite，锁定依赖及独立构建；接口 schema 同时生成 OpenAPI 文档。Node.js 最低 22.23.0，推荐 24 LTS；当前 Node 22 的 `node:sqlite` 有实验性提示。只监听本机 `127.0.0.1:8787`。运行说明见 [后端 README](app/backend/README.md)，状态/请求合同见 [API](docs/backend/API.md)。本轮只改后端及其合同/产品依据；双端 UI API 接入由小傅另行完成。批准 V1 + 最多一次 V2：仅 V1 More 开放补交、每版一次审核、V2 终局；不沿用无限重提或重开原审核。先读[修订 3 计划](docs/backend/REVISION_PLAN.md)与验收矩阵。
+
+```sh
+npm ci --prefix app/backend
+npm run build --prefix app/backend
+npm run typecheck --prefix app/backend
+npm test --prefix app/backend
+npm run test:coverage --prefix app/backend
+npm run docs:generate --prefix app/backend
+# .env 与相对 DATABASE_PATH 以 app/backend 为工作目录
+cd app/backend
+npm start
+# 另一个终端（同目录）
+npm run demo
+# 完整两版客户端需要初始案例；确认要清空演示时先显式 reset
+npm run reset
+npm run demo -- --resubmit
+# 临时库与独立进程的两版客户端验证
+node scripts/verify-revisions.mjs
+```
+
+`.env.example` 只作配置示例。默认分析 disabled，manual_simulation 明确为手工规则，live 需要单独的项目模型配置和服务端密钥。reset 要求至少 24 字符的本机管理员令牌。schemaVersion 为 2.0，默认新库 `var/evidencebridge-v2.sqlite`；旧 1.0 库不迁移、不自动清空，启动检测后要求新路径并保留旧文件。数据库/锁/日志不提交；一个数据库只由一个本机进程持有。配置、失败行为、端口冲突与恢复步骤见 README。自动文档在本机 `/docs/`，健康检查 `/healthz`；这不构成公网部署或 UI 已接入的证明。
+
 ## 4. 开发与验证
 
 - 开始前简要说明本次修改范围和验证办法；完成后按实际修改和测试汇报。
@@ -148,8 +173,8 @@ npm run test:ui --prefix app/candidate
 
 - 开展产品功能、页面、交互、演示数据或验收相关工作前，先阅读 [产品蓝图](docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md) 和 [UI 与交互基线](docs/product/EvidenceBridge_BASELINE.md)。视觉工作还须查看两份文档链接的原始概念图。
 - 产品蓝图负责产品定位、角色流程、功能范围和演示闭环；Baseline 负责视觉、交互、共享状态语义和固定演示场景；[PROJECT_PLAN.md](PROJECT_PLAN.md) 记录技术选择、实施阶段和待决事项；本文件负责开发与协作规则。产品细节不重复维护多套。
-- 图 1 是候选人核心工作台参考，图 2 是双端页面与流程参考。已知差异按 Baseline 落实：侧栏随日夜主题变化、HR 蓝色、Candidate 绿色；候选人核心输入采用调查板，不照搬图 2 的单一大文本框。图片外围注释不作为产品界面内容；图中的共享后端示意不构成必须建设真实后端的要求。其他实质冲突先指出具体位置并确认。
-- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录。Candidate 已实现独立 React / TypeScript / Vite 本地演示；HR 已有独立 React + Vite 本地演示。根目录没有统一构建；已建立 `app/shared/` 共享主题与侧栏，业务数据接口仍须另行约定。
+- 图 1 是候选人核心工作台参考，图 2 是双端页面与流程参考。已知差异按 Baseline 落实：侧栏随日夜主题变化、HR 蓝色、Candidate 绿色；候选人核心输入采用调查板，不照搬图 2 的单一大文本框。图片外围注释不作为产品界面内容；图本身不新增后端要求；当前共享 API 与有限两版范围来自用户明确确认的修订 3。其他实质冲突先指出具体位置并确认。
+- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录。Candidate 已实现独立 React / TypeScript / Vite 本地演示；HR 已有独立 React + Vite 本地演示。根目录没有统一构建；已建立 `app/shared/` 共享主题与侧栏，正式业务接口以 API 2.0 合同为准，前端不自行改变补交次数或历史只读规则。
 - 双方在各自本地副本、独立分支中开发，通过 PR 整合。默认只修改本次负责的一端；接手另一端、修改重叠或触及共享部分时先协调，禁止同时写同一工作副本。
 - 两端共用产品基线、基础组件风格、状态命名和演示场景。跨端的任务、提交、证据、审核状态及演示重置方式须先约定输入输出与文件归属，再并行实现；共享外壳、组件、数据结构或接口变更遵循第 2 节的确认规则。
 - MVP 是面向浏览器演示的 Web 应用，优先候选人工作台、HR 证据审核与完整补证闭环；允许静态数据、本地状态和预生成 AI 输出。模拟演示通过不等于真实 AI、持久化或生产后端已经验证。

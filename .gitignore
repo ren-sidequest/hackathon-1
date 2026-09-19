@@ -30,3 +30,15 @@ coverage/
 # Project-local code intelligence and machine-specific Codex configuration
 .gitnexus/
 .codex/config.toml
+
+# Backend SQLite sidecars and per-database local process ownership
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite-journal
+*.sqlite.lock
+*.sqlite.lock.reclaim
+*.sqlite3-wal
+*.sqlite3-shm
+*.sqlite3-journal
+*.sqlite3.lock
+*.sqlite3.lock.reclaim
