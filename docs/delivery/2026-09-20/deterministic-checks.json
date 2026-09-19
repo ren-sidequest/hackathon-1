@@ -1,0 +1,2925 @@
+{
+  "timestampUtc": "2026-09-19T17:32:03.348331+00:00",
+  "sourceRoot": "[LOCAL_ARCHIVE]",
+  "gitCommit": "b5d0568c71fd51f4f39f3eb506654861c1b59695",
+  "kind": "deterministic_read_only_checks",
+  "result": "pass",
+  "checks": [
+    {
+      "name": "manifest_sha256_and_size",
+      "result": "pass",
+      "count": 27,
+      "detail": "All declared files match manifest; metadata labels are not evidence of human approval."
+    },
+    {
+      "name": "original_pdf_pages_and_extracted_text",
+      "result": "pass",
+      "count": 5,
+      "detail": "Five PDFs / eight pages: pypdf text matches stored extracts after whitespace/page-marker normalisation; original-byte hashes match manifest."
+    },
+    {
+      "name": "snapshot_fingerprint_independent_canonical_hash",
+      "result": "pass",
+      "count": 4,
+      "detail": "Python sorted-key canonical JSON independently reproduces all four source fingerprints."
+    },
+    {
+      "name": "assessment_scope_and_annotations",
+      "result": "pass",
+      "count": 40,
+      "detail": "29 numerical and 11 NE; each checks all 3 own sources; numerical rows have own literal references."
+    },
+    {
+      "name": "owned_utf16_citations",
+      "result": "pass",
+      "count": 145,
+      "detail": "29 criterion refs and 116 JD alignment refs; exact owner/snapshot/fingerprint/location/text slice verified."
+    },
+    {
+      "name": "independent_score_arithmetic",
+      "result": "pass",
+      "count": 4,
+      "detail": "Ten contributions, all skills, coverage, accrued and null overall independently recalculated. No rescaling of known items."
+    },
+    {
+      "name": "jd_requirement_quote_page_binding",
+      "result": "pass",
+      "count": 19,
+      "detail": "19 exact JD excerpts and page markers; 76 candidate JD rows structurally covered by reference checks, not a claim of full independent semantic recalibration of those 76 rows."
+    },
+    {
+      "name": "candidate_material_arithmetic",
+      "result": "pass",
+      "count": 3,
+      "detail": "Amy totals/growth/rates/weights; Ann counts/split/majority baseline; Jamie SUM/net followers/budget. This is not original SQL execution or model evaluation."
+    },
+    {
+      "name": "company_task_arithmetic_and_download_parity",
+      "result": "pass",
+      "count": 6,
+      "detail": "Six resources: five CSVs match presented columns/rows, markdown matches byte size; both periods totals and current Paid Search device subset reconcile."
+    }
+  ],
+  "generatedAuditCheck": "PASS: --check, 4 applicants, 40 items, 145 owned citations, 27 file hashes/sizes.",
+  "scores": [
+    {
+      "candidateId": "amy-chen",
+      "marks": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        2,
+        3,
+        2,
+        2
+      ],
+      "contributions": [
+        10.0,
+        10.0,
+        10.0,
+        10.0,
+        10.0,
+        10.0,
+        5.0,
+        7.5,
+        5.0,
+        5.0
+      ],
+      "accrued": 82.5,
+      "coverage": 100.0,
+      "overall": 82.5,
+      "skills": [
+        {
+          "skill": "sql",
+          "percentage": 100.0,
+          "accrued": 30.0,
+          "maximum": 30
+        },
+        {
+          "skill": "data-analysis",
+          "percentage": 100.0,
+          "accrued": 30.0,
+          "maximum": 30
+        },
+        {
+          "skill": "business-problem-solving",
+          "percentage": 56.25,
+          "accrued": 22.5,
+          "maximum": 40
+        }
+      ],
+      "humanCalibration": "pending"
+    },
+    {
+      "candidateId": "ann-li",
+      "marks": [
+        4,
+        2,
+        3,
+        4,
+        2,
+        4,
+        2,
+        3,
+        2,
+        2
+      ],
+      "contributions": [
+        10.0,
+        5.0,
+        7.5,
+        10.0,
+        5.0,
+        10.0,
+        5.0,
+        7.5,
+        5.0,
+        5.0
+      ],
+      "accrued": 70.0,
+      "coverage": 100.0,
+      "overall": 70.0,
+      "skills": [
+        {
+          "skill": "sql",
+          "percentage": 75.0,
+          "accrued": 22.5,
+          "maximum": 30
+        },
+        {
+          "skill": "data-analysis",
+          "percentage": 83.33333333333333,
+          "accrued": 25.0,
+          "maximum": 30
+        },
+        {
+          "skill": "business-problem-solving",
+          "percentage": 56.25,
+          "accrued": 22.5,
+          "maximum": 40
+        }
+      ],
+      "humanCalibration": "pending"
+    },
+    {
+      "candidateId": "david-liu",
+      "marks": [
+        4,
+        "NE",
+        4,
+        "NE",
+        "NE",
+        "NE",
+        "NE",
+        "NE",
+        "NE",
+        "NE"
+      ],
+      "contributions": [
+        10.0,
+        null,
+        10.0,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "accrued": 20.0,
+      "coverage": 20.0,
+      "overall": null,
+      "skills": [
+        {
+          "skill": "sql",
+          "percentage": null,
+          "accrued": 20.0,
+          "maximum": 30
+        },
+        {
+          "skill": "data-analysis",
+          "percentage": null,
+          "accrued": 0,
+          "maximum": 30
+        },
+        {
+          "skill": "business-problem-solving",
+          "percentage": null,
+          "accrued": 0,
+          "maximum": 40
+        }
+      ],
+      "humanCalibration": "pending"
+    },
+    {
+      "candidateId": "jamie-parker",
+      "marks": [
+        "NE",
+        "NE",
+        "NE",
+        4,
+        2,
+        4,
+        3,
+        3,
+        1,
+        2
+      ],
+      "contributions": [
+        null,
+        null,
+        null,
+        10.0,
+        5.0,
+        10.0,
+        7.5,
+        7.5,
+        2.5,
+        5.0
+      ],
+      "accrued": 47.5,
+      "coverage": 70.0,
+      "overall": null,
+      "skills": [
+        {
+          "skill": "sql",
+          "percentage": null,
+          "accrued": 0,
+          "maximum": 30
+        },
+        {
+          "skill": "data-analysis",
+          "percentage": 83.33333333333333,
+          "accrued": 25.0,
+          "maximum": 30
+        },
+        {
+          "skill": "business-problem-solving",
+          "percentage": 56.25,
+          "accrued": 22.5,
+          "maximum": 40
+        }
+      ],
+      "humanCalibration": "pending"
+    }
+  ],
+  "files": [
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "29e478a635d1226fa1fd794e6efd79b1c1fb6f6317ea6f67cbc59f708878f70e",
+      "bytes": 2089
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "0fd0d3d093b2744a07c2d0229a35b56b60a28b725b237b9e244c14f1ed3e2f62",
+      "bytes": 1533
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "6af64b7365eda8036418f907760b0fbb1d3f2197a81db06d2c8f41d549d278dc",
+      "bytes": 2294
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "f55a088f1f97ce16230677ff7ffafae9e388037405798bd4bb82a5fdaeb9957c",
+      "bytes": 2236
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "4b7598a5d39bfdb99c0de7e99d088318bf9a6dfbfd606425b28abd1cfde6560c",
+      "bytes": 131083
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "8de6a9c09f790cc73d27fbb4ae2f6620f7e05ac94be24a7592333f92a17891a9",
+      "bytes": 2813
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "6f9f50aa2a97ec1aab76af61078427361171f5c1e98abcb137c3d028cf21e448",
+      "bytes": 1123
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "52edb122b1110a38467952e8bbd5b9e305df104acbc65c43826553e3c796b527",
+      "bytes": 3274
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "22e23725f900789426298ff3057690da1ae413001428826d4ed4bbb08c4dd6b3",
+      "bytes": 3218
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "2ea623c0d56a555d379ae4b96b4c3c2f8972b95ec3ce10504ed5b226124169b9",
+      "bytes": 87153
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "0a4b440911e746ac983ef5e2a97f2b3434e09b2b1124c8d666836d1ad3c7795b",
+      "bytes": 41311
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "016975de5c75c788ad28462fb0b72c443ee1a58ec839941e2bbfcc9ca619f979",
+      "bytes": 2526
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "64d5440f76f922b834700fc06592a392545b6dc896786cc067731debd06d9853",
+      "bytes": 2468
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "2aa6c97fc472ba97dffa451eee56f297fe917ed8f8906875cd58072559790c78",
+      "bytes": 87347
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "263844fec181cd6baa7167025deafe014ddead7307ce77d08f8a2e7e75d1cdfa",
+      "bytes": 1452
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "d205078aaef5a378001d8af2d5d9beb57d5ae329737aaf1bf1becb5cf59789eb",
+      "bytes": 1283
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "7b15a71137003cd23ce8fb3988fc84794362c828b43685dc256764b2b50ab5c6",
+      "bytes": 21563
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "5269aed70e4a304b8ed642aec7c49a46ba52f22004cf6753572c4e587321d090",
+      "bytes": 21122
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "fc5872a569b79ab6b945552608da9f9bf19e25973867e32af16f198926a6bcf3",
+      "bytes": 1623
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "f4892677bf3fc92f26db73ba1ea774e8ad9e69f437b025349d28ee9b1b50a6b4",
+      "bytes": 2577
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "f4892677bf3fc92f26db73ba1ea774e8ad9e69f437b025349d28ee9b1b50a6b4",
+      "bytes": 2577
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "c13b285ba0a0a8d1d53440ea280d5ef55c5d1c288dd57ca36027499b39e85537",
+      "bytes": 70799
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "84ec678726c58e1fdafdbb8ca06cb4148e70fe5e601a8f1459bb2a4a2b4f38b0",
+      "bytes": 1937
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "aadd35bfaa31dddaa47de42f792e26e71a87b8d15c2880c450faf6bf943c415c",
+      "bytes": 51194
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "574d59ec91d40951b39f5ae31aaf497952a6235828c03a9f46b8d9dea6d7564a",
+      "bytes": 8044
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "7dacd04212d36dbe26ef9226280d923e6d1f15a222894c2eec5f3171822a603f",
+      "bytes": 6097
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "sha256": "93a45567de59b2aa8580b490f9bd7995fcf528246ca5df2cd5438a0939b87e89",
+      "bytes": 85411
+    }
+  ],
+  "pdfs": [
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "pages": 1,
+      "extractedTextEquivalentIgnoringWhitespaceAndPageMarkers": true,
+      "hashMatchesDeclaredOriginal": true,
+      "originalInputPath": "[LOCAL_ARCHIVE]",
+      "originalInputBytesMatch": true
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "pages": 1,
+      "extractedTextEquivalentIgnoringWhitespaceAndPageMarkers": true,
+      "hashMatchesDeclaredOriginal": true,
+      "originalInputPath": "[LOCAL_ARCHIVE]",
+      "originalInputBytesMatch": true
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "pages": 1,
+      "extractedTextEquivalentIgnoringWhitespaceAndPageMarkers": true,
+      "hashMatchesDeclaredOriginal": true,
+      "originalInputPath": "[LOCAL_ARCHIVE]",
+      "originalInputBytesMatch": true
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "pages": 1,
+      "extractedTextEquivalentIgnoringWhitespaceAndPageMarkers": true,
+      "hashMatchesDeclaredOriginal": true,
+      "originalInputPath": "[LOCAL_ARCHIVE]",
+      "originalInputBytesMatch": true
+    },
+    {
+      "file": "[LOCAL_ARCHIVE]",
+      "pages": 4,
+      "extractedTextEquivalentIgnoringWhitespaceAndPageMarkers": true,
+      "hashMatchesDeclaredOriginal": true,
+      "originalInputPath": "[LOCAL_ARCHIVE]",
+      "originalInputBytesMatch": true
+    }
+  ],
+  "citations": [
+    {
+      "candidateId": "amy-chen",
+      "kind": "criterion",
+      "criterionId": "S1",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        4,
+        5
+      ],
+      "sourceId": "channel_analysis.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 226,
+      "endUtf16": 395,
+      "quote": "-- Prepared input: channel_period_metrics, one row per (period_start, channel).\n-- period_start identifies a complete four-week reporting window, not a transaction date.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "criterion",
+      "criterionId": "S2",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        6,
+        6
+      ],
+      "sourceId": "channel_analysis.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 396,
+      "endUtf16": 467,
+      "quote": "-- Previous: [2026-03-02,2026-03-30); current: [2026-03-30,2026-04-27).",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "criterion",
+      "criterionId": "S3",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        18,
+        24
+      ],
+      "sourceId": "channel_analysis.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 982,
+      "endUtf16": 1532,
+      "quote": "-- Proposed pre-report checks (not recorded execution results):\n-- 1. GROUP BY period_start, channel HAVING COUNT(*) > 1 should return zero rows.\n-- 2. Count null or negative counts; investigate every flagged row before publishing.\n-- 3. A zero-session group returns NULL, not a valid zero conversion rate.\n-- 4. Reconcile each period to the prepared totals in channel_analysis.md.\n-- 5. Confirm the upstream export actually uses the stated windows and definitions;\n--    this query trusts period labels and does not verify the raw timestamp mapping.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "criterion",
+      "criterionId": "D1",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        21,
+        23
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1049,
+      "endUtf16": 1210,
+      "quote": "- Total sessions: 4,000 to 5,000 (+25.0%).\n- Completed orders: 200 to 225 (+12.5%).\n- Overall conversion: 5.0% to 4.5% (-0.5 percentage points; -10.0% relative).",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "criterion",
+      "criterionId": "D2",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        24,
+        26
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1211,
+      "endUtf16": 1485,
+      "quote": "- Paid Search conversion: 4.0% to 3.0%; its session share rises from 37.5% to 48.0%.\n- Organic conversion: 5.6% to approximately 5.8846%.\n- Aggregate rates use total orders divided by total sessions, not an unweighted average of channel percentages. Round after calculating.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "criterion",
+      "criterionId": "D3",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        28,
+        28
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1487,
+      "endUtf16": 1659,
+      "quote": "The SQL file and this table describe the same population. They are not two sets of orders. The upstream timestamp mapping and original export checks remain to be inspected.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "criterion",
+      "criterionId": "B1",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        31,
+        31
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1698,
+      "endUtf16": 2088,
+      "quote": "Orders increased even though overall conversion fell. Paid Search brought more sessions and orders, but converted a smaller share of its sessions. Before interpreting an increase in promotional activity, I would look at the paid-traffic composition. Campaign mix is one possible explanation, not a demonstrated cause. I would request campaign and device breakdowns for the same two periods.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "criterion",
+      "criterionId": "B2",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        31,
+        31
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1948,
+      "endUtf16": 2015,
+      "quote": "Campaign mix is one possible explanation, not a demonstrated cause.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "criterion",
+      "criterionId": "B3",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        31,
+        31
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2016,
+      "endUtf16": 2088,
+      "quote": "I would request campaign and device breakdowns for the same two periods.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "criterion",
+      "criterionId": "B4",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        31,
+        31
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1845,
+      "endUtf16": 1947,
+      "quote": "Before interpreting an increase in promotional activity, I would look at the paid-traffic composition.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "data-quality",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        17,
+        17
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 781,
+      "endUtf16": 853,
+      "quote": "Checked data for missing or inconsistent values before weekly reporting.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "data-quality",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        20,
+        20
+      ],
+      "sourceId": "channel_analysis.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 1128,
+      "endUtf16": 1213,
+      "quote": "-- 2. Count null or negative counts; investigate every flagged row before publishing.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "accuracy",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        17,
+        17
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 781,
+      "endUtf16": 853,
+      "quote": "Checked data for missing or inconsistent values before weekly reporting.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "accuracy",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        20,
+        20
+      ],
+      "sourceId": "channel_analysis.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 1128,
+      "endUtf16": 1213,
+      "quote": "-- 2. Count null or negative counts; investigate every flagged row before publishing.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "sql-extraction",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        27,
+        27
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1471,
+      "endUtf16": 1542,
+      "quote": "Used filtering, grouping and aggregation to summaries transaction data.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "sql-extraction",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        15,
+        16
+      ],
+      "sourceId": "channel_analysis.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 918,
+      "endUtf16": 980,
+      "quote": "GROUP BY period_start, channel\nORDER BY period_start, channel;",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "foundational-sql",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        27,
+        27
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1471,
+      "endUtf16": 1542,
+      "quote": "Used filtering, grouping and aggregation to summaries transaction data.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "foundational-sql",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        15,
+        16
+      ],
+      "sourceId": "channel_analysis.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 918,
+      "endUtf16": 980,
+      "quote": "GROUP BY period_start, channel\nORDER BY period_start, channel;",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        22,
+        22
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1049,
+      "endUtf16": 1143,
+      "quote": "Calculated website traffic, orders and conversion rates across different acquisition channels.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        23,
+        23
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1133,
+      "endUtf16": 1210,
+      "quote": "- Overall conversion: 5.0% to 4.5% (-0.5 percentage points; -10.0% relative).",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "metric-interpretation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        22,
+        22
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1049,
+      "endUtf16": 1143,
+      "quote": "Calculated website traffic, orders and conversion rates across different acquisition channels.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "metric-interpretation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        23,
+        23
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1133,
+      "endUtf16": 1210,
+      "quote": "- Overall conversion: 5.0% to 4.5% (-0.5 percentage points; -10.0% relative).",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "digital-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        22,
+        22
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1049,
+      "endUtf16": 1143,
+      "quote": "Calculated website traffic, orders and conversion rates across different acquisition channels.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "digital-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        23,
+        23
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1133,
+      "endUtf16": 1210,
+      "quote": "- Overall conversion: 5.0% to 4.5% (-0.5 percentage points; -10.0% relative).",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-investigation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        31,
+        31
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1948,
+      "endUtf16": 2088,
+      "quote": "Campaign mix is one possible explanation, not a demonstrated cause. I would request campaign and device breakdowns for the same two periods.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "structured-problem-solving",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        31,
+        31
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1948,
+      "endUtf16": 2088,
+      "quote": "Campaign mix is one possible explanation, not a demonstrated cause. I would request campaign and device breakdowns for the same two periods.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "reporting-visualisation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 696,
+      "endUtf16": 777,
+      "quote": "Prepared Excel tables showing website traffic, order volume and conversion rates.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "reporting-visualisation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        18,
+        18
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 975,
+      "endUtf16": 999,
+      "quote": "## Calculation worksheet",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "stakeholder-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        31,
+        31
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1698,
+      "endUtf16": 1844,
+      "quote": "Orders increased even though overall conversion fell. Paid Search brought more sessions and orders, but converted a smaller share of its sessions.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "written-verbal-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        31,
+        31
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1698,
+      "endUtf16": 1844,
+      "quote": "Orders increased even though overall conversion fell. Paid Search brought more sessions and orders, but converted a smaller share of its sessions.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "relevant-degree",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        6,
+        6
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 139,
+      "endUtf16": 173,
+      "quote": "Bachelor of Information Technology",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "relevant-degree",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        7,
+        7
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 175,
+      "endUtf16": 197,
+      "quote": "•Major: Data Analytics",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "spreadsheets",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        36,
+        36
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1906,
+      "endUtf16": 1989,
+      "quote": "Technical Skills: SQL, Microsoft Excel, Google Sheets, Basic Python, Basic Power BI",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "learning",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        38,
+        38
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2095,
+      "endUtf16": 2173,
+      "quote": "Core Skills: Attention to detail, teamwork, organization, willingness to learn",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "analysis-experience",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        20,
+        20
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 878,
+      "endUtf16": 928,
+      "quote": "Online Sales Channel Analysis — University Project",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "analysis-experience",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        6,
+        6
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 288,
+      "endUtf16": 359,
+      "quote": "Companion to the university project named in Amy's CV (March-May 2026).",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "python-r",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        36,
+        36
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1906,
+      "endUtf16": 1989,
+      "quote": "Technical Skills: SQL, Microsoft Excel, Google Sheets, Basic Python, Basic Power BI",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "bi-tools",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        36,
+        36
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1906,
+      "endUtf16": 1989,
+      "quote": "Technical Skills: SQL, Microsoft Excel, Google Sheets, Basic Python, Basic Power BI",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "amy-chen",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "nontechnical-presentation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        30,
+        30
+      ],
+      "sourceId": "channel_analysis.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1661,
+      "endUtf16": 1697,
+      "quote": "## Short note to the operations team",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "criterion",
+      "criterionId": "S1",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        4,
+        4
+      ],
+      "sourceId": "cohort_extract.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 247,
+      "endUtf16": 310,
+      "quote": "-- customer_features: one row per (customer_id, snapshot_date).",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "criterion",
+      "criterionId": "S2",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        5,
+        6
+      ],
+      "sourceId": "cohort_extract.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 311,
+      "endUtf16": 471,
+      "quote": "-- The prepared cohort contains 45,000 customers at snapshot_date 2025-12-31.\n-- Feature windows end before 2026-01-01; churn_next_60d is a later outcome label.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "criterion",
+      "criterionId": "S3",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        15,
+        18
+      ],
+      "sourceId": "cohort_extract.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 817,
+      "endUtf16": 1122,
+      "quote": "-- Proposed checks: unique customer_id within this snapshot; 45,000 rows;\n-- 6,750 positive labels and 38,250 negative labels; labels in {0,1}.\n-- Inspect missing feature values; learn any imputation only on training folds.\n-- The feature construction SQL and outcome-window audit are not in this extract.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "criterion",
+      "criterionId": "D1",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        18,
+        18
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1024,
+      "endUtf16": 1248,
+      "quote": "Positive prevalence is 6,750 / 45,000 = 15.0%. Predicting the majority class for everyone would produce 85.0% accuracy and zero recall of churn cases; accuracy alone is therefore a poor selection criterion for this exercise.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "criterion",
+      "criterionId": "D2",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        23,
+        23
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1606,
+      "endUtf16": 1810,
+      "quote": "3. Fit preprocessing within each training fold. Compare logistic regression, random forest and XGBoost with the same folds. Class weighting is applied during training, not by modifying the holdout labels.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "criterion",
+      "criterionId": "D3",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        28,
+        28
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2183,
+      "endUtf16": 2474,
+      "quote": "These are a prepared cohort and a reviewable procedure, not observed model outputs. Feature-construction code, the label-window audit and execution records would be needed to validate implementation. A customer-random split does not by itself establish performance in a later trading period.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "criterion",
+      "criterionId": "B1",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        30,
+        30
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2545,
+      "endUtf16": 2704,
+      "quote": "A risk score could help a business prioritise follow-up. A contact policy would still need capacity, intervention cost, customer consent and measured outcomes.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "criterion",
+      "criterionId": "B2",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        25,
+        25
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2023,
+      "endUtf16": 2158,
+      "quote": "5. SHAP can describe model associations. It does not establish why customers leave or show that changing a feature would prevent churn.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "criterion",
+      "criterionId": "B3",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        28,
+        28
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2267,
+      "endUtf16": 2382,
+      "quote": "Feature-construction code, the label-window audit and execution records would be needed to validate implementation.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "criterion",
+      "criterionId": "B4",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        30,
+        30
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2602,
+      "endUtf16": 2812,
+      "quote": "A contact policy would still need capacity, intervention cost, customer consent and measured outcomes. This note does not specify a campaign budget, select a retention intervention or claim revenue improvement.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "data-quality",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        15,
+        15
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 578,
+      "endUtf16": 670,
+      "quote": "Cleaned and analysed more than 300,000 customer transaction records using Python and pandas.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "data-quality",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        15,
+        15
+      ],
+      "sourceId": "cohort_extract.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 817,
+      "endUtf16": 890,
+      "quote": "-- Proposed checks: unique customer_id within this snapshot; 45,000 rows;",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "accuracy",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        15,
+        15
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 578,
+      "endUtf16": 670,
+      "quote": "Cleaned and analysed more than 300,000 customer transaction records using Python and pandas.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "accuracy",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        15,
+        15
+      ],
+      "sourceId": "cohort_extract.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 817,
+      "endUtf16": 890,
+      "quote": "-- Proposed checks: unique customer_id within this snapshot; 45,000 rows;",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "sql-extraction",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 673,
+      "endUtf16": 782,
+      "quote": "Wrote SQL queries to compare sales, customer retention and repeat-purchase rates across six regional markets.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "sql-extraction",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        11,
+        11
+      ],
+      "sourceId": "cohort_extract.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 625,
+      "endUtf16": 665,
+      "quote": "WHERE snapshot_date = DATE '2025-12-31';",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "foundational-sql",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 673,
+      "endUtf16": 782,
+      "quote": "Wrote SQL queries to compare sales, customer retention and repeat-purchase rates across six regional markets.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "foundational-sql",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        11,
+        11
+      ],
+      "sourceId": "cohort_extract.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 625,
+      "endUtf16": 665,
+      "quote": "WHERE snapshot_date = DATE '2025-12-31';",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        17,
+        17
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 859,
+      "endUtf16": 904,
+      "quote": "achieving an AUC of 0.82 on the test dataset.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        18,
+        18
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1024,
+      "endUtf16": 1070,
+      "quote": "Positive prevalence is 6,750 / 45,000 = 15.0%.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "metric-interpretation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        17,
+        17
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 859,
+      "endUtf16": 904,
+      "quote": "achieving an AUC of 0.82 on the test dataset.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "metric-interpretation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        18,
+        18
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1024,
+      "endUtf16": 1070,
+      "quote": "Positive prevalence is 6,750 / 45,000 = 15.0%.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-investigation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        25,
+        25
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2023,
+      "endUtf16": 2158,
+      "quote": "5. SHAP can describe model associations. It does not establish why customers leave or show that changing a feature would prevent churn.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-investigation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        30,
+        30
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2545,
+      "endUtf16": 2601,
+      "quote": "A risk score could help a business prioritise follow-up.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "structured-problem-solving",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        25,
+        25
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2023,
+      "endUtf16": 2158,
+      "quote": "5. SHAP can describe model associations. It does not establish why customers leave or show that changing a feature would prevent churn.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "structured-problem-solving",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        30,
+        30
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2545,
+      "endUtf16": 2601,
+      "quote": "A risk score could help a business prioritise follow-up.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "reporting-visualisation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        19,
+        19
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 993,
+      "endUtf16": 1082,
+      "quote": "Created a Tableau dashboard showing customer segments, churn rates and purchasing trends.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "reporting-visualisation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        20,
+        20
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1250,
+      "endUtf16": 1273,
+      "quote": "## Reviewable procedure",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "stakeholder-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        20,
+        20
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1085,
+      "endUtf16": 1144,
+      "quote": "Prepared weekly dashboard summaries for the marketing team.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "stakeholder-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        28,
+        28
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2383,
+      "endUtf16": 2474,
+      "quote": "A customer-random split does not by itself establish performance in a later trading period.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "written-verbal-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        20,
+        20
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1085,
+      "endUtf16": 1144,
+      "quote": "Prepared weekly dashboard summaries for the marketing team.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "written-verbal-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        28,
+        28
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 2383,
+      "endUtf16": 2474,
+      "quote": "A customer-random split does not by itself establish performance in a later trading period.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "relevant-degree",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        10,
+        10
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 336,
+      "endUtf16": 369,
+      "quote": "Bachelor of Science in Statistics",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "relevant-degree",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        5,
+        5
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 73,
+      "endUtf16": 95,
+      "quote": "Master of Data Science",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "spreadsheets",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        50,
+        50
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 3029,
+      "endUtf16": 3068,
+      "quote": "Tools: Git, GitHub and Jupyter Notebook",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "learning",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        38,
+        38
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2271,
+      "endUtf16": 2354,
+      "quote": "Attended machine-learning workshops, industry panels and student networking events.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "analysis-experience",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        23,
+        23
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1234,
+      "endUtf16": 1278,
+      "quote": "Customer Churn Prediction - Capstone Project",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "analysis-experience",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        6,
+        6
+      ],
+      "sourceId": "churn_method_note.md",
+      "location": "/sources/1/text",
+      "startUtf16": 297,
+      "endUtf16": 340,
+      "quote": "Companion to Ann's March-May 2026 capstone.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "python-r",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        46,
+        46
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2778,
+      "endUtf16": 2805,
+      "quote": "Programming: Python, R, SQL",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "bi-tools",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        49,
+        49
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2970,
+      "endUtf16": 3026,
+      "quote": "Visualisation: Tableau, Power BI, matplotlib and ggplot2",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "digital-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 673,
+      "endUtf16": 782,
+      "quote": "Wrote SQL queries to compare sales, customer retention and repeat-purchase rates across six regional markets.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "ann-li",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "nontechnical-presentation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        43,
+        43
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2648,
+      "endUtf16": 2721,
+      "quote": "Assisted with data preparation and development of the final presentation.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "criterion",
+      "criterionId": "S1",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        7,
+        7
+      ],
+      "sourceId": "task_queries.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 420,
+      "endUtf16": 496,
+      "quote": "-- One output row per task; users.id is unique, so this join is many-to-one.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "criterion",
+      "criterionId": "S3",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        19
+      ],
+      "sourceId": "task_queries.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 853,
+      "endUtf16": 1125,
+      "quote": "-- A user with no tasks receives an empty result.\n-- A task with a valid creator should appear once, not once per other task.\n-- The returned task IDs should match the user's task IDs in the source table.\n-- A missing display name should not remove a task from the result.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "data-quality",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        18,
+        18
+      ],
+      "sourceId": "task_queries.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 979,
+      "endUtf16": 1057,
+      "quote": "-- The returned task IDs should match the user's task IDs in the source table.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "accuracy",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        18,
+        18
+      ],
+      "sourceId": "task_queries.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 979,
+      "endUtf16": 1057,
+      "quote": "-- The returned task IDs should match the user's task IDs in the source table.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "sql-extraction",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 619,
+      "endUtf16": 677,
+      "quote": "Wrote SQL queries to retrieve and update application data.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "sql-extraction",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        7,
+        7
+      ],
+      "sourceId": "task_queries.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 420,
+      "endUtf16": 496,
+      "quote": "-- One output row per task; users.id is unique, so this join is many-to-one.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "foundational-sql",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 619,
+      "endUtf16": 677,
+      "quote": "Wrote SQL queries to retrieve and update application data.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "foundational-sql",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        7,
+        7
+      ],
+      "sourceId": "task_queries.sql",
+      "location": "/sources/2/text",
+      "startUtf16": 420,
+      "endUtf16": 496,
+      "quote": "-- One output row per task; users.id is unique, so this join is many-to-one.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "project_readme.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1207,
+      "endUtf16": 1346,
+      "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "metric-interpretation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "project_readme.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1207,
+      "endUtf16": 1346,
+      "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-investigation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "project_readme.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1207,
+      "endUtf16": 1346,
+      "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "structured-problem-solving",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "project_readme.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1207,
+      "endUtf16": 1346,
+      "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "digital-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "project_readme.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1207,
+      "endUtf16": 1346,
+      "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "reporting-visualisation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "project_readme.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1130,
+      "endUtf16": 1206,
+      "quote": "The material shows a proposed application query and basic checking approach.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "stakeholder-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        39,
+        39
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2322,
+      "endUtf16": 2418,
+      "quote": "Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "stakeholder-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        11,
+        11
+      ],
+      "sourceId": "project_readme.md",
+      "location": "/sources/1/text",
+      "startUtf16": 886,
+      "endUtf16": 960,
+      "quote": "The join retrieves the creator display name; it should not multiply tasks.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "written-verbal-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        39,
+        39
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2322,
+      "endUtf16": 2418,
+      "quote": "Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "written-verbal-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        11,
+        11
+      ],
+      "sourceId": "project_readme.md",
+      "location": "/sources/1/text",
+      "startUtf16": 886,
+      "endUtf16": 960,
+      "quote": "The join retrieves the creator display name; it should not multiply tasks.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "relevant-degree",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        5,
+        5
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 92,
+      "endUtf16": 120,
+      "quote": "Bachelor of Computer Science",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "relevant-degree",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        6,
+        6
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 121,
+      "endUtf16": 150,
+      "quote": "• Major: Software Development",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "spreadsheets",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        38,
+        38
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2221,
+      "endUtf16": 2319,
+      "quote": "Software Skills: Object-oriented programming, REST APIs, basic testing, debugging, data structures",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "learning",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        39,
+        39
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2322,
+      "endUtf16": 2418,
+      "quote": "Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "analysis-experience",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        11,
+        11
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 351,
+      "endUtf16": 404,
+      "quote": "Software Development Intern - Nexus Digital Solutions",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "analysis-experience",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        6,
+        6
+      ],
+      "sourceId": "project_readme.md",
+      "location": "/sources/1/text",
+      "startUtf16": 523,
+      "endUtf16": 597,
+      "quote": "without adding a new analytics internship or unmentioned business project.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "python-r",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        37,
+        37
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2118,
+      "endUtf16": 2218,
+      "quote": "Technical Skills: Java, Python, JavaScript, React, Node.js, Spring Boot, SQL, Git, GitHub, Basic AWS",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "bi-tools",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        37,
+        37
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2118,
+      "endUtf16": 2218,
+      "quote": "Technical Skills: Java, Python, JavaScript, React, Node.js, Spring Boot, SQL, Git, GitHub, Basic AWS",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "david-liu",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "nontechnical-presentation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        34,
+        34
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1967,
+      "endUtf16": 2035,
+      "quote": "Helped participants with registration and basic technical questions.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "criterion",
+      "criterionId": "D1",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1062,
+      "endUtf16": 1205,
+      "quote": "In the worksheet, total interactions use SUM(likes, comments, shares): 400 in May and 520 in June. Net new followers = end - start: 100 and 80.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "criterion",
+      "criterionId": "D2",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        19,
+        19
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1432,
+      "endUtf16": 1521,
+      "quote": "June had more reported reach and interaction actions, while net new followers were lower.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "criterion",
+      "criterionId": "D3",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        22,
+        22
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1767,
+      "endUtf16": 1936,
+      "quote": "The figures were copied from platform dashboards. The original export and per-post breakdown are not attached. The worksheet does not test which content caused a change.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "criterion",
+      "criterionId": "B1",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        9,
+        9
+      ],
+      "sourceId": "campaign_brief.md",
+      "location": "/sources/1/text",
+      "startUtf16": 638,
+      "endUtf16": 976,
+      "quote": "The concept cafe wants nearby university students to recognise its weekday offering. The team compared three fictional local cafe concepts for message clarity, posting frequency and student offers. The proposed theme is an affordable weekday study break, with two short product posts and one student-oriented post each week for two weeks.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "criterion",
+      "criterionId": "B2",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        6,
+        6
+      ],
+      "sourceId": "campaign_brief.md",
+      "location": "/sources/1/text",
+      "startUtf16": 532,
+      "endUtf16": 627,
+      "quote": "This is a planning artefact, not evidence that a campaign was launched or that sales increased.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "criterion",
+      "criterionId": "B3",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        19,
+        19
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1522,
+      "endUtf16": 1615,
+      "quote": "The content calendar and popular-post examples can be reviewed alongside the platform export.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "criterion",
+      "criterionId": "B4",
+      "jdRequirementId": null,
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "campaign_brief.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1259,
+      "endUtf16": 1459,
+      "quote": "Check the offer wording, links and image rights before publishing. Review platform reach and interaction actions after the two-week period; collect common customer questions for the next content plan.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "data-quality",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1267,
+      "endUtf16": 1397,
+      "quote": "It keeps follower counts separate from interaction counts and does not add overlapping monthly reach into a unique-audience total.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "accuracy",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1267,
+      "endUtf16": 1397,
+      "quote": "It keeps follower counts separate from interaction counts and does not add overlapping monthly reach into a unique-audience total.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "sql-extraction",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "campaign_brief.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1555,
+      "endUtf16": 1622,
+      "quote": "It is relevant marketing context, not demonstrated SQL proficiency.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "foundational-sql",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        14,
+        14
+      ],
+      "sourceId": "campaign_brief.md",
+      "location": "/sources/1/text",
+      "startUtf16": 1555,
+      "endUtf16": 1622,
+      "quote": "It is relevant marketing context, not demonstrated SQL proficiency.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        55,
+        55
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2383,
+      "endUtf16": 2458,
+      "quote": "Excel: Data entry, sorting, filtering, basic SUM formulas and simple charts",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1161,
+      "endUtf16": 1205,
+      "quote": "Net new followers = end - start: 100 and 80.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "metric-interpretation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        55,
+        55
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2383,
+      "endUtf16": 2458,
+      "quote": "Excel: Data entry, sorting, filtering, basic SUM formulas and simple charts",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "metric-interpretation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1161,
+      "endUtf16": 1205,
+      "quote": "Net new followers = end - start: 100 and 80.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "digital-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        55,
+        55
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2383,
+      "endUtf16": 2458,
+      "quote": "Excel: Data entry, sorting, filtering, basic SUM formulas and simple charts",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "digital-metrics",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1161,
+      "endUtf16": 1205,
+      "quote": "Net new followers = end - start: 100 and 80.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-investigation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        9,
+        9
+      ],
+      "sourceId": "campaign_brief.md",
+      "location": "/sources/1/text",
+      "startUtf16": 638,
+      "endUtf16": 722,
+      "quote": "The concept cafe wants nearby university students to recognise its weekday offering.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "business-investigation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        19,
+        19
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1616,
+      "endUtf16": 1748,
+      "quote": "This tracker has no website sessions, orders, advertising spend or campaign attribution; it gives no sales or conversion conclusion.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "structured-problem-solving",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        9,
+        9
+      ],
+      "sourceId": "campaign_brief.md",
+      "location": "/sources/1/text",
+      "startUtf16": 638,
+      "endUtf16": 722,
+      "quote": "The concept cafe wants nearby university students to recognise its weekday offering.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "structured-problem-solving",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        19,
+        19
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1616,
+      "endUtf16": 1748,
+      "quote": "This tracker has no website sessions, orders, advertising spend or campaign attribution; it gives no sales or conversion conclusion.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "reporting-visualisation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        55,
+        55
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2383,
+      "endUtf16": 2458,
+      "quote": "Excel: Data entry, sorting, filtering, basic SUM formulas and simple charts",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "reporting-visualisation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1206,
+      "endUtf16": 1266,
+      "quote": "The report uses a simple two-column chart for monthly reach.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "stakeholder-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        19,
+        19
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1432,
+      "endUtf16": 1521,
+      "quote": "June had more reported reach and interaction actions, while net new followers were lower.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "stakeholder-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        56,
+        56
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2459,
+      "endUtf16": 2542,
+      "quote": "Communication: Copywriting, presentations, customer enquiries and team coordination",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "written-verbal-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        19,
+        19
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1432,
+      "endUtf16": 1521,
+      "quote": "June had more reported reach and interaction actions, while net new followers were lower.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "written-verbal-communication",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        56,
+        56
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2459,
+      "endUtf16": 2542,
+      "quote": "Communication: Copywriting, presentations, customer enquiries and team coordination",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "relevant-degree",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        11,
+        11
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 459,
+      "endUtf16": 500,
+      "quote": "Bachelor of Business - Major in Marketing",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "relevant-degree",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        12,
+        12
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 501,
+      "endUtf16": 515,
+      "quote": "Graduated 2026",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "spreadsheets",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        55,
+        55
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2383,
+      "endUtf16": 2458,
+      "quote": "Excel: Data entry, sorting, filtering, basic SUM formulas and simple charts",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "spreadsheets",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        16,
+        16
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 1062,
+      "endUtf16": 1160,
+      "quote": "In the worksheet, total interactions use SUM(likes, comments, shares): 400 in May and 520 in June.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "learning",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        8,
+        8
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 356,
+      "endUtf16": 407,
+      "quote": "Seeking an entry-level opportunity to contribute to",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "analysis-experience",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        24,
+        24
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 1015,
+      "endUtf16": 1114,
+      "quote": "Recorded monthly reach, follower growth and engagement figures from platform dashboards in an Excel",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "analysis-experience",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        6,
+        6
+      ],
+      "sourceId": "social_reporting.md",
+      "location": "/sources/2/text",
+      "startUtf16": 495,
+      "endUtf16": 573,
+      "quote": "This is a small reporting worksheet, not SQL or an advanced analytics project.",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "python-r",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        54,
+        54
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2315,
+      "endUtf16": 2382,
+      "quote": "Tools: Canva, CapCut, Meta Business Suite, Mailchimp and PowerPoint",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "bi-tools",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        54,
+        54
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2315,
+      "endUtf16": 2382,
+      "quote": "Tools: Canva, CapCut, Meta Business Suite, Mailchimp and PowerPoint",
+      "ownerSnapshotAndFingerprintValid": true
+    },
+    {
+      "candidateId": "jamie-parker",
+      "kind": "jd_alignment",
+      "criterionId": null,
+      "jdRequirementId": "nontechnical-presentation",
+      "file": "[LOCAL_ARCHIVE]",
+      "lines": [
+        50,
+        50
+      ],
+      "sourceId": "cv-public.txt",
+      "location": "/sources/0/text",
+      "startUtf16": 2137,
+      "endUtf16": 2211,
+      "quote": "Presented the campaign recommendation and creative materials to the class.",
+      "ownerSnapshotAndFingerprintValid": true
+    }
+  ],
+  "humanCalibration": "pending",
+  "notPerformed": [
+    "Original SQL execution",
+    "Human review/sign-off",
+    "Live model calls",
+    "Employment or education verification",
+    "Production writes",
+    "Assessment revision or score mutation"
+  ]
+}
