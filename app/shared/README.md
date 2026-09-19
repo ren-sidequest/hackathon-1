@@ -130,3 +130,6 @@ Candidate 调查页空状态的 `View task and work` 和反馈页空状态的 `V
 本轮补充：标准导航使用更深底板 / 更亮卡片；hover 在 180ms 内渐亮金边和柔光，不平移或缩放；键盘 focus 可见，reduced motion 关闭过渡。Material stage 改为复用 GlideSelect，保留 application / V1 / V2 的原有可用选项和切换清理逻辑。Human mark 等未涉及控件保持原状。
 
 最终实际结果：`npm run test:revision5 --prefix app/candidate -- --reporter=line` 19/19 通过；两端 revision5-preview 构建通过，Candidate 构建包含共享 TypeScript 检查；仓库 19 份文档检查和 `git diff --check` 通过。当前 6173 / 6186 服务可访问。未运行新的 API / 后端测试或 AI Eval。
+## 2026-09-19 双端本地整合补充
+
+基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](../../docs/FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。

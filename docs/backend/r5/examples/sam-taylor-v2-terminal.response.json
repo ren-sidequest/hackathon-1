@@ -1,0 +1,3616 @@
+{
+  "data": {
+    "schemaVersion": "3.0",
+    "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+    "revision": 27,
+    "datasetVersion": "harbourcart-2026-09-v1",
+    "fixtureVersion": "harbourcart-applications-v1",
+    "rubricVersion": "harbourcart-rubric-v1",
+    "company": {
+      "id": "harbourcart",
+      "name": "HarbourCart Pty Ltd",
+      "provenance": "synthetic",
+      "location": "Sydney",
+      "approximateHeadcount": 25,
+      "products": [
+        "Accessories",
+        "Tote bags",
+        "Stationery"
+      ],
+      "fulfilment": "Partly outsourced",
+      "hiringManager": "Operations manager",
+      "budgetApprover": "Founder",
+      "dedicatedRecruitingTeam": false,
+      "businessProblem": "Traffic is increasing while orders fall; investigate reliably before expanding advertising spend.",
+      "constraints": [
+        "Small team and limited analysis time",
+        "Incomplete campaign, historical device and checkout data"
+      ]
+    },
+    "job": {
+      "id": "junior-data-analyst",
+      "title": "Junior Data Analyst",
+      "company": "HarbourCart Pty Ltd",
+      "requirements": [
+        {
+          "id": "sql",
+          "title": "SQL",
+          "statement": "Write SQL queries to explore, aggregate and analyse business data."
+        },
+        {
+          "id": "data-analysis",
+          "title": "Data Analysis",
+          "statement": "Analyse and compare data using reproducible calculations."
+        },
+        {
+          "id": "business-problem-solving",
+          "title": "Business Problem Solving",
+          "statement": "Frame business problems, test hypotheses and recommend evidence-led actions."
+        }
+      ],
+      "reportsTo": "Operations manager",
+      "successStages": [
+        "核对指标定义并提供可复核的基础报表。",
+        "调查期间和分组变化，说明缺失证据。",
+        "提出有优先级、可验证的下一步。"
+      ]
+    },
+    "rubric": {
+      "version": "harbourcart-rubric-v1",
+      "jobId": "junior-data-analyst",
+      "provenance": "synthetic_team_designed",
+      "calibrationStatus": "human_calibration_pending",
+      "label": "岗位证据匹配度 · 基于当前材料与本岗位标准",
+      "scope": "Material review, not hiring success, population percentile, personality or retention probability. SQL is statically reviewed, not executed.",
+      "requirements": [
+        {
+          "id": "sql",
+          "title": "SQL",
+          "maxScore": 30,
+          "statement": "核对取数粒度、期间比较与查询边界。"
+        },
+        {
+          "id": "data-analysis",
+          "title": "Data Analysis",
+          "maxScore": 30,
+          "statement": "用可复算的指标与分组比较解释变化。"
+        },
+        {
+          "id": "business-problem-solving",
+          "title": "Business Problem Solving",
+          "maxScore": 40,
+          "statement": "在增加广告预算前提出有优先级、可验证的调查与行动。"
+        }
+      ],
+      "marks": [
+        {
+          "mark": 4,
+          "meaning": "充分满足可观察要求，相关边界说明充分。"
+        },
+        {
+          "mark": 3,
+          "meaning": "主要满足，理由中指出具体非关键缺口。"
+        },
+        {
+          "mark": 2,
+          "meaning": "部分满足，有影响判断的明显缺口。"
+        },
+        {
+          "mark": 1,
+          "meaning": "有相关内容，但尚未达到 2 分的具体支持。"
+        },
+        {
+          "mark": 0,
+          "meaning": "已观察到具体、明确的问题；须有原文依据。"
+        },
+        {
+          "mark": "NE",
+          "meaning": "材料不足以判断；记录已检查范围，不转为 0。"
+        }
+      ],
+      "criteria": [
+        {
+          "id": "S1",
+          "requirementId": "sql",
+          "title": "查询粒度、聚合与连接逻辑",
+          "observableSupport": "表和粒度清楚；聚合及连接与问题一致，没有可见的重复计数；无需 JOIN 的问题不因缺少 JOIN 扣分。",
+          "maxScore": 10,
+          "anchors": {
+            "0": "可见的重复连接使关键计数错误，却将其作为正确结果。",
+            "2": "基本聚合可读，但粒度或连接的计数影响说明不足。",
+            "4": "粒度明确，聚合／连接与所问问题一致，并核对重复风险。"
+          }
+        },
+        {
+          "id": "S2",
+          "requirementId": "sql",
+          "title": "时间比较与查询可复核性",
+          "observableSupport": "时间窗和比较对象明确，代码与解释足以检查推导；语法复杂度本身不加分。",
+          "maxScore": 10,
+          "anchors": {
+            "0": "把不同期间或不相关分组混作同一比较对象。",
+            "2": "有查询或期间比较，但过滤条件／边界解释不完整。",
+            "4": "时间窗、分组和比较对象清楚，代码与解释一致，可按过程复核。"
+          }
+        },
+        {
+          "id": "S3",
+          "requirementId": "sql",
+          "title": "校验与边界说明",
+          "observableSupport": "有可检查的方法或示例，考虑适用的重复、空值、零分母及边界。",
+          "maxScore": 10,
+          "anchors": {
+            "0": "明知校验不通过仍宣称结果正确，或校验逻辑明显无效。",
+            "2": "提到空值／重复等检查，但方法或预期结果不充分。",
+            "4": "有可操作的结果检查和适用边界，说明预期检查结果。"
+          }
+        },
+        {
+          "id": "D1",
+          "requirementId": "data-analysis",
+          "title": "指标、分母、单位和计算",
+          "observableSupport": "分子、分母、时间窗和单位一致，数值可复算，区分百分比与百分点。",
+          "maxScore": 10,
+          "anchors": {
+            "0": "使用错误分母形成核心结论，且没有识别／修正。",
+            "2": "主要计算可用，但某项定义或单位解释不足。",
+            "4": "指标定义、分母、单位、期间和计算都清楚且一致。"
+          }
+        },
+        {
+          "id": "D2",
+          "requirementId": "data-analysis",
+          "title": "有意义的期间／分组比较",
+          "observableSupport": "合理比较期间或分组，不只复述总量，不把重叠资源当新增总体。",
+          "maxScore": 10,
+          "anchors": {
+            "0": "把重叠资源相加，或直接平均比例后作关键结论。",
+            "2": "能看到一个有用变化，但缺少相应分组或基准。",
+            "4": "总量和相关分组比较合理，注意权重及重叠总体。"
+          }
+        },
+        {
+          "id": "D3",
+          "requirementId": "data-analysis",
+          "title": "可复核过程与限制",
+          "observableSupport": "交代计算过程、数据缺口和适用范围，不凭图表形式推断正确性。",
+          "maxScore": 10,
+          "anchors": {
+            "0": "使用材料中不存在的数据并当成已观测事实。",
+            "2": "有过程或限制说明，但另一部分较弱。",
+            "4": "给出可重复的计算依据，明确缺失数据与适用范围。"
+          }
+        },
+        {
+          "id": "B1",
+          "requirementId": "business-problem-solving",
+          "title": "业务问题界定",
+          "observableSupport": "连接实际业务决策、需要回答的问题和小团队资源约束。",
+          "maxScore": 10,
+          "anchors": {
+            "0": "明确回答了无关问题，并将其当成当前决策依据。",
+            "2": "能描述下降现象，但与业务决策连接不充分。",
+            "4": "明确业务决策、需要回答的问题和现实约束。"
+          }
+        },
+        {
+          "id": "B2",
+          "requirementId": "business-problem-solving",
+          "title": "观察与因果区分",
+          "observableSupport": "分开事实、假设和已验证原因，避免无依据的确定性断言。",
+          "maxScore": 10,
+          "anchors": {
+            "0": "无对应证据，却明确断言唯一原因已经证实。",
+            "2": "有假设意识，但个别陈述仍把关联说成原因。",
+            "4": "事实／假设分开，考虑合理替代解释及推断边界。"
+          }
+        },
+        {
+          "id": "B3",
+          "requirementId": "business-problem-solving",
+          "title": "有区分力的补证计划",
+          "observableSupport": "请求能区分假设的数据，并解释不同结果将意味着什么。",
+          "maxScore": 10,
+          "anchors": {
+            "0": "所提方法逻辑循环或与待判断假设无关，却声称可验证。",
+            "2": "给出具体数据请求，但未解释怎样判别假设。",
+            "4": "具体数据、比较方法及不同结果如何区分假设都清楚。"
+          }
+        },
+        {
+          "id": "B4",
+          "requirementId": "business-problem-solving",
+          "title": "行动优先级与验证",
+          "observableSupport": "建议有优先级、理由和验证指标，符合小团队约束。",
+          "maxScore": 10,
+          "anchors": {
+            "0": "行动与自己确认的关键证据明显矛盾且无解释。",
+            "2": "有相关行动，但顺序、验证指标或停止条件不足。",
+            "4": "优先级、理由、可执行步骤与验证指标匹配公司约束。"
+          }
+        }
+      ],
+      "rules": {
+        "maxScore": 100,
+        "criterionContribution": "mark / 4 * 10",
+        "displayDecimalPlaces": 1,
+        "neIsZero": false,
+        "autoPassThreshold": null,
+        "rounding": "Calculate with unrounded values; round only for display."
+      }
+    },
+    "candidate": {
+      "id": "sam-taylor",
+      "name": "Sam Taylor",
+      "background": "Synthetic fundraising reporting project: query and validation notes alongside a report with causal inference problems."
+    },
+    "application": {
+      "id": "sam-taylor-demo-application",
+      "candidateId": "sam-taylor",
+      "jobId": "junior-data-analyst",
+      "evidenceSnapshotId": "sam-taylor-application-v1",
+      "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+      "fixtureVersion": "harbourcart-applications-v1",
+      "provenance": "synthetic",
+      "materialVersion": 1,
+      "scope": "Immutable synthetic application material. Separate from actual task V1/V2 submissions. Static review only; authorship, execution and production capability remain unverified.",
+      "sources": [
+        {
+          "sourceId": "cv.md",
+          "location": "/sources/0/text",
+          "text": "# Sam Taylor — synthetic application CV\nI wrote SQL for a fictional fundraising campaign exercise and delivered the report below. The query and my business recommendation are separate artefacts. SQL execution, independent authorship and production experience have not been verified.",
+          "kind": "application"
+        },
+        {
+          "sourceId": "query.sql",
+          "location": "/sources/1/text",
+          "text": "-- Sam's independent fundraising exercise: one imported row per period and mutually exclusive acquisition channel.\n-- period is a controlled label: previous = [2026-05-04,2026-06-01), current = [2026-06-01,2026-06-29).\n-- Both are consecutive four-week local-calendar intervals with unchanged donation/session definitions.\n-- Import key is (period, channel); the donations export repeats these aggregates, so do not join or add it.\nSELECT period, channel, SUM(sessions) AS sessions, SUM(donations) AS donations,\n       100.0 * SUM(donations) / NULLIF(SUM(sessions), 0) AS conversion_pct\nFROM fundraising_channel WHERE period IN ('previous', 'current') GROUP BY period, channel;\n-- SELECT period, channel, COUNT(*) FROM fundraising_channel GROUP BY period, channel HAVING COUNT(*) <> 1;\n-- Expect zero rows; block this result review if duplicate keys appear. Require exactly two allowed period labels and two channels per period.\n-- Count null/negative sessions or donations; expect zero. Zero denominator is NULL and flagged, not a successful zero-rate result.\n-- Reconcile sums to the prepared totals: previous 5000 sessions / 200 donations, current 6500 / 195.\n-- Verify 2026-06-01 is assigned only to current and 2026-06-29 excluded at import. No query execution log is supplied.",
+          "kind": "application"
+        },
+        {
+          "sourceId": "analysis.md",
+          "location": "/sources/2/text",
+          "text": "# Sam Taylor — fundraising report\nSynthetic independent application project, not HarbourCart’s task dataset. The same two non-overlapping four-week windows and channel definitions as query.sql apply.\nPrevious: 5,000 sessions and 200 completed donations. Current: 6,500 sessions and 195 completed donations. Conversion = completed donations / sessions × 100, so 4.0% to 3.0%: down 1.0 percentage point, 25% relative. Sessions rose 30%; donation count fell 2.5%.\nPaid: 2,000 sessions / 60 donations then 3,500 / 70 (3.0% to 2.0%). Organic: 3,000 / 140 then 3,000 / 125 (4.6667% to 4.1667%). These channel rows reconcile to the totals and are not additional populations. Paid share rises from 40% to 53.8462%; use integer totals rather than averaging rates.\nThe figures are prepared aggregates. I show the formulas and channel reconciliation, but have not traced event quality or considered the limits of the causal interpretation below.\n\nThe organiser is deciding next month's advertising spend, but this report only notes that donations fell; there is no stated budget or investigation-time constraint.\nThe new advertising campaign is definitely the sole proven cause of the conversion drop. Its launch occurred in the current period, which proves the campaign caused it. No other explanation needs checking.\nI will verify this by reading the same two-period summary again: since conversion declined after launch, that repetition will confirm the campaign cause. No different evidence or comparison is needed.\nIncrease advertising spend immediately to recover donations. No experiment, validation measure or order of checks is proposed, despite the report calling that campaign the sole cause.",
+          "kind": "application"
+        }
+      ],
+      "baseline": {
+        "candidateId": "sam-taylor",
+        "jobId": "junior-data-analyst",
+        "evidenceSnapshotId": "sam-taylor-application-v1",
+        "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+        "fixtureVersion": "harbourcart-applications-v1",
+        "rubricVersion": "harbourcart-rubric-v1",
+        "stage": "application_review",
+        "assessmentRevision": 1,
+        "annotationMode": "preset_human",
+        "label": "合成案例·预置人工评估",
+        "status": "reviewed",
+        "provenance": {
+          "sampleType": "synthetic",
+          "standardDesign": "team_designed",
+          "actualAnnotation": "ai_agent_authored_fixture",
+          "actualReview": "ai_agent_review",
+          "humanCalibration": "pending",
+          "externalExpertValidation": false,
+          "note": "preset_human is the product fixture category, not a claim that a human expert authored or validated these annotations. AI agents implemented and reviewed the synthetic team-designed fixture. Two-person human calibration and external validation remain pending."
+        },
+        "items": [
+          {
+            "criterionId": "S1",
+            "mark": 4,
+            "rationale": "The import key, aggregation and duplicate-risk check are explicit. No material grain or counting defect is visible in this static query.",
+            "support": "The import key, aggregation and duplicate-risk check are explicit.",
+            "gaps": "No material grain or counting defect is visible in this static query.",
+            "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+            "nextStep": "Verify the import-key assumption against real source records if used.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "query.sql",
+                "location": "/sources/1/text",
+                "start": 323,
+                "end": 785,
+                "quote": "-- Import key is (period, channel); the donations export repeats these aggregates, so do not join or add it.\nSELECT period, channel, SUM(sessions) AS sessions, SUM(donations) AS donations,\n       100.0 * SUM(donations) / NULLIF(SUM(sessions), 0) AS conversion_pct\nFROM fundraising_channel WHERE period IN ('previous', 'current') GROUP BY period, channel;\n-- SELECT period, channel, COUNT(*) FROM fundraising_channel GROUP BY period, channel HAVING COUNT(*) <> 1;"
+              }
+            ]
+          },
+          {
+            "criterionId": "S2",
+            "mark": 3,
+            "rationale": "Controlled labels map to aligned non-overlapping periods and the query filters both labels. The import code assigning the period labels is not attached.",
+            "support": "Controlled labels map to aligned non-overlapping periods and the query filters both labels.",
+            "gaps": "The import code assigning the period labels is not attached.",
+            "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+            "nextStep": "Ask to inspect the importer time-boundary mapping.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "query.sql",
+                "location": "/sources/1/text",
+                "start": 115,
+                "end": 322,
+                "quote": "-- period is a controlled label: previous = [2026-05-04,2026-06-01), current = [2026-06-01,2026-06-29).\n-- Both are consecutive four-week local-calendar intervals with unchanged donation/session definitions."
+              }
+            ]
+          },
+          {
+            "criterionId": "S3",
+            "mark": 4,
+            "rationale": "The checks state expected results, response to failures, null/zero handling, reconciliation and date edges. No material gap in the proposed checks, while actual execution is unobserved.",
+            "support": "The checks state expected results, response to failures, null/zero handling, reconciliation and date edges.",
+            "gaps": "No material gap in the proposed checks, while actual execution is unobserved.",
+            "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+            "nextStep": "Capture the checks and their outputs separately if operational use is considered.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "query.sql",
+                "location": "/sources/1/text",
+                "start": 786,
+                "end": 1282,
+                "quote": "-- Expect zero rows; block this result review if duplicate keys appear. Require exactly two allowed period labels and two channels per period.\n-- Count null/negative sessions or donations; expect zero. Zero denominator is NULL and flagged, not a successful zero-rate result.\n-- Reconcile sums to the prepared totals: previous 5000 sessions / 200 donations, current 6500 / 195.\n-- Verify 2026-06-01 is assigned only to current and 2026-06-29 excluded at import. No query execution log is supplied."
+              }
+            ]
+          },
+          {
+            "criterionId": "D1",
+            "mark": 4,
+            "rationale": "Denominators, units and prepared integer counts support the rate and change calculations. No material numerical error is visible in these formulas.",
+            "support": "Denominators, units and prepared integer counts support the rate and change calculations.",
+            "gaps": "No material numerical error is visible in these formulas.",
+            "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+            "nextStep": "Retain the correct calculations while reviewing causal claims separately.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 200,
+                "end": 460,
+                "quote": "Previous: 5,000 sessions and 200 completed donations. Current: 6,500 sessions and 195 completed donations. Conversion = completed donations / sessions × 100, so 4.0% to 3.0%: down 1.0 percentage point, 25% relative. Sessions rose 30%; donation count fell 2.5%."
+              }
+            ]
+          },
+          {
+            "criterionId": "D2",
+            "mark": 4,
+            "rationale": "Group changes, weight changes and overlap are documented with reconciled counts. No material descriptive-comparison gap is visible here.",
+            "support": "Group changes, weight changes and overlap are documented with reconciled counts.",
+            "gaps": "No material descriptive-comparison gap is visible here.",
+            "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+            "nextStep": "Do not treat correct comparison as confirmation of the later causal claim.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 461,
+                "end": 754,
+                "quote": "Paid: 2,000 sessions / 60 donations then 3,500 / 70 (3.0% to 2.0%). Organic: 3,000 / 140 then 3,000 / 125 (4.6667% to 4.1667%). These channel rows reconcile to the totals and are not additional populations. Paid share rises from 40% to 53.8462%; use integer totals rather than averaging rates."
+              }
+            ]
+          },
+          {
+            "criterionId": "D3",
+            "mark": 2,
+            "rationale": "Formulas and reconciliation make the numerical part reviewable. Event quality and limits of the report’s causal interpretation are not examined.",
+            "support": "Formulas and reconciliation make the numerical part reviewable.",
+            "gaps": "Event quality and limits of the report’s causal interpretation are not examined.",
+            "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+            "nextStep": "State the missing data and the boundary of what these counts establish.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 755,
+                "end": 934,
+                "quote": "The figures are prepared aggregates. I show the formulas and channel reconciliation, but have not traced event quality or considered the limits of the causal interpretation below."
+              }
+            ]
+          },
+          {
+            "criterionId": "B1",
+            "mark": 2,
+            "rationale": "The report identifies a related spending decision and falling donation count. The question and realistic resource constraints are not developed.",
+            "support": "The report identifies a related spending decision and falling donation count.",
+            "gaps": "The question and realistic resource constraints are not developed.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Frame what must be learned before that spending decision.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 936,
+                "end": 1101,
+                "quote": "The organiser is deciding next month's advertising spend, but this report only notes that donations fell; there is no stated budget or investigation-time constraint."
+              }
+            ]
+          },
+          {
+            "criterionId": "B2",
+            "mark": 0,
+            "rationale": "There is an inspectable, explicit causal assertion to assess. Coincidence is presented as proof of a sole cause without discriminating evidence.",
+            "support": "There is an inspectable, explicit causal assertion to assess.",
+            "gaps": "Coincidence is presented as proof of a sole cause without discriminating evidence.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Separate the observed timing from a hypothesis and consider a competing explanation.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 1102,
+                "end": 1307,
+                "quote": "The new advertising campaign is definitely the sole proven cause of the conversion drop. Its launch occurred in the current period, which proves the campaign caused it. No other explanation needs checking."
+              }
+            ]
+          },
+          {
+            "criterionId": "B3",
+            "mark": 0,
+            "rationale": "A specific proposed verification method is available for review. The proposed method repeats the original association and is logically circular, rather than distinguishing hypotheses.",
+            "support": "A specific proposed verification method is available for review.",
+            "gaps": "The proposed method repeats the original association and is logically circular, rather than distinguishing hypotheses.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Request different evidence and explain what result would change the conclusion.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 1308,
+                "end": 1508,
+                "quote": "I will verify this by reading the same two-period summary again: since conversion declined after launch, that repetition will confirm the campaign cause. No different evidence or comparison is needed."
+              }
+            ]
+          },
+          {
+            "criterionId": "B4",
+            "mark": 0,
+            "rationale": "The source proposes an explicit business action. Increasing spend without explanation conflicts with its own asserted harmful-campaign cause and omits validation.",
+            "support": "The source proposes an explicit business action.",
+            "gaps": "Increasing spend without explanation conflicts with its own asserted harmful-campaign cause and omits validation.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Resolve the contradiction and define a measured next step before spending.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 1509,
+                "end": 1692,
+                "quote": "Increase advertising spend immediately to recover donations. No experiment, validation measure or order of checks is proposed, despite the report calling that campaign the sole cause."
+              }
+            ]
+          }
+        ],
+        "score": {
+          "status": "complete",
+          "assessmentComplete": true,
+          "complete": true,
+          "coveragePercent": 100,
+          "accruedScore": 57.5,
+          "overallScore": 57.5,
+          "overallPercentage": 57.5,
+          "criteria": [
+            {
+              "criterionId": "S1",
+              "requirementId": "sql",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "S2",
+              "requirementId": "sql",
+              "mark": 3,
+              "status": "assessed",
+              "contribution": 7.5
+            },
+            {
+              "criterionId": "S3",
+              "requirementId": "sql",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "D1",
+              "requirementId": "data-analysis",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "D2",
+              "requirementId": "data-analysis",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "D3",
+              "requirementId": "data-analysis",
+              "mark": 2,
+              "status": "assessed",
+              "contribution": 5
+            },
+            {
+              "criterionId": "B1",
+              "requirementId": "business-problem-solving",
+              "mark": 2,
+              "status": "assessed",
+              "contribution": 5
+            },
+            {
+              "criterionId": "B2",
+              "requirementId": "business-problem-solving",
+              "mark": 0,
+              "status": "assessed",
+              "contribution": 0
+            },
+            {
+              "criterionId": "B3",
+              "requirementId": "business-problem-solving",
+              "mark": 0,
+              "status": "assessed",
+              "contribution": 0
+            },
+            {
+              "criterionId": "B4",
+              "requirementId": "business-problem-solving",
+              "mark": 0,
+              "status": "assessed",
+              "contribution": 0
+            }
+          ],
+          "skills": [
+            {
+              "requirementId": "sql",
+              "criterionIds": [
+                "S1",
+                "S2",
+                "S3"
+              ],
+              "maxScore": 30,
+              "assessmentComplete": true,
+              "complete": true,
+              "evaluatedCount": 3,
+              "neCount": 0,
+              "pendingCount": 0,
+              "accruedScore": 27.5,
+              "score": 27.5,
+              "percentage": 91.66666666666666
+            },
+            {
+              "requirementId": "data-analysis",
+              "criterionIds": [
+                "D1",
+                "D2",
+                "D3"
+              ],
+              "maxScore": 30,
+              "assessmentComplete": true,
+              "complete": true,
+              "evaluatedCount": 3,
+              "neCount": 0,
+              "pendingCount": 0,
+              "accruedScore": 25,
+              "score": 25,
+              "percentage": 83.33333333333334
+            },
+            {
+              "requirementId": "business-problem-solving",
+              "criterionIds": [
+                "B1",
+                "B2",
+                "B3",
+                "B4"
+              ],
+              "maxScore": 40,
+              "assessmentComplete": true,
+              "complete": true,
+              "evaluatedCount": 4,
+              "neCount": 0,
+              "pendingCount": 0,
+              "accruedScore": 5,
+              "score": 5,
+              "percentage": 12.5
+            }
+          ]
+        }
+      },
+      "initialReport": [
+        {
+          "requirementId": "sql",
+          "status": "supported",
+          "displayStatus": "Supported",
+          "mode": "preset",
+          "summary": "The query and expected checks provide inspectable technical evidence.",
+          "uncertainty": "Import code and actual query execution are not supplied.",
+          "sourceRefs": [
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "query.sql",
+              "location": "/sources/1/text",
+              "start": 323,
+              "end": 785,
+              "quote": "-- Import key is (period, channel); the donations export repeats these aggregates, so do not join or add it.\nSELECT period, channel, SUM(sessions) AS sessions, SUM(donations) AS donations,\n       100.0 * SUM(donations) / NULLIF(SUM(sessions), 0) AS conversion_pct\nFROM fundraising_channel WHERE period IN ('previous', 'current') GROUP BY period, channel;\n-- SELECT period, channel, COUNT(*) FROM fundraising_channel GROUP BY period, channel HAVING COUNT(*) <> 1;"
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "query.sql",
+              "location": "/sources/1/text",
+              "start": 115,
+              "end": 322,
+              "quote": "-- period is a controlled label: previous = [2026-05-04,2026-06-01), current = [2026-06-01,2026-06-29).\n-- Both are consecutive four-week local-calendar intervals with unchanged donation/session definitions."
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "query.sql",
+              "location": "/sources/1/text",
+              "start": 786,
+              "end": 1282,
+              "quote": "-- Expect zero rows; block this result review if duplicate keys appear. Require exactly two allowed period labels and two channels per period.\n-- Count null/negative sessions or donations; expect zero. Zero denominator is NULL and flagged, not a successful zero-rate result.\n-- Reconcile sums to the prepared totals: previous 5000 sessions / 200 donations, current 6500 / 195.\n-- Verify 2026-06-01 is assigned only to current and 2026-06-29 excluded at import. No query execution log is supplied."
+            }
+          ]
+        },
+        {
+          "requirementId": "data-analysis",
+          "status": "supported",
+          "displayStatus": "Supported",
+          "mode": "preset",
+          "summary": "The descriptive calculation and weighted comparisons are reproducible.",
+          "uncertainty": "This support is restricted to arithmetic; the same report contains unsupported causal conclusions.",
+          "sourceRefs": [
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 200,
+              "end": 460,
+              "quote": "Previous: 5,000 sessions and 200 completed donations. Current: 6,500 sessions and 195 completed donations. Conversion = completed donations / sessions × 100, so 4.0% to 3.0%: down 1.0 percentage point, 25% relative. Sessions rose 30%; donation count fell 2.5%."
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 461,
+              "end": 754,
+              "quote": "Paid: 2,000 sessions / 60 donations then 3,500 / 70 (3.0% to 2.0%). Organic: 3,000 / 140 then 3,000 / 125 (4.6667% to 4.1667%). These channel rows reconcile to the totals and are not additional populations. Paid share rises from 40% to 53.8462%; use integer totals rather than averaging rates."
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 755,
+              "end": 934,
+              "quote": "The figures are prepared aggregates. I show the formulas and channel reconciliation, but have not traced event quality or considered the limits of the causal interpretation below."
+            }
+          ]
+        },
+        {
+          "requirementId": "business-problem-solving",
+          "status": "uncertain",
+          "displayStatus": "Uncertain",
+          "mode": "preset",
+          "summary": "The report asserts a sole cause, uses circular verification and proposes an internally inconsistent action.",
+          "uncertainty": "These are source-backed reasoning problems, not an automatic rejection or judgement of personal worth.",
+          "sourceRefs": [
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 936,
+              "end": 1101,
+              "quote": "The organiser is deciding next month's advertising spend, but this report only notes that donations fell; there is no stated budget or investigation-time constraint."
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 1102,
+              "end": 1307,
+              "quote": "The new advertising campaign is definitely the sole proven cause of the conversion drop. Its launch occurred in the current period, which proves the campaign caused it. No other explanation needs checking."
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 1308,
+              "end": 1508,
+              "quote": "I will verify this by reading the same two-period summary again: since conversion declined after launch, that repetition will confirm the campaign cause. No different evidence or comparison is needed."
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 1509,
+              "end": 1692,
+              "quote": "Increase advertising spend immediately to recover donations. No experiment, validation measure or order of checks is proposed, despite the report calling that campaign the sole cause."
+            }
+          ]
+        }
+      ]
+    },
+    "dataset": {
+      "version": "harbourcart-2026-09-v1",
+      "provenance": "synthetic",
+      "records": [
+        {
+          "id": "previous-organic",
+          "period": "previous",
+          "channel": "Organic",
+          "sessions": 300000,
+          "orders": 11400,
+          "adSpendCents": 0,
+          "revenueCents": 34200000
+        },
+        {
+          "id": "previous-paid-search",
+          "period": "previous",
+          "channel": "Paid Search",
+          "sessions": 300000,
+          "orders": 9600,
+          "adSpendCents": 3391304,
+          "revenueCents": 28800000
+        },
+        {
+          "id": "previous-social",
+          "period": "previous",
+          "channel": "Social",
+          "sessions": 160000,
+          "orders": 4480,
+          "adSpendCents": 782609,
+          "revenueCents": 13440000
+        },
+        {
+          "id": "previous-email",
+          "period": "previous",
+          "channel": "Email",
+          "sessions": 80000,
+          "orders": 3600,
+          "adSpendCents": 0,
+          "revenueCents": 10800000
+        },
+        {
+          "id": "previous-direct",
+          "period": "previous",
+          "channel": "Direct",
+          "sessions": 160000,
+          "orders": 4920,
+          "adSpendCents": 0,
+          "revenueCents": 14760000
+        },
+        {
+          "id": "current-organic",
+          "period": "current",
+          "channel": "Organic",
+          "sessions": 324000,
+          "orders": 11340,
+          "adSpendCents": 0,
+          "revenueCents": 34020000
+        },
+        {
+          "id": "current-paid-search",
+          "period": "current",
+          "channel": "Paid Search",
+          "sessions": 426000,
+          "orders": 7668,
+          "adSpendCents": 3900000,
+          "revenueCents": 23004000
+        },
+        {
+          "id": "current-social",
+          "period": "current",
+          "channel": "Social",
+          "sessions": 200000,
+          "orders": 4200,
+          "adSpendCents": 900000,
+          "revenueCents": 12600000
+        },
+        {
+          "id": "current-email",
+          "period": "current",
+          "channel": "Email",
+          "sessions": 77600,
+          "orders": 3414,
+          "adSpendCents": 0,
+          "revenueCents": 10242000
+        },
+        {
+          "id": "current-direct",
+          "period": "current",
+          "channel": "Direct",
+          "sessions": 152400,
+          "orders": 4058,
+          "adSpendCents": 0,
+          "revenueCents": 12174000
+        }
+      ],
+      "metrics": {
+        "previous": {
+          "sessions": 1000000,
+          "orders": 34000,
+          "adSpendCents": 4173913,
+          "revenueCents": 102000000,
+          "conversionPct": 3.4
+        },
+        "current": {
+          "sessions": 1180000,
+          "orders": 30680,
+          "adSpendCents": 4800000,
+          "revenueCents": 92040000,
+          "conversionPct": 2.6
+        },
+        "change": {
+          "trafficPct": 18,
+          "ordersPct": -9.764705882352942,
+          "adSpendPct": 15.00000119791668,
+          "conversionPercentagePoints": -0.7999999999999998
+        }
+      },
+      "channels": [
+        {
+          "id": "organic",
+          "channel": "Organic",
+          "traffic": 324000,
+          "growth": 8,
+          "orders": 11340,
+          "conversion": 3.5,
+          "previous": 3.8,
+          "revenue": 340200,
+          "trafficSharePct": 27.45762711864407,
+          "before": {
+            "id": "previous-organic",
+            "period": "previous",
+            "channel": "Organic",
+            "sessions": 300000,
+            "orders": 11400,
+            "adSpendCents": 0,
+            "revenueCents": 34200000
+          },
+          "current": {
+            "id": "current-organic",
+            "period": "current",
+            "channel": "Organic",
+            "sessions": 324000,
+            "orders": 11340,
+            "adSpendCents": 0,
+            "revenueCents": 34020000
+          }
+        },
+        {
+          "id": "paid-search",
+          "channel": "Paid Search",
+          "traffic": 426000,
+          "growth": 42,
+          "orders": 7668,
+          "conversion": 1.8,
+          "previous": 3.2,
+          "revenue": 230040,
+          "trafficSharePct": 36.101694915254235,
+          "before": {
+            "id": "previous-paid-search",
+            "period": "previous",
+            "channel": "Paid Search",
+            "sessions": 300000,
+            "orders": 9600,
+            "adSpendCents": 3391304,
+            "revenueCents": 28800000
+          },
+          "current": {
+            "id": "current-paid-search",
+            "period": "current",
+            "channel": "Paid Search",
+            "sessions": 426000,
+            "orders": 7668,
+            "adSpendCents": 3900000,
+            "revenueCents": 23004000
+          }
+        },
+        {
+          "id": "social",
+          "channel": "Social",
+          "traffic": 200000,
+          "growth": 25,
+          "orders": 4200,
+          "conversion": 2.1,
+          "previous": 2.8,
+          "revenue": 126000,
+          "trafficSharePct": 16.949152542372882,
+          "before": {
+            "id": "previous-social",
+            "period": "previous",
+            "channel": "Social",
+            "sessions": 160000,
+            "orders": 4480,
+            "adSpendCents": 782609,
+            "revenueCents": 13440000
+          },
+          "current": {
+            "id": "current-social",
+            "period": "current",
+            "channel": "Social",
+            "sessions": 200000,
+            "orders": 4200,
+            "adSpendCents": 900000,
+            "revenueCents": 12600000
+          }
+        },
+        {
+          "id": "email",
+          "channel": "Email",
+          "traffic": 77600,
+          "growth": -3,
+          "orders": 3414,
+          "conversion": 4.399484536082475,
+          "previous": 4.5,
+          "revenue": 102420,
+          "trafficSharePct": 6.576271186440678,
+          "before": {
+            "id": "previous-email",
+            "period": "previous",
+            "channel": "Email",
+            "sessions": 80000,
+            "orders": 3600,
+            "adSpendCents": 0,
+            "revenueCents": 10800000
+          },
+          "current": {
+            "id": "current-email",
+            "period": "current",
+            "channel": "Email",
+            "sessions": 77600,
+            "orders": 3414,
+            "adSpendCents": 0,
+            "revenueCents": 10242000
+          }
+        },
+        {
+          "id": "direct",
+          "channel": "Direct",
+          "traffic": 152400,
+          "growth": -4.75,
+          "orders": 4058,
+          "conversion": 2.6627296587926508,
+          "previous": 3.075,
+          "revenue": 121740,
+          "trafficSharePct": 12.915254237288135,
+          "before": {
+            "id": "previous-direct",
+            "period": "previous",
+            "channel": "Direct",
+            "sessions": 160000,
+            "orders": 4920,
+            "adSpendCents": 0,
+            "revenueCents": 14760000
+          },
+          "current": {
+            "id": "current-direct",
+            "period": "current",
+            "channel": "Direct",
+            "sessions": 152400,
+            "orders": 4058,
+            "adSpendCents": 0,
+            "revenueCents": 12174000
+          }
+        }
+      ],
+      "trafficTrend": [
+        {
+          "period": "previous",
+          "label": "Previous 4 weeks",
+          "sessions": 1000000,
+          "traffic": 1000,
+          "orders": 34000,
+          "conversion": 3.4
+        },
+        {
+          "period": "current",
+          "label": "Last 4 weeks",
+          "sessions": 1180000,
+          "traffic": 1180,
+          "orders": 30680,
+          "conversion": 2.6
+        }
+      ],
+      "resources": [
+        {
+          "id": "website_traffic.csv",
+          "name": "website_traffic.csv",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Canonical channel-period session and order counts; conversion is orders / sessions.",
+          "columns": [
+            "record_id",
+            "period",
+            "channel",
+            "sessions",
+            "orders",
+            "conversion_pct"
+          ],
+          "rows": [
+            [
+              "previous-organic",
+              "previous",
+              "Organic",
+              "300000",
+              "11400",
+              "3.800000"
+            ],
+            [
+              "previous-paid-search",
+              "previous",
+              "Paid Search",
+              "300000",
+              "9600",
+              "3.200000"
+            ],
+            [
+              "previous-social",
+              "previous",
+              "Social",
+              "160000",
+              "4480",
+              "2.800000"
+            ],
+            [
+              "previous-email",
+              "previous",
+              "Email",
+              "80000",
+              "3600",
+              "4.500000"
+            ],
+            [
+              "previous-direct",
+              "previous",
+              "Direct",
+              "160000",
+              "4920",
+              "3.075000"
+            ],
+            [
+              "current-organic",
+              "current",
+              "Organic",
+              "324000",
+              "11340",
+              "3.500000"
+            ],
+            [
+              "current-paid-search",
+              "current",
+              "Paid Search",
+              "426000",
+              "7668",
+              "1.800000"
+            ],
+            [
+              "current-social",
+              "current",
+              "Social",
+              "200000",
+              "4200",
+              "2.100000"
+            ],
+            [
+              "current-email",
+              "current",
+              "Email",
+              "77600",
+              "3414",
+              "4.399485"
+            ],
+            [
+              "current-direct",
+              "current",
+              "Direct",
+              "152400",
+              "4058",
+              "2.662730"
+            ]
+          ],
+          "content": "\"record_id\",\"period\",\"channel\",\"sessions\",\"orders\",\"conversion_pct\"\r\n\"previous-organic\",\"previous\",\"Organic\",\"300000\",\"11400\",\"3.800000\"\r\n\"previous-paid-search\",\"previous\",\"Paid Search\",\"300000\",\"9600\",\"3.200000\"\r\n\"previous-social\",\"previous\",\"Social\",\"160000\",\"4480\",\"2.800000\"\r\n\"previous-email\",\"previous\",\"Email\",\"80000\",\"3600\",\"4.500000\"\r\n\"previous-direct\",\"previous\",\"Direct\",\"160000\",\"4920\",\"3.075000\"\r\n\"current-organic\",\"current\",\"Organic\",\"324000\",\"11340\",\"3.500000\"\r\n\"current-paid-search\",\"current\",\"Paid Search\",\"426000\",\"7668\",\"1.800000\"\r\n\"current-social\",\"current\",\"Social\",\"200000\",\"4200\",\"2.100000\"\r\n\"current-email\",\"current\",\"Email\",\"77600\",\"3414\",\"4.399485\"\r\n\"current-direct\",\"current\",\"Direct\",\"152400\",\"4058\",\"2.662730\"",
+          "sizeBytes": 737
+        },
+        {
+          "id": "campaigns.csv",
+          "name": "campaigns.csv",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Derived acquisition-channel comparison, not individual campaign-level data.",
+          "columns": [
+            "channel",
+            "previous_sessions",
+            "current_sessions",
+            "previous_conversion_pct",
+            "current_conversion_pct",
+            "traffic_change_pct",
+            "previous_spend_aud",
+            "current_spend_aud"
+          ],
+          "rows": [
+            [
+              "Organic",
+              "300000",
+              "324000",
+              "3.800000",
+              "3.500000",
+              "8.000000",
+              "0.00",
+              "0.00"
+            ],
+            [
+              "Paid Search",
+              "300000",
+              "426000",
+              "3.200000",
+              "1.800000",
+              "42.000000",
+              "33913.04",
+              "39000.00"
+            ],
+            [
+              "Social",
+              "160000",
+              "200000",
+              "2.800000",
+              "2.100000",
+              "25.000000",
+              "7826.09",
+              "9000.00"
+            ],
+            [
+              "Email",
+              "80000",
+              "77600",
+              "4.500000",
+              "4.399485",
+              "-3.000000",
+              "0.00",
+              "0.00"
+            ],
+            [
+              "Direct",
+              "160000",
+              "152400",
+              "3.075000",
+              "2.662730",
+              "-4.750000",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "content": "\"channel\",\"previous_sessions\",\"current_sessions\",\"previous_conversion_pct\",\"current_conversion_pct\",\"traffic_change_pct\",\"previous_spend_aud\",\"current_spend_aud\"\r\n\"Organic\",\"300000\",\"324000\",\"3.800000\",\"3.500000\",\"8.000000\",\"0.00\",\"0.00\"\r\n\"Paid Search\",\"300000\",\"426000\",\"3.200000\",\"1.800000\",\"42.000000\",\"33913.04\",\"39000.00\"\r\n\"Social\",\"160000\",\"200000\",\"2.800000\",\"2.100000\",\"25.000000\",\"7826.09\",\"9000.00\"\r\n\"Email\",\"80000\",\"77600\",\"4.500000\",\"4.399485\",\"-3.000000\",\"0.00\",\"0.00\"\r\n\"Direct\",\"160000\",\"152400\",\"3.075000\",\"2.662730\",\"-4.750000\",\"0.00\",\"0.00\"",
+          "sizeBytes": 557
+        },
+        {
+          "id": "orders.csv",
+          "name": "orders.csv",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Same channel-period aggregates with integer orders, synthetic revenue and advertising spend.",
+          "columns": [
+            "record_id",
+            "period",
+            "channel",
+            "orders",
+            "revenue_aud",
+            "ad_spend_aud"
+          ],
+          "rows": [
+            [
+              "previous-organic",
+              "previous",
+              "Organic",
+              "11400",
+              "342000.00",
+              "0.00"
+            ],
+            [
+              "previous-paid-search",
+              "previous",
+              "Paid Search",
+              "9600",
+              "288000.00",
+              "33913.04"
+            ],
+            [
+              "previous-social",
+              "previous",
+              "Social",
+              "4480",
+              "134400.00",
+              "7826.09"
+            ],
+            [
+              "previous-email",
+              "previous",
+              "Email",
+              "3600",
+              "108000.00",
+              "0.00"
+            ],
+            [
+              "previous-direct",
+              "previous",
+              "Direct",
+              "4920",
+              "147600.00",
+              "0.00"
+            ],
+            [
+              "current-organic",
+              "current",
+              "Organic",
+              "11340",
+              "340200.00",
+              "0.00"
+            ],
+            [
+              "current-paid-search",
+              "current",
+              "Paid Search",
+              "7668",
+              "230040.00",
+              "39000.00"
+            ],
+            [
+              "current-social",
+              "current",
+              "Social",
+              "4200",
+              "126000.00",
+              "9000.00"
+            ],
+            [
+              "current-email",
+              "current",
+              "Email",
+              "3414",
+              "102420.00",
+              "0.00"
+            ],
+            [
+              "current-direct",
+              "current",
+              "Direct",
+              "4058",
+              "121740.00",
+              "0.00"
+            ]
+          ],
+          "content": "\"record_id\",\"period\",\"channel\",\"orders\",\"revenue_aud\",\"ad_spend_aud\"\r\n\"previous-organic\",\"previous\",\"Organic\",\"11400\",\"342000.00\",\"0.00\"\r\n\"previous-paid-search\",\"previous\",\"Paid Search\",\"9600\",\"288000.00\",\"33913.04\"\r\n\"previous-social\",\"previous\",\"Social\",\"4480\",\"134400.00\",\"7826.09\"\r\n\"previous-email\",\"previous\",\"Email\",\"3600\",\"108000.00\",\"0.00\"\r\n\"previous-direct\",\"previous\",\"Direct\",\"4920\",\"147600.00\",\"0.00\"\r\n\"current-organic\",\"current\",\"Organic\",\"11340\",\"340200.00\",\"0.00\"\r\n\"current-paid-search\",\"current\",\"Paid Search\",\"7668\",\"230040.00\",\"39000.00\"\r\n\"current-social\",\"current\",\"Social\",\"4200\",\"126000.00\",\"9000.00\"\r\n\"current-email\",\"current\",\"Email\",\"3414\",\"102420.00\",\"0.00\"\r\n\"current-direct\",\"current\",\"Direct\",\"4058\",\"121740.00\",\"0.00\"",
+          "sizeBytes": 744
+        },
+        {
+          "id": "landing_pages.csv",
+          "name": "landing_pages.csv",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Current Paid Search device partition; page identity, history and speed are not provided.",
+          "columns": [
+            "record_id",
+            "period",
+            "channel",
+            "device",
+            "sessions",
+            "orders",
+            "conversion_pct"
+          ],
+          "rows": [
+            [
+              "current-paid-mobile",
+              "current",
+              "Paid Search",
+              "Mobile",
+              "300000",
+              "4200",
+              "1.400000"
+            ],
+            [
+              "current-paid-desktop",
+              "current",
+              "Paid Search",
+              "Desktop",
+              "126000",
+              "3468",
+              "2.752381"
+            ]
+          ],
+          "content": "\"record_id\",\"period\",\"channel\",\"device\",\"sessions\",\"orders\",\"conversion_pct\"\r\n\"current-paid-mobile\",\"current\",\"Paid Search\",\"Mobile\",\"300000\",\"4200\",\"1.400000\"\r\n\"current-paid-desktop\",\"current\",\"Paid Search\",\"Desktop\",\"126000\",\"3468\",\"2.752381\"",
+          "sizeBytes": 244
+        },
+        {
+          "id": "product_catalog.csv",
+          "name": "product_catalog.csv",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Illustrative product context; availability is not a proven explanation.",
+          "columns": [
+            "product",
+            "category",
+            "price_aud",
+            "availability"
+          ],
+          "rows": [
+            [
+              "Everyday Tote",
+              "Accessories",
+              "30.00",
+              "In stock"
+            ],
+            [
+              "Canvas Carryall",
+              "Accessories",
+              "45.00",
+              "Limited"
+            ],
+            [
+              "Studio Notebook",
+              "Stationery",
+              "18.00",
+              "In stock"
+            ],
+            [
+              "Travel Organiser",
+              "Accessories",
+              "35.00",
+              "In stock"
+            ]
+          ],
+          "content": "\"product\",\"category\",\"price_aud\",\"availability\"\r\n\"Everyday Tote\",\"Accessories\",\"30.00\",\"In stock\"\r\n\"Canvas Carryall\",\"Accessories\",\"45.00\",\"Limited\"\r\n\"Studio Notebook\",\"Stationery\",\"18.00\",\"In stock\"\r\n\"Travel Organiser\",\"Accessories\",\"35.00\",\"In stock\"",
+          "sizeBytes": 252
+        },
+        {
+          "id": "business_context.md",
+          "name": "business_context.md",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/markdown",
+          "description": "Business brief, overlap rules, precision and remaining unknowns.",
+          "columns": [],
+          "rows": [],
+          "content": "# HarbourCart · Business context\n\nSynthetic demonstration data only. Two consecutive, non-overlapping four-week windows use the same session and order definitions. No customer-level data is included.\n\nSessions rose from 1,000,000 to 1,180,000 (+18.00%). Conversion fell from 3.4% to 2.6%. Orders changed from 34,000 to 30,680 (-9.76%). Advertising spend rose from AUD 41739.13 to AUD 48000.00 (+15.00%).\n\nNew Paid Search campaigns launched at the start of the current period. The Spring Sale landing page also changed. These changes are possible explanations, not established causes. The business is considering increasing the advertising budget.\n\nwebsite_traffic.csv and orders.csv contain the same ten channel-period aggregates, not separate populations. campaigns.csv is a channel comparison, not individual campaign attribution. landing_pages.csv contains a current-period Paid Search device partition only: it reconciles to Paid Search but adds no new sessions. It contains no page-specific attribution or speed measurements. product_catalog.csv is context, not evidence of a conversion cause. Revenue uses a synthetic AUD 30 average order value; no order-level product attribution is implied.\n\nCampaign × device × landing-page detail, historical device comparisons, load times and checkout events are still missing. Rates are derived from integer totals; displayed percentages round to two decimals. Do not average channel percentages or add overlapping resources. The chart compares whole four-week periods, not weekly trend points.\n\nInvestigate the strongest signals, separate observations from hypotheses, request discriminating evidence, and recommend a measured next step. No single prescribed conclusion or hiring decision is implied.",
+          "sizeBytes": 1749,
+          "text": "# HarbourCart · Business context\n\nSynthetic demonstration data only. Two consecutive, non-overlapping four-week windows use the same session and order definitions. No customer-level data is included.\n\nSessions rose from 1,000,000 to 1,180,000 (+18.00%). Conversion fell from 3.4% to 2.6%. Orders changed from 34,000 to 30,680 (-9.76%). Advertising spend rose from AUD 41739.13 to AUD 48000.00 (+15.00%).\n\nNew Paid Search campaigns launched at the start of the current period. The Spring Sale landing page also changed. These changes are possible explanations, not established causes. The business is considering increasing the advertising budget.\n\nwebsite_traffic.csv and orders.csv contain the same ten channel-period aggregates, not separate populations. campaigns.csv is a channel comparison, not individual campaign attribution. landing_pages.csv contains a current-period Paid Search device partition only: it reconciles to Paid Search but adds no new sessions. It contains no page-specific attribution or speed measurements. product_catalog.csv is context, not evidence of a conversion cause. Revenue uses a synthetic AUD 30 average order value; no order-level product attribution is implied.\n\nCampaign × device × landing-page detail, historical device comparisons, load times and checkout events are still missing. Rates are derived from integer totals; displayed percentages round to two decimals. Do not average channel percentages or add overlapping resources. The chart compares whole four-week periods, not weekly trend points.\n\nInvestigate the strongest signals, separate observations from hypotheses, request discriminating evidence, and recommend a measured next step. No single prescribed conclusion or hiring decision is implied."
+        }
+      ]
+    },
+    "task": {
+      "taskId": "54a24f34-d4d1-4467-9157-c24520000508",
+      "status": "reviewed",
+      "targetRequirementId": "data-analysis",
+      "templateId": "harbourcart-data-analysis-v1",
+      "title": "Conversion Metrics and Comparison",
+      "instructions": "Use harbourcart-2026-09-v1 to define and calculate the main session, order and conversion changes across the two four-week periods. Show numerators, denominators, units and a relevant group comparison, with enough working to reproduce the result. State overlapping resource populations and missing data. Submit calculation text and limitations; no executable notebook is required. Do not invent page-speed measurements or historical device trends.",
+      "gapReason": "Synthetic example: a human identifies a bounded evidence gap.",
+      "sentAt": "2026-09-19T08:16:50.877Z",
+      "timeboxMinutes": 20
+    },
+    "taskTemplates": {
+      "sql": {
+        "templateId": "harbourcart-sql-v1",
+        "title": "Conversion Data Query Review",
+        "targetRequirementId": "sql",
+        "instructions": "Use harbourcart-2026-09-v1 to write a readable query fragment for the two-period conversion comparison. Explain the input grain, time windows, aggregation and any join. Describe practical checks and expected check results for relevant duplicates, missing values and zero denominators. Submit query text, explanations and checks; this is static code review, not online SQL execution. Shared resources overlap and must not be added as independent populations.",
+        "timeboxMinutes": 20,
+        "timeboxEnforced": false,
+        "datasetVersion": "harbourcart-2026-09-v1",
+        "resourceIds": [
+          "website_traffic.csv",
+          "campaigns.csv",
+          "orders.csv",
+          "landing_pages.csv",
+          "product_catalog.csv",
+          "business_context.md"
+        ],
+        "observationDimensions": [
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "mode": "preset"
+      },
+      "data-analysis": {
+        "templateId": "harbourcart-data-analysis-v1",
+        "title": "Conversion Metrics and Comparison",
+        "targetRequirementId": "data-analysis",
+        "instructions": "Use harbourcart-2026-09-v1 to define and calculate the main session, order and conversion changes across the two four-week periods. Show numerators, denominators, units and a relevant group comparison, with enough working to reproduce the result. State overlapping resource populations and missing data. Submit calculation text and limitations; no executable notebook is required. Do not invent page-speed measurements or historical device trends.",
+        "timeboxMinutes": 20,
+        "timeboxEnforced": false,
+        "datasetVersion": "harbourcart-2026-09-v1",
+        "resourceIds": [
+          "website_traffic.csv",
+          "campaigns.csv",
+          "orders.csv",
+          "landing_pages.csv",
+          "product_catalog.csv",
+          "business_context.md"
+        ],
+        "observationDimensions": [
+          "D1",
+          "D2",
+          "D3"
+        ],
+        "mode": "preset"
+      },
+      "business-problem-solving": {
+        "templateId": "harbourcart-bps-v1",
+        "title": "Conversion Drop Investigation",
+        "targetRequirementId": "business-problem-solving",
+        "instructions": "Investigate the conversion decline using harbourcart-2026-09-v1. Identify the strongest observations, distinguish them from hypotheses, request evidence that could test competing explanations, and recommend a prioritised action with a way to check its result. Work within HarbourCart’s small-team constraints. Submit findings, hypotheses, missing evidence and next steps using the investigation board; incomplete or weak work may still be submitted for review.",
+        "timeboxMinutes": 20,
+        "timeboxEnforced": false,
+        "datasetVersion": "harbourcart-2026-09-v1",
+        "resourceIds": [
+          "website_traffic.csv",
+          "campaigns.csv",
+          "orders.csv",
+          "landing_pages.csv",
+          "product_catalog.csv",
+          "business_context.md"
+        ],
+        "observationDimensions": [
+          "Problem Framing",
+          "Evidence Navigation",
+          "Hypothesis Formation",
+          "Evidence Seeking",
+          "Decision Making"
+        ],
+        "mode": "preset"
+      }
+    },
+    "versions": [
+      {
+        "submission": {
+          "schemaVersion": "3.0",
+          "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+          "candidateId": "sam-taylor",
+          "jobId": "junior-data-analyst",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "taskId": "54a24f34-d4d1-4467-9157-c24520000508",
+          "targetRequirementId": "data-analysis",
+          "submissionVersion": 1,
+          "previousSubmissionId": null,
+          "previousContentFingerprint": null,
+          "summary": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision.",
+          "findings": [
+            {
+              "id": "finding-1",
+              "section": "Key Findings",
+              "title": "Clarify the denominator",
+              "detail": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+              "source": "website_traffic.csv",
+              "confidence": "Low"
+            }
+          ],
+          "processEvidence": [],
+          "submissionId": "5168e882-0eee-491d-8670-837c422e4683",
+          "submittedAt": "2026-09-19T08:16:50.891Z",
+          "contentFingerprint": "5831848f18b42ea6733d134fbb6d9f8164bbf2a7ab8cf631501f93d744bcc432",
+          "processEvidenceProvenance": "client_reported",
+          "sources": [
+            {
+              "sourceId": "summary",
+              "location": "/summary",
+              "text": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision.",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:finding-1:title",
+              "location": "/findings/0/title",
+              "text": "Clarify the denominator",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:finding-1:detail",
+              "location": "/findings/0/detail",
+              "text": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+              "kind": "work_sample"
+            }
+          ]
+        },
+        "evidenceSnapshotId": "submission:5168e882-0eee-491d-8670-837c422e4683",
+        "analysis": {
+          "status": "succeeded",
+          "attemptId": "75d0c333-7121-4584-b886-82ca0076c273",
+          "submissionId": "5168e882-0eee-491d-8670-837c422e4683",
+          "contentFingerprint": "5831848f18b42ea6733d134fbb6d9f8164bbf2a7ab8cf631501f93d744bcc432",
+          "startedAt": "2026-09-19T08:16:50.903Z",
+          "finishedAt": "2026-09-19T08:16:50.905Z",
+          "errorCode": null,
+          "result": {
+            "mode": "manual_simulation",
+            "model": null,
+            "promptVersion": "evidencebridge-data-analysis-v3",
+            "submissionId": "5168e882-0eee-491d-8670-837c422e4683",
+            "contentFingerprint": "5831848f18b42ea6733d134fbb6d9f8164bbf2a7ab8cf631501f93d744bcc432",
+            "observations": [
+              {
+                "dimension": "D1",
+                "status": "observed",
+                "statement": "The candidate supplied an executive summary.",
+                "citations": [
+                  {
+                    "sourceId": "summary",
+                    "location": "/summary",
+                    "quote": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision.",
+                    "start": 0,
+                    "end": 204
+                  }
+                ],
+                "scope": "Manual simulation: presence of submitted text only, not validated reasoning or competence.",
+                "uncertainty": "Accuracy, evidential support and causation remain unverified. A human must assess the cited work."
+              },
+              {
+                "dimension": "D2",
+                "status": "observed",
+                "statement": "The candidate supplied text under Key Findings.",
+                "citations": [
+                  {
+                    "sourceId": "finding:finding-1:detail",
+                    "location": "/findings/0/detail",
+                    "quote": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+                    "start": 0,
+                    "end": 101
+                  }
+                ],
+                "scope": "Manual simulation: presence of submitted text only, not validated reasoning or competence.",
+                "uncertainty": "Accuracy, evidential support and causation remain unverified. A human must assess the cited work."
+              },
+              {
+                "dimension": "D3",
+                "status": "not_observed",
+                "statement": "No matching text is surfaced by this manual simulation.",
+                "citations": [],
+                "scope": "Manually authored display rules only; no model extraction was performed.",
+                "uncertainty": "The absence of a display match does not establish an absence of capability. Human review is required."
+              }
+            ],
+            "provenance": {
+              "provider": "manual_rules",
+              "generatedAt": "2026-09-19T08:16:50.904Z",
+              "responseId": null,
+              "processEvidence": "client_reported"
+            }
+          }
+        },
+        "review": {
+          "schemaVersion": "3.0",
+          "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+          "candidateId": "sam-taylor",
+          "jobId": "junior-data-analyst",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "taskId": "54a24f34-d4d1-4467-9157-c24520000508",
+          "targetRequirementId": "data-analysis",
+          "submissionId": "5168e882-0eee-491d-8670-837c422e4683",
+          "contentFingerprint": "5831848f18b42ea6733d134fbb6d9f8164bbf2a7ab8cf631501f93d744bcc432",
+          "decision": "needs_more_evidence",
+          "comment": "Synthetic review: explain checks and limitations for the current target; one V2 is available.",
+          "reviewId": "d291db28-081b-49f3-9ea1-8acc9da5e2fc",
+          "reviewedAt": "2026-09-19T08:16:50.935Z"
+        }
+      },
+      {
+        "submission": {
+          "schemaVersion": "3.0",
+          "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+          "candidateId": "sam-taylor",
+          "jobId": "junior-data-analyst",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "taskId": "54a24f34-d4d1-4467-9157-c24520000508",
+          "targetRequirementId": "data-analysis",
+          "submissionVersion": 2,
+          "previousSubmissionId": "5168e882-0eee-491d-8670-837c422e4683",
+          "previousContentFingerprint": "5831848f18b42ea6733d134fbb6d9f8164bbf2a7ab8cf631501f93d744bcc432",
+          "summary": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision. V2 clarifies that omitted raw evidence remains unavailable.",
+          "findings": [
+            {
+              "id": "finding-1",
+              "section": "Key Findings",
+              "title": "Clarify the denominator",
+              "detail": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+              "source": "website_traffic.csv",
+              "confidence": "Low"
+            }
+          ],
+          "processEvidence": [],
+          "submissionId": "f1bfb4a7-06c0-4248-928b-72a5b75f342f",
+          "submittedAt": "2026-09-19T08:16:50.951Z",
+          "contentFingerprint": "c4ef855b705acb328c71b9fe5aa4540b692a341b9fed9162d1a5b2b5e781e9c1",
+          "processEvidenceProvenance": "client_reported",
+          "sources": [
+            {
+              "sourceId": "summary",
+              "location": "/summary",
+              "text": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision. V2 clarifies that omitted raw evidence remains unavailable.",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:finding-1:title",
+              "location": "/findings/0/title",
+              "text": "Clarify the denominator",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:finding-1:detail",
+              "location": "/findings/0/detail",
+              "text": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+              "kind": "work_sample"
+            }
+          ]
+        },
+        "evidenceSnapshotId": "submission:f1bfb4a7-06c0-4248-928b-72a5b75f342f",
+        "analysis": {
+          "status": "not_started",
+          "attemptId": null,
+          "submissionId": null,
+          "contentFingerprint": null,
+          "startedAt": null,
+          "finishedAt": null,
+          "errorCode": null,
+          "result": null
+        },
+        "review": {
+          "schemaVersion": "3.0",
+          "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+          "candidateId": "sam-taylor",
+          "jobId": "junior-data-analyst",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "taskId": "54a24f34-d4d1-4467-9157-c24520000508",
+          "targetRequirementId": "data-analysis",
+          "submissionId": "f1bfb4a7-06c0-4248-928b-72a5b75f342f",
+          "contentFingerprint": "c4ef855b705acb328c71b9fe5aa4540b692a341b9fed9162d1a5b2b5e781e9c1",
+          "decision": "evidence_still_insufficient",
+          "comment": "Synthetic terminal review: available evidence remains insufficient; this is not a hiring decision.",
+          "reviewId": "fc3a6c7f-7579-4654-a3cb-c174757d9dc3",
+          "reviewedAt": "2026-09-19T08:16:50.968Z"
+        }
+      }
+    ],
+    "submission": {
+      "schemaVersion": "3.0",
+      "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+      "candidateId": "sam-taylor",
+      "jobId": "junior-data-analyst",
+      "datasetVersion": "harbourcart-2026-09-v1",
+      "taskId": "54a24f34-d4d1-4467-9157-c24520000508",
+      "targetRequirementId": "data-analysis",
+      "submissionVersion": 2,
+      "previousSubmissionId": "5168e882-0eee-491d-8670-837c422e4683",
+      "previousContentFingerprint": "5831848f18b42ea6733d134fbb6d9f8164bbf2a7ab8cf631501f93d744bcc432",
+      "summary": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision. V2 clarifies that omitted raw evidence remains unavailable.",
+      "findings": [
+        {
+          "id": "finding-1",
+          "section": "Key Findings",
+          "title": "Clarify the denominator",
+          "detail": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+          "source": "website_traffic.csv",
+          "confidence": "Low"
+        }
+      ],
+      "processEvidence": [],
+      "submissionId": "f1bfb4a7-06c0-4248-928b-72a5b75f342f",
+      "submittedAt": "2026-09-19T08:16:50.951Z",
+      "contentFingerprint": "c4ef855b705acb328c71b9fe5aa4540b692a341b9fed9162d1a5b2b5e781e9c1",
+      "processEvidenceProvenance": "client_reported",
+      "sources": [
+        {
+          "sourceId": "summary",
+          "location": "/summary",
+          "text": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision. V2 clarifies that omitted raw evidence remains unavailable.",
+          "kind": "work_sample"
+        },
+        {
+          "sourceId": "finding:finding-1:title",
+          "location": "/findings/0/title",
+          "text": "Clarify the denominator",
+          "kind": "work_sample"
+        },
+        {
+          "sourceId": "finding:finding-1:detail",
+          "location": "/findings/0/detail",
+          "text": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+          "kind": "work_sample"
+        }
+      ]
+    },
+    "analysis": {
+      "status": "not_started",
+      "attemptId": null,
+      "submissionId": null,
+      "contentFingerprint": null,
+      "startedAt": null,
+      "finishedAt": null,
+      "errorCode": null,
+      "result": null
+    },
+    "review": {
+      "schemaVersion": "3.0",
+      "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+      "candidateId": "sam-taylor",
+      "jobId": "junior-data-analyst",
+      "datasetVersion": "harbourcart-2026-09-v1",
+      "taskId": "54a24f34-d4d1-4467-9157-c24520000508",
+      "targetRequirementId": "data-analysis",
+      "submissionId": "f1bfb4a7-06c0-4248-928b-72a5b75f342f",
+      "contentFingerprint": "c4ef855b705acb328c71b9fe5aa4540b692a341b9fed9162d1a5b2b5e781e9c1",
+      "decision": "evidence_still_insufficient",
+      "comment": "Synthetic terminal review: available evidence remains insufficient; this is not a hiring decision.",
+      "reviewId": "fc3a6c7f-7579-4654-a3cb-c174757d9dc3",
+      "reviewedAt": "2026-09-19T08:16:50.968Z"
+    },
+    "currentSubmissionVersion": 2,
+    "workflow": {
+      "maxSubmissions": 2,
+      "submissionsUsed": 2,
+      "remainingSubmissions": 0,
+      "canSubmit": false,
+      "canResubmit": false,
+      "nextSubmissionVersion": null,
+      "allowedReviewDecisions": [],
+      "isTerminal": true,
+      "canSend": false
+    },
+    "capabilities": {
+      "contract": "3.0",
+      "analysisMode": "manual_simulation",
+      "analysisAvailable": true,
+      "analysisUnavailableReason": null,
+      "upload": false,
+      "authentication": false,
+      "sqlExecution": false
+    },
+    "assessment": {
+      "application_review": {
+        "assessmentId": "preset-sam-taylor",
+        "candidateId": "sam-taylor",
+        "jobId": "junior-data-analyst",
+        "rubricVersion": "harbourcart-rubric-v1",
+        "stage": "application_review",
+        "evidenceSnapshotId": "sam-taylor-application-v1",
+        "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+        "submissionId": null,
+        "contentFingerprint": null,
+        "assessmentRevision": 1,
+        "status": "reviewed",
+        "annotationMode": "preset_human",
+        "operatorLabel": "Synthetic preset; AI-authored fixture, human calibration pending",
+        "createdAt": "2026-09-19T00:00:00.000Z",
+        "items": [
+          {
+            "criterionId": "S1",
+            "mark": 4,
+            "rationale": "The import key, aggregation and duplicate-risk check are explicit. No material grain or counting defect is visible in this static query.",
+            "support": "The import key, aggregation and duplicate-risk check are explicit.",
+            "gaps": "No material grain or counting defect is visible in this static query.",
+            "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+            "nextStep": "Verify the import-key assumption against real source records if used.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "query.sql",
+                "location": "/sources/1/text",
+                "start": 323,
+                "end": 785,
+                "quote": "-- Import key is (period, channel); the donations export repeats these aggregates, so do not join or add it.\nSELECT period, channel, SUM(sessions) AS sessions, SUM(donations) AS donations,\n       100.0 * SUM(donations) / NULLIF(SUM(sessions), 0) AS conversion_pct\nFROM fundraising_channel WHERE period IN ('previous', 'current') GROUP BY period, channel;\n-- SELECT period, channel, COUNT(*) FROM fundraising_channel GROUP BY period, channel HAVING COUNT(*) <> 1;"
+              }
+            ]
+          },
+          {
+            "criterionId": "S2",
+            "mark": 3,
+            "rationale": "Controlled labels map to aligned non-overlapping periods and the query filters both labels. The import code assigning the period labels is not attached.",
+            "support": "Controlled labels map to aligned non-overlapping periods and the query filters both labels.",
+            "gaps": "The import code assigning the period labels is not attached.",
+            "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+            "nextStep": "Ask to inspect the importer time-boundary mapping.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "query.sql",
+                "location": "/sources/1/text",
+                "start": 115,
+                "end": 322,
+                "quote": "-- period is a controlled label: previous = [2026-05-04,2026-06-01), current = [2026-06-01,2026-06-29).\n-- Both are consecutive four-week local-calendar intervals with unchanged donation/session definitions."
+              }
+            ]
+          },
+          {
+            "criterionId": "S3",
+            "mark": 4,
+            "rationale": "The checks state expected results, response to failures, null/zero handling, reconciliation and date edges. No material gap in the proposed checks, while actual execution is unobserved.",
+            "support": "The checks state expected results, response to failures, null/zero handling, reconciliation and date edges.",
+            "gaps": "No material gap in the proposed checks, while actual execution is unobserved.",
+            "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+            "nextStep": "Capture the checks and their outputs separately if operational use is considered.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "query.sql",
+                "location": "/sources/1/text",
+                "start": 786,
+                "end": 1282,
+                "quote": "-- Expect zero rows; block this result review if duplicate keys appear. Require exactly two allowed period labels and two channels per period.\n-- Count null/negative sessions or donations; expect zero. Zero denominator is NULL and flagged, not a successful zero-rate result.\n-- Reconcile sums to the prepared totals: previous 5000 sessions / 200 donations, current 6500 / 195.\n-- Verify 2026-06-01 is assigned only to current and 2026-06-29 excluded at import. No query execution log is supplied."
+              }
+            ]
+          },
+          {
+            "criterionId": "D1",
+            "mark": 4,
+            "rationale": "Denominators, units and prepared integer counts support the rate and change calculations. No material numerical error is visible in these formulas.",
+            "support": "Denominators, units and prepared integer counts support the rate and change calculations.",
+            "gaps": "No material numerical error is visible in these formulas.",
+            "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+            "nextStep": "Retain the correct calculations while reviewing causal claims separately.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 200,
+                "end": 460,
+                "quote": "Previous: 5,000 sessions and 200 completed donations. Current: 6,500 sessions and 195 completed donations. Conversion = completed donations / sessions × 100, so 4.0% to 3.0%: down 1.0 percentage point, 25% relative. Sessions rose 30%; donation count fell 2.5%."
+              }
+            ]
+          },
+          {
+            "criterionId": "D2",
+            "mark": 4,
+            "rationale": "Group changes, weight changes and overlap are documented with reconciled counts. No material descriptive-comparison gap is visible here.",
+            "support": "Group changes, weight changes and overlap are documented with reconciled counts.",
+            "gaps": "No material descriptive-comparison gap is visible here.",
+            "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+            "nextStep": "Do not treat correct comparison as confirmation of the later causal claim.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 461,
+                "end": 754,
+                "quote": "Paid: 2,000 sessions / 60 donations then 3,500 / 70 (3.0% to 2.0%). Organic: 3,000 / 140 then 3,000 / 125 (4.6667% to 4.1667%). These channel rows reconcile to the totals and are not additional populations. Paid share rises from 40% to 53.8462%; use integer totals rather than averaging rates."
+              }
+            ]
+          },
+          {
+            "criterionId": "D3",
+            "mark": 2,
+            "rationale": "Formulas and reconciliation make the numerical part reviewable. Event quality and limits of the report’s causal interpretation are not examined.",
+            "support": "Formulas and reconciliation make the numerical part reviewable.",
+            "gaps": "Event quality and limits of the report’s causal interpretation are not examined.",
+            "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+            "nextStep": "State the missing data and the boundary of what these counts establish.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 755,
+                "end": 934,
+                "quote": "The figures are prepared aggregates. I show the formulas and channel reconciliation, but have not traced event quality or considered the limits of the causal interpretation below."
+              }
+            ]
+          },
+          {
+            "criterionId": "B1",
+            "mark": 2,
+            "rationale": "The report identifies a related spending decision and falling donation count. The question and realistic resource constraints are not developed.",
+            "support": "The report identifies a related spending decision and falling donation count.",
+            "gaps": "The question and realistic resource constraints are not developed.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Frame what must be learned before that spending decision.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 936,
+                "end": 1101,
+                "quote": "The organiser is deciding next month's advertising spend, but this report only notes that donations fell; there is no stated budget or investigation-time constraint."
+              }
+            ]
+          },
+          {
+            "criterionId": "B2",
+            "mark": 0,
+            "rationale": "There is an inspectable, explicit causal assertion to assess. Coincidence is presented as proof of a sole cause without discriminating evidence.",
+            "support": "There is an inspectable, explicit causal assertion to assess.",
+            "gaps": "Coincidence is presented as proof of a sole cause without discriminating evidence.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Separate the observed timing from a hypothesis and consider a competing explanation.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 1102,
+                "end": 1307,
+                "quote": "The new advertising campaign is definitely the sole proven cause of the conversion drop. Its launch occurred in the current period, which proves the campaign caused it. No other explanation needs checking."
+              }
+            ]
+          },
+          {
+            "criterionId": "B3",
+            "mark": 0,
+            "rationale": "A specific proposed verification method is available for review. The proposed method repeats the original association and is logically circular, rather than distinguishing hypotheses.",
+            "support": "A specific proposed verification method is available for review.",
+            "gaps": "The proposed method repeats the original association and is logically circular, rather than distinguishing hypotheses.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Request different evidence and explain what result would change the conclusion.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 1308,
+                "end": 1508,
+                "quote": "I will verify this by reading the same two-period summary again: since conversion declined after launch, that repetition will confirm the campaign cause. No different evidence or comparison is needed."
+              }
+            ]
+          },
+          {
+            "criterionId": "B4",
+            "mark": 0,
+            "rationale": "The source proposes an explicit business action. Increasing spend without explanation conflicts with its own asserted harmful-campaign cause and omits validation.",
+            "support": "The source proposes an explicit business action.",
+            "gaps": "Increasing spend without explanation conflicts with its own asserted harmful-campaign cause and omits validation.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Resolve the contradiction and define a measured next step before spending.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 1509,
+                "end": 1692,
+                "quote": "Increase advertising spend immediately to recover donations. No experiment, validation measure or order of checks is proposed, despite the report calling that campaign the sole cause."
+              }
+            ]
+          }
+        ],
+        "reuseApplication": null,
+        "reusedItems": [],
+        "score": {
+          "status": "complete",
+          "assessmentComplete": true,
+          "complete": true,
+          "coveragePercent": 100,
+          "accruedScore": 57.5,
+          "overallScore": 57.5,
+          "overallPercentage": 57.5,
+          "criteria": [
+            {
+              "criterionId": "S1",
+              "requirementId": "sql",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "S2",
+              "requirementId": "sql",
+              "mark": 3,
+              "status": "assessed",
+              "contribution": 7.5
+            },
+            {
+              "criterionId": "S3",
+              "requirementId": "sql",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "D1",
+              "requirementId": "data-analysis",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "D2",
+              "requirementId": "data-analysis",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "D3",
+              "requirementId": "data-analysis",
+              "mark": 2,
+              "status": "assessed",
+              "contribution": 5
+            },
+            {
+              "criterionId": "B1",
+              "requirementId": "business-problem-solving",
+              "mark": 2,
+              "status": "assessed",
+              "contribution": 5
+            },
+            {
+              "criterionId": "B2",
+              "requirementId": "business-problem-solving",
+              "mark": 0,
+              "status": "assessed",
+              "contribution": 0
+            },
+            {
+              "criterionId": "B3",
+              "requirementId": "business-problem-solving",
+              "mark": 0,
+              "status": "assessed",
+              "contribution": 0
+            },
+            {
+              "criterionId": "B4",
+              "requirementId": "business-problem-solving",
+              "mark": 0,
+              "status": "assessed",
+              "contribution": 0
+            }
+          ],
+          "skills": [
+            {
+              "requirementId": "sql",
+              "criterionIds": [
+                "S1",
+                "S2",
+                "S3"
+              ],
+              "maxScore": 30,
+              "assessmentComplete": true,
+              "complete": true,
+              "evaluatedCount": 3,
+              "neCount": 0,
+              "pendingCount": 0,
+              "accruedScore": 27.5,
+              "score": 27.5,
+              "percentage": 91.66666666666666
+            },
+            {
+              "requirementId": "data-analysis",
+              "criterionIds": [
+                "D1",
+                "D2",
+                "D3"
+              ],
+              "maxScore": 30,
+              "assessmentComplete": true,
+              "complete": true,
+              "evaluatedCount": 3,
+              "neCount": 0,
+              "pendingCount": 0,
+              "accruedScore": 25,
+              "score": 25,
+              "percentage": 83.33333333333334
+            },
+            {
+              "requirementId": "business-problem-solving",
+              "criterionIds": [
+                "B1",
+                "B2",
+                "B3",
+                "B4"
+              ],
+              "maxScore": 40,
+              "assessmentComplete": true,
+              "complete": true,
+              "evaluatedCount": 4,
+              "neCount": 0,
+              "pendingCount": 0,
+              "accruedScore": 5,
+              "score": 5,
+              "percentage": 12.5
+            }
+          ]
+        }
+      },
+      "task_v1": {
+        "assessmentId": "947c38ea-0faf-4533-8be6-e75af381f366",
+        "candidateId": "sam-taylor",
+        "jobId": "junior-data-analyst",
+        "rubricVersion": "harbourcart-rubric-v1",
+        "stage": "task_v1",
+        "evidenceSnapshotId": "submission:5168e882-0eee-491d-8670-837c422e4683",
+        "fingerprint": "5831848f18b42ea6733d134fbb6d9f8164bbf2a7ab8cf631501f93d744bcc432",
+        "submissionId": "5168e882-0eee-491d-8670-837c422e4683",
+        "contentFingerprint": "5831848f18b42ea6733d134fbb6d9f8164bbf2a7ab8cf631501f93d744bcc432",
+        "assessmentRevision": 1,
+        "status": "reviewed",
+        "annotationMode": "human",
+        "operatorLabel": "Synthetic example operator; not an actual human validation",
+        "createdAt": "2026-09-19T08:16:50.919Z",
+        "items": [
+          {
+            "criterionId": "D1",
+            "mark": "NE",
+            "rationale": "Synthetic request records insufficient material for this criterion.",
+            "support": "Only a short aggregate statement was submitted.",
+            "gaps": "No criterion-specific complete demonstration.",
+            "uncertainty": "Independent work and practical performance remain unknown.",
+            "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+            "checkedSourceIds": [
+              "summary",
+              "finding:finding-1:title",
+              "finding:finding-1:detail"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "D2",
+            "mark": "NE",
+            "rationale": "Synthetic request records insufficient material for this criterion.",
+            "support": "Only a short aggregate statement was submitted.",
+            "gaps": "No criterion-specific complete demonstration.",
+            "uncertainty": "Independent work and practical performance remain unknown.",
+            "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+            "checkedSourceIds": [
+              "summary",
+              "finding:finding-1:title",
+              "finding:finding-1:detail"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "D3",
+            "mark": "NE",
+            "rationale": "Synthetic request records insufficient material for this criterion.",
+            "support": "Only a short aggregate statement was submitted.",
+            "gaps": "No criterion-specific complete demonstration.",
+            "uncertainty": "Independent work and practical performance remain unknown.",
+            "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+            "checkedSourceIds": [
+              "summary",
+              "finding:finding-1:title",
+              "finding:finding-1:detail"
+            ],
+            "sourceRefs": []
+          }
+        ],
+        "reuseApplication": {
+          "assessmentRevision": 1,
+          "evidenceSnapshotId": "sam-taylor-application-v1",
+          "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795"
+        },
+        "reusedItems": [
+          {
+            "criterionId": "S1",
+            "mark": 4,
+            "rationale": "The import key, aggregation and duplicate-risk check are explicit. No material grain or counting defect is visible in this static query.",
+            "support": "The import key, aggregation and duplicate-risk check are explicit.",
+            "gaps": "No material grain or counting defect is visible in this static query.",
+            "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+            "nextStep": "Verify the import-key assumption against real source records if used.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "query.sql",
+                "location": "/sources/1/text",
+                "start": 323,
+                "end": 785,
+                "quote": "-- Import key is (period, channel); the donations export repeats these aggregates, so do not join or add it.\nSELECT period, channel, SUM(sessions) AS sessions, SUM(donations) AS donations,\n       100.0 * SUM(donations) / NULLIF(SUM(sessions), 0) AS conversion_pct\nFROM fundraising_channel WHERE period IN ('previous', 'current') GROUP BY period, channel;\n-- SELECT period, channel, COUNT(*) FROM fundraising_channel GROUP BY period, channel HAVING COUNT(*) <> 1;"
+              }
+            ]
+          },
+          {
+            "criterionId": "S2",
+            "mark": 3,
+            "rationale": "Controlled labels map to aligned non-overlapping periods and the query filters both labels. The import code assigning the period labels is not attached.",
+            "support": "Controlled labels map to aligned non-overlapping periods and the query filters both labels.",
+            "gaps": "The import code assigning the period labels is not attached.",
+            "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+            "nextStep": "Ask to inspect the importer time-boundary mapping.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "query.sql",
+                "location": "/sources/1/text",
+                "start": 115,
+                "end": 322,
+                "quote": "-- period is a controlled label: previous = [2026-05-04,2026-06-01), current = [2026-06-01,2026-06-29).\n-- Both are consecutive four-week local-calendar intervals with unchanged donation/session definitions."
+              }
+            ]
+          },
+          {
+            "criterionId": "S3",
+            "mark": 4,
+            "rationale": "The checks state expected results, response to failures, null/zero handling, reconciliation and date edges. No material gap in the proposed checks, while actual execution is unobserved.",
+            "support": "The checks state expected results, response to failures, null/zero handling, reconciliation and date edges.",
+            "gaps": "No material gap in the proposed checks, while actual execution is unobserved.",
+            "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+            "nextStep": "Capture the checks and their outputs separately if operational use is considered.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "query.sql",
+                "location": "/sources/1/text",
+                "start": 786,
+                "end": 1282,
+                "quote": "-- Expect zero rows; block this result review if duplicate keys appear. Require exactly two allowed period labels and two channels per period.\n-- Count null/negative sessions or donations; expect zero. Zero denominator is NULL and flagged, not a successful zero-rate result.\n-- Reconcile sums to the prepared totals: previous 5000 sessions / 200 donations, current 6500 / 195.\n-- Verify 2026-06-01 is assigned only to current and 2026-06-29 excluded at import. No query execution log is supplied."
+              }
+            ]
+          },
+          {
+            "criterionId": "B1",
+            "mark": 2,
+            "rationale": "The report identifies a related spending decision and falling donation count. The question and realistic resource constraints are not developed.",
+            "support": "The report identifies a related spending decision and falling donation count.",
+            "gaps": "The question and realistic resource constraints are not developed.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Frame what must be learned before that spending decision.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 936,
+                "end": 1101,
+                "quote": "The organiser is deciding next month's advertising spend, but this report only notes that donations fell; there is no stated budget or investigation-time constraint."
+              }
+            ]
+          },
+          {
+            "criterionId": "B2",
+            "mark": 0,
+            "rationale": "There is an inspectable, explicit causal assertion to assess. Coincidence is presented as proof of a sole cause without discriminating evidence.",
+            "support": "There is an inspectable, explicit causal assertion to assess.",
+            "gaps": "Coincidence is presented as proof of a sole cause without discriminating evidence.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Separate the observed timing from a hypothesis and consider a competing explanation.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 1102,
+                "end": 1307,
+                "quote": "The new advertising campaign is definitely the sole proven cause of the conversion drop. Its launch occurred in the current period, which proves the campaign caused it. No other explanation needs checking."
+              }
+            ]
+          },
+          {
+            "criterionId": "B3",
+            "mark": 0,
+            "rationale": "A specific proposed verification method is available for review. The proposed method repeats the original association and is logically circular, rather than distinguishing hypotheses.",
+            "support": "A specific proposed verification method is available for review.",
+            "gaps": "The proposed method repeats the original association and is logically circular, rather than distinguishing hypotheses.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Request different evidence and explain what result would change the conclusion.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 1308,
+                "end": 1508,
+                "quote": "I will verify this by reading the same two-period summary again: since conversion declined after launch, that repetition will confirm the campaign cause. No different evidence or comparison is needed."
+              }
+            ]
+          },
+          {
+            "criterionId": "B4",
+            "mark": 0,
+            "rationale": "The source proposes an explicit business action. Increasing spend without explanation conflicts with its own asserted harmful-campaign cause and omits validation.",
+            "support": "The source proposes an explicit business action.",
+            "gaps": "Increasing spend without explanation conflicts with its own asserted harmful-campaign cause and omits validation.",
+            "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+            "nextStep": "Resolve the contradiction and define a measured next step before spending.",
+            "checkedSourceIds": [
+              "cv.md",
+              "query.sql",
+              "analysis.md"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "sam-taylor",
+                "evidenceSnapshotId": "sam-taylor-application-v1",
+                "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                "sourceId": "analysis.md",
+                "location": "/sources/2/text",
+                "start": 1509,
+                "end": 1692,
+                "quote": "Increase advertising spend immediately to recover donations. No experiment, validation measure or order of checks is proposed, despite the report calling that campaign the sole cause."
+              }
+            ]
+          }
+        ],
+        "score": {
+          "status": "needs_evidence",
+          "assessmentComplete": true,
+          "complete": false,
+          "coveragePercent": 70,
+          "accruedScore": 32.5,
+          "overallScore": null,
+          "overallPercentage": null,
+          "criteria": [
+            {
+              "criterionId": "S1",
+              "requirementId": "sql",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "S2",
+              "requirementId": "sql",
+              "mark": 3,
+              "status": "assessed",
+              "contribution": 7.5
+            },
+            {
+              "criterionId": "S3",
+              "requirementId": "sql",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "D1",
+              "requirementId": "data-analysis",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "D2",
+              "requirementId": "data-analysis",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "D3",
+              "requirementId": "data-analysis",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "B1",
+              "requirementId": "business-problem-solving",
+              "mark": 2,
+              "status": "assessed",
+              "contribution": 5
+            },
+            {
+              "criterionId": "B2",
+              "requirementId": "business-problem-solving",
+              "mark": 0,
+              "status": "assessed",
+              "contribution": 0
+            },
+            {
+              "criterionId": "B3",
+              "requirementId": "business-problem-solving",
+              "mark": 0,
+              "status": "assessed",
+              "contribution": 0
+            },
+            {
+              "criterionId": "B4",
+              "requirementId": "business-problem-solving",
+              "mark": 0,
+              "status": "assessed",
+              "contribution": 0
+            }
+          ],
+          "skills": [
+            {
+              "requirementId": "sql",
+              "criterionIds": [
+                "S1",
+                "S2",
+                "S3"
+              ],
+              "maxScore": 30,
+              "assessmentComplete": true,
+              "complete": true,
+              "evaluatedCount": 3,
+              "neCount": 0,
+              "pendingCount": 0,
+              "accruedScore": 27.5,
+              "score": 27.5,
+              "percentage": 91.66666666666666
+            },
+            {
+              "requirementId": "data-analysis",
+              "criterionIds": [
+                "D1",
+                "D2",
+                "D3"
+              ],
+              "maxScore": 30,
+              "assessmentComplete": true,
+              "complete": false,
+              "evaluatedCount": 0,
+              "neCount": 3,
+              "pendingCount": 0,
+              "accruedScore": 0,
+              "score": null,
+              "percentage": null
+            },
+            {
+              "requirementId": "business-problem-solving",
+              "criterionIds": [
+                "B1",
+                "B2",
+                "B3",
+                "B4"
+              ],
+              "maxScore": 40,
+              "assessmentComplete": true,
+              "complete": true,
+              "evaluatedCount": 4,
+              "neCount": 0,
+              "pendingCount": 0,
+              "accruedScore": 5,
+              "score": 5,
+              "percentage": 12.5
+            }
+          ]
+        }
+      },
+      "task_v2": null,
+      "history": [
+        {
+          "assessmentId": "preset-sam-taylor",
+          "candidateId": "sam-taylor",
+          "jobId": "junior-data-analyst",
+          "rubricVersion": "harbourcart-rubric-v1",
+          "stage": "application_review",
+          "evidenceSnapshotId": "sam-taylor-application-v1",
+          "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+          "submissionId": null,
+          "contentFingerprint": null,
+          "assessmentRevision": 1,
+          "status": "reviewed",
+          "annotationMode": "preset_human",
+          "operatorLabel": "Synthetic preset; AI-authored fixture, human calibration pending",
+          "createdAt": "2026-09-19T00:00:00.000Z",
+          "items": [
+            {
+              "criterionId": "S1",
+              "mark": 4,
+              "rationale": "The import key, aggregation and duplicate-risk check are explicit. No material grain or counting defect is visible in this static query.",
+              "support": "The import key, aggregation and duplicate-risk check are explicit.",
+              "gaps": "No material grain or counting defect is visible in this static query.",
+              "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+              "nextStep": "Verify the import-key assumption against real source records if used.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "query.sql",
+                  "location": "/sources/1/text",
+                  "start": 323,
+                  "end": 785,
+                  "quote": "-- Import key is (period, channel); the donations export repeats these aggregates, so do not join or add it.\nSELECT period, channel, SUM(sessions) AS sessions, SUM(donations) AS donations,\n       100.0 * SUM(donations) / NULLIF(SUM(sessions), 0) AS conversion_pct\nFROM fundraising_channel WHERE period IN ('previous', 'current') GROUP BY period, channel;\n-- SELECT period, channel, COUNT(*) FROM fundraising_channel GROUP BY period, channel HAVING COUNT(*) <> 1;"
+                }
+              ]
+            },
+            {
+              "criterionId": "S2",
+              "mark": 3,
+              "rationale": "Controlled labels map to aligned non-overlapping periods and the query filters both labels. The import code assigning the period labels is not attached.",
+              "support": "Controlled labels map to aligned non-overlapping periods and the query filters both labels.",
+              "gaps": "The import code assigning the period labels is not attached.",
+              "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+              "nextStep": "Ask to inspect the importer time-boundary mapping.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "query.sql",
+                  "location": "/sources/1/text",
+                  "start": 115,
+                  "end": 322,
+                  "quote": "-- period is a controlled label: previous = [2026-05-04,2026-06-01), current = [2026-06-01,2026-06-29).\n-- Both are consecutive four-week local-calendar intervals with unchanged donation/session definitions."
+                }
+              ]
+            },
+            {
+              "criterionId": "S3",
+              "mark": 4,
+              "rationale": "The checks state expected results, response to failures, null/zero handling, reconciliation and date edges. No material gap in the proposed checks, while actual execution is unobserved.",
+              "support": "The checks state expected results, response to failures, null/zero handling, reconciliation and date edges.",
+              "gaps": "No material gap in the proposed checks, while actual execution is unobserved.",
+              "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+              "nextStep": "Capture the checks and their outputs separately if operational use is considered.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "query.sql",
+                  "location": "/sources/1/text",
+                  "start": 786,
+                  "end": 1282,
+                  "quote": "-- Expect zero rows; block this result review if duplicate keys appear. Require exactly two allowed period labels and two channels per period.\n-- Count null/negative sessions or donations; expect zero. Zero denominator is NULL and flagged, not a successful zero-rate result.\n-- Reconcile sums to the prepared totals: previous 5000 sessions / 200 donations, current 6500 / 195.\n-- Verify 2026-06-01 is assigned only to current and 2026-06-29 excluded at import. No query execution log is supplied."
+                }
+              ]
+            },
+            {
+              "criterionId": "D1",
+              "mark": 4,
+              "rationale": "Denominators, units and prepared integer counts support the rate and change calculations. No material numerical error is visible in these formulas.",
+              "support": "Denominators, units and prepared integer counts support the rate and change calculations.",
+              "gaps": "No material numerical error is visible in these formulas.",
+              "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+              "nextStep": "Retain the correct calculations while reviewing causal claims separately.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 200,
+                  "end": 460,
+                  "quote": "Previous: 5,000 sessions and 200 completed donations. Current: 6,500 sessions and 195 completed donations. Conversion = completed donations / sessions × 100, so 4.0% to 3.0%: down 1.0 percentage point, 25% relative. Sessions rose 30%; donation count fell 2.5%."
+                }
+              ]
+            },
+            {
+              "criterionId": "D2",
+              "mark": 4,
+              "rationale": "Group changes, weight changes and overlap are documented with reconciled counts. No material descriptive-comparison gap is visible here.",
+              "support": "Group changes, weight changes and overlap are documented with reconciled counts.",
+              "gaps": "No material descriptive-comparison gap is visible here.",
+              "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+              "nextStep": "Do not treat correct comparison as confirmation of the later causal claim.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 461,
+                  "end": 754,
+                  "quote": "Paid: 2,000 sessions / 60 donations then 3,500 / 70 (3.0% to 2.0%). Organic: 3,000 / 140 then 3,000 / 125 (4.6667% to 4.1667%). These channel rows reconcile to the totals and are not additional populations. Paid share rises from 40% to 53.8462%; use integer totals rather than averaging rates."
+                }
+              ]
+            },
+            {
+              "criterionId": "D3",
+              "mark": 2,
+              "rationale": "Formulas and reconciliation make the numerical part reviewable. Event quality and limits of the report’s causal interpretation are not examined.",
+              "support": "Formulas and reconciliation make the numerical part reviewable.",
+              "gaps": "Event quality and limits of the report’s causal interpretation are not examined.",
+              "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+              "nextStep": "State the missing data and the boundary of what these counts establish.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 755,
+                  "end": 934,
+                  "quote": "The figures are prepared aggregates. I show the formulas and channel reconciliation, but have not traced event quality or considered the limits of the causal interpretation below."
+                }
+              ]
+            },
+            {
+              "criterionId": "B1",
+              "mark": 2,
+              "rationale": "The report identifies a related spending decision and falling donation count. The question and realistic resource constraints are not developed.",
+              "support": "The report identifies a related spending decision and falling donation count.",
+              "gaps": "The question and realistic resource constraints are not developed.",
+              "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+              "nextStep": "Frame what must be learned before that spending decision.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 936,
+                  "end": 1101,
+                  "quote": "The organiser is deciding next month's advertising spend, but this report only notes that donations fell; there is no stated budget or investigation-time constraint."
+                }
+              ]
+            },
+            {
+              "criterionId": "B2",
+              "mark": 0,
+              "rationale": "There is an inspectable, explicit causal assertion to assess. Coincidence is presented as proof of a sole cause without discriminating evidence.",
+              "support": "There is an inspectable, explicit causal assertion to assess.",
+              "gaps": "Coincidence is presented as proof of a sole cause without discriminating evidence.",
+              "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+              "nextStep": "Separate the observed timing from a hypothesis and consider a competing explanation.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 1102,
+                  "end": 1307,
+                  "quote": "The new advertising campaign is definitely the sole proven cause of the conversion drop. Its launch occurred in the current period, which proves the campaign caused it. No other explanation needs checking."
+                }
+              ]
+            },
+            {
+              "criterionId": "B3",
+              "mark": 0,
+              "rationale": "A specific proposed verification method is available for review. The proposed method repeats the original association and is logically circular, rather than distinguishing hypotheses.",
+              "support": "A specific proposed verification method is available for review.",
+              "gaps": "The proposed method repeats the original association and is logically circular, rather than distinguishing hypotheses.",
+              "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+              "nextStep": "Request different evidence and explain what result would change the conclusion.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 1308,
+                  "end": 1508,
+                  "quote": "I will verify this by reading the same two-period summary again: since conversion declined after launch, that repetition will confirm the campaign cause. No different evidence or comparison is needed."
+                }
+              ]
+            },
+            {
+              "criterionId": "B4",
+              "mark": 0,
+              "rationale": "The source proposes an explicit business action. Increasing spend without explanation conflicts with its own asserted harmful-campaign cause and omits validation.",
+              "support": "The source proposes an explicit business action.",
+              "gaps": "Increasing spend without explanation conflicts with its own asserted harmful-campaign cause and omits validation.",
+              "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+              "nextStep": "Resolve the contradiction and define a measured next step before spending.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 1509,
+                  "end": 1692,
+                  "quote": "Increase advertising spend immediately to recover donations. No experiment, validation measure or order of checks is proposed, despite the report calling that campaign the sole cause."
+                }
+              ]
+            }
+          ],
+          "reuseApplication": null,
+          "reusedItems": [],
+          "score": {
+            "status": "complete",
+            "assessmentComplete": true,
+            "complete": true,
+            "coveragePercent": 100,
+            "accruedScore": 57.5,
+            "overallScore": 57.5,
+            "overallPercentage": 57.5,
+            "criteria": [
+              {
+                "criterionId": "S1",
+                "requirementId": "sql",
+                "mark": 4,
+                "status": "assessed",
+                "contribution": 10
+              },
+              {
+                "criterionId": "S2",
+                "requirementId": "sql",
+                "mark": 3,
+                "status": "assessed",
+                "contribution": 7.5
+              },
+              {
+                "criterionId": "S3",
+                "requirementId": "sql",
+                "mark": 4,
+                "status": "assessed",
+                "contribution": 10
+              },
+              {
+                "criterionId": "D1",
+                "requirementId": "data-analysis",
+                "mark": 4,
+                "status": "assessed",
+                "contribution": 10
+              },
+              {
+                "criterionId": "D2",
+                "requirementId": "data-analysis",
+                "mark": 4,
+                "status": "assessed",
+                "contribution": 10
+              },
+              {
+                "criterionId": "D3",
+                "requirementId": "data-analysis",
+                "mark": 2,
+                "status": "assessed",
+                "contribution": 5
+              },
+              {
+                "criterionId": "B1",
+                "requirementId": "business-problem-solving",
+                "mark": 2,
+                "status": "assessed",
+                "contribution": 5
+              },
+              {
+                "criterionId": "B2",
+                "requirementId": "business-problem-solving",
+                "mark": 0,
+                "status": "assessed",
+                "contribution": 0
+              },
+              {
+                "criterionId": "B3",
+                "requirementId": "business-problem-solving",
+                "mark": 0,
+                "status": "assessed",
+                "contribution": 0
+              },
+              {
+                "criterionId": "B4",
+                "requirementId": "business-problem-solving",
+                "mark": 0,
+                "status": "assessed",
+                "contribution": 0
+              }
+            ],
+            "skills": [
+              {
+                "requirementId": "sql",
+                "criterionIds": [
+                  "S1",
+                  "S2",
+                  "S3"
+                ],
+                "maxScore": 30,
+                "assessmentComplete": true,
+                "complete": true,
+                "evaluatedCount": 3,
+                "neCount": 0,
+                "pendingCount": 0,
+                "accruedScore": 27.5,
+                "score": 27.5,
+                "percentage": 91.66666666666666
+              },
+              {
+                "requirementId": "data-analysis",
+                "criterionIds": [
+                  "D1",
+                  "D2",
+                  "D3"
+                ],
+                "maxScore": 30,
+                "assessmentComplete": true,
+                "complete": true,
+                "evaluatedCount": 3,
+                "neCount": 0,
+                "pendingCount": 0,
+                "accruedScore": 25,
+                "score": 25,
+                "percentage": 83.33333333333334
+              },
+              {
+                "requirementId": "business-problem-solving",
+                "criterionIds": [
+                  "B1",
+                  "B2",
+                  "B3",
+                  "B4"
+                ],
+                "maxScore": 40,
+                "assessmentComplete": true,
+                "complete": true,
+                "evaluatedCount": 4,
+                "neCount": 0,
+                "pendingCount": 0,
+                "accruedScore": 5,
+                "score": 5,
+                "percentage": 12.5
+              }
+            ]
+          }
+        },
+        {
+          "assessmentId": "947c38ea-0faf-4533-8be6-e75af381f366",
+          "candidateId": "sam-taylor",
+          "jobId": "junior-data-analyst",
+          "rubricVersion": "harbourcart-rubric-v1",
+          "stage": "task_v1",
+          "evidenceSnapshotId": "submission:5168e882-0eee-491d-8670-837c422e4683",
+          "fingerprint": "5831848f18b42ea6733d134fbb6d9f8164bbf2a7ab8cf631501f93d744bcc432",
+          "submissionId": "5168e882-0eee-491d-8670-837c422e4683",
+          "contentFingerprint": "5831848f18b42ea6733d134fbb6d9f8164bbf2a7ab8cf631501f93d744bcc432",
+          "assessmentRevision": 1,
+          "status": "reviewed",
+          "annotationMode": "human",
+          "operatorLabel": "Synthetic example operator; not an actual human validation",
+          "createdAt": "2026-09-19T08:16:50.919Z",
+          "items": [
+            {
+              "criterionId": "D1",
+              "mark": "NE",
+              "rationale": "Synthetic request records insufficient material for this criterion.",
+              "support": "Only a short aggregate statement was submitted.",
+              "gaps": "No criterion-specific complete demonstration.",
+              "uncertainty": "Independent work and practical performance remain unknown.",
+              "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+              "checkedSourceIds": [
+                "summary",
+                "finding:finding-1:title",
+                "finding:finding-1:detail"
+              ],
+              "sourceRefs": []
+            },
+            {
+              "criterionId": "D2",
+              "mark": "NE",
+              "rationale": "Synthetic request records insufficient material for this criterion.",
+              "support": "Only a short aggregate statement was submitted.",
+              "gaps": "No criterion-specific complete demonstration.",
+              "uncertainty": "Independent work and practical performance remain unknown.",
+              "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+              "checkedSourceIds": [
+                "summary",
+                "finding:finding-1:title",
+                "finding:finding-1:detail"
+              ],
+              "sourceRefs": []
+            },
+            {
+              "criterionId": "D3",
+              "mark": "NE",
+              "rationale": "Synthetic request records insufficient material for this criterion.",
+              "support": "Only a short aggregate statement was submitted.",
+              "gaps": "No criterion-specific complete demonstration.",
+              "uncertainty": "Independent work and practical performance remain unknown.",
+              "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+              "checkedSourceIds": [
+                "summary",
+                "finding:finding-1:title",
+                "finding:finding-1:detail"
+              ],
+              "sourceRefs": []
+            }
+          ],
+          "reuseApplication": {
+            "assessmentRevision": 1,
+            "evidenceSnapshotId": "sam-taylor-application-v1",
+            "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795"
+          },
+          "reusedItems": [
+            {
+              "criterionId": "S1",
+              "mark": 4,
+              "rationale": "The import key, aggregation and duplicate-risk check are explicit. No material grain or counting defect is visible in this static query.",
+              "support": "The import key, aggregation and duplicate-risk check are explicit.",
+              "gaps": "No material grain or counting defect is visible in this static query.",
+              "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+              "nextStep": "Verify the import-key assumption against real source records if used.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "query.sql",
+                  "location": "/sources/1/text",
+                  "start": 323,
+                  "end": 785,
+                  "quote": "-- Import key is (period, channel); the donations export repeats these aggregates, so do not join or add it.\nSELECT period, channel, SUM(sessions) AS sessions, SUM(donations) AS donations,\n       100.0 * SUM(donations) / NULLIF(SUM(sessions), 0) AS conversion_pct\nFROM fundraising_channel WHERE period IN ('previous', 'current') GROUP BY period, channel;\n-- SELECT period, channel, COUNT(*) FROM fundraising_channel GROUP BY period, channel HAVING COUNT(*) <> 1;"
+                }
+              ]
+            },
+            {
+              "criterionId": "S2",
+              "mark": 3,
+              "rationale": "Controlled labels map to aligned non-overlapping periods and the query filters both labels. The import code assigning the period labels is not attached.",
+              "support": "Controlled labels map to aligned non-overlapping periods and the query filters both labels.",
+              "gaps": "The import code assigning the period labels is not attached.",
+              "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+              "nextStep": "Ask to inspect the importer time-boundary mapping.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "query.sql",
+                  "location": "/sources/1/text",
+                  "start": 115,
+                  "end": 322,
+                  "quote": "-- period is a controlled label: previous = [2026-05-04,2026-06-01), current = [2026-06-01,2026-06-29).\n-- Both are consecutive four-week local-calendar intervals with unchanged donation/session definitions."
+                }
+              ]
+            },
+            {
+              "criterionId": "S3",
+              "mark": 4,
+              "rationale": "The checks state expected results, response to failures, null/zero handling, reconciliation and date edges. No material gap in the proposed checks, while actual execution is unobserved.",
+              "support": "The checks state expected results, response to failures, null/zero handling, reconciliation and date edges.",
+              "gaps": "No material gap in the proposed checks, while actual execution is unobserved.",
+              "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+              "nextStep": "Capture the checks and their outputs separately if operational use is considered.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "query.sql",
+                  "location": "/sources/1/text",
+                  "start": 786,
+                  "end": 1282,
+                  "quote": "-- Expect zero rows; block this result review if duplicate keys appear. Require exactly two allowed period labels and two channels per period.\n-- Count null/negative sessions or donations; expect zero. Zero denominator is NULL and flagged, not a successful zero-rate result.\n-- Reconcile sums to the prepared totals: previous 5000 sessions / 200 donations, current 6500 / 195.\n-- Verify 2026-06-01 is assigned only to current and 2026-06-29 excluded at import. No query execution log is supplied."
+                }
+              ]
+            },
+            {
+              "criterionId": "B1",
+              "mark": 2,
+              "rationale": "The report identifies a related spending decision and falling donation count. The question and realistic resource constraints are not developed.",
+              "support": "The report identifies a related spending decision and falling donation count.",
+              "gaps": "The question and realistic resource constraints are not developed.",
+              "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+              "nextStep": "Frame what must be learned before that spending decision.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 936,
+                  "end": 1101,
+                  "quote": "The organiser is deciding next month's advertising spend, but this report only notes that donations fell; there is no stated budget or investigation-time constraint."
+                }
+              ]
+            },
+            {
+              "criterionId": "B2",
+              "mark": 0,
+              "rationale": "There is an inspectable, explicit causal assertion to assess. Coincidence is presented as proof of a sole cause without discriminating evidence.",
+              "support": "There is an inspectable, explicit causal assertion to assess.",
+              "gaps": "Coincidence is presented as proof of a sole cause without discriminating evidence.",
+              "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+              "nextStep": "Separate the observed timing from a hypothesis and consider a competing explanation.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 1102,
+                  "end": 1307,
+                  "quote": "The new advertising campaign is definitely the sole proven cause of the conversion drop. Its launch occurred in the current period, which proves the campaign caused it. No other explanation needs checking."
+                }
+              ]
+            },
+            {
+              "criterionId": "B3",
+              "mark": 0,
+              "rationale": "A specific proposed verification method is available for review. The proposed method repeats the original association and is logically circular, rather than distinguishing hypotheses.",
+              "support": "A specific proposed verification method is available for review.",
+              "gaps": "The proposed method repeats the original association and is logically circular, rather than distinguishing hypotheses.",
+              "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+              "nextStep": "Request different evidence and explain what result would change the conclusion.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 1308,
+                  "end": 1508,
+                  "quote": "I will verify this by reading the same two-period summary again: since conversion declined after launch, that repetition will confirm the campaign cause. No different evidence or comparison is needed."
+                }
+              ]
+            },
+            {
+              "criterionId": "B4",
+              "mark": 0,
+              "rationale": "The source proposes an explicit business action. Increasing spend without explanation conflicts with its own asserted harmful-campaign cause and omits validation.",
+              "support": "The source proposes an explicit business action.",
+              "gaps": "Increasing spend without explanation conflicts with its own asserted harmful-campaign cause and omits validation.",
+              "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+              "nextStep": "Resolve the contradiction and define a measured next step before spending.",
+              "checkedSourceIds": [
+                "cv.md",
+                "query.sql",
+                "analysis.md"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "sam-taylor",
+                  "evidenceSnapshotId": "sam-taylor-application-v1",
+                  "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+                  "sourceId": "analysis.md",
+                  "location": "/sources/2/text",
+                  "start": 1509,
+                  "end": 1692,
+                  "quote": "Increase advertising spend immediately to recover donations. No experiment, validation measure or order of checks is proposed, despite the report calling that campaign the sole cause."
+                }
+              ]
+            }
+          ],
+          "score": {
+            "status": "needs_evidence",
+            "assessmentComplete": true,
+            "complete": false,
+            "coveragePercent": 70,
+            "accruedScore": 32.5,
+            "overallScore": null,
+            "overallPercentage": null,
+            "criteria": [
+              {
+                "criterionId": "S1",
+                "requirementId": "sql",
+                "mark": 4,
+                "status": "assessed",
+                "contribution": 10
+              },
+              {
+                "criterionId": "S2",
+                "requirementId": "sql",
+                "mark": 3,
+                "status": "assessed",
+                "contribution": 7.5
+              },
+              {
+                "criterionId": "S3",
+                "requirementId": "sql",
+                "mark": 4,
+                "status": "assessed",
+                "contribution": 10
+              },
+              {
+                "criterionId": "D1",
+                "requirementId": "data-analysis",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              },
+              {
+                "criterionId": "D2",
+                "requirementId": "data-analysis",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              },
+              {
+                "criterionId": "D3",
+                "requirementId": "data-analysis",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              },
+              {
+                "criterionId": "B1",
+                "requirementId": "business-problem-solving",
+                "mark": 2,
+                "status": "assessed",
+                "contribution": 5
+              },
+              {
+                "criterionId": "B2",
+                "requirementId": "business-problem-solving",
+                "mark": 0,
+                "status": "assessed",
+                "contribution": 0
+              },
+              {
+                "criterionId": "B3",
+                "requirementId": "business-problem-solving",
+                "mark": 0,
+                "status": "assessed",
+                "contribution": 0
+              },
+              {
+                "criterionId": "B4",
+                "requirementId": "business-problem-solving",
+                "mark": 0,
+                "status": "assessed",
+                "contribution": 0
+              }
+            ],
+            "skills": [
+              {
+                "requirementId": "sql",
+                "criterionIds": [
+                  "S1",
+                  "S2",
+                  "S3"
+                ],
+                "maxScore": 30,
+                "assessmentComplete": true,
+                "complete": true,
+                "evaluatedCount": 3,
+                "neCount": 0,
+                "pendingCount": 0,
+                "accruedScore": 27.5,
+                "score": 27.5,
+                "percentage": 91.66666666666666
+              },
+              {
+                "requirementId": "data-analysis",
+                "criterionIds": [
+                  "D1",
+                  "D2",
+                  "D3"
+                ],
+                "maxScore": 30,
+                "assessmentComplete": true,
+                "complete": false,
+                "evaluatedCount": 0,
+                "neCount": 3,
+                "pendingCount": 0,
+                "accruedScore": 0,
+                "score": null,
+                "percentage": null
+              },
+              {
+                "requirementId": "business-problem-solving",
+                "criterionIds": [
+                  "B1",
+                  "B2",
+                  "B3",
+                  "B4"
+                ],
+                "maxScore": 40,
+                "assessmentComplete": true,
+                "complete": true,
+                "evaluatedCount": 4,
+                "neCount": 0,
+                "pendingCount": 0,
+                "accruedScore": 5,
+                "score": 5,
+                "percentage": 12.5
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "shortlist": {
+      "revision": 0,
+      "status": "not_retained",
+      "reason": null,
+      "basis": null,
+      "history": []
+    },
+    "report": {
+      "isHiringDecision": false,
+      "requirements": [
+        {
+          "requirementId": "sql",
+          "title": "SQL",
+          "evidenceSnapshotId": "sam-taylor-application-v1",
+          "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+          "status": "supported",
+          "mode": "preset",
+          "summary": "The query and expected checks provide inspectable technical evidence.",
+          "uncertainty": "Import code and actual query execution are not supplied.",
+          "sourceRefs": [
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "query.sql",
+              "location": "/sources/1/text",
+              "start": 323,
+              "end": 785,
+              "quote": "-- Import key is (period, channel); the donations export repeats these aggregates, so do not join or add it.\nSELECT period, channel, SUM(sessions) AS sessions, SUM(donations) AS donations,\n       100.0 * SUM(donations) / NULLIF(SUM(sessions), 0) AS conversion_pct\nFROM fundraising_channel WHERE period IN ('previous', 'current') GROUP BY period, channel;\n-- SELECT period, channel, COUNT(*) FROM fundraising_channel GROUP BY period, channel HAVING COUNT(*) <> 1;"
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "query.sql",
+              "location": "/sources/1/text",
+              "start": 115,
+              "end": 322,
+              "quote": "-- period is a controlled label: previous = [2026-05-04,2026-06-01), current = [2026-06-01,2026-06-29).\n-- Both are consecutive four-week local-calendar intervals with unchanged donation/session definitions."
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "query.sql",
+              "location": "/sources/1/text",
+              "start": 786,
+              "end": 1282,
+              "quote": "-- Expect zero rows; block this result review if duplicate keys appear. Require exactly two allowed period labels and two channels per period.\n-- Count null/negative sessions or donations; expect zero. Zero denominator is NULL and flagged, not a successful zero-rate result.\n-- Reconcile sums to the prepared totals: previous 5000 sessions / 200 donations, current 6500 / 195.\n-- Verify 2026-06-01 is assigned only to current and 2026-06-29 excluded at import. No query execution log is supplied."
+            }
+          ],
+          "review": null,
+          "scope": "Bounded synthetic evidence only; scoring and shortlist are separate."
+        },
+        {
+          "requirementId": "data-analysis",
+          "title": "Data Analysis",
+          "evidenceSnapshotId": "submission:f1bfb4a7-06c0-4248-928b-72a5b75f342f",
+          "fingerprint": "c4ef855b705acb328c71b9fe5aa4540b692a341b9fed9162d1a5b2b5e781e9c1",
+          "status": "uncertain",
+          "mode": "human_reviewed",
+          "summary": "Synthetic terminal review: available evidence remains insufficient; this is not a hiring decision.",
+          "uncertainty": "Human evidence review of this submitted work only; independent authorship, execution and future performance are unverified.",
+          "sourceRefs": [],
+          "review": {
+            "schemaVersion": "3.0",
+            "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+            "candidateId": "sam-taylor",
+            "jobId": "junior-data-analyst",
+            "datasetVersion": "harbourcart-2026-09-v1",
+            "taskId": "54a24f34-d4d1-4467-9157-c24520000508",
+            "targetRequirementId": "data-analysis",
+            "submissionId": "f1bfb4a7-06c0-4248-928b-72a5b75f342f",
+            "contentFingerprint": "c4ef855b705acb328c71b9fe5aa4540b692a341b9fed9162d1a5b2b5e781e9c1",
+            "decision": "evidence_still_insufficient",
+            "comment": "Synthetic terminal review: available evidence remains insufficient; this is not a hiring decision.",
+            "reviewId": "fc3a6c7f-7579-4654-a3cb-c174757d9dc3",
+            "reviewedAt": "2026-09-19T08:16:50.968Z"
+          },
+          "scope": "Bounded synthetic evidence only; scoring and shortlist are separate."
+        },
+        {
+          "requirementId": "business-problem-solving",
+          "title": "Business Problem Solving",
+          "evidenceSnapshotId": "sam-taylor-application-v1",
+          "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+          "status": "uncertain",
+          "mode": "preset",
+          "summary": "The report asserts a sole cause, uses circular verification and proposes an internally inconsistent action.",
+          "uncertainty": "These are source-backed reasoning problems, not an automatic rejection or judgement of personal worth.",
+          "sourceRefs": [
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 936,
+              "end": 1101,
+              "quote": "The organiser is deciding next month's advertising spend, but this report only notes that donations fell; there is no stated budget or investigation-time constraint."
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 1102,
+              "end": 1307,
+              "quote": "The new advertising campaign is definitely the sole proven cause of the conversion drop. Its launch occurred in the current period, which proves the campaign caused it. No other explanation needs checking."
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 1308,
+              "end": 1508,
+              "quote": "I will verify this by reading the same two-period summary again: since conversion declined after launch, that repetition will confirm the campaign cause. No different evidence or comparison is needed."
+            },
+            {
+              "candidateId": "sam-taylor",
+              "evidenceSnapshotId": "sam-taylor-application-v1",
+              "fingerprint": "79ad633d6432e08c4ea93524dd0db0f0f1db2af7fdb39b10bd36fb39b626e795",
+              "sourceId": "analysis.md",
+              "location": "/sources/2/text",
+              "start": 1509,
+              "end": 1692,
+              "quote": "Increase advertising spend immediately to recover donations. No experiment, validation measure or order of checks is proposed, despite the report calling that campaign the sole cause."
+            }
+          ],
+          "review": null,
+          "scope": "Bounded synthetic evidence only; scoring and shortlist are separate."
+        }
+      ]
+    }
+  },
+  "meta": {
+    "replayed": false
+  }
+}

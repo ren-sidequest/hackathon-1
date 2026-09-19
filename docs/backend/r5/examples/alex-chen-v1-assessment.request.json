@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "3.0",
+  "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+  "candidateId": "alex-chen",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbourcart-2026-09-v1",
+  "stage": "task_v1",
+  "evidenceSnapshotId": "submission:7ec2b9c5-607e-4df2-9fb3-aa9853d6e5a2",
+  "fingerprint": "00fd136b4769c72c817061f14b185716de631d4fa4a1e91482f3c554c77643c8",
+  "submissionId": "7ec2b9c5-607e-4df2-9fb3-aa9853d6e5a2",
+  "contentFingerprint": "00fd136b4769c72c817061f14b185716de631d4fa4a1e91482f3c554c77643c8",
+  "rubricVersion": "harbourcart-rubric-v1",
+  "expectedAssessmentRevision": 0,
+  "items": [
+    {
+      "criterionId": "B1",
+      "mark": "NE",
+      "rationale": "Synthetic request records insufficient material for this criterion.",
+      "support": "Only a short aggregate statement was submitted.",
+      "gaps": "No criterion-specific complete demonstration.",
+      "uncertainty": "Independent work and practical performance remain unknown.",
+      "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+      "checkedSourceIds": [
+        "summary",
+        "finding:finding-1:title",
+        "finding:finding-1:detail"
+      ],
+      "sourceRefs": []
+    },
+    {
+      "criterionId": "B2",
+      "mark": "NE",
+      "rationale": "Synthetic request records insufficient material for this criterion.",
+      "support": "Only a short aggregate statement was submitted.",
+      "gaps": "No criterion-specific complete demonstration.",
+      "uncertainty": "Independent work and practical performance remain unknown.",
+      "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+      "checkedSourceIds": [
+        "summary",
+        "finding:finding-1:title",
+        "finding:finding-1:detail"
+      ],
+      "sourceRefs": []
+    },
+    {
+      "criterionId": "B3",
+      "mark": "NE",
+      "rationale": "Synthetic request records insufficient material for this criterion.",
+      "support": "Only a short aggregate statement was submitted.",
+      "gaps": "No criterion-specific complete demonstration.",
+      "uncertainty": "Independent work and practical performance remain unknown.",
+      "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+      "checkedSourceIds": [
+        "summary",
+        "finding:finding-1:title",
+        "finding:finding-1:detail"
+      ],
+      "sourceRefs": []
+    },
+    {
+      "criterionId": "B4",
+      "mark": "NE",
+      "rationale": "Synthetic request records insufficient material for this criterion.",
+      "support": "Only a short aggregate statement was submitted.",
+      "gaps": "No criterion-specific complete demonstration.",
+      "uncertainty": "Independent work and practical performance remain unknown.",
+      "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+      "checkedSourceIds": [
+        "summary",
+        "finding:finding-1:title",
+        "finding:finding-1:detail"
+      ],
+      "sourceRefs": []
+    }
+  ],
+  "reuseApplication": {
+    "assessmentRevision": 2,
+    "evidenceSnapshotId": "alex-chen-application-v1",
+    "fingerprint": "3c27e97e76517e67e56e2b706400ffa61d397e444e7a0de81b55ed5e846bac0e"
+  },
+  "operatorLabel": "Synthetic example operator; not an actual human validation"
+}

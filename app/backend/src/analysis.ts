@@ -4,7 +4,8 @@ export const DIMENSIONS = [
   'Problem Framing', 'Evidence Navigation', 'Hypothesis Formation',
   'Evidence Seeking', 'Decision Making',
 ] as const;
-export type Dimension = typeof DIMENSIONS[number];
+export type Dimension = string;
+export type AnalysisProfile = { dimensions: readonly string[]; promptVersion: string; instructions: string; sections: Record<string, string | null> };
 export const PROMPT_VERSION = 'evidencebridge-observations-v1';
 
 export type SubmissionForAnalysis = {
@@ -47,6 +48,7 @@ export type AnalyzerConfig = {
   maxOutputTokens?: number;
   retryDelayMs?: number;
   caseContext?: string;
+  profile?: AnalysisProfile;
   fetchImpl?: typeof globalThis.fetch;
   now?: () => Date;
 };
@@ -121,10 +123,11 @@ export function buildSourceIndex(submission: SubmissionForAnalysis): SourceEntry
 }
 
 /** Literal provenance validation does not certify factual accuracy or the strength of a hiring inference. */
-export function validateAnalysis(result: unknown, submission: SubmissionForAnalysis): AnalysisResult {
+export function validateAnalysis(result: unknown, submission: SubmissionForAnalysis, profile?: AnalysisProfile): AnalysisResult {
+  const dimensionsExpected = profile?.dimensions ?? DIMENSIONS;
   exact(result, ['mode', 'model', 'promptVersion', 'submissionId', 'contentFingerprint', 'observations', 'provenance']);
   if (typeof result.mode !== 'string' || !['live', 'manual_simulation', 'replay'].includes(result.mode)
-      || result.promptVersion !== PROMPT_VERSION || result.submissionId !== submission.submissionId
+      || result.promptVersion !== (profile?.promptVersion ?? PROMPT_VERSION) || result.submissionId !== submission.submissionId
       || result.contentFingerprint !== submission.contentFingerprint) fail();
   exact(result.provenance, ['provider', 'generatedAt', 'responseId', 'processEvidence']);
   const provenance = result.provenance;
@@ -136,12 +139,12 @@ export function validateAnalysis(result: unknown, submission: SubmissionForAnaly
   if (result.mode === 'manual_simulation') {
     if (result.model !== null || provenance.provider !== 'manual_rules' || provenance.responseId !== null) fail();
   } else if (!nonempty(result.model, 160) || provenance.provider !== 'openai' || !validId(provenance.responseId)) fail();
-  if (!Array.isArray(result.observations) || result.observations.length !== DIMENSIONS.length) fail();
+  if (!Array.isArray(result.observations) || result.observations.length !== dimensionsExpected.length) fail();
   const sources = new Map(buildSourceIndex(submission).map(source => [source.sourceId, source]));
   const dimensions = new Set<string>();
   for (const observation of result.observations) {
     exact(observation, ['dimension', 'status', 'statement', 'citations', 'scope', 'uncertainty']);
-    if (typeof observation.dimension !== 'string' || !DIMENSIONS.includes(observation.dimension as Dimension)
+    if (typeof observation.dimension !== 'string' || !dimensionsExpected.includes(observation.dimension)
         || dimensions.has(observation.dimension) || typeof observation.status !== 'string'
         || !['observed', 'not_observed'].includes(observation.status)
         || !nonempty(observation.statement) || !nonempty(observation.scope) || !nonempty(observation.uncertainty)
@@ -203,15 +206,15 @@ Process events are client-reported, not independently verified telemetry. Openin
 Distinguish correlations, hypotheses and causal evidence. A text claiming that an ad campaign caused a decline is only a candidate assertion; without a controlled comparison or further evidence, retain causal uncertainty and identify the unsupported inference. Evidence Navigation means actual use of cited material, not merely naming a file.
 Fixed case: HarbourCart Pty Ltd; Junior Data Analyst; Alex Chen; Business Problem Solving is the target gap. Overall conversion 3.4% to 2.6%, traffic +18%, ad spend +15%. Do not substitute a different case or assume that channel conversion remained unchanged. Only supplied fixed case data is available. Write concise, neutral observations; do not infer personal or protected characteristics.`;
 
-function manualResult(submission: SubmissionForAnalysis, sources: SourceEntry[], now: () => Date): AnalysisResult {
-  const sections: Record<Dimension, string | null> = {
+function manualResult(submission: SubmissionForAnalysis, sources: SourceEntry[], now: () => Date, profile?: AnalysisProfile): AnalysisResult {
+  const sections: Record<Dimension, string | null> = profile?.sections ?? {
     'Problem Framing': null,
     'Evidence Navigation': 'Key Findings',
     'Hypothesis Formation': 'Hypotheses',
     'Evidence Seeking': 'Additional Evidence Needed',
     'Decision Making': 'Recommended Next Steps',
   };
-  const observations = DIMENSIONS.map((dimension): Observation => {
+  const observations = (profile?.dimensions ?? DIMENSIONS).map((dimension): Observation => {
     const section = sections[dimension];
     const finding = section ? submission.findings.find(item => item.section === section && item.detail.trim()) : undefined;
     const source = sources.find(item => item.sourceId === (finding ? `finding:${finding.id}:detail` : section ? '' : 'summary'));
@@ -231,10 +234,10 @@ function manualResult(submission: SubmissionForAnalysis, sources: SourceEntry[],
     };
   });
   return validateAnalysis({
-    mode: 'manual_simulation', model: null, promptVersion: PROMPT_VERSION,
+    mode: 'manual_simulation', model: null, promptVersion: profile?.promptVersion ?? PROMPT_VERSION,
     submissionId: submission.submissionId, contentFingerprint: submission.contentFingerprint, observations,
     provenance: { provider: 'manual_rules', generatedAt: now().toISOString(), responseId: null, processEvidence: 'client_reported' },
-  }, submission);
+  }, submission, profile);
 }
 
 async function boundedJson(response: Response, maximum: number, signal: AbortSignal): Promise<unknown> {
@@ -292,6 +295,10 @@ function extractProviderOutput(payload: unknown): { observations: unknown; respo
 
 /** No env lookup or network activity occurs at construction; live use is explicit and server-configured. */
 export function createAnalyzer(config: AnalyzerConfig = {}): (submission: SubmissionForAnalysis) => Promise<AnalysisResult> {
+  const profile = config.profile;
+  if (profile && (profile.dimensions.length < 1 || profile.dimensions.length > 10 || new Set(profile.dimensions).size !== profile.dimensions.length || !profile.instructions.trim() || !profile.promptVersion.trim())) fail('AI_CONFIG_INVALID', 500);
+  const outputSchema = structuredClone(OBSERVATION_OUTPUT_SCHEMA);
+  if (profile) { outputSchema.properties.observations.minItems = profile.dimensions.length; outputSchema.properties.observations.maxItems = profile.dimensions.length; outputSchema.properties.observations.items.properties.dimension.enum = [...profile.dimensions] as typeof DIMENSIONS[number][]; }
   const mode = config.mode ?? 'disabled';
   const fetchImpl = config.fetchImpl ?? globalThis.fetch;
   const now = config.now ?? (() => new Date());
@@ -323,14 +330,14 @@ export function createAnalyzer(config: AnalyzerConfig = {}): (submission: Submis
       findingLabels: submission.findings.map(finding => ({ id: finding.id, section: finding.section, source: finding.source })),
     });
     if (Buffer.byteLength(input) > maxInputBytes) fail('AI_INPUT_TOO_LARGE', 413);
-    if (mode === 'manual_simulation') return manualResult(submission, sources, now);
+    if (mode === 'manual_simulation') return manualResult(submission, sources, now, profile);
 
     const controller = new AbortController();
     let timeout: ReturnType<typeof setTimeout> | undefined;
     const deadline = new Promise<never>((_, reject) => {
       timeout = setTimeout(() => {
         controller.abort();
-        reject(new AnalysisError('AI_TIMEOUT', 504));
+        reject(new AnalysisError('AI_TIMEOUT', 504, true));
       }, timeoutMs);
     });
     const execute = async (): Promise<AnalysisResult> => {
@@ -342,8 +349,8 @@ export function createAnalyzer(config: AnalyzerConfig = {}): (submission: Submis
             headers: { 'content-type': 'application/json', authorization: `Bearer ${config.apiKey}` },
             body: JSON.stringify({
               model: config.model, store: false, max_output_tokens: maxOutputTokens,
-              input: [{ role: 'developer', content: ANALYSIS_INSTRUCTIONS }, { role: 'user', content: input }],
-              text: { format: { type: 'json_schema', name: 'evidencebridge_observations', strict: true, schema: OBSERVATION_OUTPUT_SCHEMA } },
+              input: [{ role: 'developer', content: profile?.instructions ?? ANALYSIS_INSTRUCTIONS }, { role: 'user', content: input }],
+              text: { format: { type: 'json_schema', name: 'evidencebridge_observations', strict: true, schema: outputSchema } },
             }),
           });
           controller.signal.throwIfAborted();
@@ -354,18 +361,18 @@ export function createAnalyzer(config: AnalyzerConfig = {}): (submission: Submis
           const extracted = extractProviderOutput(await boundedJson(response, maxOutputBytes, controller.signal));
           controller.signal.throwIfAborted();
           return validateAnalysis({
-            mode: 'live', model: extracted.model, promptVersion: PROMPT_VERSION,
+            mode: 'live', model: extracted.model, promptVersion: profile?.promptVersion ?? PROMPT_VERSION,
             submissionId: submission.submissionId, contentFingerprint: submission.contentFingerprint,
             observations: extracted.observations,
             provenance: { provider: 'openai', generatedAt: now().toISOString(), responseId: extracted.responseId, processEvidence: 'client_reported' },
-          }, submission);
+          }, submission, profile);
         } catch (error) {
-          if (controller.signal.aborted) throw new AnalysisError('AI_TIMEOUT', 504);
+          if (controller.signal.aborted) throw new AnalysisError('AI_TIMEOUT', 504, true);
           // External exceptions and provider bodies are deliberately not propagated as causes or messages.
           const failure = error instanceof AnalysisError ? error : new AnalysisError('AI_PROVIDER_ERROR', 502, true);
           if (attempt === 0 && failure.retryable) {
             try { await delay(retryDelayMs, undefined, { signal: controller.signal }); }
-            catch { throw new AnalysisError('AI_TIMEOUT', 504); }
+            catch { throw new AnalysisError('AI_TIMEOUT', 504, true); }
             continue;
           }
           throw failure;

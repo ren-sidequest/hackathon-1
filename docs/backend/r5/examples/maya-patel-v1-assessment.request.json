@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "3.0",
+  "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+  "candidateId": "maya-patel",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbourcart-2026-09-v1",
+  "stage": "task_v1",
+  "evidenceSnapshotId": "submission:37f38c0b-7cb8-468d-8ca3-e0081e8574fa",
+  "fingerprint": "d0208f0d9074791a277b7c1437a0da0b8375681c4856eb16b3826dfc86d908cb",
+  "submissionId": "37f38c0b-7cb8-468d-8ca3-e0081e8574fa",
+  "contentFingerprint": "d0208f0d9074791a277b7c1437a0da0b8375681c4856eb16b3826dfc86d908cb",
+  "rubricVersion": "harbourcart-rubric-v1",
+  "expectedAssessmentRevision": 0,
+  "items": [
+    {
+      "criterionId": "S1",
+      "mark": "NE",
+      "rationale": "Synthetic request records insufficient material for this criterion.",
+      "support": "Only a short aggregate statement was submitted.",
+      "gaps": "No criterion-specific complete demonstration.",
+      "uncertainty": "Independent work and practical performance remain unknown.",
+      "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+      "checkedSourceIds": [
+        "summary",
+        "finding:finding-1:title",
+        "finding:finding-1:detail"
+      ],
+      "sourceRefs": []
+    },
+    {
+      "criterionId": "S2",
+      "mark": "NE",
+      "rationale": "Synthetic request records insufficient material for this criterion.",
+      "support": "Only a short aggregate statement was submitted.",
+      "gaps": "No criterion-specific complete demonstration.",
+      "uncertainty": "Independent work and practical performance remain unknown.",
+      "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+      "checkedSourceIds": [
+        "summary",
+        "finding:finding-1:title",
+        "finding:finding-1:detail"
+      ],
+      "sourceRefs": []
+    },
+    {
+      "criterionId": "S3",
+      "mark": "NE",
+      "rationale": "Synthetic request records insufficient material for this criterion.",
+      "support": "Only a short aggregate statement was submitted.",
+      "gaps": "No criterion-specific complete demonstration.",
+      "uncertainty": "Independent work and practical performance remain unknown.",
+      "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+      "checkedSourceIds": [
+        "summary",
+        "finding:finding-1:title",
+        "finding:finding-1:detail"
+      ],
+      "sourceRefs": []
+    }
+  ],
+  "reuseApplication": {
+    "assessmentRevision": 1,
+    "evidenceSnapshotId": "maya-patel-application-v1",
+    "fingerprint": "ada8772ea8411a22ade20efab8dc8d74ca7ab13d1134202820d6a4bb79939c4c"
+  },
+  "operatorLabel": "Synthetic example operator; not an actual human validation"
+}

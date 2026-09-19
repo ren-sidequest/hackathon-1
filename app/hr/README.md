@@ -56,3 +56,8 @@ npm run preview --prefix app/hr
 `npm test --prefix app/hr` 使用 Node 内置 test runner，覆盖完整确认链路、两种非确认分支、空任务、重复发送/提交、任务锁定、重新生成、重新审核、刷新恢复、重置及固定指标一致性。CI 执行这些测试和生产构建；浏览器验收步骤见上方演示路径。
 
 常见问题：端口被占用会在启动终端报错；未收到提交时 Review 显示等待页；旧演示进度可用 Reset demo 清除。浏览器运行错误见开发者控制台，Vite 启动/构建日志在启动终端。
+
+
+## 2026-09-19 双端本地整合补充
+
+基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](../../docs/FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。

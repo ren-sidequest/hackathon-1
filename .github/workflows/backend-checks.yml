@@ -26,5 +26,7 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
+      - run: npm run docs:generate:legacy
       - run: npm run docs:generate
-      - run: git diff --exit-code -- ../../docs/backend/openapi.json
+      - run: git diff --exit-code -- ../../docs/backend/openapi.json ../../docs/backend/r5/openapi.json
+      - run: node scripts/verify-r5.mjs

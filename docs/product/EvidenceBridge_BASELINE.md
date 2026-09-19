@@ -798,3 +798,17 @@ The two independently developed sides should pass these checks:
 - The Candidate targeted task is the most visually complete part of the MVP.
 - The evidence gap -> targeted task -> new evidence -> human confirmation loop is immediately understandable.
 - No screen should look like a generic AI chat interface or a quiz form.
+
+
+## 2026-09-19 修订5本地后端实施补充
+
+以已合并 PR7 `e9d6de6` 为基线保留 API2 前端。本地新增 API3 四人独立状态、SQL/DA/BPS固定模板、有限V1/V2、十项rubric确定性计算、分阶段评估历史与人工名单；证据review、assessment、shortlist彼此独立。公司与材料为合成fixture，预置评估实际由AI编写/交叉审查，真人校准待完成。不把这份实现当作生产鉴权、真实模型效果或新版双端已联调。
+
+新入口 `npm start --prefix app/backend` 运行API3（默认新库v3）；已合并两端继续用 `npm run start:legacy --prefix app/backend` 的API2并显式核对v2路径。请先进入 `app/backend` 复制/核对环境示例，避免旧 `.env` 路径影响合同切换。API3 GET 必选candidateId，不静默默认Alex；正式演示库不自动迁移。来源和流程以[新版后端交接](../backend/R5_HANDOFF.md)为准，旧段落表示API2阶段。
+
+新增检查：`npm run test:r5 --prefix app/backend`；`npm run docs:generate --prefix app/backend` 生成API3，`npm run docs:generate:legacy --prefix app/backend` 保留API2；`node app/backend/scripts/verify-r5.mjs` 用独立临时库跑进程级HTTP/重启/迁移。迁移CLI强制source/destination/backup显式路径，执行前另外确认目标，禁止直接替换演示库。本轮新增发布、合并、部署均未执行。
+
+
+## 2026-09-19 双端本地整合补充
+
+基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](../FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。

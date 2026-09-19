@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "3.0",
+  "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+  "candidateId": "alex-chen",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbourcart-2026-09-v1",
+  "taskId": "e0e15ba5-3a8a-4e3d-be4a-dd312d6c0f79",
+  "targetRequirementId": "business-problem-solving",
+  "submissionId": "b84a4e88-941b-4e13-bbc1-8ceab1fb1cc0",
+  "contentFingerprint": "c23ceca5312d67d4c07b6d8903105f6df538b069fe5bd84307b52be83ab3fec4",
+  "decision": "needs_more_evidence",
+  "comment": "Third version is outside this finite task."
+}

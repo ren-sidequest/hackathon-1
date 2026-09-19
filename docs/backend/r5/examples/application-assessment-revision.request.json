@@ -1,0 +1,266 @@
+{
+  "schemaVersion": "3.0",
+  "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+  "candidateId": "alex-chen",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbourcart-2026-09-v1",
+  "stage": "application_review",
+  "evidenceSnapshotId": "alex-chen-application-v1",
+  "fingerprint": "3c27e97e76517e67e56e2b706400ffa61d397e444e7a0de81b55ed5e846bac0e",
+  "submissionId": null,
+  "contentFingerprint": null,
+  "rubricVersion": "harbourcart-rubric-v1",
+  "expectedAssessmentRevision": 1,
+  "items": [
+    {
+      "criterionId": "S1",
+      "mark": 3,
+      "rationale": "The customer-month aggregation and absence of an unnecessary join are inspectable. The order-row uniqueness assumption is not documented.",
+      "support": "The customer-month aggregation and absence of an unnecessary join are inspectable.",
+      "gaps": "The order-row uniqueness assumption is not documented.",
+      "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+      "nextStep": "Explain input keys and what one orders row represents.",
+      "checkedSourceIds": [
+        "customer_churn_analysis.sql",
+        "sales_analysis_project.md",
+        "alex_chen_resume.md",
+        "business_memo.md"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "alex-chen",
+          "evidenceSnapshotId": "alex-chen-application-v1",
+          "fingerprint": "3c27e97e76517e67e56e2b706400ffa61d397e444e7a0de81b55ed5e846bac0e",
+          "sourceId": "customer_churn_analysis.sql",
+          "location": "/sources/0/text",
+          "start": 108,
+          "end": 288,
+          "quote": "SELECT customer_id, DATE_TRUNC('month', order_date) AS month,\n         COUNT(*) AS orders, SUM(total) AS revenue\n  FROM orders GROUP BY customer_id, DATE_TRUNC('month', order_date)"
+        }
+      ]
+    },
+    {
+      "criterionId": "S2",
+      "mark": 2,
+      "rationale": "The partition and month ordering show an intended customer-period comparison. No time filter or calendar-gap policy establishes whether the preceding observed row is the preceding calendar month.",
+      "support": "The partition and month ordering show an intended customer-period comparison.",
+      "gaps": "No time filter or calendar-gap policy establishes whether the preceding observed row is the preceding calendar month.",
+      "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+      "nextStep": "Clarify the intended time range and missing-month comparison.",
+      "checkedSourceIds": [
+        "customer_churn_analysis.sql",
+        "sales_analysis_project.md",
+        "alex_chen_resume.md",
+        "business_memo.md"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "alex-chen",
+          "evidenceSnapshotId": "alex-chen-application-v1",
+          "fingerprint": "3c27e97e76517e67e56e2b706400ffa61d397e444e7a0de81b55ed5e846bac0e",
+          "sourceId": "customer_churn_analysis.sql",
+          "location": "/sources/0/text",
+          "start": 342,
+          "end": 427,
+          "quote": "LAG(revenue) OVER (PARTITION BY customer_id ORDER BY month) AS previous_month_revenue"
+        }
+      ]
+    },
+    {
+      "criterionId": "S3",
+      "mark": "NE",
+      "rationale": "The SQL, calculation table, CV and supplementary memo were checked. No practical SQL check or expected boundary result is supplied; checks are unobserved, not known incorrect.",
+      "support": "The SQL, calculation table, CV and supplementary memo were checked.",
+      "gaps": "No practical SQL check or expected boundary result is supplied; checks are unobserved, not known incorrect.",
+      "uncertainty": "Static source review only; execution, independent authorship and production performance are not verified.",
+      "nextStep": "Request one reproducible check with its expected result.",
+      "checkedSourceIds": [
+        "customer_churn_analysis.sql",
+        "sales_analysis_project.md",
+        "alex_chen_resume.md",
+        "business_memo.md"
+      ],
+      "sourceRefs": []
+    },
+    {
+      "criterionId": "D1",
+      "mark": 4,
+      "rationale": "Monthly denominators, AUD units and formulas reproduce AOV 30 and the stated revenue changes. No material gap in the displayed descriptive calculation; this contains no conversion-rate comparison.",
+      "support": "Monthly denominators, AUD units and formulas reproduce AOV 30 and the stated revenue changes.",
+      "gaps": "No material gap in the displayed descriptive calculation; this contains no conversion-rate comparison.",
+      "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+      "nextStep": "Retain the arithmetic scope and request raw inputs only if needed.",
+      "checkedSourceIds": [
+        "customer_churn_analysis.sql",
+        "sales_analysis_project.md",
+        "alex_chen_resume.md",
+        "business_memo.md"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "alex-chen",
+          "evidenceSnapshotId": "alex-chen-application-v1",
+          "fingerprint": "3c27e97e76517e67e56e2b706400ffa61d397e444e7a0de81b55ed5e846bac0e",
+          "sourceId": "sales_analysis_project.md",
+          "location": "/sources/1/text",
+          "start": 211,
+          "end": 578,
+          "quote": "| Month | Orders | Revenue AUD | Average order value AUD | Revenue change |\n| --- | ---: | ---: | ---: | ---: |\n| April | 400 | 12000 | 30 | — |\n| May | 450 | 13500 | 30 | 12.50% |\n| June | 500 | 15000 | 30 | 11.11% |\n\nAverage order value = revenue / orders. Revenue change = (current revenue - previous revenue) / previous revenue. Percentages shown to two decimals."
+        }
+      ]
+    },
+    {
+      "criterionId": "D2",
+      "mark": 2,
+      "rationale": "The consecutive monthly revenue comparisons identify a useful change. No relevant channel or product comparison accompanies the aggregate trend.",
+      "support": "The consecutive monthly revenue comparisons identify a useful change.",
+      "gaps": "No relevant channel or product comparison accompanies the aggregate trend.",
+      "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+      "nextStep": "Ask which grouping would help interpret the overall change.",
+      "checkedSourceIds": [
+        "customer_churn_analysis.sql",
+        "sales_analysis_project.md",
+        "alex_chen_resume.md",
+        "business_memo.md"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "alex-chen",
+          "evidenceSnapshotId": "alex-chen-application-v1",
+          "fingerprint": "3c27e97e76517e67e56e2b706400ffa61d397e444e7a0de81b55ed5e846bac0e",
+          "sourceId": "sales_analysis_project.md",
+          "location": "/sources/1/text",
+          "start": 356,
+          "end": 428,
+          "quote": "| May | 450 | 13500 | 30 | 12.50% |\n| June | 500 | 15000 | 30 | 11.11% |"
+        }
+      ]
+    },
+    {
+      "criterionId": "D3",
+      "mark": 3,
+      "rationale": "The table, formulas and descriptive limitation provide a reviewable path. The source does not explain raw input provenance or extraction checks.",
+      "support": "The table, formulas and descriptive limitation provide a reviewable path.",
+      "gaps": "The source does not explain raw input provenance or extraction checks.",
+      "uncertainty": "Prepared synthetic counts support a descriptive calculation, not independently verified extraction or production data quality.",
+      "nextStep": "Clarify how the prepared totals would be reconciled to source records.",
+      "checkedSourceIds": [
+        "customer_churn_analysis.sql",
+        "sales_analysis_project.md",
+        "alex_chen_resume.md",
+        "business_memo.md"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "alex-chen",
+          "evidenceSnapshotId": "alex-chen-application-v1",
+          "fingerprint": "3c27e97e76517e67e56e2b706400ffa61d397e444e7a0de81b55ed5e846bac0e",
+          "sourceId": "sales_analysis_project.md",
+          "location": "/sources/1/text",
+          "start": 579,
+          "end": 669,
+          "quote": "These calculations show descriptive comparison; they do not establish why revenue changed."
+        }
+      ]
+    },
+    {
+      "criterionId": "B1",
+      "mark": 3,
+      "rationale": "The memo ties investigation to the advertising decision and limited analysis time. The immediate operational owner and time allocation remain unspecified.",
+      "support": "The memo ties investigation to the advertising decision and limited analysis time.",
+      "gaps": "The immediate operational owner and time allocation remain unspecified.",
+      "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+      "nextStep": "Clarify the first decision the operations manager needs to make.",
+      "checkedSourceIds": [
+        "customer_churn_analysis.sql",
+        "sales_analysis_project.md",
+        "alex_chen_resume.md",
+        "business_memo.md"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "alex-chen",
+          "evidenceSnapshotId": "alex-chen-application-v1",
+          "fingerprint": "3c27e97e76517e67e56e2b706400ffa61d397e444e7a0de81b55ed5e846bac0e",
+          "sourceId": "business_memo.md",
+          "location": "/sources/3/text",
+          "start": 223,
+          "end": 465,
+          "quote": "Business question: HarbourCart is considering increasing advertising spend while conversion is falling. First clarify which change deserves investigation. The team has limited analysis time; I have not assigned an owner or an action sequence."
+        }
+      ]
+    },
+    {
+      "criterionId": "B2",
+      "mark": 3,
+      "rationale": "Observed conversion and a campaign hypothesis are explicitly distinguished. A reasonable competing explanation has not yet been developed.",
+      "support": "Observed conversion and a campaign hypothesis are explicitly distinguished.",
+      "gaps": "A reasonable competing explanation has not yet been developed.",
+      "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+      "nextStep": "Ask for another explanation and its evidence boundary.",
+      "checkedSourceIds": [
+        "customer_churn_analysis.sql",
+        "sales_analysis_project.md",
+        "alex_chen_resume.md",
+        "business_memo.md"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "alex-chen",
+          "evidenceSnapshotId": "alex-chen-application-v1",
+          "fingerprint": "3c27e97e76517e67e56e2b706400ffa61d397e444e7a0de81b55ed5e846bac0e",
+          "sourceId": "business_memo.md",
+          "location": "/sources/3/text",
+          "start": 584,
+          "end": 755,
+          "quote": "The conversion decline is an observation, not proof that the new campaigns caused it. A campaign mix change is one hypothesis; other hypotheses are not yet developed here."
+        }
+      ]
+    },
+    {
+      "criterionId": "B3",
+      "mark": 2,
+      "rationale": "两个期间的 campaign × device 和 checkout 数据请求具体。 未说明怎样比较，也未解释不同结果如何支持或削弱假设。",
+      "support": "两个期间的 campaign × device 和 checkout 数据请求具体。",
+      "gaps": "未说明怎样比较，也未解释不同结果如何支持或削弱假设。",
+      "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+      "nextStep": "你将怎样解释不同结果，哪些结果会改变你的判断？",
+      "checkedSourceIds": [
+        "customer_churn_analysis.sql",
+        "sales_analysis_project.md",
+        "alex_chen_resume.md",
+        "business_memo.md"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "alex-chen",
+          "evidenceSnapshotId": "alex-chen-application-v1",
+          "fingerprint": "3c27e97e76517e67e56e2b706400ffa61d397e444e7a0de81b55ed5e846bac0e",
+          "sourceId": "business_memo.md",
+          "location": "/sources/3/text",
+          "start": 757,
+          "end": 813,
+          "quote": "🔎 补证想法\n我会请求两个期间的 campaign × device 明细，以及各步 checkout 事件。"
+        }
+      ]
+    },
+    {
+      "criterionId": "B4",
+      "mark": "NE",
+      "rationale": "All four application files were checked, including the new short memo. No business intervention, priority sequence or validation measure is supplied; absence is not evidence of a wrong action.",
+      "support": "All four application files were checked, including the new short memo.",
+      "gaps": "No business intervention, priority sequence or validation measure is supplied; absence is not evidence of a wrong action.",
+      "uncertainty": "This application text supports only the stated reasoning; independent completion, practical execution and actual outcomes remain unverified.",
+      "nextStep": "Request a minimal prioritised action with a way to check its result.",
+      "checkedSourceIds": [
+        "customer_churn_analysis.sql",
+        "sales_analysis_project.md",
+        "alex_chen_resume.md",
+        "business_memo.md"
+      ],
+      "sourceRefs": []
+    }
+  ],
+  "reuseApplication": null,
+  "operatorLabel": "Synthetic example operator; not an actual human validation"
+}
