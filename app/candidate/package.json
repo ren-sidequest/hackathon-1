@@ -15,6 +15,7 @@
     "test:ui": "playwright test --config playwright.shared.config.ts",
     "test:api": "playwright test --config playwright.api.config.ts",
     "test:revision5": "playwright test --config playwright.revision5.config.ts",
+    "test:api4": "playwright test --config playwright.api4.config.ts",
     "test:api3": "playwright test --config playwright.api3.config.ts"
   },
   "dependencies": {

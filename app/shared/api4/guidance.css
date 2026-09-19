@@ -1,0 +1,25 @@
+@import "../api3/guidance.css";
+
+.r6-material-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.r6-material-grid .r5-source-card { margin:0; width:100%; }
+.r6-jd-group { margin-top:20px; }
+.r6-jd-row { border-top:1px solid var(--border); padding:12px 0; }
+.r6-jd-row > summary { display:flex; align-items:center; justify-content:space-between; gap:16px; cursor:pointer; }
+.r6-jd-row > summary > span:first-child { flex:1; }
+.r6-jd-row[open] > summary { color:var(--text-link); margin-bottom:12px; }
+.r6-statuses { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; max-width:48%; }
+.r6-tag { display:inline-block; padding:4px 8px; border:1px solid var(--border); border-radius:8px; background:var(--surface); font-size:12px; }
+.r6-tag.work_sample_evidence { background:var(--success-bg); color:var(--success-text); }
+.r6-tag.further_evidence_needed { background:var(--warning-bg); color:var(--warning-text); }
+.r6-tag.claimed_in_cv { background:var(--surface-soft); color:var(--text-primary); }
+.r6-provenance { display:grid; gap:8px; margin-top:12px; }
+.r6-provenance p { margin:0; font-size:13px; }
+.r6-provenance details, .r6-jd-original { margin-top:12px; }
+.r6-provenance details p, .r6-archived code { overflow-wrap:anywhere; }
+.r6-source-text { white-space:pre-wrap; overflow-wrap:anywhere; max-height:55vh; overflow:auto; padding:16px; border:1px solid var(--border); border-radius:12px; line-height:1.7; }
+.r6-jd-row .eb-citation { display:block; width:100%; text-align:left; }
+.r6-gaps .eb-actions { margin-top:12px; }
+.r6-jd summary:focus-visible, .r6-gaps summary:focus-visible { outline:2px solid var(--focus-ring); outline-offset:4px; }
+
+.r6-jd-row .eb-citation small { display:block; margin-top:6px; color:var(--text-secondary); }
+.r6-complete-count { display:block; margin-top:4px; }

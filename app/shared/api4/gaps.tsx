@@ -1,0 +1,11 @@
+import React from 'react';
+import type { Demo, Comparison } from '../api4-types';
+import type { TaskIntent } from './guidance';
+export const gapLabel = (severity: string) => ({ observed_problem: 'Observed problem', missing_evidence: 'Missing evidence', material_gap: 'Material reasoning gap', minor_gap: 'Minor clarification' }[severity] ?? severity.replaceAll('_', ' '));
+export function prioritizedGaps(row: Pick<Comparison['candidates'][number], 'gapSuggestions' | 'assessment' | 'application'>) {
+  return row.gapSuggestions.filter(g => g.stage === 'application_review' && g.assessmentRevision === row.assessment?.assessmentRevision && g.evidenceSnapshotId === row.application.evidenceSnapshotId && g.fingerprint === row.application.fingerprint).sort((a,b) => a.priority - b.priority);
+}
+export function GapSuggestions({ data, onTask, inspect }: { data: Demo; onTask: (intent: TaskIntent) => void; inspect: (criterion: string) => void }) {
+  const gaps = prioritizedGaps({ ...data, assessment: data.assessment.application_review });
+  return <section className="eb-panel r6-gaps"><h2>Clarify the application evidence</h2><p>Ask for an existing explanation or work sample first. A bounded task is optional and requires your confirmation.</p>{gaps.length ? gaps.map(g => <details key={g.gapId} className="r6-jd-row"><summary><span>{g.criterionId} · {g.summary}</span><span className="r6-tag further_evidence_needed">{gapLabel(g.severity)}</span></summary><p>{g.priorityReason}</p><p>{g.rationale}</p><p><strong>Next step:</strong> {g.nextStep}</p><small>{g.suggestedFirstAction}</small><div className="eb-actions"><button className="eb-action" onClick={() => inspect(g.criterionId)}>Inspect {g.criterionId} evidence</button><button className="eb-action primary" disabled={!data.workflow.canSend} onClick={() => onTask({ target: g.targetRequirementId, criterion: g.criterionId, reason: `${g.summary} ${g.nextStep}` })}>Prepare optional {g.criterionId} task</button></div></details>) : <p>No current application gap suggestion. Inspect the sources before requesting more work.</p>}<small>Application assessment revision {data.assessment.application_review?.assessmentRevision ?? 'not assessed'} · Suggestions do not diagnose submitted task V1/V2.</small></section>;
+}
