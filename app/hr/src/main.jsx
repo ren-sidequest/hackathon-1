@@ -28,6 +28,12 @@ import {
   workflowReducer,
 } from "./workflow.js";
 import "./styles.css";
+import "../../shared/tokens.css";
+import "../../shared/shell.css";
+import { Sidebar, useSidebar } from "../../shared/ui";
+import { initializeTheme } from "../../shared/preferences";
+document.documentElement.dataset.role = "hr";
+initializeTheme();
 
 const nav = [
   { id: "jobs", label: "Job Requirements", icon: "briefcase" },
@@ -69,6 +75,7 @@ function download(name, content, type = "text/plain") {
 }
 
 function App() {
+  const sidebar = useSidebar("hr");
   const [state, dispatch] = useReducer(workflowReducer, null, () => {
     try {
       return restoreState(localStorage.getItem(STORAGE_KEY));
@@ -1705,90 +1712,14 @@ function App() {
       >
         Skip to content
       </a>
-      <aside className="sidebar">
-        <a
-          className="brand"
-          aria-label="EvidenceBridge home"
-          href="#report"
-          onClick={() => go("report")}
-        >
-          <span className="brand-mark">
-            <Icon name="bridge" size={24} />
-          </span>
-          <span>EvidenceBridge</span>
-        </a>
-        <div className="workspace-switch">
-          <div className="company-avatar">H</div>
-          <div>
-            <strong>HarbourCart</strong>
-            <small>Hiring workspace</small>
-          </div>
-          <span className="workspace-badge">HR</span>
-        </div>
-        <div className="nav-label">WORKSPACE</div>
-        <nav aria-label="Main navigation">
-          {nav.map((n) => (
-            <button
-              className={`nav-item ${page === n.id ? "active" : ""}`}
-              key={n.id}
-              aria-label={n.label}
-              title={n.label}
-              onClick={() => go(n.id)}
-              aria-current={page === n.id ? "page" : undefined}
-            >
-              <Icon name={n.icon} size={19} />
-              <span>{n.label}</span>
-              {n.id === "review" && state.stage === "submitted" && (
-                <span className="nav-count">1</span>
-              )}
-              {n.id === "candidates" && (
-                <span className="nav-count subtle">1</span>
-              )}
-            </button>
-          ))}
-        </nav>
-        <div className="sidebar-bottom">
-          <div className="demo-card">
-            <div>
-              <span className="live-dot" />
-              DEMO WORKSPACE
-            </div>
-            <p>
-              Realistic work.
-              <br />
-              Evidence you can review.
-            </p>
-            <button
-              aria-label="Reset demo"
-              title="Reset demo"
-              onClick={() => setModal({ type: "reset" })}
-            >
-              <Icon name="reset" size={14} />
-              Reset demo
-            </button>
-          </div>
-          <button
-            className="nav-item help-link"
-            aria-label="Demo guide"
-            title="Demo guide"
-            onClick={() => setModal({ type: "help" })}
-          >
-            <Icon name="help" />
-            Demo guide
-          </button>
-          <div className="user-block">
-            <span className="avatar user">JM</span>
-            <div>
-              <strong>Jamie Morgan</strong>
-              <small>Hiring manager</small>
-            </div>
-            <Icon name="shield" size={16} />
-          </div>
-        </div>
-      </aside>
-      <div className="app-body">
+      <Sidebar role="hr" controller={sidebar} activePage={page}
+        items={nav.map(n => ({id:n.id,label:n.label,icon:<Icon name={n.icon}/>,count:n.id === "candidates" || (n.id === "review" && state.stage === "submitted") ? 1 : undefined}))}
+        onNavigate={go} user={{initials:"JM",name:"Jamie Morgan",title:"Hiring manager"}}
+        helpLabel="Demo guide" onHelp={()=>setModal({type:"help"})} onReset={()=>setModal({type:"reset"})}/>
+      <div className="app-body" data-eb-content>
         <header className="topbar">
           <div className="breadcrumbs">
+            {sidebar.menuButton}
             <span>Workspace</span>
             <Icon name="chevron" size={13} />
             <strong>{nav.find((n) => n.id === page)?.label}</strong>

@@ -1,6 +1,6 @@
 # EvidenceBridge HR
 
-可独立演示的 HR Web 应用。使用 React 19 + Vite 7，遵循 [产品蓝图](../../docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md)、[UI 基线](../../docs/product/EvidenceBridge_BASELINE.md) 与 [仓库规则](../../AGENTS.md)。深色侧栏、浅色工作区、蓝色 HR 强调色；固定使用 HarbourCart / Junior Data Analyst 场景。
+可独立演示的 HR Web 应用。使用 React 19 + Vite 7，遵循 [产品蓝图](../../docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md)、[UI 基线](../../docs/product/EvidenceBridge_BASELINE.md) 与 [仓库规则](../../AGENTS.md)。随主题变化的共享折叠侧栏、日夜工作区、蓝色 HR 强调色；固定使用 HarbourCart / Junior Data Analyst 场景。
 
 ## 本地运行
 
@@ -36,12 +36,16 @@ npm run preview --prefix app/hr
 ## 实现与协作边界
 
 - `src/main.jsx`：HR 页面、导航、任务与审核交互；`components.jsx`：HR 本地界面组件。
-- `src/styles.css`：Baseline 视觉 token、桌面布局与窄屏适配。
+- `src/styles.css`：本端布局与语义颜色引用；主题 token 与侧栏来自 [共享 UI](../shared/README.md)。
 - `src/data.js`：合成申请材料、六个资源、工作样本、时间线、预生成 AI 观察。
 - `src/workflow.js`：明确的工作流转换与本地状态恢复；`test/workflow.test.js`：状态、边界和证据链接检查。
 - 状态保存在当前浏览器 origin 的 `evidencebridge.hr.demo.v1`；刷新保留进度。Reset demo 只重置本 HR 应用数据。浏览器禁用存储时显示提示，当前会话仍可使用。
-- Candidate 目录、根目录构建配置和跨端接口没有改变。发送与收到样本是 HR 端本地模拟，不会向真实人员发消息；没有真实上传、AI 请求或两端同步。跨端任务、提交、审核与重置合同仍需双方约定。
+- 两端共用外观层，保留独立构建与业务状态。发送与收到样本是 HR 端本地模拟，不会向真实人员发消息；没有真实上传、AI 请求或两端同步。跨端任务、提交、审核与重置合同仍需双方约定。
 - 内置候选人、材料、分析、身份均为演示数据。按钮改变的是证据审核状态，不执行真实招聘决定。
+
+## 外观偏好
+
+侧栏底部太阳/月亮滑动开关控制日夜主题；侧栏支持 232px / 64px 折叠与小屏抽屉。业务重置保留外观偏好，本地不同端口分别记忆。数字评分尚未加入，原有三种人工审核结果不变。跨端界面回归复用 Candidate 的 Playwright：根目录执行 `npm run test:ui --prefix app/candidate`，需先安装两端既有依赖；截图与失败 trace 见 `.ci-results/shared-ui/`。
 
 ## 验证
 

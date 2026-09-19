@@ -34,6 +34,7 @@
 | .github/workflows/repository-checks.yml | 仓库基础检查，不运行应用或部署 |
 | scripts/check_repository.py | 文档存在性和本地链接检查 |
 | app/hr/ | HR 独立 React + Vite 应用、演示数据与工作流测试 |
+| app/shared/ | 两端主题、侧栏和 UI 偏好；不包含业务状态 |
 | app/candidate/ | Candidate 独立 React / TypeScript / Vite 应用，含演示数据与测试 |
 | .github/workflows/candidate-checks.yml | Candidate 单元测试、构建与 Chromium 浏览器测试 |
 | .github/workflows/hr-checks.yml | HR 工作流测试与构建 |
@@ -72,6 +73,14 @@ npm run preview --prefix app/hr
 开发与构建预览均使用 `http://127.0.0.1:5186`，不能同时占用该端口。HR 的 Node 工作流测试与构建接入 `.github/workflows/hr-checks.yml`；演示步骤和边界见 [HR README](app/hr/README.md)。跨端同步尚未实现。
 
 Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；两者执行同一检查脚本。
+
+双端共享 UI 回归复用 Candidate 的 Playwright（两端依赖均需按各自锁文件安装）：
+
+```sh
+npm run test:ui --prefix app/candidate
+```
+
+自动启动 Candidate `5273` / HR `5286`，截图与失败 trace 见 `.ci-results/shared-ui/`。主题、侧栏接口和存储边界见 [共享 UI 说明](app/shared/README.md)。
 
 ## 4. 开发与验证
 
@@ -139,8 +148,8 @@ Windows 若 `python3` 不可用，使用 `python scripts/check_repository.py`；
 
 - 开展产品功能、页面、交互、演示数据或验收相关工作前，先阅读 [产品蓝图](docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md) 和 [UI 与交互基线](docs/product/EvidenceBridge_BASELINE.md)。视觉工作还须查看两份文档链接的原始概念图。
 - 产品蓝图负责产品定位、角色流程、功能范围和演示闭环；Baseline 负责视觉、交互、共享状态语义和固定演示场景；[PROJECT_PLAN.md](PROJECT_PLAN.md) 记录技术选择、实施阶段和待决事项；本文件负责开发与协作规则。产品细节不重复维护多套。
-- 图 1 是候选人核心工作台参考，图 2 是双端页面与流程参考。已知差异按 Baseline 落实：深色侧栏、HR 蓝色、Candidate 绿色；候选人核心输入采用调查板，不照搬图 2 的单一大文本框。图片外围注释不作为产品界面内容；图中的共享后端示意不构成必须建设真实后端的要求。其他实质冲突先指出具体位置并确认。
-- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录。Candidate 已实现独立 React / TypeScript / Vite 本地演示；HR 已有独立 React + Vite 本地演示。根目录统一构建配置和共享模块尚未建立，变更前仍须约定。
+- 图 1 是候选人核心工作台参考，图 2 是双端页面与流程参考。已知差异按 Baseline 落实：侧栏随日夜主题变化、HR 蓝色、Candidate 绿色；候选人核心输入采用调查板，不照搬图 2 的单一大文本框。图片外围注释不作为产品界面内容；图中的共享后端示意不构成必须建设真实后端的要求。其他实质冲突先指出具体位置并确认。
+- HR 与 Candidate 由用户和朋友分别设计、实现，具体角色以当前任务为准。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个独立开发目录。Candidate 已实现独立 React / TypeScript / Vite 本地演示；HR 已有独立 React + Vite 本地演示。根目录没有统一构建；已建立 `app/shared/` 共享主题与侧栏，业务数据接口仍须另行约定。
 - 双方在各自本地副本、独立分支中开发，通过 PR 整合。默认只修改本次负责的一端；接手另一端、修改重叠或触及共享部分时先协调，禁止同时写同一工作副本。
 - 两端共用产品基线、基础组件风格、状态命名和演示场景。跨端的任务、提交、证据、审核状态及演示重置方式须先约定输入输出与文件归属，再并行实现；共享外壳、组件、数据结构或接口变更遵循第 2 节的确认规则。
 - MVP 是面向浏览器演示的 Web 应用，优先候选人工作台、HR 证据审核与完整补证闭环；允许静态数据、本地状态和预生成 AI 输出。模拟演示通过不等于真实 AI、持久化或生产后端已经验证。

@@ -4,7 +4,7 @@ Candidate 端独立 React / TypeScript / Vite Web 应用。使用 Lucide、Recha
 
 开发前阅读 [仓库规则](../../AGENTS.md)、[产品蓝图](../../docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md) 和 [UI 与交互基线](../../docs/product/EvidenceBridge_BASELINE.md)。技术栈与共享数据约定见 [项目计划](../../PROJECT_PLAN.md)。
 
-负责申请材料、任务接收、核心分析工作台、可编辑调查板、最终工作样本、过程时间线和提交状态。遵循深色侧栏、浅色工作区和 Candidate 绿色强调色，分析图表可使用共享蓝色。
+负责申请材料、任务接收、核心分析工作台、可编辑调查板、最终工作样本、过程时间线和提交状态。使用随主题变化的共享折叠侧栏、日夜主题和 Candidate 绿色强调色，分析图表可使用共享蓝色。
 
 ## 运行与验证
 
@@ -29,6 +29,10 @@ npm run preview -- --port 4173 --strictPort
 
 Vitest 覆盖状态迁移、提交校验、数据一致性与损坏草稿恢复。Playwright 覆盖九条浏览器场景，并在 `test-results/` 生成六个页面、过程时间线和移动端截图；失败时保留 trace。CI 从锁文件安装，在 Linux 上运行同样检查。
 
+## 共享界面
+
+侧栏底部太阳/月亮滑动开关控制日夜主题，侧栏支持桌面折叠和小屏抽屉。偏好在本 origin 记忆，业务演示重置保留外观设置。共享接口、存储边界与跨端回归命令见 [共享 UI 说明](../shared/README.md)。`npm run test:ui` 复用本端 Playwright 检查两端，需先安装 HR 既有依赖；产物在根目录 `.ci-results/shared-ui/`。
+
 ## 三分钟演示
 
 1. Home → **Load Demo Application** → **Submit Application**。
@@ -51,7 +55,7 @@ Vitest 覆盖状态迁移、提交校验、数据一致性与损坏草稿恢复�
 - 私人笔记不进入工作样本和 JSON 导出；最近 100 条过程事件保存在本地演示状态。
 - JSON 导出是 Candidate 独立演示产物，**不是已约定的两端 API**，没有 HR 导入或跨电脑同步。HR 团队可以继续独立实现，连接两端时再约定共享结构。
 - 字体使用 Baseline 的系统字体 fallback，无远程字体依赖；核心演示在资源加载后无需外部服务。
-- `npm run build` 当前有图表依赖导致的约 681 KB 主包体积提示（gzip 约 201 KB），不影响本地构建或演示。
+- `npm run build` 当前有图表依赖导致的约 686 KB 主包体积提示（gzip 约 202 KB），不影响本地构建或演示。
 
 视觉核对与已知差异见 [design-qa.md](design-qa.md)。默认不修改 HR 端；涉及共享组件或跨端数据时先协调。
 
