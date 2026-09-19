@@ -82,6 +82,27 @@ npm run test:ui --prefix app/candidate
 
 自动启动 Candidate `5273` / HR `5286`，截图与失败 trace 见 `.ci-results/shared-ui/`。主题、侧栏接口和存储边界见 [共享 UI 说明](app/shared/README.md)。
 
+### 共享后端（2026-09-19 本轮确认）
+
+目录 `app/backend/`：TypeScript + Fastify + SQLite，锁定依赖及独立构建；接口 schema 同时生成 OpenAPI 文档。Node.js 最低 22.23.0，推荐 24 LTS；当前 Node 22 的 `node:sqlite` 有实验性提示。只监听本机 `127.0.0.1:8787`。运行说明见 [后端 README](app/backend/README.md)，状态/请求合同见 [API](docs/backend/API.md)。本轮只改后端；双端 UI API 接入由小傅另行完成，旧前端本地模拟的多轮行为不是本轮后端要求。
+
+```sh
+npm ci --prefix app/backend
+npm run build --prefix app/backend
+npm run typecheck --prefix app/backend
+npm test --prefix app/backend
+npm run test:coverage --prefix app/backend
+npm run docs:generate --prefix app/backend
+# .env 与相对 DATABASE_PATH 以 app/backend 为工作目录
+cd app/backend
+npm start
+# 另一个终端（同目录）
+npm run demo
+npm run reset
+```
+
+`.env.example` 只作配置示例。默认分析 disabled，manual_simulation 明确为手工规则，live 需要单独的项目模型配置和服务端密钥。reset 要求至少 24 字符的本机管理员令牌。数据库/锁/日志不提交；一个数据库只由一个本机进程持有。配置、失败行为、端口冲突与恢复步骤见 README。自动文档在本机 `/docs/`，健康检查 `/healthz`；这不构成公网部署或 UI 已接入的证明。
+
 ## 4. 开发与验证
 
 - 开始前简要说明本次修改范围和验证办法；完成后按实际修改和测试汇报。

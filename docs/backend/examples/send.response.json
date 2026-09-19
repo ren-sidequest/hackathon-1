@@ -1,0 +1,858 @@
+{
+  "data": {
+    "schemaVersion": "1.0",
+    "sessionId": "90b3d55d-2675-45ed-8fc6-d9b8a82ab6f8",
+    "datasetVersion": "harbourcart-2026-09-v1",
+    "revision": 1,
+    "candidate": {
+      "id": "alex-chen",
+      "name": "Alex Chen"
+    },
+    "job": {
+      "id": "junior-data-analyst",
+      "title": "Junior Data Analyst",
+      "company": "HarbourCart Pty Ltd",
+      "requirements": [
+        {
+          "id": "sql",
+          "title": "SQL",
+          "statement": "Write SQL queries to explore, aggregate and analyse business data."
+        },
+        {
+          "id": "data-analysis",
+          "title": "Data Analysis",
+          "statement": "Analyse and compare data using reproducible calculations."
+        },
+        {
+          "id": "business-problem-solving",
+          "title": "Business Problem Solving",
+          "statement": "Frame business problems, test hypotheses and recommend evidence-led actions."
+        }
+      ]
+    },
+    "application": {
+      "id": "alex-chen-demo-application",
+      "mode": "preset",
+      "sources": [
+        {
+          "id": "customer_churn_analysis.sql",
+          "name": "customer_churn_analysis.sql",
+          "kind": "sql_example",
+          "provenance": "synthetic",
+          "content": "-- Prepared sample; inspected as source code, not claimed to have been executed.\nWITH monthly_orders AS (\n  SELECT customer_id, DATE_TRUNC('month', order_date) AS month,\n         COUNT(*) AS orders, SUM(total) AS revenue\n  FROM orders GROUP BY customer_id, DATE_TRUNC('month', order_date)\n)\nSELECT customer_id, month, orders, revenue,\n       LAG(revenue) OVER (PARTITION BY customer_id ORDER BY month) AS previous_month_revenue\nFROM monthly_orders;"
+        },
+        {
+          "id": "sales_analysis_project.md",
+          "name": "sales_analysis_project.md",
+          "kind": "calculation_table",
+          "provenance": "synthetic",
+          "content": "# Prepared sales calculation sample\n\nThis earlier application project is distinct from the targeted task dataset. Integer monthly totals support the calculations below; no business recommendation was supplied.\n\n| Month | Orders | Revenue AUD | Average order value AUD | Revenue change |\n| --- | ---: | ---: | ---: | ---: |\n| April | 400 | 12000 | 30 | — |\n| May | 450 | 13500 | 30 | 12.50% |\n| June | 500 | 15000 | 30 | 11.11% |\n\nAverage order value = revenue / orders. Revenue change = (current revenue - previous revenue) / previous revenue. Percentages shown to two decimals. These calculations show descriptive comparison; they do not establish why revenue changed."
+        },
+        {
+          "id": "alex_chen_resume.md",
+          "name": "alex_chen_resume.md",
+          "kind": "self_statement",
+          "provenance": "synthetic",
+          "content": "Alex Chen — Junior analyst with SQL, Python and dashboard experience. Projects include customer churn analysis and an e-commerce sales dashboard. Presented analytical findings in university team projects. This is a candidate self-statement, not independent verification of problem-solving behaviour."
+        }
+      ],
+      "initialReport": [
+        {
+          "requirementId": "sql",
+          "status": "supported",
+          "displayStatus": "Supported",
+          "mode": "preset",
+          "summary": "The supplied SQL sample uses aggregation, a CTE and a window function.",
+          "uncertainty": "Source-code inspection only; execution correctness and production-scale performance have not been observed.",
+          "sourceRefs": [
+            {
+              "sourceId": "customer_churn_analysis.sql",
+              "locator": "lines 2–9",
+              "quote": "LAG(revenue) OVER (PARTITION BY customer_id ORDER BY month) AS previous_month_revenue"
+            }
+          ]
+        },
+        {
+          "requirementId": "data-analysis",
+          "status": "supported",
+          "displayStatus": "Supported",
+          "mode": "preset",
+          "summary": "The prepared calculation table correctly compares monthly totals and percentage change.",
+          "uncertainty": "The supplied totals are prepared data; cleaning, independent reproduction and ambiguous business decisions remain unobserved.",
+          "sourceRefs": [
+            {
+              "sourceId": "sales_analysis_project.md",
+              "locator": "table / May",
+              "quote": "| May | 450 | 13500 | 30 | 12.50% |"
+            }
+          ]
+        },
+        {
+          "requirementId": "business-problem-solving",
+          "status": "uncertain",
+          "displayStatus": "Uncertain",
+          "mode": "preset",
+          "summary": "Technical samples and a self-statement are present; a reasoned business recommendation is not yet observable.",
+          "uncertainty": "Missing evidence of problem framing, tested hypotheses and prioritised actions is not proof that the candidate lacks capability.",
+          "sourceRefs": [
+            {
+              "sourceId": "alex_chen_resume.md",
+              "locator": "paragraph 1",
+              "quote": "Presented analytical findings in university team projects."
+            }
+          ]
+        }
+      ]
+    },
+    "dataset": {
+      "version": "harbourcart-2026-09-v1",
+      "provenance": "synthetic",
+      "records": [
+        {
+          "id": "previous-organic",
+          "period": "previous",
+          "channel": "Organic",
+          "sessions": 300000,
+          "orders": 11400,
+          "adSpendCents": 0,
+          "revenueCents": 34200000
+        },
+        {
+          "id": "previous-paid-search",
+          "period": "previous",
+          "channel": "Paid Search",
+          "sessions": 300000,
+          "orders": 9600,
+          "adSpendCents": 3391304,
+          "revenueCents": 28800000
+        },
+        {
+          "id": "previous-social",
+          "period": "previous",
+          "channel": "Social",
+          "sessions": 160000,
+          "orders": 4480,
+          "adSpendCents": 782609,
+          "revenueCents": 13440000
+        },
+        {
+          "id": "previous-email",
+          "period": "previous",
+          "channel": "Email",
+          "sessions": 80000,
+          "orders": 3600,
+          "adSpendCents": 0,
+          "revenueCents": 10800000
+        },
+        {
+          "id": "previous-direct",
+          "period": "previous",
+          "channel": "Direct",
+          "sessions": 160000,
+          "orders": 4920,
+          "adSpendCents": 0,
+          "revenueCents": 14760000
+        },
+        {
+          "id": "current-organic",
+          "period": "current",
+          "channel": "Organic",
+          "sessions": 324000,
+          "orders": 11340,
+          "adSpendCents": 0,
+          "revenueCents": 34020000
+        },
+        {
+          "id": "current-paid-search",
+          "period": "current",
+          "channel": "Paid Search",
+          "sessions": 426000,
+          "orders": 7668,
+          "adSpendCents": 3900000,
+          "revenueCents": 23004000
+        },
+        {
+          "id": "current-social",
+          "period": "current",
+          "channel": "Social",
+          "sessions": 200000,
+          "orders": 4200,
+          "adSpendCents": 900000,
+          "revenueCents": 12600000
+        },
+        {
+          "id": "current-email",
+          "period": "current",
+          "channel": "Email",
+          "sessions": 77600,
+          "orders": 3414,
+          "adSpendCents": 0,
+          "revenueCents": 10242000
+        },
+        {
+          "id": "current-direct",
+          "period": "current",
+          "channel": "Direct",
+          "sessions": 152400,
+          "orders": 4058,
+          "adSpendCents": 0,
+          "revenueCents": 12174000
+        }
+      ],
+      "metrics": {
+        "previous": {
+          "sessions": 1000000,
+          "orders": 34000,
+          "adSpendCents": 4173913,
+          "revenueCents": 102000000,
+          "conversionPct": 3.4
+        },
+        "current": {
+          "sessions": 1180000,
+          "orders": 30680,
+          "adSpendCents": 4800000,
+          "revenueCents": 92040000,
+          "conversionPct": 2.6
+        },
+        "change": {
+          "trafficPct": 18,
+          "ordersPct": -9.764705882352942,
+          "adSpendPct": 15.00000119791668,
+          "conversionPercentagePoints": -0.7999999999999998
+        }
+      },
+      "channels": [
+        {
+          "id": "organic",
+          "channel": "Organic",
+          "traffic": 324000,
+          "growth": 8,
+          "orders": 11340,
+          "conversion": 3.5,
+          "previous": 3.8,
+          "revenue": 340200,
+          "trafficSharePct": 27.45762711864407,
+          "before": {
+            "id": "previous-organic",
+            "period": "previous",
+            "channel": "Organic",
+            "sessions": 300000,
+            "orders": 11400,
+            "adSpendCents": 0,
+            "revenueCents": 34200000
+          },
+          "current": {
+            "id": "current-organic",
+            "period": "current",
+            "channel": "Organic",
+            "sessions": 324000,
+            "orders": 11340,
+            "adSpendCents": 0,
+            "revenueCents": 34020000
+          }
+        },
+        {
+          "id": "paid-search",
+          "channel": "Paid Search",
+          "traffic": 426000,
+          "growth": 42,
+          "orders": 7668,
+          "conversion": 1.8,
+          "previous": 3.2,
+          "revenue": 230040,
+          "trafficSharePct": 36.101694915254235,
+          "before": {
+            "id": "previous-paid-search",
+            "period": "previous",
+            "channel": "Paid Search",
+            "sessions": 300000,
+            "orders": 9600,
+            "adSpendCents": 3391304,
+            "revenueCents": 28800000
+          },
+          "current": {
+            "id": "current-paid-search",
+            "period": "current",
+            "channel": "Paid Search",
+            "sessions": 426000,
+            "orders": 7668,
+            "adSpendCents": 3900000,
+            "revenueCents": 23004000
+          }
+        },
+        {
+          "id": "social",
+          "channel": "Social",
+          "traffic": 200000,
+          "growth": 25,
+          "orders": 4200,
+          "conversion": 2.1,
+          "previous": 2.8,
+          "revenue": 126000,
+          "trafficSharePct": 16.949152542372882,
+          "before": {
+            "id": "previous-social",
+            "period": "previous",
+            "channel": "Social",
+            "sessions": 160000,
+            "orders": 4480,
+            "adSpendCents": 782609,
+            "revenueCents": 13440000
+          },
+          "current": {
+            "id": "current-social",
+            "period": "current",
+            "channel": "Social",
+            "sessions": 200000,
+            "orders": 4200,
+            "adSpendCents": 900000,
+            "revenueCents": 12600000
+          }
+        },
+        {
+          "id": "email",
+          "channel": "Email",
+          "traffic": 77600,
+          "growth": -3,
+          "orders": 3414,
+          "conversion": 4.399484536082475,
+          "previous": 4.5,
+          "revenue": 102420,
+          "trafficSharePct": 6.576271186440678,
+          "before": {
+            "id": "previous-email",
+            "period": "previous",
+            "channel": "Email",
+            "sessions": 80000,
+            "orders": 3600,
+            "adSpendCents": 0,
+            "revenueCents": 10800000
+          },
+          "current": {
+            "id": "current-email",
+            "period": "current",
+            "channel": "Email",
+            "sessions": 77600,
+            "orders": 3414,
+            "adSpendCents": 0,
+            "revenueCents": 10242000
+          }
+        },
+        {
+          "id": "direct",
+          "channel": "Direct",
+          "traffic": 152400,
+          "growth": -4.75,
+          "orders": 4058,
+          "conversion": 2.6627296587926508,
+          "previous": 3.075,
+          "revenue": 121740,
+          "trafficSharePct": 12.915254237288135,
+          "before": {
+            "id": "previous-direct",
+            "period": "previous",
+            "channel": "Direct",
+            "sessions": 160000,
+            "orders": 4920,
+            "adSpendCents": 0,
+            "revenueCents": 14760000
+          },
+          "current": {
+            "id": "current-direct",
+            "period": "current",
+            "channel": "Direct",
+            "sessions": 152400,
+            "orders": 4058,
+            "adSpendCents": 0,
+            "revenueCents": 12174000
+          }
+        }
+      ],
+      "trafficTrend": [
+        {
+          "period": "previous",
+          "label": "Previous 4 weeks",
+          "sessions": 1000000,
+          "traffic": 1000,
+          "orders": 34000,
+          "conversion": 3.4
+        },
+        {
+          "period": "current",
+          "label": "Last 4 weeks",
+          "sessions": 1180000,
+          "traffic": 1180,
+          "orders": 30680,
+          "conversion": 2.6
+        }
+      ],
+      "resources": [
+        {
+          "id": "website_traffic.csv",
+          "name": "website_traffic.csv",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Canonical channel-period session and order counts; conversion is orders / sessions.",
+          "columns": [
+            "record_id",
+            "period",
+            "channel",
+            "sessions",
+            "orders",
+            "conversion_pct"
+          ],
+          "rows": [
+            [
+              "previous-organic",
+              "previous",
+              "Organic",
+              "300000",
+              "11400",
+              "3.800000"
+            ],
+            [
+              "previous-paid-search",
+              "previous",
+              "Paid Search",
+              "300000",
+              "9600",
+              "3.200000"
+            ],
+            [
+              "previous-social",
+              "previous",
+              "Social",
+              "160000",
+              "4480",
+              "2.800000"
+            ],
+            [
+              "previous-email",
+              "previous",
+              "Email",
+              "80000",
+              "3600",
+              "4.500000"
+            ],
+            [
+              "previous-direct",
+              "previous",
+              "Direct",
+              "160000",
+              "4920",
+              "3.075000"
+            ],
+            [
+              "current-organic",
+              "current",
+              "Organic",
+              "324000",
+              "11340",
+              "3.500000"
+            ],
+            [
+              "current-paid-search",
+              "current",
+              "Paid Search",
+              "426000",
+              "7668",
+              "1.800000"
+            ],
+            [
+              "current-social",
+              "current",
+              "Social",
+              "200000",
+              "4200",
+              "2.100000"
+            ],
+            [
+              "current-email",
+              "current",
+              "Email",
+              "77600",
+              "3414",
+              "4.399485"
+            ],
+            [
+              "current-direct",
+              "current",
+              "Direct",
+              "152400",
+              "4058",
+              "2.662730"
+            ]
+          ],
+          "content": "\"record_id\",\"period\",\"channel\",\"sessions\",\"orders\",\"conversion_pct\"\r\n\"previous-organic\",\"previous\",\"Organic\",\"300000\",\"11400\",\"3.800000\"\r\n\"previous-paid-search\",\"previous\",\"Paid Search\",\"300000\",\"9600\",\"3.200000\"\r\n\"previous-social\",\"previous\",\"Social\",\"160000\",\"4480\",\"2.800000\"\r\n\"previous-email\",\"previous\",\"Email\",\"80000\",\"3600\",\"4.500000\"\r\n\"previous-direct\",\"previous\",\"Direct\",\"160000\",\"4920\",\"3.075000\"\r\n\"current-organic\",\"current\",\"Organic\",\"324000\",\"11340\",\"3.500000\"\r\n\"current-paid-search\",\"current\",\"Paid Search\",\"426000\",\"7668\",\"1.800000\"\r\n\"current-social\",\"current\",\"Social\",\"200000\",\"4200\",\"2.100000\"\r\n\"current-email\",\"current\",\"Email\",\"77600\",\"3414\",\"4.399485\"\r\n\"current-direct\",\"current\",\"Direct\",\"152400\",\"4058\",\"2.662730\"",
+          "sizeBytes": 737
+        },
+        {
+          "id": "campaigns.csv",
+          "name": "campaigns.csv",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Derived acquisition-channel comparison, not individual campaign-level data.",
+          "columns": [
+            "channel",
+            "previous_sessions",
+            "current_sessions",
+            "previous_conversion_pct",
+            "current_conversion_pct",
+            "traffic_change_pct",
+            "previous_spend_aud",
+            "current_spend_aud"
+          ],
+          "rows": [
+            [
+              "Organic",
+              "300000",
+              "324000",
+              "3.800000",
+              "3.500000",
+              "8.000000",
+              "0.00",
+              "0.00"
+            ],
+            [
+              "Paid Search",
+              "300000",
+              "426000",
+              "3.200000",
+              "1.800000",
+              "42.000000",
+              "33913.04",
+              "39000.00"
+            ],
+            [
+              "Social",
+              "160000",
+              "200000",
+              "2.800000",
+              "2.100000",
+              "25.000000",
+              "7826.09",
+              "9000.00"
+            ],
+            [
+              "Email",
+              "80000",
+              "77600",
+              "4.500000",
+              "4.399485",
+              "-3.000000",
+              "0.00",
+              "0.00"
+            ],
+            [
+              "Direct",
+              "160000",
+              "152400",
+              "3.075000",
+              "2.662730",
+              "-4.750000",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "content": "\"channel\",\"previous_sessions\",\"current_sessions\",\"previous_conversion_pct\",\"current_conversion_pct\",\"traffic_change_pct\",\"previous_spend_aud\",\"current_spend_aud\"\r\n\"Organic\",\"300000\",\"324000\",\"3.800000\",\"3.500000\",\"8.000000\",\"0.00\",\"0.00\"\r\n\"Paid Search\",\"300000\",\"426000\",\"3.200000\",\"1.800000\",\"42.000000\",\"33913.04\",\"39000.00\"\r\n\"Social\",\"160000\",\"200000\",\"2.800000\",\"2.100000\",\"25.000000\",\"7826.09\",\"9000.00\"\r\n\"Email\",\"80000\",\"77600\",\"4.500000\",\"4.399485\",\"-3.000000\",\"0.00\",\"0.00\"\r\n\"Direct\",\"160000\",\"152400\",\"3.075000\",\"2.662730\",\"-4.750000\",\"0.00\",\"0.00\"",
+          "sizeBytes": 557
+        },
+        {
+          "id": "orders.csv",
+          "name": "orders.csv",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Same channel-period aggregates with integer orders, synthetic revenue and advertising spend.",
+          "columns": [
+            "record_id",
+            "period",
+            "channel",
+            "orders",
+            "revenue_aud",
+            "ad_spend_aud"
+          ],
+          "rows": [
+            [
+              "previous-organic",
+              "previous",
+              "Organic",
+              "11400",
+              "342000.00",
+              "0.00"
+            ],
+            [
+              "previous-paid-search",
+              "previous",
+              "Paid Search",
+              "9600",
+              "288000.00",
+              "33913.04"
+            ],
+            [
+              "previous-social",
+              "previous",
+              "Social",
+              "4480",
+              "134400.00",
+              "7826.09"
+            ],
+            [
+              "previous-email",
+              "previous",
+              "Email",
+              "3600",
+              "108000.00",
+              "0.00"
+            ],
+            [
+              "previous-direct",
+              "previous",
+              "Direct",
+              "4920",
+              "147600.00",
+              "0.00"
+            ],
+            [
+              "current-organic",
+              "current",
+              "Organic",
+              "11340",
+              "340200.00",
+              "0.00"
+            ],
+            [
+              "current-paid-search",
+              "current",
+              "Paid Search",
+              "7668",
+              "230040.00",
+              "39000.00"
+            ],
+            [
+              "current-social",
+              "current",
+              "Social",
+              "4200",
+              "126000.00",
+              "9000.00"
+            ],
+            [
+              "current-email",
+              "current",
+              "Email",
+              "3414",
+              "102420.00",
+              "0.00"
+            ],
+            [
+              "current-direct",
+              "current",
+              "Direct",
+              "4058",
+              "121740.00",
+              "0.00"
+            ]
+          ],
+          "content": "\"record_id\",\"period\",\"channel\",\"orders\",\"revenue_aud\",\"ad_spend_aud\"\r\n\"previous-organic\",\"previous\",\"Organic\",\"11400\",\"342000.00\",\"0.00\"\r\n\"previous-paid-search\",\"previous\",\"Paid Search\",\"9600\",\"288000.00\",\"33913.04\"\r\n\"previous-social\",\"previous\",\"Social\",\"4480\",\"134400.00\",\"7826.09\"\r\n\"previous-email\",\"previous\",\"Email\",\"3600\",\"108000.00\",\"0.00\"\r\n\"previous-direct\",\"previous\",\"Direct\",\"4920\",\"147600.00\",\"0.00\"\r\n\"current-organic\",\"current\",\"Organic\",\"11340\",\"340200.00\",\"0.00\"\r\n\"current-paid-search\",\"current\",\"Paid Search\",\"7668\",\"230040.00\",\"39000.00\"\r\n\"current-social\",\"current\",\"Social\",\"4200\",\"126000.00\",\"9000.00\"\r\n\"current-email\",\"current\",\"Email\",\"3414\",\"102420.00\",\"0.00\"\r\n\"current-direct\",\"current\",\"Direct\",\"4058\",\"121740.00\",\"0.00\"",
+          "sizeBytes": 744
+        },
+        {
+          "id": "landing_pages.csv",
+          "name": "landing_pages.csv",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Current Paid Search device partition; page identity, history and speed are not provided.",
+          "columns": [
+            "record_id",
+            "period",
+            "channel",
+            "device",
+            "sessions",
+            "orders",
+            "conversion_pct"
+          ],
+          "rows": [
+            [
+              "current-paid-mobile",
+              "current",
+              "Paid Search",
+              "Mobile",
+              "300000",
+              "4200",
+              "1.400000"
+            ],
+            [
+              "current-paid-desktop",
+              "current",
+              "Paid Search",
+              "Desktop",
+              "126000",
+              "3468",
+              "2.752381"
+            ]
+          ],
+          "content": "\"record_id\",\"period\",\"channel\",\"device\",\"sessions\",\"orders\",\"conversion_pct\"\r\n\"current-paid-mobile\",\"current\",\"Paid Search\",\"Mobile\",\"300000\",\"4200\",\"1.400000\"\r\n\"current-paid-desktop\",\"current\",\"Paid Search\",\"Desktop\",\"126000\",\"3468\",\"2.752381\"",
+          "sizeBytes": 244
+        },
+        {
+          "id": "product_catalog.csv",
+          "name": "product_catalog.csv",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Illustrative product context; availability is not a proven explanation.",
+          "columns": [
+            "product",
+            "category",
+            "price_aud",
+            "availability"
+          ],
+          "rows": [
+            [
+              "Everyday Tote",
+              "Accessories",
+              "30.00",
+              "In stock"
+            ],
+            [
+              "Canvas Carryall",
+              "Accessories",
+              "45.00",
+              "Limited"
+            ],
+            [
+              "Studio Notebook",
+              "Stationery",
+              "18.00",
+              "In stock"
+            ],
+            [
+              "Travel Organiser",
+              "Accessories",
+              "35.00",
+              "In stock"
+            ]
+          ],
+          "content": "\"product\",\"category\",\"price_aud\",\"availability\"\r\n\"Everyday Tote\",\"Accessories\",\"30.00\",\"In stock\"\r\n\"Canvas Carryall\",\"Accessories\",\"45.00\",\"Limited\"\r\n\"Studio Notebook\",\"Stationery\",\"18.00\",\"In stock\"\r\n\"Travel Organiser\",\"Accessories\",\"35.00\",\"In stock\"",
+          "sizeBytes": 252
+        },
+        {
+          "id": "business_context.md",
+          "name": "business_context.md",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/markdown",
+          "description": "Business brief, overlap rules, precision and remaining unknowns.",
+          "columns": [],
+          "rows": [],
+          "content": "# HarbourCart · Business context\n\nSynthetic demonstration data only. Two consecutive, non-overlapping four-week windows use the same session and order definitions. No customer-level data is included.\n\nSessions rose from 1,000,000 to 1,180,000 (+18.00%). Conversion fell from 3.4% to 2.6%. Orders changed from 34,000 to 30,680 (-9.76%). Advertising spend rose from AUD 41739.13 to AUD 48000.00 (+15.00%).\n\nNew Paid Search campaigns launched at the start of the current period. The Spring Sale landing page also changed. These changes are possible explanations, not established causes. The business is considering increasing the advertising budget.\n\nwebsite_traffic.csv and orders.csv contain the same ten channel-period aggregates, not separate populations. campaigns.csv is a channel comparison, not individual campaign attribution. landing_pages.csv contains a current-period Paid Search device partition only: it reconciles to Paid Search but adds no new sessions. It contains no page-specific attribution or speed measurements. product_catalog.csv is context, not evidence of a conversion cause. Revenue uses a synthetic AUD 30 average order value; no order-level product attribution is implied.\n\nCampaign × device × landing-page detail, historical device comparisons, load times and checkout events are still missing. Rates are derived from integer totals; displayed percentages round to two decimals. Do not average channel percentages or add overlapping resources. The chart compares whole four-week periods, not weekly trend points.\n\nInvestigate the strongest signals, separate observations from hypotheses, request discriminating evidence, and recommend a measured next step. No single prescribed conclusion or hiring decision is implied.",
+          "sizeBytes": 1749,
+          "text": "# HarbourCart · Business context\n\nSynthetic demonstration data only. Two consecutive, non-overlapping four-week windows use the same session and order definitions. No customer-level data is included.\n\nSessions rose from 1,000,000 to 1,180,000 (+18.00%). Conversion fell from 3.4% to 2.6%. Orders changed from 34,000 to 30,680 (-9.76%). Advertising spend rose from AUD 41739.13 to AUD 48000.00 (+15.00%).\n\nNew Paid Search campaigns launched at the start of the current period. The Spring Sale landing page also changed. These changes are possible explanations, not established causes. The business is considering increasing the advertising budget.\n\nwebsite_traffic.csv and orders.csv contain the same ten channel-period aggregates, not separate populations. campaigns.csv is a channel comparison, not individual campaign attribution. landing_pages.csv contains a current-period Paid Search device partition only: it reconciles to Paid Search but adds no new sessions. It contains no page-specific attribution or speed measurements. product_catalog.csv is context, not evidence of a conversion cause. Revenue uses a synthetic AUD 30 average order value; no order-level product attribution is implied.\n\nCampaign × device × landing-page detail, historical device comparisons, load times and checkout events are still missing. Rates are derived from integer totals; displayed percentages round to two decimals. Do not average channel percentages or add overlapping resources. The chart compares whole four-week periods, not weekly trend points.\n\nInvestigate the strongest signals, separate observations from hypotheses, request discriminating evidence, and recommend a measured next step. No single prescribed conclusion or hiring decision is implied."
+        }
+      ]
+    },
+    "task": {
+      "id": "conversion-drop-investigation",
+      "taskId": "6dbf5cd7-021b-4d3f-aac9-e72217534f4f",
+      "requirementId": "business-problem-solving",
+      "title": "Conversion Drop Investigation",
+      "instructions": "Investigate what is driving the conversion decline. Use the supplied data to identify the strongest signals, form testable hypotheses, and recommend a prioritised next step. Distinguish what the data shows from what still needs to be validated.",
+      "timeboxMinutes": 20,
+      "timeboxEnforced": false,
+      "mode": "preset",
+      "resourceIds": [
+        "website_traffic.csv",
+        "campaigns.csv",
+        "orders.csv",
+        "landing_pages.csv",
+        "product_catalog.csv",
+        "business_context.md"
+      ],
+      "status": "sent",
+      "sentAt": "2026-09-19T03:05:40.537Z"
+    },
+    "submission": null,
+    "analysis": {
+      "status": "not_started",
+      "attemptId": null,
+      "submissionId": null,
+      "contentFingerprint": null,
+      "startedAt": null,
+      "finishedAt": null,
+      "errorCode": null,
+      "result": null
+    },
+    "review": null,
+    "report": {
+      "mode": "preset_with_current_workflow",
+      "isHiringDecision": false,
+      "review": null,
+      "requirements": [
+        {
+          "requirementId": "sql",
+          "status": "supported",
+          "displayStatus": "Supported",
+          "mode": "preset",
+          "summary": "The supplied SQL sample uses aggregation, a CTE and a window function.",
+          "uncertainty": "Source-code inspection only; execution correctness and production-scale performance have not been observed.",
+          "sourceRefs": [
+            {
+              "sourceId": "customer_churn_analysis.sql",
+              "locator": "lines 2–9",
+              "quote": "LAG(revenue) OVER (PARTITION BY customer_id ORDER BY month) AS previous_month_revenue"
+            }
+          ],
+          "title": "SQL",
+          "displayLabel": "Supported",
+          "review": null,
+          "submissionSourceRefs": []
+        },
+        {
+          "requirementId": "data-analysis",
+          "status": "supported",
+          "displayStatus": "Supported",
+          "mode": "preset",
+          "summary": "The prepared calculation table correctly compares monthly totals and percentage change.",
+          "uncertainty": "The supplied totals are prepared data; cleaning, independent reproduction and ambiguous business decisions remain unobserved.",
+          "sourceRefs": [
+            {
+              "sourceId": "sales_analysis_project.md",
+              "locator": "table / May",
+              "quote": "| May | 450 | 13500 | 30 | 12.50% |"
+            }
+          ],
+          "title": "Data Analysis",
+          "displayLabel": "Supported",
+          "review": null,
+          "submissionSourceRefs": []
+        },
+        {
+          "requirementId": "business-problem-solving",
+          "status": "uncertain",
+          "displayStatus": "Uncertain",
+          "mode": "preset",
+          "summary": "Technical samples and a self-statement are present; a reasoned business recommendation is not yet observable.",
+          "uncertainty": "Missing evidence of problem framing, tested hypotheses and prioritised actions is not proof that the candidate lacks capability.",
+          "sourceRefs": [
+            {
+              "sourceId": "alex_chen_resume.md",
+              "locator": "paragraph 1",
+              "quote": "Presented analytical findings in university team projects."
+            }
+          ],
+          "title": "Business Problem Solving",
+          "displayLabel": "Uncertain",
+          "review": null,
+          "submissionSourceRefs": []
+        }
+      ]
+    }
+  },
+  "meta": {
+    "replayed": false
+  }
+}

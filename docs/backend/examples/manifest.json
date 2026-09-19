@@ -1,0 +1,90 @@
+{
+  "generatedAt": "2026-09-19T03:05:40.373Z",
+  "kind": "generated-synthetic-manual-fixture",
+  "modelCalls": 0,
+  "scope": "In-memory API contract examples; IDs and timestamps are one generated run, never production constants.",
+  "requests": [
+    {
+      "name": "health",
+      "method": "GET",
+      "path": "/healthz",
+      "status": 200,
+      "responseFile": "health.response.json"
+    },
+    {
+      "name": "initial",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200,
+      "responseFile": "initial.response.json"
+    },
+    {
+      "name": "send",
+      "method": "POST",
+      "path": "/api/demo/task/send",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-send-v1"
+      },
+      "requestFile": "send.request.json",
+      "responseFile": "send.response.json"
+    },
+    {
+      "name": "submission",
+      "method": "POST",
+      "path": "/api/demo/submission",
+      "status": 201,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-submission-v1"
+      },
+      "requestFile": "submission.request.json",
+      "responseFile": "submission.response.json"
+    },
+    {
+      "name": "analysis",
+      "method": "POST",
+      "path": "/api/demo/analysis",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-analysis-v1"
+      },
+      "requestFile": "analysis.request.json",
+      "responseFile": "analysis.response.json"
+    },
+    {
+      "name": "review",
+      "method": "POST",
+      "path": "/api/demo/review",
+      "status": 200,
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-review-v1"
+      },
+      "requestFile": "review.request.json",
+      "responseFile": "review.response.json"
+    },
+    {
+      "name": "reviewed",
+      "method": "GET",
+      "path": "/api/demo",
+      "status": 200,
+      "responseFile": "reviewed.response.json"
+    },
+    {
+      "name": "reset",
+      "method": "POST",
+      "path": "/api/demo/reset",
+      "executed": false,
+      "note": "Explicit reset is documented separately; set a real local admin token, use the latest GET session, and generate a fresh key.",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "replace-with-random-uuid",
+        "X-Demo-Admin-Token": "<LOCAL_ADMIN_TOKEN>"
+      },
+      "requestFile": "reset.request.json"
+    }
+  ]
+}

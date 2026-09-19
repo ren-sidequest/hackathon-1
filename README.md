@@ -1,6 +1,6 @@
 # hackathon-1
 
-`ren-sidequest` 的黑客松项目 **EvidenceBridge**：找出候选人材料中的能力证据缺口，通过定向工作样本任务补充证据，供 HR 人工审核。MVP 是前端演示优先的浏览器 Web 应用；产品文档与概念图已接入，HR 与 Candidate 的独立前端演示均已实现，跨端集成仍待约定。
+`ren-sidequest` 的黑客松项目 **EvidenceBridge**：找出候选人材料中的能力证据缺口，通过定向工作样本任务补充证据，供 HR 人工审核。MVP 是前端演示优先的浏览器 Web 应用；产品文档与概念图已接入，HR 与 Candidate 的独立前端演示均已实现，共享后端已在本轮分支实现，双端 UI API 接入待小傅完成。
 
 ## 从这里开始
 
@@ -19,6 +19,16 @@
 开工不要求汇报朋友在做什么；接手同一分支、修改重叠或共用接口受影响时再协调。双方各用自己的 GitHub 账号和本地副本，无需安装同一套个人 Skill。
 
 HR 与 Candidate 由两位协作者分别设计和实现，各自分支、各自 PR。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个开发目录。Candidate 使用 React / TypeScript / Vite，HR 使用 React + Vite；两端共享产品基线，尚无真实数据联通或统一根构建。
+
+## 本轮共享后端
+
+新增 [TypeScript + Fastify + SQLite 后端](app/backend/README.md)，保存同一任务、不可变作品、五维观察、人工决定与报告。只运行一个本机服务，保留原前端页面；固定一次提交、一次审核，不扩展多轮平台。
+
+- [接口合同与自动 OpenAPI](docs/backend/API.md)、[小傅接入清单](docs/backend/HANDOFF.md)
+- [统一案例事实与前端替换位置](docs/backend/DATA.md)、[架构取舍](docs/backend/ADR.md)
+- [实际测试结果及未验证事项](docs/backend/TEST_RESULTS.md)、[产品验收标准](docs/backend/ACCEPTANCE.md)
+
+当前 GitHub Pages 和双端 `localStorage` 演示仍是旧前端路径；后端 API 测试与旧页面回归都不等同于双端 UI 已联通。后端通过独立分支和 PR 交付，合并与部署分别确认；产品模型真实效果仍待项目凭据与配置后验证。
 
 ## 当前检查
 

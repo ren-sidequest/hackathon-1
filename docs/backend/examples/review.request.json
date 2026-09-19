@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "1.0",
+  "sessionId": "90b3d55d-2675-45ed-8fc6-d9b8a82ab6f8",
+  "taskId": "6dbf5cd7-021b-4d3f-aac9-e72217534f4f",
+  "datasetVersion": "harbourcart-2026-09-v1",
+  "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
+  "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+  "requirementId": "business-problem-solving",
+  "decision": "confirm",
+  "comment": "Synthetic API test decision: confirm this bounded work-sample evidence only; causal explanations and real-world performance remain uncertain."
+}

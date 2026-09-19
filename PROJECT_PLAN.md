@@ -8,6 +8,14 @@
 - 运行目标：双方各自在自己的电脑准备独立运行副本，具体系统与依赖待确认。不预设公网部署或云服务。
 - 产品需求以 [产品蓝图](docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md) 为依据，视觉与交互以 [Baseline](docs/product/EvidenceBridge_BASELINE.md) 为依据；两份文档包含概念图引用。本文件记录实施安排与技术决策，不复制整套产品规范。执行准则见 [AGENTS.md](AGENTS.md)。
 
+## 本轮后端执行覆盖（2026-09-19）
+
+用户确认 TypeScript + Fastify + SQLite，并从同一接口 schema 生成 OpenAPI 文档。小傅负责 HR 与 Candidate 两端页面和 API 接入；本轮实现者仅负责 `app/backend/`、统一案例、接口合同、测试与交接。下文旧“真实 API 未开始/尚未约定”的条目是原前端阶段记录，后端最新状态以此节及 [后端交付](app/backend/README.md)为准。
+
+冻结范围：HarbourCart / Junior Data Analyst / Alex Chen，三个要求，一个任务、一次提交、一次人工审核。三结果分开，两个不足分支终止本轮且保持 Uncertain；不套用旧前端的重开/重提。唯一产品 AI 环节为当前作品的五维观察；初始材料与任务为显式预置。数据保留 3.4%→2.6% 场景，不使用另一份两渠道案例。
+
+[API](docs/backend/API.md)是新共享合同，[DATA](docs/backend/DATA.md)是本轮统一事实来源，[验收矩阵](docs/backend/ACCEPTANCE.md)与[实际测试](docs/backend/TEST_RESULTS.md)分开记录。初始阶段完成本地代码、测试与 AI agent 审查；用户随后确认按仓库规范提交独立分支并创建 PR。合并、部署与双端 UI 接入另行处理，已有页面与历史审查副本受保护。
+
 ## 1. 项目目标
 
 | 项目 | 当前决定 |
