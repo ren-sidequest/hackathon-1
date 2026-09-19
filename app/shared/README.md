@@ -139,3 +139,7 @@ Candidate 调查页空状态的 `View task and work` 和反馈页空状态的 `V
 本轮在已合并 PR10 的 API3 上接入上述黑金组件与审核布局，全部业务数据使用现有 API；部署入口、实际新增／修改文件、恢复和排错方式见 [服务器发布说明](../../docs/FRONTEND_SERVER_RELEASE.md)。默认夜间，保留显式白天偏好。新增 API3 标准/覆盖率概览从服务端 rubric 与 comparison 派生，未引用预览 fixtures，也未更改后端或数据库。
 
 本轮实际验证：Candidate 单元 79/79，HR 8/8，API3 24/24，revision5-preview 20/20，共享 UI 12/12，API2 11/11，旧 Candidate 浏览器 9/9；双端 API3 发布构建及类型/20份文档/diff 检查通过。Windows 下修复测试专用重开信号，API2 reset 测试在原 POST 发出后再重置，以消除自动刷新抢先关闭旧表单的时序竞争。所有写入闭环使用隔离数据库，无线上 reset 或模型调用；线上发布以 PR 与 release manifest 为准。
+
+### 四块引导式设计（独立本地版本）
+
+API3岗位概览、证据双栏、流程联动与任务向导已在独立工作副本实现。详见[设计与验证交接](../../docs/FRONTEND_GUIDED_UI.md)。默认API3合同和原revision5-preview均保持原边界。

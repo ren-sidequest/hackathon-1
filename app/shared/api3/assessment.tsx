@@ -1,7 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Dialog } from '../api-ui';
 import { GlideSelect } from '../glide-select';
 import { SpotlightCard, StarTrail } from '../gold-interactions';
+import type { EvidenceFocus } from './coverage-cell';
+import type { TaskIntent } from './guidance';
 import type { AssessmentItem, Demo, SourceRef, Stage } from '../api3-types';
 import { baseBinding, stageContext } from './client';
 import type { Api3Controller } from './controller';
@@ -27,22 +29,34 @@ export function Rubric({ data, close, initialCriterion }: { data: Demo; close: (
   </div></Dialog>;
 }
 
-function InlineSource({ name, candidateId, context, source, quote, revealRequest }: { name: string; candidateId: string; context: SourceContext; source: Source | null; quote?: SourceRef; revealRequest?: number }) {
+function InlineSource({ name, candidateId, context, source, quote, reveal }: { name: string; candidateId: string; context: SourceContext; source: Source | null; quote?: SourceRef; reveal?:number }) {
   const mark = useRef<HTMLElement>(null);
   const valid = source && (!quote || resolveSourceRef(candidateId, context, quote));
-  useEffect(() => {
-    const node = mark.current, pane = node?.closest('pre');
-    if (!quote || !node || !pane) return;
-    pane.scrollTop += node.getBoundingClientRect().top - pane.getBoundingClientRect().top - (pane.clientHeight - node.offsetHeight) / 2;
-    if (revealRequest !== undefined) node.scrollIntoView({ block: 'center' });
-  }, [quote, revealRequest]);
+  useEffect(() => { const item=mark.current, pane=item?.closest('.guide-source-scroll'); if(!quote||!item||!pane)return; pane.scrollTop+=item.getBoundingClientRect().top-pane.getBoundingClientRect().top-(pane.clientHeight-item.offsetHeight)/2; if(reveal!==undefined)item.scrollIntoView({block:'center'}); }, [quote,reveal]);
   return <section className="eb-panel r5-inline-source" aria-label="Original source text" tabIndex={-1}><h2>{name} · original source</h2>{valid && source ? <><strong>{source.sourceId}</strong><small>{source.location} · {context.evidenceSnapshotId}</small><pre>{quote ? <>{source.text.slice(0, quote.start)}<mark ref={mark}>{source.text.slice(quote.start, quote.end)}</mark>{source.text.slice(quote.end)}</> : source.text}</pre><small>Synthetic case · quoted text is not proof of execution or independent authorship</small></> : <p role="alert">This quotation does not match the selected candidate and material snapshot.</p>}</section>;
 }
 
-export function AssessmentPanel({ data, controller, initialStage = 'application_review', onEditingChange }: { data: Demo; controller: Api3Controller; initialStage?: Stage; onEditingChange?: (editing: boolean) => void }) {
+export function AssessmentPanel({ data, controller, initialStage = 'application_review', onEditingChange, onTask, openTask, evidenceFocus }: { data: Demo; controller: Api3Controller; initialStage?: Stage; onEditingChange?: (editing: boolean) => void; onTask?:(intent:TaskIntent)=>void; openTask?:()=>void; evidenceFocus?:EvidenceFocus }) {
   const [stage, setStage] = useState<Stage>(initialStage), [expanded, setExpanded] = useState<string | null>('B3');
   const [revision, setRevision] = useState<number | null>(null), [edit, setEdit] = useState(false);
-  const [citation, setCitation] = useState<{ sourceId: string; quote?: SourceRef; reused?: boolean; revealRequest?: number } | null>(null);
+  const [citation, setCitation] = useState<{ sourceId: string; quote?: SourceRef; reused?: boolean; reveal?:number } | null>(null);
+  const reviewGrid=useRef<HTMLDivElement>(null);
+  const focusedRequest=useRef<number | null>(null);
+  useEffect(()=>{
+    if(!evidenceFocus)return;
+    setStage('application_review');setRevision(null);setExpanded(evidenceFocus.criterion);
+    const ref=data.assessment.application_review?.items.find(item=>item.criterionId===evidenceFocus.criterion)?.sourceRefs[0];
+    setCitation(ref?{sourceId:ref.sourceId,quote:ref}:null);
+  },[evidenceFocus]);
+  useLayoutEffect(()=>{
+    // Focus only after React commits the requested standard, once per navigation.
+    if(!evidenceFocus || focusedRequest.current===evidenceFocus.request || expanded!==evidenceFocus.criterion || stage!=='application_review')return;
+    const button=reviewGrid.current?.querySelector<HTMLButtonElement>('.r5-criterion-toggle[aria-expanded=true]');
+    if(!button)return;
+    focusedRequest.current=evidenceFocus.request;
+    reviewGrid.current?.scrollIntoView({block:'start'});
+    button.focus({preventScroll:true});
+  },[evidenceFocus,expanded,stage]);
   const context = stageContext(data, stage);
   if (!context) return <section className="eb-panel"><p>This material stage is not available.</p></section>;
   const latest = context.assessment;
@@ -62,31 +76,34 @@ export function AssessmentPanel({ data, controller, initialStage = 'application_
   const source = quotedContext.sources.find(s => s.sourceId === resolvedCitation?.sourceId) ?? quotedContext.sources[0] ?? null;
   const setStageView = (next: Stage) => { setStage(next); setRevision(null); setCitation(null); setExpanded(null); };
   return <>
-    <section className="eb-panel r5-assessment-header" aria-label="Assessment context">
-      <label className="eb-field">Material stage<GlideSelect ariaLabel="Assessment stage" value={stage} onChange={value => setStageView(value as Stage)} options={[{value:'application_review', label:'Application materials · comparison baseline'}, ...data.versions.map(v => ({value:`task_v${v.submission.submissionVersion}`,label:`Task V${v.submission.submissionVersion} · ${data.task.targetRequirementId && requirementNames[data.task.targetRequirementId]}`}))]}/></label><button className="eb-action primary r5-edit-assessment eb-star-border" disabled={controller.busy || !!controller.pending || historical || !currentWork} onClick={() => { setEdit(true); onEditingChange?.(true); }}><StarTrail />Edit human assessment</button>
+    <section className="eb-panel r5-assessment-header" aria-label="Assessment context"><div className="eb-heading"><h2>Evidence before a number</h2><button className="eb-action primary eb-star-border" disabled={controller.busy || !!controller.pending || historical || !currentWork} onClick={() => { setEdit(true); onEditingChange?.(true); }}><StarTrail />Edit human assessment</button></div>
+      <label className="eb-field">Material stage<GlideSelect ariaLabel="Assessment stage" value={stage} onChange={value=>setStageView(value as Stage)} options={[{value:'application_review',label:'Application materials · comparison baseline'},...data.versions.map(v=>({value:`task_v${v.submission.submissionVersion}`,label:`Task V${v.submission.submissionVersion} · ${data.task.targetRequirementId && requirementNames[data.task.targetRequirementId]}`}))]}/></label>
       <div className="r5-meta"><span>{stageNames[stage]}</span><span>{record ? `${annotationLabel(record.annotationMode)} · revision ${record.assessmentRevision}` : 'Not assessed'}</span><span>{data.rubricVersion}</span></div>
       {stage !== 'application_review' && <p className="eb-feedback">Target: {data.task.targetRequirementId && requirementNames[data.task.targetRequirementId]}. This task is separate from the application comparison. {record?.reuseApplication ? `Non-target criteria explicitly reuse application assessment revision ${record.reuseApplication.assessmentRevision}.` : 'Non-target criteria have no inherited score; application reuse is an explicit choice when saving.'}</p>}
       {(!currentWork || historical) && <p className="eb-feedback">Historical assessment and work are read only. Select the current stage and latest revision to create a new assessment.</p>}
       {record && <div className="r5-three r5-api-assessment-summary"><div><strong>{record.score.overallPercentage != null ? percent(record.score.overallPercentage) : record.score.status === 'needs_evidence' ? 'Needs evidence' : 'Not assessed'}</strong><p>{record.score.status === 'pending' ? 'Not fully assessed' : record.score.status === 'needs_evidence' ? 'NE present · no overall percentage' : 'Job evidence match'}</p></div><div><strong>{percent(record.score.coveragePercent)}</strong><p>Evidence coverage · not a hiring prediction</p></div><div><strong>{record.score.accruedScore.toFixed(1)}/100</strong><p>Accumulated contributions · not scaled up</p></div></div>}
       <details><summary>Assessment history & source binding</summary><label className="eb-field">Assessment revision<GlideSelect ariaLabel="Assessment revision" value={String(revision ?? 'latest')} onChange={value => { setRevision(value === 'latest' ? null : Number(value)); setCitation(null); }} options={[{value:'latest',label:`Latest · ${latest ? `revision ${latest.assessmentRevision}` : 'not assessed'}`}, ...history.map(r => ({value:String(r.assessmentRevision),label:`Revision ${r.assessmentRevision} · ${annotationLabel(r.annotationMode)} · ${r.operatorLabel}`}))]}/></label><small>{data.candidate.id} · {context.evidenceSnapshotId} · {context.fingerprint}</small>{record && <p>{record.operatorLabel} · {new Date(record.createdAt).toLocaleString()} · {record.assessmentId}</p>}<p>The original application baseline stays immutable; each human save appends a revision.</p><p>{data.application.baseline.provenance.actualAnnotation} · {data.application.baseline.provenance.actualReview}</p><p>Human calibration: {data.application.baseline.provenance.humanCalibration}</p></details>
     </section>
-    <div className="r5-assessment-grid"><nav className="r5-evidence-rail" aria-label="Evidence criteria"><div className="r5-evidence-nav-heading"><h2>Assessment criteria</h2><small>{activeCriteria.length} public standards · Select one to inspect its evidence</small></div><div className="r5-evidence-options">{activeCriteria.map(c => {
-      const direct = record?.items.find(e => e.criterionId === c.id), reused = !direct ? record?.reusedItems.find(e => e.criterionId === c.id) : undefined, entry = direct ?? reused;
-      const ref = entry?.sourceRefs[0];
-      return <button key={c.id} className={`r5-criterion-toggle${activeId === c.id ? ' eb-star-border' : ''}`} title={`${c.id} · ${c.title}`} aria-label={`${c.id} · ${c.title}`} aria-expanded={activeId === c.id} onClick={() => { setExpanded(c.id); if (ref) setCitation({sourceId:ref.sourceId,quote:ref,reused:!!reused}); else setCitation(null); }}>{activeId === c.id && <StarTrail />}<span className="r5-criterion-id">{c.id}</span><span><strong>{c.title}</strong><small className="r5-mark">{!entry ? 'Not assessed' : entry.mark === 'NE' ? 'NE' : `${entry.mark}/4`} · {c.requirementId === 'sql' ? 'SQL' : c.requirementId === 'data-analysis' ? 'DA' : 'BPS'}</small></span></button>;
-    })}</div></nav><aside className="r5-original-pane"><section className="eb-panel"><label className="eb-field">Original material<GlideSelect ariaLabel="Review source" value={source?.sourceId ?? ''} onChange={value => setCitation({ sourceId: value, reused: resolvedCitation?.reused })} options={quotedContext.sources.map(s => ({value:s.sourceId,label:`${s.sourceId} · ${s.location}`}))}/></label></section><InlineSource name={data.candidate.name} candidateId={data.candidate.id} context={quotedContext} source={source} quote={resolvedCitation?.quote} revealRequest={resolvedCitation && 'revealRequest' in resolvedCitation ? resolvedCitation.revealRequest : undefined}/><details className="eb-panel"><summary>Three separate decisions</summary><p><strong>Assess:</strong> judge individual standards.</p><p><strong>Review evidence:</strong> confirm or request a bounded revision.</p><p><strong>Retain:</strong> choose who to discuss further.</p><p>None of these automatically performs the other two.</p></details></aside><section aria-label="Assessment criteria">{activeCriteria.filter(c => c.id === activeId).map(c => {
-      const direct = record?.items.find(e => e.criterionId === c.id), reused = !direct ? record?.reusedItems.find(e => e.criterionId === c.id) : undefined;
-      const entry = direct ?? reused;
-      const contribution = record?.score.criteria.find(e => e.criterionId === c.id)?.contribution;
-      return <SpotlightCard as="article" className="eb-panel r5-criterion" key={c.id}><header className="r5-judgment-heading"><small>REVIEW THIS EVIDENCE · {c.id}</small><h2>{c.title}</h2></header>
-        {activeId === c.id && <div className="r5-criterion-body"><p><strong>Company requirement:</strong> {data.rubric.requirements.find(r => r.id === c.requirementId)?.statement}</p><p><strong>What this role needs:</strong> {c.observableSupport}</p><p><strong>Anchor:</strong> {!entry ? 'Review the original work before judging.' : entry.mark === 'NE' ? 'Insufficient material, not a zero.' : entry.mark === 4 || entry.mark === 2 || entry.mark === 0 ? c.anchors[String(entry.mark) as '4' | '2' | '0'] : data.rubric.marks.find(m => m.mark === entry.mark)?.meaning}</p>
+    <div ref={reviewGrid} className="r5-assessment-grid guide-review-grid">
+      <nav className="r5-evidence-rail" aria-label="Evidence criteria"><div className="r5-evidence-nav-heading"><h2>Assessment criteria</h2><small>Select a standard · inspect its evidence · choose the next step</small></div><div className="r5-evidence-options">{activeCriteria.map(c=>{
+        const direct=record?.items.find(e=>e.criterionId===c.id), reused=!direct?record?.reusedItems.find(e=>e.criterionId===c.id):undefined, entry=direct??reused;
+        const selected=activeId===c.id;
+        return <button className={`r5-criterion-toggle${selected ? ' eb-star-border' : ''}`} key={c.id} aria-label={`${c.id} · ${c.title}`} title={`${c.id} · ${c.title}`} aria-expanded={selected} onClick={()=>{setExpanded(c.id);const ref=entry?.sourceRefs[0];setCitation(ref?{sourceId:ref.sourceId,quote:ref,reused:!!reused}:null);}}>{selected && <StarTrail />}<span className="r5-criterion-id">{c.id}</span><span><strong>{c.title}</strong><small className={`r5-mark ${!entry || entry.mark === 'NE' ? 'is-unknown' : ''}`}>{!entry?'Not assessed':entry.mark==='NE'?'NE':`${entry.mark}/4`}</small></span></button>;
+      })}</div></nav>
+      <aside className="r5-original-pane"><section className="eb-panel"><label className="eb-field">Original material<GlideSelect ariaLabel="Review source" value={source?.sourceId??''} onChange={value=>setCitation({sourceId:value,reused:resolvedCitation?.reused})} options={quotedContext.sources.map(s=>({value:s.sourceId,label:`${s.sourceId} · ${s.location}`}))}/></label></section><div className="guide-source-scroll" tabIndex={0} role="region" aria-label="Scrollable original material"><InlineSource name={data.candidate.name} candidateId={data.candidate.id} context={quotedContext} source={source} quote={resolvedCitation?.quote} reveal={resolvedCitation && 'reveal' in resolvedCitation ? resolvedCitation.reveal : undefined}/></div><details className="guide-background"><summary>Reading this evidence</summary><p>Assess individual standards, review the submitted evidence and retain a candidate as separate human decisions. A quote does not prove execution.</p></details></aside>
+      <section aria-label="Assessment criteria">{activeCriteria.filter(c=>c.id===activeId).map(c=>{
+        const direct=record?.items.find(e=>e.criterionId===c.id), reused=!direct?record?.reusedItems.find(e=>e.criterionId===c.id):undefined, entry=direct??reused;
+        const contribution=record?.score.criteria.find(e=>e.criterionId===c.id)?.contribution;
+        return <React.Fragment key={c.id}><header className="r5-judgment-heading"><small>REVIEW THIS EVIDENCE · {c.id}</small><h2>{c.title}</h2></header><div className="guide-judgment-scroll" tabIndex={0} role="region" aria-label="Scrollable evidence judgment"><SpotlightCard as="article" className="eb-panel r5-criterion"><div className="r5-criterion-body">
+          <p><strong>Judgment:</strong> {entry?.rationale??'No saved judgment yet. Read the source before assessing.'}</p>
           {reused && <p className="r5-notice">Application source · explicitly reused revision {record?.reuseApplication?.assessmentRevision}; not evidence from this task.</p>}
-          {entry?.sourceRefs.map((ref, index) => <button className="eb-citation" key={index} onClick={() => setCitation({ sourceId: ref.sourceId, quote: ref, reused: !!reused, revealRequest: performance.now() })}>{ref.quote}<small>{ref.sourceId} · {ref.location} · Locate exact source ←</small></button>)}{!entry?.sourceRefs.length && <p className="eb-muted">No cited passage. Inspect the material and checked scope before judgment.</p>}
-          <p><strong>Support:</strong> {entry?.support ?? 'Not assessed'}</p><p><strong>Gap / counter-evidence:</strong> {entry?.gaps ?? 'Not assessed'}</p><p><strong>Judgment:</strong> {entry?.rationale ?? 'No saved judgment yet.'}</p>
-          <div className="r5-formula">{entry && typeof entry.mark === 'number' ? `${entry.mark} ÷ 4 × 10 = ${contribution?.toFixed(1) ?? '—'}/10 contribution` : entry?.mark === 'NE' ? 'NE · no numerical contribution inferred' : 'No contribution before assessment'}</div><p><strong>Uncertainty:</strong> {entry?.uncertainty ?? 'Awaiting human assessment.'}</p><p><strong>Next step:</strong> {entry?.nextStep ?? 'Review the original material.'}</p><small>Checked sources: {entry?.checkedSourceIds.join(' · ') || 'None selected'}</small>
-        </div>}
-      </SpotlightCard>;
-    })}</section></div>
+          {entry?.sourceRefs.map((ref,index)=><button className="eb-citation" key={index} onClick={()=>setCitation({sourceId:ref.sourceId,quote:ref,reused:!!reused,reveal:performance.now()})}>{ref.quote}<small>{ref.sourceId} · Locate exact source ←</small></button>)}
+          {!entry?.sourceRefs.length && <p>No cited passage. Check the original material and scope.</p>}
+          <div className="guide-gap"><small>WHAT REMAINS UNCLEAR</small><p>{entry?.gaps||'No specific gap recorded. Inspect the material before requesting more work.'}</p></div>
+          <details><summary>Assessment basis, scope & calculation</summary><p><strong>Company requirement:</strong> {data.rubric.requirements.find(r=>r.id===c.requirementId)?.statement}</p><p><strong>What this role needs:</strong> {c.observableSupport}</p><p><strong>Anchor:</strong> {!entry?'Not assessed':entry.mark==='NE'?'Insufficient material, not a zero.':entry.mark===4||entry.mark===2||entry.mark===0?c.anchors[String(entry.mark) as '4'|'2'|'0']:data.rubric.marks.find(m=>m.mark===entry.mark)?.meaning}</p><p><strong>Support:</strong> {entry?.support??'Not assessed'}</p><p><strong>Uncertainty:</strong> {entry?.uncertainty??'Awaiting human assessment.'}</p><div className="r5-formula">{entry&&typeof entry.mark==='number'?`${entry.mark} ÷ 4 × 10 = ${contribution?.toFixed(1)??'—'}/10 contribution`:entry?.mark==='NE'?'NE · no numerical contribution inferred':'No contribution before assessment'}</div><small>Checked sources: {entry?.checkedSourceIds.join(' · ')||'None selected'}</small></details>
+        </div></SpotlightCard></div><footer className="guide-next"><strong>Next step</strong><p>{entry?.nextStep||'Review the original material against this standard.'}</p>{onTask && data.workflow.canSend ? <button className="eb-action primary" onClick={()=>onTask({target:c.requirementId,criterion:c.id,reason:[entry?.gaps,entry?.nextStep].filter(Boolean).join(' ')})}>Prepare task from {c.id}</button> : openTask ? <button className="eb-action primary" onClick={openTask}>View task & review</button> : <button className="eb-action primary" disabled={controller.busy||!!controller.pending||historical||!currentWork} onClick={()=>{setEdit(true);onEditingChange?.(true);}}>Assess this work</button>}</footer></React.Fragment>;
+      })}</section>
+    </div>
     {edit && <AssessmentEditor data={data} stage={stage} controller={controller} close={() => { setEdit(false); onEditingChange?.(false); }}/>}
   </>;
 }

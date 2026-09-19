@@ -216,3 +216,7 @@ API 浏览器测试使用独立内存数据库 / 8789 后端和 5373 / 5386 前�
 ## 2026-09-19 双端本地整合补充
 
 基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](docs/FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。
+
+## API3并行设计测试端口
+
+API3浏览器检查支持 EB_API3_TEST_BACKEND_PORT / EB_API3_TEST_CANDIDATE_PORT / EB_API3_TEST_HR_PORT 环境变量，默认8793/6373/6386不变。与其他工作副本并行时可用8894/6473/6486，仍由Playwright启动独立临时SQLite，不能复用正在部署的服务。Windows测试重启通过当前工作副本的PID/generation控制文件完成。设计范围、预览与验证见[四块引导式设计](docs/FRONTEND_GUIDED_UI.md)。
