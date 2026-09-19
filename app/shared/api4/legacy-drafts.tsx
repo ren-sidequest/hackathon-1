@@ -10,7 +10,7 @@ export function recoveredPublicText(raw: string): string {
 export function LegacyDrafts({ currentKey }: { currentKey: string }) {
   const [error, setError] = useState('');
   const [keys] = useState(() => {
-    try { return Object.keys(localStorage).filter(k => /^evidencebridge\.api[34]\.draft\./.test(k) && k !== currentKey); }
+    try { return Object.keys(localStorage).filter(k => /^evidencebridge\.api4\.draft\./.test(k) && k !== currentKey); }
     catch { return []; }
   });
   if (!keys.length) return null;

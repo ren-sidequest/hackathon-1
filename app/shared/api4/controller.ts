@@ -11,7 +11,7 @@ export type Api4Controller = {
 };
 const sameSnapshot = (a: Demo, b: Comparison) => (['sessionId', 'revision', 'fixtureVersion', 'jdVersion', 'rubricVersion', 'datasetVersion'] as const).every(key => a[key] === b[key]);
 const asError = (error: unknown) => error instanceof Api4Error ? error : new Api4Error('CLIENT_ERROR', 'The operation did not complete. Your input has been kept.');
-export function useApi4(role: 'hr' | 'candidate', candidateId: CandidateId | null): Api4Controller {
+export function useApi4(role: 'hr' | 'candidate', candidateId: CandidateId | null, needsSelection = false): Api4Controller {
   const base = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8787').replace(/\/$/, '');
   const client = useMemo(() => new Api4Client(base, `evidencebridge.api4.receipt.${role}.${base}`), [base, role]);
   const analysisClient = useMemo(() => new Api4Client(base, `evidencebridge.api4.analysis-receipt.${role}.${base}`), [base, role]);
@@ -32,6 +32,11 @@ export function useApi4(role: 'hr' | 'candidate', candidateId: CandidateId | nul
     if (!preserveError) setError(null);
     try {
       let list = await client.comparison();
+      if (needsSelection) {
+        if (!mounted.current || request !== sequence.current || person !== identity.current) return false;
+        current.current = null; setData(null); setComparison(list); setFresh(false);
+        return true;
+      }
       const selected = person ?? list.candidates[0].candidate.id;
       let next = await client.read(selected);
       // A reset between the two GETs must not combine old and new sessions.
@@ -46,7 +51,7 @@ export function useApi4(role: 'hr' | 'candidate', candidateId: CandidateId | nul
       if (mounted.current && request === sequence.current && person === identity.current) setError(asError(e));
       return false;
     } finally { if (mounted.current && request === sequence.current) setLoading(false); }
-  }, [client, analysisClient]);
+  }, [client, analysisClient, needsSelection]);
   const refresh = useCallback(async () => { await fetchCurrent(); }, [fetchCurrent]);
   useEffect(() => { setNotice(''); setCompletedAction(null); void refresh(); }, [candidateId, refresh]);
 
@@ -87,5 +92,5 @@ export function useApi4(role: 'hr' | 'candidate', candidateId: CandidateId | nul
   };
   const retry = () => execute(() => client.retry(), client.pending?.body.candidateId, client.pending?.body.sessionId, false, client.pending?.path, client.pending?.body.stage);
   const retryAnalysis = () => execute(() => analysisClient.retry(), analysisClient.pending?.body.candidateId, analysisClient.pending?.body.sessionId, true);
-  return { data: !candidateId || data?.candidate.id === candidateId ? data : null, comparison, error, loading, busy, pending, analysisBusy, analysisPending, notice, completedAction, fresh: fresh && (!candidateId || data?.candidate.id === candidateId), base, refresh, write, retry, retryAnalysis };
+  return { data: !needsSelection && (!candidateId || data?.candidate.id === candidateId) ? data : null, comparison, error, loading, busy, pending, analysisBusy, analysisPending, notice, completedAction, fresh: !needsSelection && fresh && (!candidateId || data?.candidate.id === candidateId), base, refresh, write, retry, retryAnalysis };
 }
