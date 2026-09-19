@@ -4,11 +4,13 @@ on:
   pull_request:
     paths:
       - 'app/hr/**'
+      - 'app/shared/**'
       - '.github/workflows/hr-checks.yml'
   push:
     branches: [main]
     paths:
       - 'app/hr/**'
+      - 'app/shared/**'
       - '.github/workflows/hr-checks.yml'
   workflow_dispatch:
 

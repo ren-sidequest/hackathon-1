@@ -1,10 +1,11 @@
 import { useEffect, useReducer, useState, useSyncExternalStore } from 'react';
-import { ArrowRight, ArrowUpRight, BriefcaseBusiness, Building2, ChartNoAxesCombined, Check, ChevronRight, CircleHelp, ClipboardList, FileText, FolderOpen, Home, Layers3, MapPin, Menu, MonitorPlay, PanelLeftClose, RotateCcw, ShieldCheck, Sparkles, Upload, X } from 'lucide-react';
+import { ArrowRight, BriefcaseBusiness, Building2, ChartNoAxesCombined, Check, ChevronRight, CircleHelp, ClipboardList, FileText, FolderOpen, Home, MapPin, MonitorPlay, RotateCcw, ShieldCheck, Sparkles, Upload, X } from 'lucide-react';
 import { CandidateContext, useCandidate, type Page } from './context';
 import { initialState, reducer, restore, stamp, storageKey } from './state';
 import { company, role, taskTitle } from './data';
 import { Badge, Empty, Modal, ResourceBrowser, Timeline } from './ui';
 import { Workspace, WorkSample } from './Workspace';
+import { Sidebar, useSidebar } from '../../shared/ui';
 const nav = [{ page:'home', label:'Home', icon:Home },{ page:'tasks', label:'My Tasks', icon:ClipboardList },{ page:'workspace', label:'Workspace', icon:ChartNoAxesCombined },{ page:'resources', label:'Resources', icon:FolderOpen },{ page:'status', label:'Application Status', icon:ShieldCheck }] as const;
 const subscribe = (callback: () => void) => { window.addEventListener('hashchange',callback); return () => window.removeEventListener('hashchange',callback); };
 function route(): Page { const page = location.hash.slice(1); return ['home','tasks','workspace','resources','sample','status'].includes(page) ? page as Page : 'home'; }
@@ -12,20 +13,20 @@ function load() { try { return restore(localStorage.getItem(storageKey)); } catc
 export default function App() {
   const [state,dispatch] = useReducer(reducer,undefined,load);
   const [toast,setToast] = useState(''); const [storageError,setStorageError] = useState(false);
-  const [demo,setDemo] = useState(false); const [help,setHelp] = useState(false); const [sidebar,setSidebar] = useState(false);
+  const [demo,setDemo] = useState(false); const [help,setHelp] = useState(false);
+  const sidebar = useSidebar('candidate');
   const page = useSyncExternalStore(subscribe,route);
   useEffect(() => { try { localStorage.setItem(storageKey,JSON.stringify(state)); setStorageError(false); } catch { setStorageError(true); } },[state]);
   useEffect(() => { if (toast) { const timer=setTimeout(()=>setToast(''),4500); return ()=>clearTimeout(timer); } },[toast]);
-  const navigate = (next: Page) => { location.hash=next; setSidebar(false); window.scrollTo({top:0,behavior:'instant'}); };
+  const navigate = (next: Page) => { location.hash=next; sidebar.closeMobile(); window.scrollTo({top:0,behavior:'instant'}); };
   const locked = state.stage === 'application' || state.stage === 'received';
   function populatedDemo() { dispatch({type:'RESET'}); dispatch({type:'LOAD_APPLICATION'}); dispatch({type:'APPLY',...stamp()}); dispatch({type:'START',...stamp()}); dispatch({type:'LOAD_FINDINGS',...stamp()}); navigate('workspace'); setDemo(false); setToast('Example investigation loaded. You can edit every card.'); }
   return <CandidateContext.Provider value={{state,dispatch,navigate,notify:setToast,storageAvailable:!storageError}}><div className="app-shell">
-    {sidebar && <button className="sidebar-backdrop" aria-label="Close navigation" onClick={()=>setSidebar(false)}/>}
-    <aside className={`sidebar ${sidebar?'open':''}`}><a className="brand" href="#home"><Layers3 size={24}/><span>EvidenceBridge</span></a><button className="mobile-close icon-button" aria-label="Close navigation" onClick={()=>setSidebar(false)}><PanelLeftClose size={20}/></button>
-      <div className="role-label">CANDIDATE WORKSPACE</div><nav aria-label="Main navigation">{nav.map(({page:target,label,icon:Icon})=><a key={target} href={`#${target}`} onClick={()=>setSidebar(false)} aria-current={page===target || (page==='sample' && target==='workspace')?'page':undefined} className={page===target || (page==='sample' && target==='workspace')?'active':''}><Icon size={18}/><span>{label}</span>{target==='tasks' && state.stage!=='application' && <span className="nav-count">1</span>}</a>)}</nav>
-      <div className="sidebar-footer"><div className="sidebar-message"><ShieldCheck size={22}/><p>Your work.<br/><strong>Your evidence.</strong></p><small>A clearer picture of what you can do.</small></div><button className="help-button" onClick={()=>setHelp(true)}><CircleHelp size={17}/>Help & support<ArrowUpRight size={14}/></button><div className="user-block"><span className="avatar">AC</span><span><strong>Alex Chen</strong><small>Candidate</small></span><Badge>Demo</Badge></div></div>
-    </aside>
-    <div className="app-main"><header className="topbar"><div className="breadcrumb"><button className="icon-button mobile-menu" aria-label="Open navigation" onClick={()=>setSidebar(true)}><Menu size={20}/></button><span>Candidate</span><ChevronRight size={14}/><strong>{page==='sample'?'Work sample':nav.find(n=>n.page===page)?.label}</strong></div><div className="topbar-right"><span className="local-indicator"><span/>Local demo workspace</span><button className="demo-button" onClick={()=>setDemo(true)}><MonitorPlay size={15}/>Demo controls</button></div></header>
+    <Sidebar role="candidate" controller={sidebar} activePage={page==='sample'?'workspace':page}
+      items={nav.map(({page:target,label,icon:Icon})=>({id:target,label,icon:<Icon size={18}/>,href:`#${target}`,count:target==='tasks'&&state.stage!=='application'?1:undefined}))}
+      onNavigate={id=>navigate(id as Page)} user={{initials:'AC',name:'Alex Chen',title:'Candidate'}}
+      helpLabel="Help & support" onHelp={()=>setHelp(true)}/>
+    <div className="app-main" data-eb-content><header className="topbar"><div className="breadcrumb">{sidebar.menuButton}<span>Candidate</span><ChevronRight size={14}/><strong>{page==='sample'?'Work sample':nav.find(n=>n.page===page)?.label}</strong></div><div className="topbar-right"><span className="local-indicator"><span/>Local demo workspace</span><button className="demo-button" onClick={()=>setDemo(true)}><MonitorPlay size={15}/>Demo controls</button></div></header>
       {storageError && <div className="alert amber" role="alert">Browser storage is unavailable. Your work remains in this tab; download your work sample before leaving.</div>}
       <main id="main-content" className={`main-content ${page==='workspace'?'workspace-content':''}`}>
         {page==='home' && <Application/>}{page==='tasks' && <Tasks/>}

@@ -39,7 +39,7 @@
 | --- | --- |
 | 应用形态与技术栈 | 浏览器 Web 应用，桌面演示优先；Candidate 已批准 React + TypeScript + Vite、Lucide、Recharts、普通 CSS；HR 使用 React 19 + Vite 7 |
 | 运行时、包管理器及版本 | Candidate 使用 Node.js 24 LTS（最低 22.12）；HR 使用 Node.js 22.12+；各端使用 npm 和独立 package-lock.json |
-| 模块划分与代码目录 | HR 与 Candidate 分别设计实现；已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md)，两端均有独立应用与锁文件；共享模块目录与文件归属待约定 |
+| 模块划分与代码目录 | HR 与 Candidate 分别设计实现；已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md)，两端均有独立应用与锁文件；共享主题、侧栏和 UI 偏好位于 [app/shared/](app/shared/README.md)，业务流程仍归各端维护 |
 | 接口、数据结构与存储方式 | 两端各自使用浏览器 localStorage；Candidate 内部使用 reducer，重置清除本端状态。跨端 API 尚未约定，JSON 导出仅是本端演示产物 |
 | 外部服务及离线／模拟方案 | 允许静态 JSON、本地状态和预生成输出；是否引入真实服务待确认，不默认需要生产后端 |
 | 本地运行方式和演示设备 | Candidate：dev（5173）、build + preview（4173）；HR：dev / build / preview（--prefix app/hr，5186）；本机浏览器 |
@@ -47,6 +47,12 @@
 技术选择应服务于 MVP、团队熟悉程度和活动时间。引入外部服务时说明网络、成本和凭据需求，不默认已有账号或额度。
 
 HR 和 Candidate 由用户与朋友分别负责，具体人员对应哪一端由任务确认。双方使用各自本地副本和独立分支，通过 PR 整合；共享外壳、基础组件风格、状态命名和演示场景遵循 Baseline。跨端变更先协调输入输出及文件归属，不覆盖另一端工作。
+
+## 3.1 本轮界面统一范围
+
+两端已接入共享日夜主题与折叠侧栏，使用现有 React / CSS，不新增第三方运行依赖。主题和侧栏偏好与业务存储分离，跨端数据同步仍未实现。额外 HR 评分暂缓，后续明确评价对象、标准与候选人可见性后再设计。
+
+竞赛要求记录（依据用户补充）：允许合成与模拟数据，同时要求有意义地使用 AI 或 AI-enabled technology、诚实说明成果；目前未确认有现场必须联网调用模型的条款。具体预生成展示方式是否满足本场要求，待向 mentor 确认。现有模拟流程和预生成证据不据此宣称已经满足赛事 AI 要求。
 
 ## 4. 开发阶段
 

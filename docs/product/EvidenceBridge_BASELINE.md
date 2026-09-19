@@ -15,7 +15,7 @@
 ### Reference boundaries / 参考边界
 
 - 图 1 用于核心工作台的布局、密度和模块参考；图 2 用于双端页面与流程参考。外围编号、中文说明和示意连线不作为产品界面内容。
-- 已知图文差异以本文件的明确规范为准：共享深色侧栏、HR 蓝色、Candidate 绿色；分析图表可使用共享蓝色，不照搬图 2 的浅色侧栏或候选人蓝色主按钮。
+- 已知图文差异以本文件的明确规范为准：共享随日夜主题变化的侧栏、HR 蓝色、Candidate 绿色；分析图表可使用共享蓝色，侧栏明暗以当前主题为准，不照搬候选人蓝色主按钮。
 - 候选人主要输入采用图 1 的结构化 Investigation Board，不采用图 2 的单一大文本框任务页。
 - 图 2 的 Shared Backend / Data 仅表示两端共享数据关系；MVP 可使用本地模拟状态，不因此要求真实后端。
 - 图片中的个人、公司和数据用于概念演示，不作为真实候选人评价或运行结果。其他实质冲突先确认，不自行改变产品要求。
@@ -101,8 +101,8 @@ Both sides must feel like one product.
 
 All major screens use:
 
-- **Dark left sidebar**
-- **Light main content area**
+- **Theme-aware left sidebar**
+- **Day / night main content area**, with a shared two-state theme switch
 - Consistent typography
 - Consistent spacing scale
 - Consistent component shapes
@@ -141,8 +141,8 @@ The shell is shared. Role accents are different.
 
 ### Shared neutrals
 
-- `--sidebar-bg: #142238`
-- `--sidebar-bg-deep: #0F1B2D`
+- `--sidebar-bg: #FFFFFF` (day) / `#0D1829` (night)
+- `--sidebar-bg-deep: #F9FBFD` (day) / `#091220` (night)
 - `--page-bg: #F6F8FB`
 - `--surface: #FFFFFF`
 - `--surface-soft: #F9FBFD`
@@ -268,7 +268,7 @@ The hackathon demo should be optimized for desktop presentation.
 
 Recommended frame:
 
-- Sidebar: `220–240px`
+- Sidebar: `232px` expanded / `64px` collapsed; drawer navigation at `700px` and below
 - Main content: fluid
 - Max content width for standard pages: `1280–1440px`
 - Workspace screens may use full width
@@ -277,7 +277,7 @@ Recommended frame:
 
 ### Sidebar
 
-Shared dark sidebar.
+Shared sidebar: light in day mode, dark in night mode.
 
 Contains:
 
@@ -291,7 +291,16 @@ Active item:
 - HR side: blue-accented
 - Candidate side: green-accented
 
-Sidebar must remain visually stable across pages.
+Sidebar must remain visually stable across pages. Both roles use the shared Sidebar, theme switch and semantic palette in [app/shared](../../app/shared/README.md). Keep role-specific navigation and business state in each app.
+
+### Day / night behavior
+
+- Day mode uses a light sidebar and pale workspace; night mode uses dark sidebar and layered surfaces.
+- HR remains blue and Candidate remains green; evidence status meanings remain identical.
+- The sun / moon sliding switch sits at the bottom of the sidebar, above help and user information, and remains usable when collapsed or in the mobile drawer. Follow system appearance until the user explicitly chooses; persist that choice when storage is available.
+- Theme applies to forms, dialogs, tables, charts, tooltips and empty states. Changing appearance must not reset task drafts or review outcomes.
+- Desktop collapse preserves icon labels, active state and counts. Mobile navigation is a dismissible drawer with focus management.
+- Numeric scoring is deferred pending a separate discussion of what is being assessed; existing human-review actions are unchanged.
 
 ---
 
