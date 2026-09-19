@@ -46,7 +46,7 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
   const { data, comparison } = controller;
   const access = useWriteAccess(controller.base, controller.error);
   const pendingName = (owner: unknown) => comparison?.candidates.find(row => row.candidate.id === owner)?.candidate.name ?? 'the original candidate';
-  const savedNext = controller.completedAction?.candidateId === candidateId ? savedActionDestination(controller.completedAction.path, role) : null;
+  const savedNext = controller.completedAction?.candidateId === candidateId ? savedActionDestination(controller.completedAction.path, role, controller.completedAction.stage) : null;
   const noticeAction = controller.error ? {
     label: needsWriteAccess(controller.error) && access.status !== 'enabled' && access.url ? 'Enable editing' : controller.pending ? 'Retry saved request' : controller.analysisPending ? 'Retry analysis' : 'Check latest status',
     run: () => { if (needsWriteAccess(controller.error) && access.status !== 'enabled' && access.url) window.open(access.url, '_blank', 'noopener,noreferrer'); else void (controller.pending ? controller.retry() : controller.analysisPending ? controller.retryAnalysis() : controller.refresh()); }

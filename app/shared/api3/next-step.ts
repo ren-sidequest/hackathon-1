@@ -12,10 +12,10 @@ export function nextStep(data: Demo, role: 'hr' | 'candidate', page: string) {
   if (data.task.status !== 'draft') return { page: 'tasks', label: 'View task status', detail: 'The candidate has the task. Refresh after they submit their work.' };
   return { page: 'evidence', label: 'Inspect application evidence', detail: 'Inspect the source first. Request a task only for a specific gap, or make a shortlist decision.' };
 }
-export function savedActionDestination(path: string, role: 'hr' | 'candidate') {
+export function savedActionDestination(path: string, role: 'hr' | 'candidate', stage?: unknown) {
   if (role === 'candidate') return { page: 'history', label: 'View work & feedback' };
   if (path === '/shortlist') return { page: 'shortlist', label: 'View retained decisions' };
-  if (path === '/assessment') return { page: 'evidence', label: 'View saved assessment' };
+  if (path === '/assessment') return stage === 'task_v1' || stage === 'task_v2' ? { page: 'tasks', label: 'View saved task assessment' } : { page: 'evidence', label: 'View saved assessment' };
   if (path === '/review') return { page: 'tasks', label: 'View review & next steps' };
   return { page: 'tasks', label: 'View task status' };
 }

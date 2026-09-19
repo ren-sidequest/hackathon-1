@@ -55,6 +55,8 @@ describe('frontend-only clarity and export', () => {
   });
   it('routes saved assessment and shortlist actions to their own results', () => {
     expect(savedActionDestination('/assessment', 'hr').page).toBe('evidence');
+    expect(savedActionDestination('/assessment', 'hr', 'task_v1').page).toBe('tasks');
+    expect(savedActionDestination('/assessment', 'hr', 'task_v2').page).toBe('tasks');
     expect(savedActionDestination('/shortlist', 'hr').page).toBe('shortlist');
     expect(savedActionDestination('/submission', 'candidate').page).toBe('history');
     expect(nextStep(data, 'hr', 'company').page).toBe('evidence');

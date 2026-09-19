@@ -6,7 +6,7 @@ export type Api3Controller = {
   data: Demo | null; comparison: Comparison | null; error: Api3Error | null;
   loading: boolean; busy: boolean; pending: Pending | null; notice: string; fresh: boolean; base: string;
   analysisBusy: boolean; analysisPending: Pending | null; retryAnalysis: () => Promise<boolean>;
-  completedAction: { path: string; candidateId: unknown } | null;
+  completedAction: { path: string; candidateId: unknown; stage?: unknown } | null;
   refresh: () => Promise<void>; write: (path: string, body: Record<string, unknown>) => Promise<boolean>; retry: () => Promise<boolean>;
 };
 const asError = (error: unknown) => error instanceof Api3Error ? error : new Api3Error('CLIENT_ERROR', 'The operation did not complete. Your input has been kept.');
@@ -47,7 +47,7 @@ export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api
   const refresh = useCallback(async () => { await fetchCurrent(); }, [fetchCurrent]);
   useEffect(() => { setNotice(''); setCompletedAction(null); void refresh(); }, [candidateId, refresh]);
 
-  const execute = async (action: () => ReturnType<Api3Client['retry']>, owner: unknown, session: unknown, isAnalysis = false, path = '') => {
+  const execute = async (action: () => ReturnType<Api3Client['retry']>, owner: unknown, session: unknown, isAnalysis = false, path = '', stage?: unknown) => {
     const lock = isAnalysis ? analyzing : writing, transport = isAnalysis ? analysisClient : client;
     if (lock.current) return false;
     lock.current = true; if (isAnalysis) setAnalysisBusy(true); else setBusy(true); setError(null); setNotice(''); setCompletedAction(null);
@@ -57,7 +57,7 @@ export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api
       let refreshed = false;
       if (mounted.current) { setPending(client.pending); setAnalysisPending(analysisClient.pending); refreshed = await fetchCurrent(); }
       const same = owner === identity.current && session === current.current?.sessionId;
-      if (mounted.current && committed && same) setCompletedAction({ path, candidateId: owner });
+      if (mounted.current && committed && same) setCompletedAction({ path, candidateId: owner, stage });
       const saved = path === '/submission' ? 'Work submitted · waiting for human review.' : path === '/task/send' ? 'Task sent · available in the candidate workspace.' : path === '/review' ? 'Evidence review saved · public feedback is available.' : path === '/assessment' ? 'Human assessment saved · server scores updated.' : path === '/shortlist' ? 'Shortlist decision saved.' : 'Action saved.';
       const name = current.current && current.current.candidate.id === owner ? current.current.candidate.name : comparison?.candidates.find(row => row.candidate.id === owner)?.candidate.name ?? 'the selected candidate';
       if (mounted.current) setNotice(session !== current.current?.sessionId ? 'The session changed during this action. Only the current session is shown.' : committed ? `${saved} Saved on the shared service for ${name}.${refreshed ? '' : ' Refresh is still needed before continuing.'}` : `Analysis is running for ${name}; refresh or retry the original action.`);
@@ -80,9 +80,9 @@ export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api
       return Promise.resolve(false);
     }
     const isAnalysis = path === '/analysis';
-    return execute(() => (isAnalysis ? analysisClient : client).write(path, body), body.candidateId, body.sessionId, isAnalysis, path);
+    return execute(() => (isAnalysis ? analysisClient : client).write(path, body), body.candidateId, body.sessionId, isAnalysis, path, body.stage);
   };
-  const retry = () => execute(() => client.retry(), client.pending?.body.candidateId, client.pending?.body.sessionId, false, client.pending?.path);
+  const retry = () => execute(() => client.retry(), client.pending?.body.candidateId, client.pending?.body.sessionId, false, client.pending?.path, client.pending?.body.stage);
   const retryAnalysis = () => execute(() => analysisClient.retry(), analysisClient.pending?.body.candidateId, analysisClient.pending?.body.sessionId, true);
   return { data: data?.candidate.id === candidateId ? data : null, comparison, error, loading, busy, pending, analysisBusy, analysisPending, notice, completedAction, fresh: fresh && data?.candidate.id === candidateId, base, refresh, write, retry, retryAnalysis };
 }
