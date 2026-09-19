@@ -1,5 +1,11 @@
 # 项目开发与修改准则
 
+## API4 前端接入补充（2026-09-19）
+
+双端默认 `api4-connected`；新页面与客户端在 `app/shared/api4/`，生成类型严格沿用后端 `ff053cb` 合同。未整合后端 PR14 时，使用独立后端 checkout，通过 `EB_API4_BACKEND_ROOT` 指定根目录。不得把 API3 服务当作 API4 使用。历史模式和测试保持显式入口。
+
+新增根目录检查：`npm run test:api4 --prefix app/candidate`。测试使用独立临时库与 8894/6474/6487 端口，不访问现网或外部模型；截图/trace 位于 `.ci-results/api4-ui/`。完整接入、版本边界及生成类型核对命令见 [API4 前端交接](docs/FRONTEND_API4_INTEGRATION.md)。本轮手机端暂缓，不清理历史代码或文档。合并与部署仍需用户明确批准。
+
 适用于本仓库的 AI 编程助手和协作者。项目方向见 [PROJECT_PLAN.md](PROJECT_PLAN.md)，入口见 [README.md](README.md)。本文件直接承载开发准则，不另建一份重复的规则文档，也不依赖任何人的个人 Skill。
 
 ## 1. 开工：先识别项目，再核对规则
@@ -240,3 +246,7 @@ node app/backend/scripts/manage-r6-database.mjs --help
 ```
 
 API4 shared types are generated independently in `app/shared/api4-types.ts`. API3 frozen types and OpenAPI stay unchanged. `test:r5` names the reused internal business modules; it is not a claim that current new people use historical API3. `migrate:v3` is deliberately disabled in this new-person version; use the historical code+database together for historical records. Human calibration and real-model experiments are separate from automated tests.
+
+## API4 integrated regression targets (2026-09-20)
+
+After integrating PR16 with PR14, current frontend and backend both use API4. Earlier pending-frontend statements above are phase history. API4 CI uses the current checkout, not the frozen handoff backend. Historical API3 regression uses `EB_API3_BACKEND_ROOT` pointing to `80d153bc487201c193dd416c606d20f3210766fe`; its build helper probes actual schema 3.0, and the server/analyzer/reset CLI share that root. Preserve every existing test and assertion. Commands and isolation are documented in [API contract testing](docs/API_CONTRACT_TESTING.md). Run constrained local browser suites separately from the backend suite. Verify latest-head CI before merging; production deployment and database changes remain separate.

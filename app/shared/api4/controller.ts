@@ -1,22 +1,23 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { CandidateId, Comparison, Demo } from '../api3-types';
-import { Api3Client, Api3Error, type Pending } from './client';
+import type { CandidateId, Comparison, Demo } from '../api4-types';
+import { Api4Client, Api4Error, type Pending } from './client';
 
-export type Api3Controller = {
-  data: Demo | null; comparison: Comparison | null; error: Api3Error | null;
+export type Api4Controller = {
+  data: Demo | null; comparison: Comparison | null; error: Api4Error | null;
   loading: boolean; busy: boolean; pending: Pending | null; notice: string; fresh: boolean; base: string;
   analysisBusy: boolean; analysisPending: Pending | null; retryAnalysis: () => Promise<boolean>;
   completedAction: { path: string; candidateId: unknown; stage?: unknown } | null;
   refresh: () => Promise<void>; write: (path: string, body: Record<string, unknown>) => Promise<boolean>; retry: () => Promise<boolean>;
 };
-const asError = (error: unknown) => error instanceof Api3Error ? error : new Api3Error('CLIENT_ERROR', 'The operation did not complete. Your input has been kept.');
-export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api3Controller {
+const sameSnapshot = (a: Demo, b: Comparison) => (['sessionId', 'revision', 'fixtureVersion', 'jdVersion', 'rubricVersion', 'datasetVersion'] as const).every(key => a[key] === b[key]);
+const asError = (error: unknown) => error instanceof Api4Error ? error : new Api4Error('CLIENT_ERROR', 'The operation did not complete. Your input has been kept.');
+export function useApi4(role: 'hr' | 'candidate', candidateId: CandidateId | null): Api4Controller {
   const base = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8787').replace(/\/$/, '');
-  const client = useMemo(() => new Api3Client(base, `evidencebridge.api3.receipt.${role}.${base}`), [base, role]);
-  const analysisClient = useMemo(() => new Api3Client(base, `evidencebridge.api3.analysis-receipt.${role}.${base}`), [base, role]);
+  const client = useMemo(() => new Api4Client(base, `evidencebridge.api4.receipt.${role}.${base}`), [base, role]);
+  const analysisClient = useMemo(() => new Api4Client(base, `evidencebridge.api4.analysis-receipt.${role}.${base}`), [base, role]);
   const [data, setData] = useState<Demo | null>(null), [comparison, setComparison] = useState<Comparison | null>(null);
-  const [error, setError] = useState<Api3Error | null>(null), [notice, setNotice] = useState('');
-  const [completedAction, setCompletedAction] = useState<Api3Controller['completedAction']>(null);
+  const [error, setError] = useState<Api4Error | null>(null), [notice, setNotice] = useState('');
+  const [completedAction, setCompletedAction] = useState<Api4Controller['completedAction']>(null);
   const [loading, setLoading] = useState(true), [busy, setBusy] = useState(false), [fresh, setFresh] = useState(false);
   const [pending, setPending] = useState(client.pending);
   const [analysisPending, setAnalysisPending] = useState(analysisClient.pending), [analysisBusy, setAnalysisBusy] = useState(false);
@@ -30,10 +31,12 @@ export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api
     setLoading(true); setFresh(false);
     if (!preserveError) setError(null);
     try {
-      let [next, list] = await Promise.all([client.read(person), client.comparison()]);
+      let list = await client.comparison();
+      const selected = person ?? list.candidates[0].candidate.id;
+      let next = await client.read(selected);
       // A reset between the two GETs must not combine old and new sessions.
-      if (next.sessionId !== list.sessionId || next.revision !== list.revision) [next, list] = await Promise.all([client.read(person), client.comparison()]);
-      if (next.sessionId !== list.sessionId || next.revision !== list.revision) throw new Api3Error('REFRESH_CONFLICT', 'The shared case changed while loading. Refresh again.');
+      if (!sameSnapshot(next, list)) [next, list] = await Promise.all([client.read(selected), client.comparison()]);
+      if (!sameSnapshot(next, list)) throw new Api4Error('REFRESH_CONFLICT', 'The shared case changed while loading. Refresh again.');
       if (!mounted.current || request !== sequence.current || person !== identity.current) return false;
       if (current.current?.sessionId === next.sessionId && current.current.revision > next.revision) return false;
       client.reconcile(next); analysisClient.reconcile(next); setPending(client.pending); setAnalysisPending(analysisClient.pending);
@@ -47,7 +50,7 @@ export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api
   const refresh = useCallback(async () => { await fetchCurrent(); }, [fetchCurrent]);
   useEffect(() => { setNotice(''); setCompletedAction(null); void refresh(); }, [candidateId, refresh]);
 
-  const execute = async (action: () => ReturnType<Api3Client['retry']>, owner: unknown, session: unknown, isAnalysis = false, path = '', stage?: unknown) => {
+  const execute = async (action: () => ReturnType<Api4Client['retry']>, owner: unknown, session: unknown, isAnalysis = false, path = '', stage?: unknown) => {
     const lock = isAnalysis ? analyzing : writing, transport = isAnalysis ? analysisClient : client;
     if (lock.current) return false;
     lock.current = true; if (isAnalysis) setAnalysisBusy(true); else setBusy(true); setError(null); setNotice(''); setCompletedAction(null);
@@ -76,7 +79,7 @@ export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api
   };
   const write = (path: string, body: Record<string, unknown>) => {
     if (!fresh || loading || body.candidateId !== identity.current || body.sessionId !== current.current?.sessionId) {
-      setError(new Api3Error('STALE_VIEW', 'Refresh the selected person and reopen this action against the current session. Your input is kept.'));
+      setError(new Api4Error('STALE_VIEW', 'Refresh the selected person and reopen this action against the current session. Your input is kept.'));
       return Promise.resolve(false);
     }
     const isAnalysis = path === '/analysis';
@@ -84,5 +87,5 @@ export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api
   };
   const retry = () => execute(() => client.retry(), client.pending?.body.candidateId, client.pending?.body.sessionId, false, client.pending?.path, client.pending?.body.stage);
   const retryAnalysis = () => execute(() => analysisClient.retry(), analysisClient.pending?.body.candidateId, analysisClient.pending?.body.sessionId, true);
-  return { data: data?.candidate.id === candidateId ? data : null, comparison, error, loading, busy, pending, analysisBusy, analysisPending, notice, completedAction, fresh: fresh && data?.candidate.id === candidateId, base, refresh, write, retry, retryAnalysis };
+  return { data: !candidateId || data?.candidate.id === candidateId ? data : null, comparison, error, loading, busy, pending, analysisBusy, analysisPending, notice, completedAction, fresh: fresh && (!candidateId || data?.candidate.id === candidateId), base, refresh, write, retry, retryAnalysis };
 }

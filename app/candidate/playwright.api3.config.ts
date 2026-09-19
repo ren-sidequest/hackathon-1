@@ -8,7 +8,7 @@ export default defineConfig({
   retries: 0, timeout: 90000,
   use: { actionTimeout: 15000, navigationTimeout: 30000, viewport: { width: 1440, height: 1000 }, colorScheme: 'light', trace: 'retain-on-failure', screenshot: 'only-on-failure' },
   webServer: [
-    { command: 'npm run build --prefix ../backend && node tests/api3-server.mjs', url: `http://127.0.0.1:${backendPort}/healthz`, reuseExistingServer: false, timeout: 120000 },
+    { command: 'node tests/build-api3-backend.mjs && node tests/api3-server.mjs', url: `http://127.0.0.1:${backendPort}/healthz`, reuseExistingServer: false, timeout: 120000 },
     { command: `npm run dev -- --port ${candidatePort} --strictPort`, url: `http://127.0.0.1:${candidatePort}`, env: { VITE_APP_MODE: 'api3-connected', VITE_API_BASE_URL: `http://127.0.0.1:${backendPort}` }, reuseExistingServer: false },
     { command: `npm run dev --prefix ../hr -- --port ${hrPort} --strictPort`, url: `http://127.0.0.1:${hrPort}`, env: { VITE_APP_MODE: 'api3-connected', VITE_API_BASE_URL: `http://127.0.0.1:${backendPort}` }, reuseExistingServer: false },
   ],

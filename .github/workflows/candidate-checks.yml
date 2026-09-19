@@ -13,6 +13,8 @@ jobs:
   candidate:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      EB_API3_BACKEND_ROOT: ${{ github.workspace }}/.api3-contract
     defaults:
       run:
         working-directory: app/candidate
@@ -20,11 +22,20 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
+      # Historical API3 UI still runs its complete suite against the last
+      # matching API3 executable, not the current API4 backend.
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: 80d153bc487201c193dd416c606d20f3210766fe
+          path: .api3-contract
+          persist-credentials: false
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
-          cache-dependency-path: app/candidate/package-lock.json
+          cache-dependency-path: |
+            app/candidate/package-lock.json
+            .api3-contract/app/backend/package-lock.json
       - run: npm ci
       - run: python3 ../../scripts/frontend-types-v3.py --check
       - run: npm test
@@ -36,4 +47,7 @@ jobs:
       - run: npm run test:revision5
       - run: npm ci --prefix ../backend --no-audit --no-fund
       - run: npm run test:api
+      - run: npm ci --prefix "$EB_API3_BACKEND_ROOT/app/backend" --no-audit --no-fund
+      - run: python3 "$EB_API3_BACKEND_ROOT/scripts/frontend-types-v3.py" --check
+      - run: cmp ../../app/shared/api3-types.ts "$EB_API3_BACKEND_ROOT/app/shared/api3-types.ts"
       - run: npm run test:api3

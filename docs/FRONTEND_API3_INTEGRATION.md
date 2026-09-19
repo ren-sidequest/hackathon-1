@@ -1,5 +1,7 @@
 # 修订5双端 API3 本地整合
 
+> 2026-09-20 整合说明：下文记录 API3 阶段，当前双端默认与当前后端已使用 API4。历史 API3 需显式选择模式，并配套历史后端与独立数据库。运行 `test:api3` 前设置 `EB_API3_BACKEND_ROOT` 指向固定的 `80d153b` 副本；当前后端用于 `test:api4`。完整命令及 CI 绑定见 [API 合同测试](API_CONTRACT_TESTING.md)。本页旧启动示例对应历史副本，不用于当前 API4 运行时。
+
 本地整合基线：PR9 `4cf45fea3949d1abce2c3ff9658d9352c018f135`（包含已合并PR8），加本地修订5后端。保留小傅的主题、侧栏、比较、证据详情、卡片编辑器、资源转卡、并排审核和版本差异；新增API3数据与请求层，不覆盖原前端预览。第一阶段止于本地验收；随后用户明确要求提交整合PR并合并。发布进展以对应PR的最新head、CI和合并记录为准；部署、正式库迁移不随代码合并执行。
 
 ## 1. 模式与启动
@@ -122,3 +124,13 @@ API3浏览器验收使用独立8793后端、6373 Candidate、6386 HR与临时SQL
 The connected API3 pages use the shared GlideSelect for all twelve formerly native selectors, including resource preview sorting and selectors inside assessment/card dialogs. Scores retain the distinct empty, NE and zero states. Evidence judgments, investigation cards and public work cards use SpotlightCard; only the active criterion and the assessment entry button gain StarBorder decoration. Motion never changes layout and respects reduced-motion preferences. Initial and historical assessment views resolve the active judgment's source quotation before choosing a fallback source.
 
 Run `npm run test:api3 --prefix app/candidate` for the connected flow and T27/T28 selector, source, theme and card regression cases. Screenshots and failure traces are under `.ci-results/api3-ui/`. Shared editor/resource changes also require `npm run test:api --prefix app/candidate` and `npm run test:revision5 --prefix app/candidate`. These tests use isolated local cases; they do not modify deployed data. The two original concept images are historical only; current approved black/gold and light/gold pages are the visual baseline.
+
+## Frontend clarity and editing recovery (2026-09-19)
+
+- Application review counts use the server's `assessmentComplete`; complete core evidence uses `complete`. A reviewed NE judgment counts as reviewed, while remaining incomplete evidence. Core analytical evidence match covers only SQL, DA and BPS, not the whole JD.
+- Direct task creation starts with no target selected. A task entered from a specific evidence criterion retains its explicit target and gap; a target and reason are required before preview and confirmation.
+- API/session/request diagnostics are expandable. Journey guidance describes the next human action; success notices link to the saved assessment, task, review or retained decision.
+- Production `/gateway` uses the existing same-origin `/gateway/write-access` page in a separate tab. The original editor stays open. HTTP 401 (including HTML responses) and `WRITE_AUTH_REQUIRED` preserve the exact public request and idempotency key. Returning to the page checks access; retry is explicit, never automatic. No credentials are collected or stored by the frontend. Direct local backends show unverified access rather than claiming authentication.
+- Assessment exports contain the selected application/V1/V2 stage and revision, server scores, NE/unassessed distinctions, standards, validated source quotations, provenance and limitations. Reused application evidence is identified separately. Work exports remain available; neither export reads local private drafts. These are Markdown reports, not PDF/OCR support or full-JD matching.
+
+Validation uses the existing `npm test --prefix app/candidate`, `npm test --prefix app/hr`, both builds and `npm run test:api3 --prefix app/candidate`. T29 checks distinct counts, explicit task choice, export and themes; T30 checks an HTML 401, preserved submission and exact retry. Unit cases cover report ownership, V1/V2 isolation, NE and same-origin access links. Failure traces and screenshots remain in `.ci-results/api3-ui/`. Server-side English rubric content, new R6 identities/materials and full JD evidence mappings remain separate backend-dependent work.

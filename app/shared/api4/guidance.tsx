@@ -1,7 +1,7 @@
 import { nextStep } from './next-step';
 import { SpotlightCard } from '../gold-interactions';
 import React, { useEffect, useRef, useState } from 'react';
-import type { Demo, RequirementId } from '../api3-types';
+import type { Demo, RequirementId } from '../api4-types';
 import { requirementNames } from './hr-model';
 
 export type TaskIntent = { target: RequirementId; reason: string; criterion: string };
@@ -13,10 +13,10 @@ export function RoleStandards({ data, inspect }: { data: Demo; inspect: (criteri
 
 export function CompanyOverview({ data, compare }: { data: Demo; compare: () => void }) {
   return <section className="eb-panel guide-company" aria-label="Role overview">
-    <div className="guide-company-head"><span className="r5-avatar">HC</span><div><small>{data.company.name} · Synthetic company</small><h2>{data.job.title}</h2><div className="r5-meta"><span>{data.company.location}</span><span>{data.company.approximateHeadcount} people</span><span>{data.company.products.join(' · ')}</span></div></div><button className="eb-action primary" onClick={compare}>View candidates →</button></div>
-    <p className="guide-goal">{data.company.businessProblem}</p>
+    <div className="guide-company-head"><span className="r5-avatar">HR</span><div><small>{data.company.name} · Synthetic company</small><h2>{data.job.title}</h2><div className="r5-meta"><span>{data.company.location}</span><span>{data.job.employmentType}</span><span>{data.job.experienceLevel}</span><span>{data.job.team}</span></div></div><button className="eb-action primary" onClick={compare}>View candidates →</button></div>
+    <p className="guide-goal">{data.company.businessDescription}</p>
     <div className="guide-work-chain">{data.job.successStages.map((text, i) => <details key={text}><summary><span className="guide-step-icon" aria-hidden="true">{['≋', '⌕', '↗'][i]}</span><small>0{i + 1}</small><strong>{['Check the numbers', 'Explain the change', 'Recommend an action'][i]}</strong><span className="guide-expand">Details +</span></summary><p>{text}</p></details>)}</div>
-    <details className="guide-background"><summary>Company background & decision owners</summary><p>{data.company.fulfilment} fulfilment. {data.company.hiringManager} reviews evidence; {data.company.budgetApprover} approves the budget. Hiring remains a human decision.</p><ul>{data.company.constraints.map(c => <li key={c}>{c}</li>)}</ul></details>
+    <details className="guide-background"><summary>Role context & limits</summary><p>{data.company.profileScope}</p><p>Collaborating teams: {data.job.collaboratingTeams.join(' · ')}. Supported by experienced analysts.</p><p>Hiring remains a human decision.</p></details>
   </section>;
 }
 

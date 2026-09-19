@@ -1,6 +1,8 @@
 # Revision 6 backend — GitHub handoff publication
 
-**2026-09-20 · Backend branch / draft PR, not a merged or deployed release.**
+**2026-09-20 · Backend PR14, updated with PR16 for joint integration. Deployment remains separate.**
+
+The user subsequently approved integrating main `9b1d192` (PR15 and PR16), correcting the test-target bindings, then merging PR14 after latest-head CI passes. The current working change contains Xiaofu's API4 frontend without business-code rewrites. The sections headed “at publication” below record the earlier backend-only handoff, not a pending frontend delivery. Current test targets and commands are in [API contract testing](../API_CONTRACT_TESTING.md). Merge status is authoritative in [PR14](https://github.com/ren-sidequest/hackathon-1/pull/14); this note does not announce deployment.
 
 The user authorized uploading the completed backend to GitHub after its local acceptance. Publish branch `codex/revision6-backend` against `main` of `ren-sidequest/hackathon-1`; the implementation baseline is `dbbcad921f2f2f33135721dc387bdb7dcdd4ee00` (including PR12/13). Check the PR head and CI for the exact uploaded version. Earlier “uncommitted / local only” statements in the September 19 reports describe that completed phase.
 
@@ -34,10 +36,16 @@ The first staged whitespace check caught original PDF-extraction layout spaces t
 
 Backend CI retains legacy/current schema checks and now also checks `docs/backend/r6/openapi.json`, `frontend-types-v4.py --check`, `generate-audit.mjs --check` and `verify-r6.mjs`. Executed examples contain run-specific IDs/times: schema/types/audit must be stable, while example timestamps are not compared byte-for-byte across reruns.
 
-The unchanged Candidate workflow still ends with `npm run test:api3`. Its client expects schema 3.0 and historical applicant IDs, whereas the current backend is intentionally API4. This integration check is expected to remain incompatible until the separately owned API4 frontend work is completed. It is not disabled, marked successful or bypassed in this backend handoff. Record its actual outcome when CI runs.
+At the initial upload, Candidate CI failed because `test:api3` used the current API4 server for the historical schema 3.0 client. The integration revision resolves this by selecting the matching `80d153b` backend, analyzer and reset CLI for all 30 historical cases. API4's 36 browser cases now test the current combined checkout instead of a frozen backend. No test is suppressed and no assertion is weakened.
 
-## Remaining gates and next action
+## Original handoff boundary and current remaining gates
 
-This is a **draft backend handoff PR** for Xiaofu to integrate against, not approval to merge the mismatched frontend/backend set. Start from the frozen handoff fields and generated API4 types. Preserve prior local drafts and old data; do not rename old applicants into the new cohort or point the new executable at the old database.
+### Joint integration local recheck
 
-Still pending: API4 frontend/client/controller and genuine dual-browser/mobile acceptance; human calibration of AI-authored initial judgments; any claimed live-model validation; review and merge authorization; and separately approved release with coherent frontend/backend/content/database versions, backup and rollback. No server connection, live write, migration/reset, gateway application, service restart or deployment occurs in this publication task.
+On macOS / Node v22.23.2, the combined tree passed Candidate 102 unit tests, HR 8 unit tests, both frontend builds, all 30 historical API3 browser cases and all 36 current API4 browser cases. Backend typecheck, a build followed by `node --test --test-concurrency=1 test/*.test.mjs` from `app/backend` (282/282, zero skips/cancellations), all 27 isolated HTTP checks, generated types, and the 4-person / 40-item / 145-citation / 27-file content audit also passed. The API3 runner's negative check confirmed that selecting the current API4 executable exits with the expected contract-mismatch setup error. The project-local GitNexus index was refreshed without changing global configuration.
+
+The first simultaneous local run had a genuine historical reset-CLI target mismatch and timing failures while running multiple heavy suites. The CLI now resolves from the same historical root as its server. Full browser suites and the full backend suite then passed separately, with original assertions and timeout values retained. CI still runs the ordinary backend `npm test` command on its own Linux/Node24 runner. Logs are ignored under `.ci-results/r6-integration/`; latest-head GitHub Checks are separate evidence and must pass before merge.
+
+The initial upload was a **draft backend handoff PR** for Xiaofu. His PR16 frontend is now integrated for joint verification. Preserve prior local drafts and old data; do not rename old applicants into the new cohort or point the new executable at the old database.
+
+Latest-head integration CI and code review are merge gates. Human calibration of AI-authored initial judgments, any claimed live-model validation, and a separately approved release with coherent frontend/backend/content/database versions, backup and rollback remain distinct responsibilities. API4 desktop acceptance is in scope; mobile enhancement remains deferred as recorded by the frontend handoff. No server connection, live write, migration/reset, gateway application, service restart or deployment occurs in this integration task.

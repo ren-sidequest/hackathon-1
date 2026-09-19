@@ -5,8 +5,8 @@ import { Sidebar, useSidebar } from '../ui';
 import { Dialog } from '../api-ui';
 import { GlideSelect } from '../glide-select';
 import { candidateIds } from './client';
-import { useApi3 } from './controller';
-import type { CandidateId } from '../api3-types';
+import { useApi4 } from './controller';
+import type { CandidateId } from '../api4-types';
 import HRConnected from './hr';
 import CandidateConnected from './candidate';
 import '../revision5/revision5.css';
@@ -22,9 +22,9 @@ function NavIcon({ index }: { index: number }) {
 }
 export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
   const pages = role === 'hr' ? hrPages : candidatePages;
-  const [candidateId, setCandidateId] = useState<CandidateId>(() => {
+  const [candidateId, setCandidateId] = useState<CandidateId | null>(() => {
     const id = new URL(location.href).searchParams.get('candidateId') as CandidateId;
-    return candidateIds.includes(id) ? id : 'alex-chen';
+    return id || null;
   });
   const [page, setPage] = useState(() => pages.some(p => p[0] === location.hash.slice(1)) ? location.hash.slice(1) : pages[role === 'hr' ? 1 : 0][0]);
   const [evidenceFocus,setEvidenceFocus]=useState<EvidenceFocus | undefined>();
@@ -35,15 +35,16 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
       const next = location.hash.slice(1);
       if (pages.some(item => item[0] === next)) setPage(next);
       const id = new URL(location.href).searchParams.get('candidateId') as CandidateId;
-      if (candidateIds.includes(id)) setCandidateId(id);
+      setCandidateId(id || null);
       setEvidenceFocus(undefined);
     };
     window.addEventListener('hashchange', syncLocation);
     window.addEventListener('popstate', syncLocation);
     return () => { window.removeEventListener('hashchange', syncLocation); window.removeEventListener('popstate', syncLocation); };
   }, [pages]);
-  const controller = useApi3(role, candidateId), sidebar = useSidebar(role);
+  const controller = useApi4(role, candidateId), sidebar = useSidebar(role);
   const { data, comparison } = controller;
+  useEffect(() => { if (!candidateId && data) { setCandidateId(data.candidate.id); const url = new URL(location.href); url.searchParams.set('candidateId', data.candidate.id); history.replaceState(null, '', url); } }, [candidateId, data]);
   const access = useWriteAccess(controller.base, controller.error);
   const pendingName = (owner: unknown) => comparison?.candidates.find(row => row.candidate.id === owner)?.candidate.name ?? 'the original candidate';
   const savedNext = controller.completedAction?.candidateId === candidateId ? savedActionDestination(controller.completedAction.path, role, controller.completedAction.stage) : null;
@@ -63,31 +64,31 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
     const url = new URL(location.href); url.searchParams.set('candidateId', id); history.replaceState(null, '', url);
     if (target) go(target);
   };
-  const displayName = comparison?.candidates.find(row => row.candidate.id === candidateId)?.candidate.name ?? candidateId;
+  const displayName = comparison?.candidates.find(row => row.candidate.id === candidateId)?.candidate.name ?? candidateId ?? 'Choose a candidate';
   const initials = displayName.split(/\s+/).map(part => part[0]).slice(0, 2).join('');
   return <div className="eb-connected r5-app guide-app">
-    <a href="#api3-main" className="eb-skip eb-action" onClick={e => { e.preventDefault(); document.getElementById('api3-main')?.focus(); }}>Skip to content</a>
-    <Sidebar role={role} controller={sidebar} activePage={page} items={pages.map(([id, label], index) => ({ id, label, icon: <NavIcon index={index}/> }))} onNavigate={go} user={{ initials: role === 'hr' ? 'HR' : initials, name: role === 'hr' ? 'Operations lead' : displayName, title: role === 'hr' ? data?.company.name ?? 'Hiring team' : 'Synthetic candidate' }} helpLabel="How to use this workspace" onHelp={() => setHelp(true)}/>
+    <a href="#api4-main" className="eb-skip eb-action" onClick={e => { e.preventDefault(); document.getElementById('api4-main')?.focus(); }}>Skip to content</a>
+    <Sidebar role={role} workspaceName={role === 'hr' ? data?.company.name ?? 'Hiring workspace' : 'Candidate'} controller={sidebar} activePage={page} items={pages.map(([id, label], index) => ({ id, label, icon: <NavIcon index={index}/> }))} onNavigate={next => go(next === 'report' ? 'company' : next === 'home' ? 'application' : next)} user={{ initials: role === 'hr' ? 'HR' : initials, name: role === 'hr' ? 'Hiring reviewer' : displayName, title: role === 'hr' ? data?.company.name ?? 'Hiring team' : 'Synthetic candidate' }} helpLabel="How to use this workspace" onHelp={() => setHelp(true)}/>
     <div className="eb-main" data-eb-content><header className="eb-api-topbar">{sidebar.menuButton}<span>{role === 'hr' ? 'Hiring workspace' : 'Candidate workspace'} / {pages.find(p => p[0] === page)?.[1]}</span><span className="r5-mode">Shared evidence workspace</span></header>
-      <main id="api3-main" tabIndex={-1} className="eb-content">
-        <section className="eb-api-status" aria-label="Shared service status"><div className="eb-heading"><span>{controller.fresh ? 'Connected · four-person shared case' : controller.loading ? 'Loading shared case…' : 'Refresh required · service data not current'}</span><button className="eb-action" disabled={controller.loading} onClick={() => void controller.refresh()}>{controller.loading ? 'Refreshing…' : 'Refresh shared case'}</button></div><small>Synthetic company and materials · Human judgments, server-calculated scores · Demo identities, not account authentication</small>
+      <main id="api4-main" tabIndex={-1} className="eb-content">
+        <section className="eb-api-status" aria-label="Shared service status"><div className="eb-heading"><span>{controller.fresh ? 'Connected · four-person shared case' : controller.loading ? 'Loading shared case…' : 'Refresh required · service data not current'}</span><button className="eb-action" disabled={controller.loading} onClick={() => void controller.refresh()}>{controller.loading ? 'Refreshing…' : 'Refresh shared case'}</button></div><small>Demo materials · Server-calculated scores · Demo identities, not account authentication</small>
           <div className="guide-access" aria-label="Editing access"><span className="r5-state">{access.status === 'read-only' ? 'Read-only' : access.status === 'enabled' ? 'Editing enabled' : access.status === 'checking' ? 'Checking editing access…' : 'Editing access unverified'}</span>{access.url && <><a className="eb-action" href={access.url} target="_blank" rel="noopener noreferrer">Enable editing</a><button className="eb-action" onClick={() => void access.check()}>Check editing access</button></>}<small>Reading is public. Editing requires access from the host.</small></div>
-          <PermissionHelp base={controller.base} error={controller.error}/>
+          <PermissionHelp base={controller.base} error={controller.error}/>{data && <p>{data.capabilities.analysisModeLabel} · {data.assessment.application_review ? data.assessment.application_review.operatorLabel : 'Not assessed'}</p>}{candidateId && !candidateIds.includes(candidateId) && <p role="alert">This link belongs to an old or unknown identity. No material has been transferred. <button className="eb-action" onClick={() => { const url = new URL(location.href); url.searchParams.delete('candidateId'); history.replaceState(null, '', url); setCandidateId(null); }}>Choose current demo identity</button></p>}
           {controller.error && <p role="alert" className="eb-feedback">{controller.error.message}</p>}
-          <details><summary>Connection details & diagnostics</summary><p>API3 · {controller.base}</p><p>Session: {data?.sessionId ?? 'Unavailable'} · Revision: {data?.revision ?? 'Unavailable'}</p><p>Rubric: {data?.rubricVersion ?? 'Unavailable'} · Dataset: {data?.datasetVersion ?? 'Unavailable'}</p>{controller.error && <p>{controller.error.code} · Request ID: {controller.error.requestId || 'Not supplied'}</p>}</details>
+          <details><summary>Connection details & diagnostics</summary><p>API4 · {controller.base}</p><p>Session: {data?.sessionId ?? 'Unavailable'} · Revision: {data?.revision ?? 'Unavailable'}</p><p>Rubric: {data?.rubricVersion ?? 'Unavailable'} · Dataset: {data?.datasetVersion ?? 'Unavailable'}</p>{controller.error && <p>{controller.error.code} · Request ID: {controller.error.requestId || 'Not supplied'}</p>}</details>
           {controller.pending && <p className="eb-feedback">An original saved action for {pendingName(controller.pending.body.candidateId)} is waiting for confirmation. <button className="eb-action" disabled={controller.busy} onClick={() => void controller.retry()}>Retry original action</button></p>}
           {controller.analysisPending && <p className="eb-feedback">An analysis request for {pendingName(controller.analysisPending.body.candidateId)} is waiting for confirmation. Human review remains available. <button className="eb-action" disabled={controller.analysisBusy} onClick={() => void controller.retryAnalysis()}>Retry original analysis</button></p>}
           {!data && !controller.loading && <p>The shared case is unavailable. Check the connection details or contact the host, then refresh.</p>}
         </section>
         <FloatingNotice message={controller.error && controller.error !== dismissedError ? [controller.error.message,controller.notice].filter(Boolean).join(' ') : controller.notice !== dismissedNotice ? controller.notice : ''} error={!!controller.error && controller.error !== dismissedError} dismiss={() => { setDismissedNotice(controller.notice); setDismissedError(controller.error); }} action={noticeAction}/>
-        {!['company','comparison'].includes(page) && <div className="r5-person-bar"><span className="r5-avatar">{initials}</span><div><strong>{displayName}</strong><small>{data?.candidate.background ?? 'Select an explicit demo identity'}</small></div><label>Demo identity<GlideSelect ariaLabel="Current candidate" value={candidateId} onChange={value => select(value as CandidateId)} options={candidateIds.map(id => ({value: id, label: comparison?.candidates.find(row => row.candidate.id === id)?.candidate.name ?? id}))}/></label></div>}
+        {!['company','comparison'].includes(page) && <div className="r5-person-bar"><span className="r5-avatar">{initials}</span><div><strong>{displayName}</strong><small>{data?.candidate.background ?? 'Select an explicit demo identity'}</small></div><label>Demo identity<GlideSelect ariaLabel="Current candidate" value={candidateId ?? ''} onChange={value => select(value as CandidateId)} options={(comparison?.candidates ?? []).map(row => ({value: row.candidate.id, label: row.candidate.name}))}/></label></div>}
         {data && !['company', 'comparison'].includes(page) && <Journey data={data} role={role} page={page} go={go}/>}
         {data && comparison && (role === 'hr'
-          ? <HRConnected key={`${data.sessionId}.${data.candidate.id}`} data={data} comparison={comparison} controller={controller} page={page} go={go} select={select} evidenceFocus={evidenceFocus}/>
-          : <CandidateConnected key={`${data.sessionId}.${data.candidate.id}.${data.task.taskId}.${data.workflow.nextSubmissionVersion ?? data.currentSubmissionVersion ?? 1}`} data={data} controller={controller} page={page} go={go}/>)}
+          ? <HRConnected key={`${data.sessionId}.${data.fixtureVersion}.${data.jdVersion}.${data.rubricVersion}.${data.datasetVersion}.${data.candidate.id}`} data={data} comparison={comparison} controller={controller} page={page} go={go} select={select} evidenceFocus={evidenceFocus}/>
+          : <CandidateConnected key={`${data.sessionId}.${data.fixtureVersion}.${data.jdVersion}.${data.rubricVersion}.${data.datasetVersion}.${data.candidate.id}.${data.task.taskId}.${data.workflow.nextSubmissionVersion ?? data.currentSubmissionVersion ?? 1}`} data={data} controller={controller} page={page} go={go}/>)}
         <footer className="eb-footer">EvidenceBridge · Reviewable evidence. Human decisions. · Formal state lives in the shared service.</footer>
       </main>
     </div>
-    {help && <Dialog title="Using EvidenceBridge" close={() => setHelp(false)}><p>Use the HR and Candidate windows against the same backend. Choose the intended candidate explicitly; refresh to receive the other window’s work.</p><p>Application materials and baseline annotations are synthetic presets. Baseline provenance identifies AI-authored annotation and pending human calibration. Scores use the public rubric and are not hiring probabilities.</p><p>Assessment, evidence review and the retained list are separate decisions. Only V1 More opens one V2; historical work stays read only. Private notes remain browser drafts and are excluded from submitted work and exports.</p><p>Model availability is shown honestly. There is no automatic fallback to mock data, no live SQL execution and no general upload or account system. Administrator reset remains a local script, outside this page.</p></Dialog>}
+    {help && <Dialog title="Using EvidenceBridge" close={() => setHelp(false)}><p>Use the HR and Candidate windows against the same backend. Choose the intended candidate explicitly; refresh to receive the other window’s work.</p><p>Application materials include supplied fictional CVs and explicitly labelled synthetic work samples. Baseline provenance identifies AI-authored annotation and pending human calibration. Scores use the public rubric and are not hiring probabilities.</p><p>Assessment, evidence review and the retained list are separate decisions. Only V1 More opens one V2; historical work stays read only. Private notes remain browser drafts and are excluded from submitted work and exports.</p><p>Model availability is shown honestly. There is no automatic fallback to mock data, no live SQL execution and no general upload or account system. Administrator reset remains a local script, outside this page.</p></Dialog>}
   </div>;
 }

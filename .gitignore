@@ -23,6 +23,8 @@ dist/
 build/
 coverage/
 .ci-results/
+# Isolated, pinned historical contract checkout used only by regression CI.
+/.api3-contract/
 *.log
 *.sqlite
 *.sqlite3

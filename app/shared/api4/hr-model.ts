@@ -1,16 +1,16 @@
-import type { AssessmentItem, Comparison, Demo, RequirementId, SourceRef, Stage, Version } from '../api3-types';
+import type { AssessmentItem, Comparison, Demo, RequirementId, SourceRef, Stage, Version } from '../api4-types';
 
 export const stageNames: Record<Stage, string> = { application_review: 'Application materials', task_v1: 'Task V1', task_v2: 'Task V2' };
 export const requirementNames: Record<RequirementId, string> = { sql: 'SQL', 'data-analysis': 'Data Analysis', 'business-problem-solving': 'Business Problem Solving' };
 export const requirements: RequirementId[] = ['sql', 'data-analysis', 'business-problem-solving'];
 export function comparisonCounts(comparison: Comparison) {
   return {
-    reviewed: comparison.candidates.filter(row => row.assessment?.score.assessmentComplete).length,
-    complete: comparison.candidates.filter(row => row.assessment?.score.complete).length,
+    reviewed: comparison.applicationsReviewed,
+    complete: comparison.candidatesWithCompleteCoreEvidence,
   };
 }
-export function annotationLabel(mode: 'preset_human' | 'human' | 'human_reviewed' | null | undefined): string {
-  return mode === 'preset_human' ? 'AI-authored preset · human calibration pending' : mode === 'human' || mode === 'human_reviewed' ? 'Human assessment' : 'Not assessed';
+export function annotationLabel(mode: 'ai_authored' | 'human' | null | undefined): string {
+  return mode === 'ai_authored' ? 'AI-authored demo assessment · Human calibration pending' : mode === 'human' ? 'Human assessment' : 'Not assessed';
 }
 export const percent = (value: number | null | undefined) => value == null ? '—' : `${value.toFixed(1)}%`;
 export type Source = { sourceId: string; location: string; text: string };

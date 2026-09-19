@@ -61,3 +61,10 @@
 .guide-points-badge summary::-webkit-details-marker { display:none; }
 .guide-points-badge details p { position:absolute; right:0; top:18px; z-index:5; width:220px; margin:0; padding:12px; color:var(--text-primary); background:var(--glass-fallback); border:1px solid var(--accent-border); border-radius:10px; box-shadow:var(--panel-shadow); font-size:12px; line-height:1.6; }
 @media(pointer:coarse) { .guide-coverage-track button { height:28px; }.guide-coverage-track button::before { inset:11px 0; } }
+
+.guide-access,.guide-journey-next { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+.guide-journey .guide-journey-next { grid-column:1/-1; border-top:1px solid var(--border); padding-top:10px; }
+.guide-journey-next>span { flex:1; color:var(--text-secondary); }
+.guide-journey-next strong { color:var(--text-primary); }
+
+.guide-journey-next .eb-action { width:auto; flex:0 0 auto; }

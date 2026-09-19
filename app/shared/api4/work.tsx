@@ -1,7 +1,7 @@
 import { assessmentReport } from './report';
 import { SpotlightCard } from '../gold-interactions';
 import React, { useState } from 'react';
-import type { Demo, Version } from '../api3-types';
+import type { Demo, Version } from '../api4-types';
 import { decisionLabel, download, workMarkdown } from '../api';
 import { Dialog, ProcessTimeline } from '../api-ui';
 import { sections } from './candidate-draft';
