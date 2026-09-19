@@ -1,5 +1,7 @@
 # Shared appearance and navigation
 
+修订 5 新增 `revision5/` 共享前端预览模块；UI 模型不是后端 DTO，默认 API 2.0 接入保持独立。`card-editor.tsx` 从现有连接版抽取，由连接版与新预览复用。详情见 [修订 5 前端说明](../../docs/FRONTEND_REVISION5_PREVIEW.md)。下文“尚未实现数字评分”仅指既有 API 2.0 连接版。
+
 HR 与 Candidate 共用的轻量 UI 源码，不是第三个应用。使用现有 React 和普通 CSS，未新增第三方依赖；保留两端独立的 npm 锁文件和构建。
 
 ## 文件与边界

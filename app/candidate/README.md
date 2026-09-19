@@ -1,5 +1,7 @@
 # EvidenceBridge Candidate
 
+修订 5 多人前端预览使用显式 `VITE_APP_MODE=revision5-preview`，见 [运行与接入边界](../../docs/FRONTEND_REVISION5_PREVIEW.md)。该模式为合成材料和本地模拟，不代表新版后端已完成。
+
 > 默认运行 API 2.0 连接版：任务、提交和审核来自共享后端，本浏览器只保存私人调查草稿。完整启动、接口映射、限制和验证见 [前端接入交接](../../docs/FRONTEND_API_HANDOFF.md)。下文原有上传和本地模拟审核路径仅适用于显式 `VITE_APP_MODE=standalone`，不代表连接版功能。
 
 Candidate 端独立 React / TypeScript / Vite Web 应用。使用 Lucide、Recharts、普通 CSS 和浏览器本地状态，实现申请 → 定向任务 → 调查工作台 → 工作样本 → 提交与审核结果演示。

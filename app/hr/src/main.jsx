@@ -8,5 +8,5 @@ import { initializeTheme } from '../../shared/preferences';
 document.documentElement.dataset.role = 'hr';
 initializeTheme();
 const standalone = import.meta.env.VITE_APP_MODE === 'standalone';
-const App = standalone ? lazy(() => import('./LocalDemo')) : lazy(() => import('./ApiApp'));
+const App = standalone ? lazy(() => import('./LocalDemo')) : import.meta.env.VITE_APP_MODE === 'revision5-preview' ? lazy(() => import('./Revision5App')) : lazy(() => import('./ApiApp'));
 createRoot(document.getElementById('root')).render(<Suspense fallback={<p>Loading EvidenceBridge…</p>}>{standalone && <p className="eb-feedback">Standalone simulation · no shared API connection</p>}<App/></Suspense>);

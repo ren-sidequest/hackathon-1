@@ -1,5 +1,7 @@
 # EvidenceBridge HR
 
+修订 5 公司标准、四人比较、原文评估和人工名单预览使用显式 `VITE_APP_MODE=revision5-preview`，见 [运行与接入边界](../../docs/FRONTEND_REVISION5_PREVIEW.md)。评分修改只保存本地草稿，不发布已评成绩。
+
 > 默认运行 API 2.0 连接版：接收 Candidate 的真实提交快照并进行人工证据审核。启动、接口映射、限制和验证见 [前端接入交接](../../docs/FRONTEND_API_HANDOFF.md)。下文无需 API 的独立演示和模拟提交仅适用于显式 `VITE_APP_MODE=standalone`。
 
 可独立演示的 HR Web 应用。使用 React 19 + Vite 7，遵循 [产品蓝图](../../docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md)、[UI 基线](../../docs/product/EvidenceBridge_BASELINE.md) 与 [仓库规则](../../AGENTS.md)。随主题变化的共享折叠侧栏、日夜工作区、蓝色 HR 强调色；固定使用 HarbourCart / Junior Data Analyst 场景。
