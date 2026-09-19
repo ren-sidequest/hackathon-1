@@ -1,0 +1,91 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { CandidateId, Comparison, Demo } from '../api4-types';
+import { Api4Client, Api4Error, type Pending } from './client';
+
+export type Api4Controller = {
+  data: Demo | null; comparison: Comparison | null; error: Api4Error | null;
+  loading: boolean; busy: boolean; pending: Pending | null; notice: string; fresh: boolean; base: string;
+  analysisBusy: boolean; analysisPending: Pending | null; retryAnalysis: () => Promise<boolean>;
+  completedAction: { path: string; candidateId: unknown; stage?: unknown } | null;
+  refresh: () => Promise<void>; write: (path: string, body: Record<string, unknown>) => Promise<boolean>; retry: () => Promise<boolean>;
+};
+const sameSnapshot = (a: Demo, b: Comparison) => (['sessionId', 'revision', 'fixtureVersion', 'jdVersion', 'rubricVersion', 'datasetVersion'] as const).every(key => a[key] === b[key]);
+const asError = (error: unknown) => error instanceof Api4Error ? error : new Api4Error('CLIENT_ERROR', 'The operation did not complete. Your input has been kept.');
+export function useApi4(role: 'hr' | 'candidate', candidateId: CandidateId | null): Api4Controller {
+  const base = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8787').replace(/\/$/, '');
+  const client = useMemo(() => new Api4Client(base, `evidencebridge.api4.receipt.${role}.${base}`), [base, role]);
+  const analysisClient = useMemo(() => new Api4Client(base, `evidencebridge.api4.analysis-receipt.${role}.${base}`), [base, role]);
+  const [data, setData] = useState<Demo | null>(null), [comparison, setComparison] = useState<Comparison | null>(null);
+  const [error, setError] = useState<Api4Error | null>(null), [notice, setNotice] = useState('');
+  const [completedAction, setCompletedAction] = useState<Api4Controller['completedAction']>(null);
+  const [loading, setLoading] = useState(true), [busy, setBusy] = useState(false), [fresh, setFresh] = useState(false);
+  const [pending, setPending] = useState(client.pending);
+  const [analysisPending, setAnalysisPending] = useState(analysisClient.pending), [analysisBusy, setAnalysisBusy] = useState(false);
+  const identity = useRef(candidateId); identity.current = candidateId;
+  const current = useRef(data); current.current = data;
+  const mounted = useRef(true), sequence = useRef(0), writing = useRef(false), analyzing = useRef(false);
+  useEffect(() => { mounted.current = true; return () => { mounted.current = false; sequence.current++; }; }, []);
+
+  const fetchCurrent = useCallback(async (preserveError = false) => {
+    const person = identity.current, request = ++sequence.current;
+    setLoading(true); setFresh(false);
+    if (!preserveError) setError(null);
+    try {
+      let list = await client.comparison();
+      const selected = person ?? list.candidates[0].candidate.id;
+      let next = await client.read(selected);
+      // A reset between the two GETs must not combine old and new sessions.
+      if (!sameSnapshot(next, list)) [next, list] = await Promise.all([client.read(selected), client.comparison()]);
+      if (!sameSnapshot(next, list)) throw new Api4Error('REFRESH_CONFLICT', 'The shared case changed while loading. Refresh again.');
+      if (!mounted.current || request !== sequence.current || person !== identity.current) return false;
+      if (current.current?.sessionId === next.sessionId && current.current.revision > next.revision) return false;
+      client.reconcile(next); analysisClient.reconcile(next); setPending(client.pending); setAnalysisPending(analysisClient.pending);
+      current.current = next; setData(next); setComparison(list); setFresh(true);
+      return true;
+    } catch (e) {
+      if (mounted.current && request === sequence.current && person === identity.current) setError(asError(e));
+      return false;
+    } finally { if (mounted.current && request === sequence.current) setLoading(false); }
+  }, [client, analysisClient]);
+  const refresh = useCallback(async () => { await fetchCurrent(); }, [fetchCurrent]);
+  useEffect(() => { setNotice(''); setCompletedAction(null); void refresh(); }, [candidateId, refresh]);
+
+  const execute = async (action: () => ReturnType<Api4Client['retry']>, owner: unknown, session: unknown, isAnalysis = false, path = '', stage?: unknown) => {
+    const lock = isAnalysis ? analyzing : writing, transport = isAnalysis ? analysisClient : client;
+    if (lock.current) return false;
+    lock.current = true; if (isAnalysis) setAnalysisBusy(true); else setBusy(true); setError(null); setNotice(''); setCompletedAction(null);
+    let committed = false;
+    try {
+      await action(); committed = !transport.pending;
+      let refreshed = false;
+      if (mounted.current) { setPending(client.pending); setAnalysisPending(analysisClient.pending); refreshed = await fetchCurrent(); }
+      const same = owner === identity.current && session === current.current?.sessionId;
+      if (mounted.current && committed && same) setCompletedAction({ path, candidateId: owner, stage });
+      const saved = path === '/submission' ? 'Work submitted · waiting for human review.' : path === '/task/send' ? 'Task sent · available in the candidate workspace.' : path === '/review' ? 'Evidence review saved · public feedback is available.' : path === '/assessment' ? 'Human assessment saved · server scores updated.' : path === '/shortlist' ? 'Shortlist decision saved.' : 'Action saved.';
+      const name = current.current && current.current.candidate.id === owner ? current.current.candidate.name : comparison?.candidates.find(row => row.candidate.id === owner)?.candidate.name ?? 'the selected candidate';
+      if (mounted.current) setNotice(session !== current.current?.sessionId ? 'The session changed during this action. Only the current session is shown.' : committed ? `${saved} Saved on the shared service for ${name}.${refreshed ? '' : ' Refresh is still needed before continuing.'}` : `Analysis is running for ${name}; refresh or retry the original action.`);
+      return committed && same && refreshed;
+    } catch (e) {
+      if (mounted.current) {
+        const problem = asError(e);
+        if (owner === identity.current) { setError(problem); if (problem.uncertain && !isAnalysis) setFresh(false); }
+        else setNotice(`The action for ${owner} did not complete (${problem.code}). Its response was not applied to this person.`);
+        setPending(client.pending); setAnalysisPending(analysisClient.pending);
+        // Preserve the precise error and all editor input, but reload conflict state.
+        if (asError(e).status === 409 || asError(e).code.startsWith('AI_')) await fetchCurrent(true);
+      }
+      return false;
+    } finally { lock.current = false; if (mounted.current) { if (isAnalysis) setAnalysisBusy(false); else setBusy(false); setPending(client.pending); setAnalysisPending(analysisClient.pending); } }
+  };
+  const write = (path: string, body: Record<string, unknown>) => {
+    if (!fresh || loading || body.candidateId !== identity.current || body.sessionId !== current.current?.sessionId) {
+      setError(new Api4Error('STALE_VIEW', 'Refresh the selected person and reopen this action against the current session. Your input is kept.'));
+      return Promise.resolve(false);
+    }
+    const isAnalysis = path === '/analysis';
+    return execute(() => (isAnalysis ? analysisClient : client).write(path, body), body.candidateId, body.sessionId, isAnalysis, path, body.stage);
+  };
+  const retry = () => execute(() => client.retry(), client.pending?.body.candidateId, client.pending?.body.sessionId, false, client.pending?.path, client.pending?.body.stage);
+  const retryAnalysis = () => execute(() => analysisClient.retry(), analysisClient.pending?.body.candidateId, analysisClient.pending?.body.sessionId, true);
+  return { data: !candidateId || data?.candidate.id === candidateId ? data : null, comparison, error, loading, busy, pending, analysisBusy, analysisPending, notice, completedAction, fresh: fresh && (!candidateId || data?.candidate.id === candidateId), base, refresh, write, retry, retryAnalysis };
+}

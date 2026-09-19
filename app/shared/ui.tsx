@@ -48,7 +48,7 @@ export function ThemeSwitch() {
 
 export type NavigationItem = { id: string; label: string; icon: ReactNode; count?: number; href?: string };
 type SidebarProps = {
-  role: 'hr' | 'candidate'; activePage: string; items: NavigationItem[];
+  role: 'hr' | 'candidate'; workspaceName?: string; activePage: string; items: NavigationItem[];
   onNavigate: (id: string) => void; user: { initials: string; name: string; title: string };
   helpLabel: string; onHelp: () => void; onReset?: () => void;
 };
@@ -71,7 +71,7 @@ export function useSidebar(role: SidebarProps['role']) {
   };
 }
 
-export function Sidebar({ role, activePage, items, onNavigate, user, helpLabel, onHelp, onReset, controller }: SidebarProps & { controller: ReturnType<typeof useSidebar> }) {
+export function Sidebar({ role, workspaceName, activePage, items, onNavigate, user, helpLabel, onHelp, onReset, controller }: SidebarProps & { controller: ReturnType<typeof useSidebar> }) {
   const { collapsed, mobileOpen, closeMobile, toggleCollapsed } = controller;
   const panel = useRef<HTMLElement>(null);
   const closeRef = useRef(closeMobile);
@@ -117,7 +117,7 @@ export function Sidebar({ role, activePage, items, onNavigate, user, helpLabel, 
     <aside ref={panel} id="eb-sidebar" className={`eb-sidebar${collapsed ? ' is-collapsed' : ''}${mobileOpen ? ' is-open' : ''}`} aria-label={`${role === 'hr' ? 'HR' : 'Candidate'} workspace`} role={mobileOpen ? 'dialog' : undefined} aria-modal={mobileOpen || undefined}>
       <button type="button" className="eb-mobile-close" aria-label="Close navigation" onClick={() => closeMobile()}><Glyph name="close"/></button>
       <a className="eb-brand" href={role === 'hr' ? '#report' : '#home'} aria-label="EvidenceBridge home" onClick={e => { e.preventDefault(); visit(role === 'hr' ? 'report' : 'home'); }}><span className="eb-brand-mark"><Glyph name="brand"/></span><span className="eb-expanded">EvidenceBridge</span></a>
-      <div className="eb-workspace"><span className="eb-role-badge">{role === 'hr' ? 'HR' : 'C'}</span><div className="eb-expanded"><strong>{role === 'hr' ? 'HarbourCart' : 'Candidate'}</strong><small>{role === 'hr' ? 'Hiring workspace' : 'Your evidence workspace'}</small></div></div>
+      <div className="eb-workspace"><span className="eb-role-badge">{role === 'hr' ? 'HR' : 'C'}</span><div className="eb-expanded"><strong>{workspaceName ?? (role === 'hr' ? 'HarbourCart' : 'Candidate')}</strong><small>{role === 'hr' ? 'Hiring workspace' : 'Your evidence workspace'}</small></div></div>
       <div className="eb-nav-label eb-expanded">WORKSPACE</div>
       <nav aria-label="Main navigation">{items.map(item => {
         const contents = <><span className="eb-nav-icon">{item.icon}</span><span className="eb-expanded eb-nav-text">{item.label}</span>{!!item.count && <span className="eb-nav-count">{item.count}</span>}<span className="eb-nav-tooltip" aria-hidden="true">{item.label}</span></>;
