@@ -45,7 +45,7 @@ export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api
   const refresh = useCallback(async () => { await fetchCurrent(); }, [fetchCurrent]);
   useEffect(() => { setNotice(''); void refresh(); }, [candidateId, refresh]);
 
-  const execute = async (action: () => ReturnType<Api3Client['retry']>, owner: unknown, session: unknown, isAnalysis = false) => {
+  const execute = async (action: () => ReturnType<Api3Client['retry']>, owner: unknown, session: unknown, isAnalysis = false, path = '') => {
     const lock = isAnalysis ? analyzing : writing, transport = isAnalysis ? analysisClient : client;
     if (lock.current) return false;
     lock.current = true; if (isAnalysis) setAnalysisBusy(true); else setBusy(true); setError(null); setNotice('');
@@ -55,7 +55,8 @@ export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api
       let refreshed = false;
       if (mounted.current) { setPending(client.pending); setAnalysisPending(analysisClient.pending); refreshed = await fetchCurrent(); }
       const same = owner === identity.current && session === current.current?.sessionId;
-      if (mounted.current) setNotice(session !== current.current?.sessionId ? 'The session changed during this action. Only the current session is shown.' : committed ? `Saved on the shared service for ${owner}.${refreshed ? '' : ' Refresh is still needed before continuing.'}` : `Analysis is running for ${owner}; refresh or retry the original action.`);
+      const saved = path === '/submission' ? 'Work submitted · waiting for human review.' : path === '/task/send' ? 'Task sent · available in the candidate workspace.' : path === '/review' ? 'Evidence review saved · public feedback is available.' : path === '/assessment' ? 'Human assessment saved · server scores updated.' : path === '/shortlist' ? 'Shortlist decision saved.' : 'Action saved.';
+      if (mounted.current) setNotice(session !== current.current?.sessionId ? 'The session changed during this action. Only the current session is shown.' : committed ? `${saved} Saved on the shared service for ${owner}.${refreshed ? '' : ' Refresh is still needed before continuing.'}` : `Analysis is running for ${owner}; refresh or retry the original action.`);
       return committed && same && refreshed;
     } catch (e) {
       if (mounted.current) {
@@ -75,9 +76,9 @@ export function useApi3(role: 'hr' | 'candidate', candidateId: CandidateId): Api
       return Promise.resolve(false);
     }
     const isAnalysis = path === '/analysis';
-    return execute(() => (isAnalysis ? analysisClient : client).write(path, body), body.candidateId, body.sessionId, isAnalysis);
+    return execute(() => (isAnalysis ? analysisClient : client).write(path, body), body.candidateId, body.sessionId, isAnalysis, path);
   };
-  const retry = () => execute(() => client.retry(), client.pending?.body.candidateId, client.pending?.body.sessionId);
+  const retry = () => execute(() => client.retry(), client.pending?.body.candidateId, client.pending?.body.sessionId, false, client.pending?.path);
   const retryAnalysis = () => execute(() => analysisClient.retry(), analysisClient.pending?.body.candidateId, analysisClient.pending?.body.sessionId, true);
   return { data: data?.candidate.id === candidateId ? data : null, comparison, error, loading, busy, pending, analysisBusy, analysisPending, notice, fresh: fresh && data?.candidate.id === candidateId, base, refresh, write, retry, retryAnalysis };
 }

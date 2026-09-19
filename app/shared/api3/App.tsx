@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sidebar, useSidebar } from '../ui';
 import { Dialog } from '../api-ui';
 import { candidateIds } from './client';
@@ -7,6 +7,9 @@ import type { CandidateId } from '../api3-types';
 import HRConnected from './hr';
 import CandidateConnected from './candidate';
 import '../revision5/revision5.css';
+import type { EvidenceFocus } from './coverage-cell';
+import { FloatingNotice, Journey } from './guidance';
+import './guidance.css';
 
 const hrPages = [['company', 'Company & role'], ['comparison', 'Compare candidates'], ['evidence', 'Evidence & marks'], ['tasks', 'Targeted tasks'], ['shortlist', 'Retained candidates']];
 const candidatePages = [['application', 'My materials'], ['tasks', 'My task'], ['workspace', 'Investigation'], ['history', 'Work & feedback']];
@@ -21,22 +24,26 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
     return candidateIds.includes(id) ? id : 'alex-chen';
   });
   const [page, setPage] = useState(() => pages.some(p => p[0] === location.hash.slice(1)) ? location.hash.slice(1) : pages[role === 'hr' ? 1 : 0][0]);
+  const [evidenceFocus,setEvidenceFocus]=useState<EvidenceFocus | undefined>();
   const [help, setHelp] = useState(false), [dismissedNotice, setDismissedNotice] = useState('');
+  const [dismissedError, setDismissedError] = useState<unknown>(null);
   const controller = useApi3(role, candidateId), sidebar = useSidebar(role);
   const { data, comparison } = controller;
+  useEffect(() => { if(!controller.notice) setDismissedNotice(''); }, [controller.notice]);
   const go = (next: string) => {
     if (!pages.some(p => p[0] === next)) return;
-    setDismissedNotice(controller.notice); setPage(next); history.replaceState(null, '', `${location.pathname}${location.search}#${next}`);
+    setPage(next); history.replaceState(null, '', `${location.pathname}${location.search}#${next}`);
     sidebar.closeMobile(); window.scrollTo(0, 0);
   };
-  const select = (id: CandidateId, target?: string) => {
+  const select = (id: CandidateId, target?: string, criterion?: string) => {
+    setEvidenceFocus(criterion ? {criterion,request:performance.now()} : undefined);
     setCandidateId(id); setDismissedNotice(controller.notice);
     const url = new URL(location.href); url.searchParams.set('candidateId', id); history.replaceState(null, '', url);
     if (target) go(target);
   };
   const displayName = comparison?.candidates.find(row => row.candidate.id === candidateId)?.candidate.name ?? candidateId;
   const initials = displayName.split(/\s+/).map(part => part[0]).slice(0, 2).join('');
-  return <div className="eb-connected r5-app">
+  return <div className="eb-connected r5-app guide-app">
     <a href="#api3-main" className="eb-skip eb-action" onClick={e => { e.preventDefault(); document.getElementById('api3-main')?.focus(); }}>Skip to content</a>
     <Sidebar role={role} controller={sidebar} activePage={page} items={pages.map(([id, label], index) => ({ id, label, icon: <NavIcon index={index}/> }))} onNavigate={go} user={{ initials: role === 'hr' ? 'HR' : initials, name: role === 'hr' ? 'Operations lead' : displayName, title: role === 'hr' ? 'HarbourCart' : 'Synthetic candidate' }} helpLabel="Connected guide" onHelp={() => setHelp(true)}/>
     <div className="eb-main" data-eb-content><header className="eb-api-topbar">{sidebar.menuButton}<span>{role === 'hr' ? 'Hiring workspace' : 'Candidate workspace'} / {pages.find(p => p[0] === page)?.[1]}</span><span className="r5-mode">API3 · shared local service</span></header>
@@ -47,10 +54,11 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
           {controller.analysisPending && <p className="eb-feedback">Analysis receipt for {String(controller.analysisPending.body.candidateId)} is unresolved. Human review remains available. <button className="eb-action" disabled={controller.analysisBusy} onClick={() => void controller.retryAnalysis()}>Retry original analysis</button></p>}
           {!data && !controller.loading && <p>Start the matching API3 backend at <code>{controller.base}</code>, then refresh. No local mock has replaced the service.</p>}
         </section>
-        {controller.notice && controller.notice !== dismissedNotice && <p role="status" className="r5-notice">{controller.notice} <button className="eb-action" aria-label="Dismiss notice" onClick={() => setDismissedNotice(controller.notice)}>×</button></p>}
-        <div className="r5-person-bar"><span className="r5-avatar">{initials}</span><div><strong>{displayName}</strong><small>{data?.candidate.background ?? 'Select an explicit demo identity'}</small></div><label>Demo identity<select aria-label="Current candidate" value={candidateId} onChange={e => select(e.target.value as CandidateId)}>{candidateIds.map(id => <option value={id} key={id}>{comparison?.candidates.find(row => row.candidate.id === id)?.candidate.name ?? id}</option>)}</select></label></div>
+        <FloatingNotice message={controller.error && controller.error !== dismissedError ? [controller.error.message,controller.notice].filter(Boolean).join(' ') : controller.notice !== dismissedNotice ? controller.notice : ''} error={!!controller.error && controller.error !== dismissedError} dismiss={() => { setDismissedNotice(controller.notice); setDismissedError(controller.error); }} action={controller.error ? {label:controller.pending ? 'Retry saved request' : 'Check latest status',run:()=>void(controller.pending ? controller.retry() : controller.refresh())} : data && !['company','comparison'].includes(page) ? { label: role === 'candidate' ? 'View work & feedback' : 'View task status', run: () => go(role === 'candidate' ? 'history' : 'tasks') } : undefined}/>
+        {!['company','comparison'].includes(page) && <div className="r5-person-bar"><span className="r5-avatar">{initials}</span><div><strong>{displayName}</strong><small>{data?.candidate.background ?? 'Select an explicit demo identity'}</small></div><label>Demo identity<select aria-label="Current candidate" value={candidateId} onChange={e => select(e.target.value as CandidateId)}>{candidateIds.map(id => <option value={id} key={id}>{comparison?.candidates.find(row => row.candidate.id === id)?.candidate.name ?? id}</option>)}</select></label></div>}
+        {data && !['company', 'comparison'].includes(page) && <Journey data={data} role={role} page={page} go={go}/>}
         {data && comparison && (role === 'hr'
-          ? <HRConnected key={`${data.sessionId}.${data.candidate.id}`} data={data} comparison={comparison} controller={controller} page={page} go={go} select={select}/>
+          ? <HRConnected key={`${data.sessionId}.${data.candidate.id}`} data={data} comparison={comparison} controller={controller} page={page} go={go} select={select} evidenceFocus={evidenceFocus}/>
           : <CandidateConnected key={`${data.sessionId}.${data.candidate.id}.${data.task.taskId}.${data.workflow.nextSubmissionVersion ?? data.currentSubmissionVersion ?? 1}`} data={data} controller={controller} page={page} go={go}/>)}
         <footer className="eb-footer">EvidenceBridge · Reviewable evidence. Human decisions. · Formal state lives in the shared local service.</footer>
       </main>

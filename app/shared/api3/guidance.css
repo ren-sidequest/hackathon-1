@@ -1,0 +1,63 @@
+.guide-company-head { display:flex; align-items:center; gap:18px; }
+.guide-company-head>div { flex:1; min-width:0; }
+.guide-company-head h2 { margin:4px 0 12px; }
+.guide-goal { max-width:900px; font-size:18px; line-height:1.65; margin:24px 0; }
+.guide-work-chain { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.guide-work-chain details { padding:18px; border:1px solid var(--border); border-radius:12px; background:var(--surface-soft); }
+.guide-work-chain summary { display:grid; grid-template-columns:38px 1fr auto; gap:6px 10px; align-items:center; cursor:pointer; list-style:none; }
+.guide-work-chain summary strong { grid-column:2/4; }.guide-step-icon { grid-row:1/3; color:var(--text-link); font-size:32px; }.guide-expand { font-size:11px; color:var(--text-secondary); }
+.guide-work-chain summary>small { grid-column:2; grid-row:1; }.guide-work-chain summary>strong { grid-row:2; }.guide-work-chain summary>.guide-expand { grid-column:3; grid-row:1; white-space:nowrap; }
+.guide-app .r5-assessment-header { grid-template-columns:minmax(0,1fr); }
+.guide-app .r5-assessment-header>details,.guide-app .r5-assessment-header>.r5-three { grid-column:1/-1; text-align:left; }
+.guide-app .r5-assessment-header>.eb-field { justify-content:flex-start; }.guide-app .r5-assessment-header .eb-glide { flex:0 1 480px; width:480px; }
+.guide-review-grid .r5-mark { background:var(--surface); color:var(--text-secondary); border-color:var(--border); }
+.guide-review-grid .r5-mark.is-unknown { background:var(--warning-bg); color:var(--warning-text); border-color:var(--warning-border); }
+.guide-background { margin-top:20px; padding-top:16px; border-top:1px solid var(--border); }
+.guide-journey { margin:0 0 22px; border:1px solid var(--border); border-radius:12px; padding:14px 18px; background:var(--glass-fallback); }
+.guide-journey>div { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:12px; margin-bottom:12px; }.guide-journey>div span { color:var(--text-secondary); }
+.guide-journey ol,.guide-composer-steps { list-style:none; display:flex; gap:8px; padding:0; margin:0; }
+.guide-journey li { flex:1; }.guide-journey button { width:100%; display:flex; align-items:center; gap:8px; border:1px solid var(--border); background:var(--surface-soft); color:var(--text-primary); border-radius:8px; padding:10px; text-align:left; cursor:pointer; }
+.guide-journey button[aria-current=step] { background:var(--accent-soft); border-color:var(--accent-border); }.guide-journey button:disabled { opacity:.55; cursor:default; }.guide-journey button:focus-visible { outline:2px solid var(--focus-ring); outline-offset:2px; }
+.guide-journey button span,.guide-deliverables>div>span { color:var(--text-link); font-size:12px; }
+.guide-toast { position:fixed; right:24px; bottom:24px; z-index:100; display:flex; gap:14px; align-items:flex-start; width:min(460px,calc(100vw - 32px)); padding:18px; border:1px solid var(--accent-border); border-radius:16px; background:var(--glass-fallback); box-shadow:0 12px 36px #0004; animation:guide-arrive 180ms ease-out; }.guide-toast>div { flex:1; min-width:0; }.guide-toast p { margin:0 0 8px; font-size:14px; overflow-wrap:anywhere; }.guide-toast .eb-action { padding:6px 10px; font-size:12px; }.guide-toast-icon { color:var(--success-text); border:1px solid currentColor; border-radius:50%; padding:2px 7px; }.guide-toast[data-error=true] { border-color:var(--danger-text); }.guide-toast[data-error=true] .guide-toast-icon { color:var(--danger-text); }
+@supports(backdrop-filter:blur(1px)) { .guide-toast { background:var(--glass-fill); backdrop-filter:blur(18px); } }
+@keyframes guide-arrive { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.guide-composer-steps { margin-bottom:24px; }.guide-composer-steps li { flex:1; padding:12px; border-bottom:2px solid var(--border); color:var(--text-secondary); }.guide-composer-steps [aria-current=step] { color:var(--text-link); border-color:var(--accent-border); }
+.guide-gap { border-left:3px solid var(--accent-fill); padding:14px 18px; margin:20px 0; background:var(--accent-soft); border-radius:0 10px 10px 0; }.guide-gap p { margin:6px 0; }.guide-task-brief { max-width:920px; }.guide-task-brief>small,.guide-gap small { color:var(--text-link); letter-spacing:.08em; }
+.guide-deliverables { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:16px 0; }.guide-deliverables>div { display:flex; gap:10px; padding:14px; background:var(--surface-soft); border:1px solid var(--border); border-radius:10px; font-size:13px; }.guide-deliverables>small { grid-column:1/-1; color:var(--text-secondary); }
+.guide-composer .eb-actions { margin-top:22px; }.guide-context-link { margin-bottom:16px; }.guide-local-nav { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+.r5-app .guide-review-grid>.r5-original-pane,.r5-app .guide-review-grid>section { height:680px; display:flex; flex-direction:column; min-height:0; overflow:hidden; }
+.guide-review-grid .guide-source-scroll,.guide-review-grid .guide-judgment-scroll { flex:1; overflow:auto; min-height:0; overscroll-behavior:contain; scrollbar-gutter:stable; }
+.r5-app .guide-review-grid .r5-inline-source pre { max-height:none; overflow:visible; white-space:pre-wrap; overflow-wrap:anywhere; }
+.r5-app .guide-review-grid .r5-inline-source { margin:0; }.guide-review-grid .guide-next { margin-top:18px; padding-top:16px; border-top:1px solid var(--border); flex-shrink:0; }.guide-next p { font-size:13px; }.guide-next .eb-action { width:100%; }.guide-review-grid .r5-judgment-heading h2 { margin:8px 0 16px; }
+.guide-checklist { display:flex; flex-wrap:wrap; gap:12px; padding:14px; margin:12px 0; border:1px solid var(--border); border-radius:10px; }.guide-checklist span { font-size:13px; }
+@media(min-width:1500px) { .r5-app .guide-review-grid>.r5-original-pane,.r5-app .guide-review-grid>section { height:720px; } }
+@media(max-width:800px) { .guide-company-head { flex-wrap:wrap; }.guide-company-head>.eb-action { width:100%; }.guide-work-chain,.guide-deliverables { grid-template-columns:1fr; }.guide-journey ol { display:grid; grid-template-columns:1fr 1fr; }.guide-journey button { height:100%; font-size:12px; }.guide-toast { right:16px; bottom:16px; }.guide-composer-steps li { padding:8px; font-size:12px; }.r5-app .guide-review-grid>.r5-original-pane,.r5-app .guide-review-grid>section { height:auto; max-height:none; }.guide-review-grid .guide-source-scroll { max-height:480px; }.guide-review-grid .guide-judgment-scroll { overflow:visible; }.guide-company-head .r5-avatar { display:none; } }
+@media(prefers-reduced-motion:reduce) { .guide-toast { animation:none; } }
+
+/* Compact labels: no additional table minimum width; only the coverage column is reserved. */
+.guide-app .r5-compare-table th:nth-child(6) { width:180px; }
+.guide-coverage-cell { min-width:0; max-width:180px; font-variant-numeric:tabular-nums; }
+.guide-coverage-labels { display:grid; grid-template-columns:1fr 1.2fr; gap:5px; }
+.guide-coverage-badge,.guide-points-badge { min-width:0; padding:4px 6px; border:1px solid var(--border); border-radius:6px; background:var(--surface-soft); }
+.guide-coverage-badge>span,.guide-points-badge>div>span { display:block; font-size:9px; font-weight:600; line-height:12px; }
+.guide-coverage-badge strong,.guide-points-badge>strong { display:block; font-size:14px; font-weight:700; line-height:18px; white-space:nowrap; }
+.r5-compare-table .guide-coverage-cell strong small { display:inline; font-size:9px; font-weight:400; margin:0; color:inherit; opacity:.8; }
+.guide-coverage-badge[data-state=complete] { color:var(--success-text); background:var(--success-bg); border-color:var(--success-border); }
+.guide-coverage-badge[data-state=partial] { color:var(--warning-text); background:var(--warning-bg); border-color:var(--warning-border); }
+.guide-coverage-badge[data-state=pending] { color:var(--text-secondary); }
+.guide-coverage-track { display:grid; grid-template-columns:repeat(10,minmax(0,1fr)); gap:3px; margin:1px 0 0; }
+.guide-coverage-track button { position:relative; height:22px; min-width:0; padding:0; border:0; background:transparent; cursor:pointer; }
+.guide-coverage-track button::before { content:''; position:absolute; inset:8px 0; border:1px solid var(--border-strong); border-radius:2px; background:var(--surface); }
+.guide-coverage-track button>span { display:none; }
+.guide-coverage-track button[data-state=covered]::before { background:var(--success-text); border-color:var(--success-border); }
+.guide-coverage-track button[data-state=missing]::before { border:1px dashed var(--warning-border); background:var(--warning-bg); }
+.guide-coverage-track button:hover::before,.guide-coverage-track button:focus-visible::before { outline:2px solid var(--text-link); outline-offset:1px; }
+.guide-coverage-track button:focus-visible { outline:1px solid var(--focus-ring); outline-offset:1px; border-radius:3px; }
+.guide-points-badge { color:var(--text-link); border-color:var(--accent-border); background:var(--accent-soft); }
+.guide-points-badge>div { display:flex; justify-content:space-between; gap:3px; align-items:center; }
+.guide-app .guide-points-badge details { position:relative; padding:0; margin:0; border:0; }
+.guide-points-badge summary { list-style:none; cursor:pointer; padding:0 1px; font-size:11px; line-height:12px; }
+.guide-points-badge summary::-webkit-details-marker { display:none; }
+.guide-points-badge details p { position:absolute; right:0; top:18px; z-index:5; width:220px; margin:0; padding:12px; color:var(--text-primary); background:var(--glass-fallback); border:1px solid var(--accent-border); border-radius:10px; box-shadow:var(--panel-shadow); font-size:12px; line-height:1.6; }
+@media(pointer:coarse) { .guide-coverage-track button { height:28px; }.guide-coverage-track button::before { inset:11px 0; } }
