@@ -1,5 +1,7 @@
 # EvidenceBridge — participant brief
 
+> **用户最新状态更新（2026-09-20）：前端仍在修改，存在尚未跑通的流程和待修复问题。以下工程通过记录仅对应历史测试基线 b5d0568 及所列覆盖，不代表当前前端定稿或最终参赛验收。后端暂保持现状，待最终前端接入后联合验证。截图与录像仅是旧基线技术演练，暂不发布为最终素材；前端冻结后统一重录。真人复核、试用和比赛提交仍待真实记录。**
+
 **Internal formative study · fictional applications · synthetic work samples**
 
 We are testing a review workflow, not you. Participation is voluntary. You may stop at any time. We record anonymous notes and timing; no recording of your face, voice, real CV or contact details is needed. Tell the facilitator if you need an accessibility adjustment before the clock starts.
@@ -50,4 +52,4 @@ Ask the facilitator for navigation or technical help when needed. They will log 
 - Were any materials, controls or people hard to find?
 
 ---
-公开交付副本：本次仅同步文档与媒体；本机路径、日志和数据库留在内部归档。产品基线 `b5d0568c71fd51f4f39f3eb506654861c1b59695`。真人签收、用户试用与比赛提交状态仍以实际记录为准。
+阶段性文档副本：本次仅推送文档审阅PR，媒体与服务器发布暂缓；本机路径、日志和数据库留在内部归档。产品基线 `b5d0568c71fd51f4f39f3eb506654861c1b59695`。真人签收、用户试用与比赛提交状态仍以实际记录为准。
