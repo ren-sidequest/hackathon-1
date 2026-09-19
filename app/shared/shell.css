@@ -47,7 +47,7 @@
 .eb-theme-switch[aria-checked="true"] .eb-theme-thumb { transform: translateX(34px); background: var(--blue-soft); }
 .eb-theme-switch[aria-checked="true"] .eb-theme-icon:last-child { color: var(--text-primary); }
 .eb-menu-button,.eb-mobile-close { display: none; }
-.eb-sidebar-backdrop { position: fixed; inset: 0; z-index: 59; background: #060e1db3; }
+.eb-sidebar-backdrop { position: fixed; inset: 0; z-index: 59; background: #030507b3; }
 .eb-sidebar :is(a,button):focus-visible,.eb-theme-switch:focus-visible,.eb-menu-button:focus-visible { outline: 3px solid var(--focus-ring); outline-offset: 2px; }
 .recharts-default-tooltip { background: var(--surface) !important; border-color: var(--border-strong) !important; color: var(--text-primary) !important; border-radius: 8px; }
 .recharts-tooltip-item { color: var(--text-primary) !important; }
@@ -96,4 +96,40 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .eb-sidebar,[data-eb-content],.eb-theme-thumb,.eb-collapse>svg { transition: none; }
+}
+
+/* Shared finish: restrained gold accents on neutral surfaces, in both roles. */
+.eb-sidebar { box-shadow:inset -1px 0 #dca84a08; }
+.eb-brand-mark { border-color:var(--accent-border); }
+.eb-theme-switch[aria-checked="true"] .eb-theme-thumb { background:var(--accent-gradient); }
+.eb-theme-switch[aria-checked="true"] .eb-theme-icon:last-child { color:var(--on-accent); }
+.eb-connected { background-image:var(--page-glow); background-attachment:fixed; }
+.eb-panel,.r5-person-bar,.card { box-shadow:var(--panel-shadow); }
+.eb-action.primary,.button.primary,.primary-button { background:var(--accent-gradient); border-color:var(--accent-border); color:var(--on-accent); box-shadow:var(--accent-shadow); }
+.eb-action.primary:hover:not(:disabled),.button.primary:hover:not(:disabled),.primary-button:hover:not(:disabled) { background:var(--accent-gradient-hover); border-color:var(--accent-hover); }
+.eyebrow,.text-button { color:var(--text-link); }
+.avatar { color:var(--text-link); background:var(--accent-soft); }
+::selection { background:var(--accent-soft); color:var(--text-primary); }
+
+/* Gilded Evidence: stable hit targets, metallic surfaces, independent focus feedback. */
+.eb-gold-backdrop { position:fixed; inset:0 0 auto; width:100%; height:min(100vh,680px); pointer-events:none; z-index:0; }
+.eb-gold-atmosphere { position:fixed; inset:0; pointer-events:none; z-index:0; background:var(--ambient-glow); }
+[data-eb-content] { position:relative; z-index:1; }
+.eb-brand { color:var(--text-link); }
+.eb-brand-mark { background:transparent; border:0; }
+.eb-brand-mark svg { width:30px; height:30px; }
+.eb-nav-item.is-active { background:var(--accent-soft); outline:1px solid var(--accent-border); outline-offset:-1px; box-shadow:inset 2px 0 var(--accent-hover), inset 0 1px #efd38716; }
+.eb-nav-item,.eb-action,.button,.primary-button,.eb-theme-switch { -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+:is(.eb-action,.button,.primary-button) { transition:box-shadow .16s ease, border-color .16s ease, color .16s ease; }
+:is(.eb-action,.button,.primary-button):not(:disabled):active { box-shadow:inset 0 2px 5px #0005; }
+:is(.eb-action,.button,.primary-button):disabled { cursor:not-allowed; }
+.eb-theme-switch { border-color:var(--accent-border); background:var(--page-bg); }
+.eb-theme-thumb { pointer-events:none; background:var(--accent-gradient); box-shadow:var(--accent-shadow); }
+.eb-theme-switch[aria-checked=false] .eb-theme-icon:first-of-type { color:var(--on-accent); }
+@media(prefers-reduced-motion:reduce) { :is(.eb-action,.button,.primary-button) { transition:none; } }
+
+/* Frosted outer surfaces; opaque fallbacks preserve legibility without blur support. */
+:is(.eb-panel,.card) { background:var(--glass-fallback); }
+@supports (backdrop-filter:blur(1px)) {
+  :is(.eb-panel,.card) { background:var(--glass-fill); backdrop-filter:blur(14px); }
 }

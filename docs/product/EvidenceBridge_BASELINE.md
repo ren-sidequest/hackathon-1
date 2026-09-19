@@ -19,7 +19,7 @@
 ### Reference boundaries / 参考边界
 
 - 图 1 用于核心工作台的布局、密度和模块参考；图 2 用于双端页面与流程参考。外围编号、中文说明和示意连线不作为产品界面内容。
-- 已知图文差异以本文件的明确规范为准：共享随日夜主题变化的侧栏、HR 蓝色、Candidate 绿色；分析图表可使用共享蓝色，侧栏明暗以当前主题为准，不照搬候选人蓝色主按钮。
+- 已知图文差异以本文件的明确规范为准：共享随日夜主题变化的侧栏；按 2026-09-19 用户新要求，双端统一黑金／白金强调色，默认夜间，保留明确状态语义。
 - 候选人主要输入采用图 1 的结构化 Investigation Board，不采用图 2 的单一大文本框任务页。
 - 图 2 的 Shared Backend / Data 本身只表达共享数据关系；当前正式任务/V1/V2/审核以已确认修订 3 的共享 API 为准，辅助模拟须明确标识。
 - 图片中的个人、公司和数据用于概念演示，不作为真实候选人评价或运行结果。其他实质冲突先确认，不自行改变产品要求。
@@ -160,57 +160,18 @@ The shell is shared. Role accents are different.
 
 ### Shared neutrals
 
-- `--sidebar-bg: #FFFFFF` (day) / `#0D1829` (night)
-- `--sidebar-bg-deep: #F9FBFD` (day) / `#091220` (night)
-- `--page-bg: #F6F8FB`
-- `--surface: #FFFFFF`
-- `--surface-soft: #F9FBFD`
-- `--border: #E3E8F0`
-- `--text-primary: #162033`
-- `--text-secondary: #667085`
-- `--text-muted: #98A2B3`
+Neutral tokens follow the active mode: dark sidebar `#0C0F11` and light sidebar `#FFFDF7`, with layered charcoal or warm white surfaces. The current source of truth is `app/shared/tokens.css`.
 
-### HR accent
+### Shared gold accent (HR and Candidate)
 
-Use blue as the HR identity color.
+User-approved update, 2026-09-19: both roles use coordinated gold accents. Role labels and navigation distinguish HR and Candidate. The previous blue/emerald role split is superseded.
 
-- `--hr-primary: #2F6BFF`
-- `--hr-primary-hover: #255BE0`
-- `--hr-soft: #EEF4FF`
-- `--hr-border: #CFE0FF`
-
-Usage:
-
-- Active HR navigation
-- Primary HR buttons
-- Selected report tabs
-- Evidence review emphasis
-- Workflow indicators
-
-### Candidate accent
-
-Use green / emerald as the Candidate identity color.
-
-- `--candidate-primary: #16A36A`
-- `--candidate-primary-hover: #128458`
-- `--candidate-soft: #ECFDF3`
-- `--candidate-border: #C7F0D8`
-
-Usage:
-
-- Active Candidate navigation
-- Candidate task state accents
-- Candidate progress states
-- Candidate-side primary actions where role identity matters
-
-### Shared analytical accent
-
-The Candidate task workspace may use blue for charts, data controls, and analytical tools to stay faithful to the core concept image.
-
-- `--analysis-blue: #4D8DFF`
-- `--analysis-blue-soft: #EEF5FF`
-
-This does **not** replace the Candidate green identity. It is a shared analytical/data visualization accent.
+- Dark: near-black sidebar `#060606`, charcoal page `#181A1C`, graphite reading surface `#2B2D2F`, warm text `#F4EFE2`, metallic gold `#DBB85C`. The third visual direction retains fine gold borders and stable metallic button highlights; the subsequent contrast revision adds warm gold ambient light and lightly frosted outer panels. Tables, inputs and long quotations retain solid reading backgrounds. Use opaque panel fallbacks when backdrop blur is unsupported.
+- Light: warm white page `#F6F3EC`, surface `#FFFEFA`, dark text `#29251D`, gold fill `#C79539`, readable gold link `#805713`.
+- Navigation, primary actions, focus rings, selected tabs and analytical charts share these tokens. Historical chart bars use a distinct muted hue and stripe pattern.
+- Success, warning and danger remain semantic states; gold alone does not establish a reviewed or verified outcome.
+- No saved preference defaults to night mode regardless of OS. Explicit light/dark choices persist using the existing key.
+- Exact tokens and compatibility aliases are maintained in [shared UI](../../app/shared/README.md).
 
 ---
 
@@ -221,25 +182,21 @@ Status meaning must be identical across both sides.
 ### Evidence status
 
 - **Supported**: green
-  - text: `#137A4B`
-  - bg: `#EAF8EF`
+  - use shared `--success-text` / `--success-bg`
 - **Uncertain**: amber
-  - text: `#9A6700`
-  - bg: `#FFF4D6`
+  - use shared `--warning-text` / `--warning-bg`
 - **Gap**: red
-  - text: `#B42318`
-  - bg: `#FEECEC`
+  - use shared `--danger-text` / `--danger-bg`
 - **Verified through targeted task**: strong green
-  - text: `#0D7A4A`
-  - bg: `#E6F7EE`
+  - use shared success colors; retain the explicit verification label
 
 ### Workflow status
 
 - Draft: neutral gray
 - Pending / For Review: amber
-- Sent: blue
-- Submitted: blue-green
-- In Review: blue
+- Sent: gold
+- Submitted: gold
+- In Review: gold
 - Review Complete: green
 - Needs More Evidence: amber
 - Evidence Still Insufficient: red / muted red
@@ -307,15 +264,15 @@ Contains:
 
 Active item:
 
-- HR side: blue-accented
-- Candidate side: green-accented
+- HR side: gold-accented
+- Candidate side: gold-accented
 
 Sidebar must remain visually stable across pages. Both roles use the shared Sidebar, theme switch and semantic palette in [app/shared](../../app/shared/README.md). Keep role-specific navigation and business state in each app.
 
 ### Day / night behavior
 
 - Day mode uses a light sidebar and pale workspace; night mode uses dark sidebar and layered surfaces.
-- HR remains blue and Candidate remains green; evidence status meanings remain identical.
+- HR and Candidate share gold accents; role labels stay distinct and evidence status meanings remain identical.
 - The sun / moon sliding switch sits at the bottom of the sidebar, above help and user information, and remains usable when collapsed or in the mobile drawer. Follow system appearance until the user explicitly chooses; persist that choice when storage is available.
 - Theme applies to forms, dialogs, tables, charts, tooltips and empty states. Changing appearance must not reset task drafts or review outcomes.
 - Desktop collapse preserves icon labels, active state and counts. Mobile navigation is a dismissible drawer with focus management.

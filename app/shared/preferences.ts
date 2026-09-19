@@ -11,16 +11,17 @@ export function writePreference(key: string, value: string): void {
   try { localStorage.setItem(key, value); } catch { /* Keep this tab usable. */ }
 }
 
-export function resolveTheme(saved: string | null, systemDark: boolean): Theme {
-  return saved === 'light' || saved === 'dark' ? saved : systemDark ? 'dark' : 'light';
+export function resolveTheme(saved: string | null): Theme {
+  return saved === 'light' || saved === 'dark' ? saved : 'dark';
 }
 
 export function applyTheme(theme: Theme): void {
   document.documentElement.dataset.theme = theme;
   document.documentElement.style.colorScheme = theme;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#060606' : '#fffdf7');
 }
 
 // Called before React mounts, so the first app frame uses the saved preference.
 export function initializeTheme(): void {
-  applyTheme(resolveTheme(readPreference(themeKey), matchMedia('(prefers-color-scheme: dark)').matches));
+  applyTheme(resolveTheme(readPreference(themeKey)));
 }

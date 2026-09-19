@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Sidebar, useSidebar } from '../ui';
 import { Dialog } from '../api-ui';
+import { GlideSelect } from '../glide-select';
 import { candidateIds } from './client';
 import { useApi3 } from './controller';
 import type { CandidateId } from '../api3-types';
@@ -39,7 +40,7 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
   return <div className="eb-connected r5-app">
     <a href="#api3-main" className="eb-skip eb-action" onClick={e => { e.preventDefault(); document.getElementById('api3-main')?.focus(); }}>Skip to content</a>
     <Sidebar role={role} controller={sidebar} activePage={page} items={pages.map(([id, label], index) => ({ id, label, icon: <NavIcon index={index}/> }))} onNavigate={go} user={{ initials: role === 'hr' ? 'HR' : initials, name: role === 'hr' ? 'Operations lead' : displayName, title: role === 'hr' ? 'HarbourCart' : 'Synthetic candidate' }} helpLabel="Connected guide" onHelp={() => setHelp(true)}/>
-    <div className="eb-main" data-eb-content><header className="eb-api-topbar">{sidebar.menuButton}<span>{role === 'hr' ? 'Hiring workspace' : 'Candidate workspace'} / {pages.find(p => p[0] === page)?.[1]}</span><span className="r5-mode">API3 · shared local service</span></header>
+    <div className="eb-main" data-eb-content><header className="eb-api-topbar">{sidebar.menuButton}<span>{role === 'hr' ? 'Hiring workspace' : 'Candidate workspace'} / {pages.find(p => p[0] === page)?.[1]}</span><span className="r5-mode">API3 · shared service</span></header>
       <main id="api3-main" tabIndex={-1} className="eb-content">
         <section className="eb-api-status" aria-label="Shared service status"><div className="eb-heading"><span>{controller.fresh ? 'Connected · four-person shared case' : controller.loading ? 'Loading shared case…' : 'Refresh required · service data not current'}</span><button className="eb-action" disabled={controller.loading} onClick={() => void controller.refresh()}>{controller.loading ? 'Refreshing…' : 'Refresh shared case'}</button></div><small>Synthetic company and materials · Human judgments, server-calculated scores · Demo identities, not account authentication</small>
           {controller.error && <p role="alert" className="eb-feedback"><strong>{controller.error.code}</strong> — {controller.error.message}{controller.error.requestId && <small>Request ID: {controller.error.requestId}</small>}</p>}
@@ -48,13 +49,13 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
           {!data && !controller.loading && <p>Start the matching API3 backend at <code>{controller.base}</code>, then refresh. No local mock has replaced the service.</p>}
         </section>
         {controller.notice && controller.notice !== dismissedNotice && <p role="status" className="r5-notice">{controller.notice} <button className="eb-action" aria-label="Dismiss notice" onClick={() => setDismissedNotice(controller.notice)}>×</button></p>}
-        <div className="r5-person-bar"><span className="r5-avatar">{initials}</span><div><strong>{displayName}</strong><small>{data?.candidate.background ?? 'Select an explicit demo identity'}</small></div><label>Demo identity<select aria-label="Current candidate" value={candidateId} onChange={e => select(e.target.value as CandidateId)}>{candidateIds.map(id => <option value={id} key={id}>{comparison?.candidates.find(row => row.candidate.id === id)?.candidate.name ?? id}</option>)}</select></label></div>
+        <div className="r5-person-bar"><span className="r5-avatar">{initials}</span><div><strong>{displayName}</strong><small>{data?.candidate.background ?? 'Select an explicit demo identity'}</small></div><label>Demo identity<GlideSelect ariaLabel="Current candidate" value={candidateId} onChange={value => select(value as CandidateId)} options={candidateIds.map(id => ({value: id, label: comparison?.candidates.find(row => row.candidate.id === id)?.candidate.name ?? id}))}/></label></div>
         {data && comparison && (role === 'hr'
           ? <HRConnected key={`${data.sessionId}.${data.candidate.id}`} data={data} comparison={comparison} controller={controller} page={page} go={go} select={select}/>
           : <CandidateConnected key={`${data.sessionId}.${data.candidate.id}.${data.task.taskId}.${data.workflow.nextSubmissionVersion ?? data.currentSubmissionVersion ?? 1}`} data={data} controller={controller} page={page} go={go}/>)}
-        <footer className="eb-footer">EvidenceBridge · Reviewable evidence. Human decisions. · Formal state lives in the shared local service.</footer>
+        <footer className="eb-footer">EvidenceBridge · Reviewable evidence. Human decisions. · Formal state lives in the shared service.</footer>
       </main>
     </div>
-    {help && <Dialog title="Shared API3 workflow" close={() => setHelp(false)}><p>Use the HR and Candidate windows against the same local backend. Choose the intended candidate explicitly; refresh to receive the other window’s work.</p><p>Application materials and baseline annotations are synthetic presets. Baseline provenance identifies AI-authored annotation and pending human calibration. Scores use the public rubric and are not hiring probabilities.</p><p>Assessment, evidence review and the retained list are separate decisions. Only V1 More opens one V2; historical work stays read only. Private notes remain browser drafts and are excluded from submitted work and exports.</p><p>Model availability is shown honestly. There is no automatic fallback to mock data, no live SQL execution and no general upload or account system. Administrator reset remains a local script, outside this page.</p></Dialog>}
+    {help && <Dialog title="Shared API3 workflow" close={() => setHelp(false)}><p>Use the HR and Candidate windows against the same backend. Choose the intended candidate explicitly; refresh to receive the other window’s work.</p><p>Application materials and baseline annotations are synthetic presets. Baseline provenance identifies AI-authored annotation and pending human calibration. Scores use the public rubric and are not hiring probabilities.</p><p>Assessment, evidence review and the retained list are separate decisions. Only V1 More opens one V2; historical work stays read only. Private notes remain browser drafts and are excluded from submitted work and exports.</p><p>Model availability is shown honestly. There is no automatic fallback to mock data, no live SQL execution and no general upload or account system. Administrator reset remains a local script, outside this page.</p></Dialog>}
   </div>;
 }
