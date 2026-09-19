@@ -267,3 +267,8 @@
 .r5-assessment-header>.r5-api-assessment-summary { grid-column:1/-1; padding:14px; background:var(--surface-soft); border-radius:8px; }
 .r5-evidence-rail .r5-mark { padding:0; border:0; background:none; color:var(--text-secondary); text-align:left; }
 @media(max-width:600px) { .r5-assessment-header .eb-glide { margin-top:6px; width:100%; } }
+
+/* Keep candidate identity readable beside longer server-supplied descriptions. */
+.r5-person-bar>div { min-width:0; flex:1; }
+.r5-person-bar>label { flex-shrink:0; }
+.r5-person-bar>label>.eb-glide { min-width:160px; }

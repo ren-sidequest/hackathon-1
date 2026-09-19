@@ -49,7 +49,7 @@ test('actual V1 → More → V2 → Confirm, immutable histories, quotations and
   await candidate.getByRole('button',{name:'Add Key Findings',exact:true}).click();
   await candidate.getByLabel('Observation or idea').fill('😀中文 a bounded finding');
   await candidate.getByLabel('Reasoning & supporting evidence').fill('426,000 sessions and 7,668 orders show a pattern, not a cause.');
-  await candidate.getByLabel('Evidence source',{exact:true}).selectOption('website_traffic.csv');
+  await candidate.getByRole('combobox',{name:'Evidence source',exact:true}).click();await candidate.getByRole('listbox',{name:'Evidence source',exact:true}).getByRole('option',{name:'website_traffic.csv',exact:true}).click();
   await candidate.getByRole('button',{name:'Save card'}).click();
   await candidate.getByRole('button',{name:'Preview work sample'}).click();
   const downloadPromise=candidate.waitForEvent('download');await candidate.getByRole('button',{name:'Export public draft JSON'}).click();

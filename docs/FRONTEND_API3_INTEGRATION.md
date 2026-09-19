@@ -117,3 +117,8 @@ API3浏览器验收使用独立8793后端、6373 Candidate、6386 HR与临时SQL
 本轮修复预览草稿覆盖名单、慢分析阻塞人工操作、409刷新丢评论、取消勾选引用来源后校验缺失、POST成功但GET失败提前关表单。分析收据按当前或历史版本的候选人／提交ID／指纹精确清理。预置标注显示“AI-authored preset · human calibration pending”，人工保存后显示“Human assessment”，不直接把合同码preset_human解释为真人已标注。
 
 已知非阻塞体验限制：分析与普通写仍共享提示区，极端并发时迟到分析提示可能替换普通操作提示；输入、版本绑定与服务端冲突校验保留。真实模型实验、真人校准、上传解析、账号系统、公网联通另行安排；没有扩大本轮发布范围。
+# Black/gold UI coverage (2026-09-19)
+
+The connected API3 pages use the shared GlideSelect for all twelve formerly native selectors, including resource preview sorting and selectors inside assessment/card dialogs. Scores retain the distinct empty, NE and zero states. Evidence judgments, investigation cards and public work cards use SpotlightCard; only the active criterion and the assessment entry button gain StarBorder decoration. Motion never changes layout and respects reduced-motion preferences. Initial and historical assessment views resolve the active judgment's source quotation before choosing a fallback source.
+
+Run `npm run test:api3 --prefix app/candidate` for the connected flow and T25/T26 selector, source, theme and card regression cases. Screenshots and failure traces are under `.ci-results/api3-ui/`. Shared editor/resource changes also require `npm run test:api --prefix app/candidate` and `npm run test:revision5 --prefix app/candidate`. These tests use isolated local cases; they do not modify deployed data. The two original concept images are historical only; current approved black/gold and light/gold pages are the visual baseline.

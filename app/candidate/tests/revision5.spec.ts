@@ -276,15 +276,15 @@ test('candidate entry, company standards, dark sidebar and mobile comparison rem
 test('resource search, numeric sort and row-to-card preserve the exact source and private boundary',async({page},info)=>{
   await page.goto('/');await task(page,'Alex Chen');await role(page,'candidate');await page.getByRole('button',{name:'Start V1 draft'}).click();
   await expect(page.getByRole('navigation',{name:'Evidence workflow'}).locator('[aria-current=step]')).toContainText('Investigation');
-  await page.getByLabel('Filter channel',{exact:true}).selectOption('Paid Search');
+  await choose(page,'Filter channel','Paid Search');
   await expect(page.locator('.eb-data-overview tbody tr')).toHaveCount(1);await expect(page.locator('.eb-channel-bars')).toContainText('1.80%');
   await page.getByLabel('Find a resource',{exact:true}).fill('website');await page.getByRole('button',{name:'website_traffic.csv',exact:true}).click();
   const dialog=page.getByRole('dialog');await page.getByLabel('Filter resource rows').fill('Paid Search');await expect(dialog.locator('tbody tr')).toHaveCount(2);
-  await page.getByLabel('Sort resource column').selectOption({label:'sessions'});await page.getByRole('button',{name:'Ascending',exact:true}).click();
+  await page.getByRole('combobox',{name:'Sort resource column',exact:true}).click();await page.getByRole('listbox',{name:'Sort resource column',exact:true}).getByRole('option',{name:'sessions',exact:true}).click();await page.getByRole('button',{name:'Ascending',exact:true}).click();
   await expect(dialog.locator('tbody tr').first()).toContainText('426000');
   const row=await dialog.locator('tbody tr').first().locator('td').first().innerText();
   await dialog.getByRole('button',{name:`Create card from row ${row}`,exact:true}).click();
-  await expect(page.getByLabel('Evidence source',{exact:true})).toHaveValue('website_traffic.csv');
+  await expect(page.getByRole('combobox',{name:'Evidence source',exact:true})).toHaveAttribute('data-value','website_traffic.csv');
   await expect(page.getByLabel('Reasoning & supporting evidence')).toContainText(`Source row ${row}`);
   await page.getByLabel('Observation or idea').fill('Paid Search needs a controlled comparison');await page.getByRole('button',{name:'Save card'}).click();
   await expect(page.locator('.eb-board')).toContainText('sessions: 426000');
