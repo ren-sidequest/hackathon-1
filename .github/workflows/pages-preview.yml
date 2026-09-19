@@ -22,7 +22,7 @@ jobs:
       - name: Check out the approved application release
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          ref: 8b0231e9592052223e1512125387b14188fcda26
+          ref: 31edc5319ee40b1d5d6e9e658a1526d7a3ab2f35
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
@@ -39,11 +39,12 @@ jobs:
         run: |
           npm test --prefix app/candidate
           npm test --prefix app/hr
-      - name: Test Candidate browser workflows
+      - name: Test Candidate workflows and shared UI
         working-directory: app/candidate
         run: |
           npx playwright install --with-deps chromium
           npm run test:e2e
+          npm run test:ui
       - name: Build both public subpaths
         run: |
           npm run build --prefix app/candidate -- --base=/hackathon-1/candidate/
