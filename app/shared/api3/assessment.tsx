@@ -8,13 +8,23 @@ import { baseBinding, stageContext } from './client';
 import type { Api3Controller } from './controller';
 import { annotationLabel, assessmentProblem, percent, requirementNames, resolveSourceRef, stageNames, type DraftItem, type Source, type SourceContext } from './hr-model';
 
-export function Rubric({ data, close }: { data: Demo; close: () => void }) {
+export function Rubric({ data, close, initialCriterion }: { data: Demo; close: () => void; initialCriterion?: string }) {
+  const selected = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    if (!initialCriterion) return;
+    const frame = requestAnimationFrame(() => {
+      const detail = selected.current, dialog = detail?.closest('dialog');
+      detail?.querySelector('summary')?.focus({ preventScroll: true });
+      if (detail && dialog) dialog.scrollTop += detail.getBoundingClientRect().top - dialog.getBoundingClientRect().top - 24;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [initialCriterion]);
   return <Dialog title="Ten public assessment standards" close={close}><div className="r5-rubric">
     <p>{data.rubric.label}</p><p>{data.rubric.scope}</p>
     <div className="r5-formula"><strong>Criterion contribution = Mark ÷ 4 × 10</strong><p>{data.rubric.requirements.map(r => `${r.title} ${r.maxScore} points`).join(' · ')}</p><p>Complete skill % = skill contribution ÷ skill maximum × 100. One NE means no overall percentage. Assessed points are never scaled up.</p></div>
     {data.rubric.marks.map(m => <p key={m.mark}><strong>{m.mark}:</strong> {m.meaning}</p>)}<p>Not assessed means no judgment yet, and is distinct from NE and 0.</p>
     <p className="eb-muted">{data.rubric.version} · {data.rubric.provenance} · {data.rubric.calibrationStatus}. SQL is static review, not an execution check.</p>
-    {data.rubric.criteria.map(c => <details key={c.id}><summary><span>{c.id} · {c.title}</span><small>{c.maxScore} points</small></summary><p>{c.observableSupport}</p>{(['4', '2', '0'] as const).map(m => <p key={m}><strong>{m}/4:</strong> {c.anchors[m]}</p>)}</details>)}
+    {data.rubric.criteria.map(c => <details key={c.id} ref={c.id === initialCriterion ? selected : undefined} open={c.id === initialCriterion}><summary><span>{c.id} · {c.title}</span><small>{c.maxScore} points</small></summary><p>{c.observableSupport}</p>{(['4', '2', '0'] as const).map(m => <p key={m}><strong>{m}/4:</strong> {c.anchors[m]}</p>)}</details>)}
   </div></Dialog>;
 }
 
@@ -46,26 +56,27 @@ export function AssessmentPanel({ data, controller, initialStage = 'application_
   const historical = revision !== null && revision !== latest?.assessmentRevision;
   const currentWork = stage === 'application_review' || stage === `task_v${data.currentSubmissionVersion}`;
   const activeCriteria = data.rubric.criteria;
+  const activeId = activeCriteria.some(c => c.id === expanded) ? expanded : activeCriteria[0]?.id;
   const quotedContext = citation?.reused ? stageContext(data, 'application_review')! : context;
   const source = quotedContext.sources.find(s => s.sourceId === citation?.sourceId) ?? quotedContext.sources[0] ?? null;
   const setStageView = (next: Stage) => { setStage(next); setRevision(null); setCitation(null); setExpanded(null); };
   return <>
-    <section className="eb-panel r5-assessment-header"><div className="eb-heading"><h2>Evidence before a number</h2><button className="eb-action primary" disabled={controller.busy || !!controller.pending || historical || !currentWork} onClick={() => { setEdit(true); onEditingChange?.(true); }}>Edit human assessment</button></div>
+    <section className="eb-panel r5-assessment-header" aria-label="Assessment context"><div className="eb-heading"><h2>Evidence before a number</h2><button className="eb-action primary" disabled={controller.busy || !!controller.pending || historical || !currentWork} onClick={() => { setEdit(true); onEditingChange?.(true); }}>Edit human assessment</button></div>
       <label className="eb-field">Material stage<GlideSelect ariaLabel="Assessment stage" value={stage} onChange={value=>setStageView(value as Stage)} options={[{value:'application_review',label:'Application materials · comparison baseline'},...data.versions.map(v=>({value:`task_v${v.submission.submissionVersion}`,label:`Task V${v.submission.submissionVersion} · ${data.task.targetRequirementId && requirementNames[data.task.targetRequirementId]}`}))]}/></label>
       <div className="r5-meta"><span>{stageNames[stage]}</span><span>{record ? `${annotationLabel(record.annotationMode)} · revision ${record.assessmentRevision}` : 'Not assessed'}</span><span>{data.rubricVersion}</span></div>
       {stage !== 'application_review' && <p className="eb-feedback">Target: {data.task.targetRequirementId && requirementNames[data.task.targetRequirementId]}. This task is separate from the application comparison. {record?.reuseApplication ? `Non-target criteria explicitly reuse application assessment revision ${record.reuseApplication.assessmentRevision}.` : 'Non-target criteria have no inherited score; application reuse is an explicit choice when saving.'}</p>}
       {(!currentWork || historical) && <p className="eb-feedback">Historical assessment and work are read only. Select the current stage and latest revision to create a new assessment.</p>}
-      {record && <div className="r5-three"><div><strong>{record.score.overallPercentage != null ? percent(record.score.overallPercentage) : record.score.status === 'needs_evidence' ? 'Needs evidence' : 'Not assessed'}</strong><p>{record.score.status === 'pending' ? 'Not fully assessed' : record.score.status === 'needs_evidence' ? 'NE present · no overall percentage' : 'Job evidence match'}</p></div><div><strong>{percent(record.score.coveragePercent)}</strong><p>Evidence coverage · not a hiring prediction</p></div><div><strong>{record.score.accruedScore.toFixed(1)}/100</strong><p>Accumulated contributions · not scaled up</p></div></div>}
+      {record && <div className="r5-three r5-api-assessment-summary"><div><strong>{record.score.overallPercentage != null ? percent(record.score.overallPercentage) : record.score.status === 'needs_evidence' ? 'Needs evidence' : 'Not assessed'}</strong><p>{record.score.status === 'pending' ? 'Not fully assessed' : record.score.status === 'needs_evidence' ? 'NE present · no overall percentage' : 'Job evidence match'}</p></div><div><strong>{percent(record.score.coveragePercent)}</strong><p>Evidence coverage · not a hiring prediction</p></div><div><strong>{record.score.accruedScore.toFixed(1)}/100</strong><p>Accumulated contributions · not scaled up</p></div></div>}
       <details><summary>Assessment history & source binding</summary><label className="eb-field">Assessment revision<select aria-label="Assessment revision" value={revision ?? 'latest'} onChange={e => { setRevision(e.target.value === 'latest' ? null : Number(e.target.value)); setCitation(null); }}><option value="latest">Latest · {latest ? `revision ${latest.assessmentRevision}` : 'not assessed'}</option>{history.map(r => <option key={r.assessmentId} value={r.assessmentRevision}>Revision {r.assessmentRevision} · {annotationLabel(r.annotationMode)} · {r.operatorLabel}</option>)}</select></label><small>{data.candidate.id} · {context.evidenceSnapshotId} · {context.fingerprint}</small>{record && <p>{record.operatorLabel} · {new Date(record.createdAt).toLocaleString()} · {record.assessmentId}</p>}<p>The original application baseline stays immutable; each human save appends a revision.</p><p>{data.application.baseline.provenance.actualAnnotation} · {data.application.baseline.provenance.actualReview}</p><p>Human calibration: {data.application.baseline.provenance.humanCalibration}</p></details>
     </section>
     <div ref={reviewGrid} className="r5-assessment-grid guide-review-grid">
       <nav className="r5-evidence-rail" aria-label="Evidence criteria"><div className="r5-evidence-nav-heading"><h2>Assessment criteria</h2><small>Select a standard · inspect its evidence · choose the next step</small></div><div className="r5-evidence-options">{activeCriteria.map(c=>{
         const direct=record?.items.find(e=>e.criterionId===c.id), reused=!direct?record?.reusedItems.find(e=>e.criterionId===c.id):undefined, entry=direct??reused;
-        const selected=(expanded??'B3')===c.id;
+        const selected=activeId===c.id;
         return <button className="r5-criterion-toggle" key={c.id} aria-label={`${c.id} · ${c.title}`} title={`${c.id} · ${c.title}`} aria-expanded={selected} onClick={()=>{setExpanded(c.id);const ref=entry?.sourceRefs[0];setCitation(ref?{sourceId:ref.sourceId,quote:ref,reused:!!reused}:null);}}><span className="r5-criterion-id">{c.id}</span><span><strong>{c.title}</strong><small className={`r5-mark ${!entry || entry.mark === 'NE' ? 'is-unknown' : ''}`}>{!entry?'Not assessed':entry.mark==='NE'?'NE':`${entry.mark}/4`}</small></span></button>;
       })}</div></nav>
       <aside className="r5-original-pane"><section className="eb-panel"><label className="eb-field">Original material<GlideSelect ariaLabel="Review source" value={source?.sourceId??''} onChange={value=>setCitation({sourceId:value,reused:citation?.reused})} options={quotedContext.sources.map(s=>({value:s.sourceId,label:`${s.sourceId} · ${s.location}`}))}/></label></section><div className="guide-source-scroll" tabIndex={0} role="region" aria-label="Scrollable original material"><InlineSource name={data.candidate.name} candidateId={data.candidate.id} context={quotedContext} source={source} quote={citation?.quote} reveal={citation?.reveal}/></div><details className="guide-background"><summary>Reading this evidence</summary><p>Assess individual standards, review the submitted evidence and retain a candidate as separate human decisions. A quote does not prove execution.</p></details></aside>
-      <section aria-label="Assessment criteria">{activeCriteria.filter(c=>c.id===(expanded??'B3')).map(c=>{
+      <section aria-label="Assessment criteria">{activeCriteria.filter(c=>c.id===activeId).map(c=>{
         const direct=record?.items.find(e=>e.criterionId===c.id), reused=!direct?record?.reusedItems.find(e=>e.criterionId===c.id):undefined, entry=direct??reused;
         const contribution=record?.score.criteria.find(e=>e.criterionId===c.id)?.contribution;
         return <React.Fragment key={c.id}><header className="r5-judgment-heading"><small>REVIEW THIS EVIDENCE · {c.id}</small><h2>{c.title}</h2></header><div className="guide-judgment-scroll" tabIndex={0} role="region" aria-label="Scrollable evidence judgment"><article className="eb-panel r5-criterion"><div className="r5-criterion-body">

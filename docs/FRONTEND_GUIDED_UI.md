@@ -42,7 +42,7 @@ python scripts/check_repository.py
 git diff --check
 ```
 
-浏览器测试只使用本工作副本控制文件和临时SQLite。Windows重启检查通过匹配进程PID与generation的控制文件请求关闭／重开测试服务，不向正式服务发送控制请求。检查包含四人V1/V2、回执重试、来源绑定、私有内容隔离、冲突、持久化、新任务向导和日夜移动截图。截图与失败trace在 `.ci-results/api3-ui/`。
+浏览器测试只使用本工作副本控制文件和临时SQLite。Windows重启检查通过临时数据库目录中的generation控制文件请求关闭／重开测试服务，不向正式服务发送控制请求。检查包含四人V1/V2、回执重试、来源绑定、私有内容隔离、冲突、持久化、新任务向导和日夜移动截图。截图与失败trace在 `.ci-results/api3-ui/`。
 
 本地设计预览：HR `http://127.0.0.1:6586/#company`，Candidate `http://127.0.0.1:6573/`；独立服务8896，只使用 `.ci-results/guided-preview/` 中的合成案例SQLite和日志，不读取正式.env，不启用模型。首次从HR选Alex、打开B3并拟定任务，再到Candidate继续相同人。页面保留真实服务与合成资料标识。
 
@@ -74,3 +74,15 @@ git diff --check
 本轮只修改 coverage-cell.tsx、guidance.css、T25测试和本文。覆盖/累计分数改为并排小标签，模块约63px高；十格视觉6px，桌面点击区22px高。移除新加的1240px表格最小宽度，覆盖列180px，沿用原950px表格底线。完整/缺项说明收进标签title和信息提示，数值、颜色语义和跨人定位不变。
 
 实际执行隔离端口 test:api3 -- --grep T25 --reporter=line：1/1通过，逐人检查模块不超过66px、标签同排、1440px窗口表格无额外横向滚动、数据和定位正确；日夜截图已查看。两端独立预览构建、git diff --check通过。未新增依赖或修改后端。已更新6573/6586本地预览，未上传合并部署。
+
+## 与服务器版本整合及发布准备
+
+本节记录用户授权上传、合并、部署后的状态；前文各阶段“未发布”为当时的历史记录。
+
+整合 origin/main 的 PR11（3ef673b）时，保留 API3 金色选择器、比较看板、Candidate Spotlight/StarBorder 和标准弹窗的精确定位。公司信息保留本轮紧凑布局；关闭标准弹窗后恢复触发按钮焦点。测试沿用主分支临时 SQLite 目录内的 generation 重启请求，并保留独立端口配置；未改生产接口。
+
+实际运行：Candidate 单元79/79、HR单元8/8、API3全套26/26、双端build、frontend-types-v3一致性、20份文档链接与diff检查通过。首轮整合回归发现自定义选择器的label同时匹配隐藏listbox，以及标准弹窗焦点未返回；修复精确combobox定位和焦点恢复后，完整26项通过。T23/T24保留主分支黑金回归，T25/T26验证新引导及紧凑标签。
+
+实际文件范围：App.tsx、assessment.tsx、candidate.tsx、controller.ts、hr.tsx、guidance.tsx、guidance.css、coverage-cell.tsx；API3浏览器测试与配置、共享README、AGENTS.md和本文。无新增依赖、后端源代码或数据库结构变化。
+
+发布沿用 [服务器发布说明](FRONTEND_SERVER_RELEASE.md)：从合并后的干净提交构建，API指向同源 /gateway；版本化静态目录并原子切换 frontend-current。保留前一版本及旧哈希资源；后端进程和数据库不重启、不清空。发布结果以PR、服务器release manifest和线上只读验收为准。
