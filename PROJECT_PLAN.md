@@ -3,18 +3,18 @@
 ## 当前状态
 
 - 仓库：`ren-sidequest/hackathon-1`。
-- 阶段：HR 与 Candidate 均已实现独立可运行的前端演示；跨端数据同步仍待约定。
+- 阶段：两端独立前端与共享后端单轮基线已交付；本次修订 3 有限 V1/V2 后端扩展已完成本地实现与验证，双端 API 接入与浏览器联调待小傅完成。
 - 已确定：使用分支和 PR 协作；先本地验证，再提交审阅；合并与部署分开。
-- 运行目标：双方各自在自己的电脑准备独立运行副本，具体系统与依赖待确认。不预设公网部署或云服务。
+- 运行目标：沿用同机 Candidate Vite、HR Vite、后端 API 三服务；端口与 Origin 见后端 README。不预设公网部署或云服务。
 - 产品需求以 [产品蓝图](docs/product/EvidenceBridge_PRODUCT_BLUEPRINT.md) 为依据，视觉与交互以 [Baseline](docs/product/EvidenceBridge_BASELINE.md) 为依据；两份文档包含概念图引用。本文件记录实施安排与技术决策，不复制整套产品规范。执行准则见 [AGENTS.md](AGENTS.md)。
 
-## 本轮后端执行覆盖（2026-09-19）
+## 本轮后端执行覆盖（2026-09-19 · 修订 3）
 
-用户确认 TypeScript + Fastify + SQLite，并从同一接口 schema 生成 OpenAPI 文档。小傅负责 HR 与 Candidate 两端页面和 API 接入；本轮实现者仅负责 `app/backend/`、统一案例、接口合同、测试与交接。下文旧“真实 API 未开始/尚未约定”的条目是原前端阶段记录，后端最新状态以此节及 [后端交付](app/backend/README.md)为准。
+沿用已确认 TypeScript + Fastify + SQLite 和自动 OpenAPI，基于已交付单轮后端 `6fb19a9` 继续实施。小傅负责 HR/Candidate 页面与 API 接入；本任务负责后端、统一案例、合同、测试与交接。先行改动与验收见 [REVISION_PLAN](docs/backend/REVISION_PLAN.md)。
 
-冻结范围：HarbourCart / Junior Data Analyst / Alex Chen，三个要求，一个任务、一次提交、一次人工审核。三结果分开，两个不足分支终止本轮且保持 Uncertain；不套用旧前端的重开/重提。唯一产品 AI 环节为当前作品的五维观察；初始材料与任务为显式预置。数据保留 3.4%→2.6% 场景，不使用另一份两渠道案例。
+当前范围：HarbourCart / Junior Data Analyst / Alex Chen，三个要求、一个任务；V1 + 最多一次 V2，每版最多一次人工审核。仅 V1 Needs More Evidence 开放 V2；V1 Confirm/Insufficient 和 V2 Confirm/Insufficient 终局，V2 More/V3 不开放。不足保持 Uncertain，保留两版只读历史而非无限重提/重开原审核。唯一产品 AI 是各版作品的五维观察；申请/任务预置，3.4%→2.6% 案例不变。
 
-[API](docs/backend/API.md)是新共享合同，[DATA](docs/backend/DATA.md)是本轮统一事实来源，[验收矩阵](docs/backend/ACCEPTANCE.md)与[实际测试](docs/backend/TEST_RESULTS.md)分开记录。初始阶段完成本地代码、测试与 AI agent 审查；用户随后确认按仓库规范提交独立分支并创建 PR。合并、部署与双端 UI 接入另行处理，已有页面与历史审查副本受保护。
+[API](docs/backend/API.md)是共享合同，[DATA](docs/backend/DATA.md)是统一事实来源，[验收矩阵](docs/backend/ACCEPTANCE.md)和[实际测试](docs/backend/TEST_RESULTS.md)分开记录。旧版 116 项测试及 10 项客户端检查是历史结果；两版扩展已新增并重跑，当前结果以 TEST_RESULTS 第 0 节为准。本次到本地实现、测试、AI agent 审查和交接，不包含远端推送、PR 更新、合并或部署；现有前端与历史审查副本受保护。
 
 ## 1. 项目目标
 
@@ -29,16 +29,17 @@
 
 ## 2. MVP 范围
 
-以浏览器中完整、稳定、可理解的补证演示为目标；允许静态数据、本地状态、模拟过程和预生成 AI 输出。生产后端完整性不是 MVP 验收条件。
+以浏览器中完整、稳定、可理解的补证演示为目标；申请/任务可预置，辅助模拟与预生成输出须标注。正式两版作品、审核与共享报告由本轮 API/SQLite 承载；生产平台完整性不是 MVP 验收条件。
 
 | 功能 | 必须／可选／不做 | 完成标准 | 当前状态 |
 | --- | --- | --- | --- |
 | 候选人申请与 HR 初始证据报告 | 必须 | 可加载演示材料，显示 SQL、Data Analysis 为 Supported，Business Problem Solving 为 Uncertain | Candidate 申请与 HR 初始报告均已实现 |
 | HR 审阅并发送定向任务 | 必须 | 显示补证原因、任务场景和发送反馈，候选人侧能收到对应任务 | HR 发送与收到预设样本已模拟；真实跨端待接入 |
 | 候选人工作台 | 必须，最高视觉优先级 | 资源、分析图表、可编辑调查板、最终工作样本和过程时间线组成连贯体验 | Candidate 已实现本地演示 |
-| HR 审核与更新报告 | 必须 | 查看最终样本、过程与提取证据，提供三种审核动作；确认后显示补证前后变化 | HR 本地演示已实现 |
-| 候选人提交状态 | 必须 | 提交、审核中、审核完成等状态与演示流程一致 | 已实现；HR 三种结果通过 Demo controls 模拟 |
-| 真实 API、数据库、认证、上传处理与 AI 编排 | 可选 | 仅在能改善可见演示且另行确认技术方案后引入 | 未开始 |
+| HR 审核与更新报告 | 必须 | 查看最终样本、过程与提取证据，V1 提供三种动作、V2 两个终局；确认后显示补证前后变化 | HR 本地演示已实现 |
+| 候选人提交状态 | 必须 | V1/V2 提交、等待补交、审核中、终局与共享 workflow 一致 | 已实现；HR 三种结果通过 Demo controls 模拟 |
+| 共享 API、SQLite、有限两版 | 必须 | V1 More 才开放 V2；两版作品/分析/审核独立，终局/上限/恢复可验证 | 本地后端验证完成，UI 待接入；实际结果见 TEST_RESULTS |
+| 生产认证、上传和完整 AI 编排 | 后置 | 不扩建账号、PDF/OCR 或动态出题平台 | 不属本轮 |
 | 原生桌面／移动应用、候选人数值排名系统 | 不做 | 保持 Web 应用与证据补充、人类审核定位 | 不适用 |
 
 ## 3. 技术方案
@@ -47,18 +48,18 @@
 | --- | --- |
 | 应用形态与技术栈 | 浏览器 Web 应用，桌面演示优先；Candidate 已批准 React + TypeScript + Vite、Lucide、Recharts、普通 CSS；HR 使用 React 19 + Vite 7 |
 | 运行时、包管理器及版本 | Candidate 使用 Node.js 24 LTS（最低 22.12）；HR 使用 Node.js 22.12+；各端使用 npm 和独立 package-lock.json |
-| 模块划分与代码目录 | HR 与 Candidate 分别设计实现；已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md)，两端均有独立应用与锁文件；共享主题、侧栏和 UI 偏好位于 [app/shared/](app/shared/README.md)，业务流程仍归各端维护 |
-| 接口、数据结构与存储方式 | 两端各自使用浏览器 localStorage；Candidate 内部使用 reducer，重置清除本端状态。跨端 API 尚未约定，JSON 导出仅是本端演示产物 |
-| 外部服务及离线／模拟方案 | 允许静态 JSON、本地状态和预生成输出；是否引入真实服务待确认，不默认需要生产后端 |
+| 模块划分与代码目录 | HR 与 Candidate 分别设计实现；已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md)，两端均有独立应用与锁文件；共享主题、侧栏和 UI 偏好位于 [app/shared/](app/shared/README.md)，草稿/交互归各端，正式工作流与版本归后端 |
+| 接口、数据结构与存储方式 | schema 2.0 返回当前投影、最多两版记录和 workflow 动作；SQLite 保存正式作品/分析/审核。前端 localStorage 只保存草稿/偏好，JSON 为备份 |
+| 外部服务及离线／模拟方案 | 申请/任务/资源明确预置；唯一 AI 为分版作品观察，disabled/manual_simulation/live/真实回放分开，真实实验另验 |
 | 本地运行方式和演示设备 | Candidate：dev（5173）、build + preview（4173）；HR：dev / build / preview（--prefix app/hr，5186）；本机浏览器 |
 
 技术选择应服务于 MVP、团队熟悉程度和活动时间。引入外部服务时说明网络、成本和凭据需求，不默认已有账号或额度。
 
-HR 和 Candidate 由用户与朋友分别负责，具体人员对应哪一端由任务确认。双方使用各自本地副本和独立分支，通过 PR 整合；共享外壳、基础组件风格、状态命名和演示场景遵循 Baseline。跨端变更先协调输入输出及文件归属，不覆盖另一端工作。
+小傅负责 HR 与 Candidate 全部页面及 API 接入，本任务负责后端、合同、统一数据、测试和交接。双方使用各自本地副本和独立分支，通过 PR 整合；共享外壳、基础组件风格、状态命名和演示场景遵循 Baseline。跨端变更先协调输入输出及文件归属，不覆盖另一端工作。
 
 ## 3.1 本轮界面统一范围
 
-两端已接入共享日夜主题与折叠侧栏，使用现有 React / CSS，不新增第三方运行依赖。主题和侧栏偏好与业务存储分离，跨端数据同步仍未实现。额外 HR 评分暂缓，后续明确评价对象、标准与候选人可见性后再设计。
+两端已接入共享日夜主题与折叠侧栏，使用现有 React / CSS，不新增第三方运行依赖。主题和侧栏偏好与业务存储分离，正式业务 API 联调仍待接入；共享 UI 偏好不是作品/审核同步。额外 HR 评分暂缓，后续明确评价对象、标准与候选人可见性后再设计。
 
 竞赛要求记录（依据用户补充）：允许合成与模拟数据，同时要求有意义地使用 AI 或 AI-enabled technology、诚实说明成果；目前未确认有现场必须联网调用模型的条款。具体预生成展示方式是否满足本场要求，待向 mentor 确认。现有模拟流程和预生成证据不据此宣称已经满足赛事 AI 要求。
 
@@ -73,11 +74,11 @@ HR 和 Candidate 由用户与朋友分别负责，具体人员对应哪一端由
 
 ## 5. 验收与演示
 
-- 核心流程：加载候选人材料 → HR 查看不确定能力 → 确认并发送任务 → Candidate 在工作台完成调查并提交 → HR 查看三层证据并人工确认 → 报告从 Uncertain 更新为 Verified through targeted task，候选人看到对应审核状态。
-- 审核分支：Needs More Evidence 与 Evidence Still Insufficient 不应误显示为已验证；Candidate 模拟中 More 重开原草稿并允许重提；Insufficient 完成证据审核但不标记已验证；HR 本地保留 Uncertain 与必填审核备注，可重新打开审核。跨端同步仍待约定。
-- 错误与边界情况：至少覆盖空调查内容提交、重复提交、刷新后的状态以及演示重置；Candidate 已覆盖缺少任一板块或摘要时阻止提交、重复提交保护、刷新恢复与重置；HR 已覆盖空任务、重复发送/加载、刷新恢复与演示重置。
+- 核心流程：预置材料/缺口→发送原任务→提交 V1→HR 直接终局，或具体补证意见→同会话 V2→终局审核→当前报告；两版历史只读。
+- 审核分支：仅 V1 More→awaiting_revision；目标仍 Uncertain，Candidate 根据真实 comment 编辑隔离的 V2 草稿。每版原审核不重开；V2 More/V3、未经补证请求的 V2、旧版新操作与错误前版绑定返回明确错误。
+- 边界：除原单轮输入/时序/幂等/隐私/来源外，验证同 session/task 的两版、终局/上限、分版观察、审核/分析迟到竞态、重启/reset、旧 1.0 库保留。已有前端单测/构建也保留并重跑，不用旧绿灯代替新联调。
 - 演示准备：统一使用文档中的 HarbourCart 场景（流量 +18%、转化率 3.4% → 2.6%、广告支出 +15%）；Candidate 的操作脚本和 Demo controls 重置入口见 [运行说明](app/candidate/README.md)；HR 操作脚本见 [HR README](app/hr/README.md)，侧栏提供 Reset demo。
-- 无网络或外部服务失败时的演示安排：优先可控静态数据和预生成输出；真实服务若获准引入，另行约定失败反馈及演示方案。
+- 模型网络失败时的演示安排：本机 API/SQLite 保留原作品和人工审核；disabled/manual_simulation/真实回放分别标注。真实模型实验另行留存输入输出证据，不以模拟成功代替。
 - 通过标准：相关测试和构建通过，核心场景在目标电脑实际运行；未完成验证明确记录，不由 CI 绿灯代替。
 
 ## 6. 方案维护

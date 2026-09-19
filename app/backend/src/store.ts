@@ -39,10 +39,11 @@ function lockDatabase(path: string): () => void {
   throw new Error('Database lock acquisition failed');
 }
 
-export type TaskState = { taskId: string; status: 'draft' | 'sent' | 'submitted' | 'reviewed'; instructions: string; sentAt: string | null };
+export type TaskState = { taskId: string; status: 'draft' | 'sent' | 'submitted' | 'awaiting_revision' | 'reviewed'; instructions: string; sentAt: string | null };
+export type VersionState = { submissionId: string; analysis: AnalysisState; review: ReviewRecord | null };
 export type State = {
-  schemaVersion: '1.0'; sessionId: string; datasetVersion: string; revision: number;
-  task: TaskState; submissionId: string | null; analysis: AnalysisState; review: ReviewRecord | null;
+  schemaVersion: '2.0'; sessionId: string; datasetVersion: string; revision: number;
+  task: TaskState; versions: VersionState[];
 };
 export type StoredResponse = { status: number; body: unknown };
 export class Store {
@@ -55,6 +56,13 @@ export class Store {
     let opened: DatabaseSync | undefined;
     try {
     opened = new DatabaseSync(path); this.db = opened;
+    // Inspect before any DDL/PRAGMA writes: v1 files are preserved, never silently reset or migrated.
+    const format = this.db.prepare('PRAGMA user_version').get() as { user_version: number };
+    const tables = this.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'").all() as { name: string }[];
+    if (format.user_version !== 2 && (format.user_version !== 0 || tables.length !== 0))
+      throw new Error('Incompatible demo database format; preserve it and select a new DATABASE_PATH for schema 2.0');
+    if (format.user_version === 2 && !['demo_state', 'submissions', 'idempotency'].every(name => tables.some(t => t.name === name)))
+      throw new Error('Stored database schema is incomplete; preserve it for diagnosis');
     if (path !== ':memory:') chmodSync(path, 0o600);
     this.db.exec(`
       PRAGMA journal_mode = WAL;
@@ -63,7 +71,8 @@ export class Store {
       PRAGMA foreign_keys = ON;
       CREATE TABLE IF NOT EXISTS demo_state (id INTEGER PRIMARY KEY CHECK (id=1), state_json TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS submissions (
-        id TEXT PRIMARY KEY, session_id TEXT NOT NULL UNIQUE, content_fingerprint TEXT NOT NULL, snapshot_json TEXT NOT NULL
+        id TEXT PRIMARY KEY, session_id TEXT NOT NULL, submission_version INTEGER NOT NULL CHECK(submission_version IN (1,2)),
+        content_fingerprint TEXT NOT NULL, snapshot_json TEXT NOT NULL, UNIQUE(session_id,submission_version)
       );
       CREATE TRIGGER IF NOT EXISTS submissions_immutable BEFORE UPDATE ON submissions
         BEGIN SELECT RAISE(ABORT, 'immutable submission'); END;
@@ -71,6 +80,7 @@ export class Store {
         session_id TEXT NOT NULL, path TEXT NOT NULL, key TEXT NOT NULL, request_hash TEXT NOT NULL,
         status INTEGER NOT NULL, body_json TEXT NOT NULL, PRIMARY KEY(session_id,path,key)
       );
+      PRAGMA user_version = 2;
     `);
     } catch (error) { opened?.close(); this.releaseLock(); throw error; }
   }
@@ -87,12 +97,20 @@ export class Store {
     this.db.prepare('INSERT INTO demo_state VALUES(1,?) ON CONFLICT(id) DO UPDATE SET state_json=excluded.state_json').run(JSON.stringify(state));
   }
   insertSubmission(submission: Submission): void {
-    this.db.prepare('INSERT INTO submissions VALUES(?,?,?,?)').run(submission.submissionId, submission.sessionId, submission.contentFingerprint, JSON.stringify(submission));
+    this.db.prepare('INSERT INTO submissions VALUES(?,?,?,?,?)').run(submission.submissionId, submission.sessionId, submission.submissionVersion, submission.contentFingerprint, JSON.stringify(submission));
   }
   getSubmission(id: string): Submission {
-    const row = this.db.prepare('SELECT snapshot_json FROM submissions WHERE id=?').get(id) as { snapshot_json: string } | undefined;
+    const row = this.db.prepare('SELECT * FROM submissions WHERE id=?').get(id) as {
+      id: string; session_id: string; submission_version: number; content_fingerprint: string; snapshot_json: string;
+    } | undefined;
     if (!row) throw new Error('Stored submission is missing');
-    return JSON.parse(row.snapshot_json) as Submission;
+    const sub = JSON.parse(row.snapshot_json) as Submission;
+    if (sub.submissionId !== row.id || sub.sessionId !== row.session_id || sub.submissionVersion !== row.submission_version
+      || sub.contentFingerprint !== row.content_fingerprint) throw new Error('Stored submission metadata is inconsistent');
+    return sub;
+  }
+  submissionIds(): string[] {
+    return (this.db.prepare('SELECT id FROM submissions ORDER BY submission_version').all() as { id: string }[]).map(row => row.id);
   }
   getIdempotency(session: string, path: string, key: string): (StoredResponse & { hash: string }) | null {
     const row = this.db.prepare('SELECT request_hash,status,body_json FROM idempotency WHERE session_id=? AND path=? AND key=?').get(session, path, key) as { request_hash: string; status: number; body_json: string } | undefined;
@@ -104,9 +122,11 @@ export class Store {
   }
   /** Reset removes past data; retain at most the most recent reset receipt. */
   clear(): void { this.db.exec('DELETE FROM submissions; DELETE FROM idempotency;'); }
-  interruptPending(session: string, attemptId: string): void {
-    this.db.prepare("UPDATE idempotency SET status=503,body_json=? WHERE session_id=? AND path='/api/demo/analysis' AND status=202")
-      .run(JSON.stringify({ error: { code: 'AI_INTERRUPTED', message: 'Analysis was interrupted. Read the saved case and retry with a new key.', requestId: attemptId, retryable: true } }), session);
+  interruptPending(session: string, attemptId: string, code = 'AI_INTERRUPTED', status = 503): void {
+    this.db.prepare("UPDATE idempotency SET status=?,body_json=? WHERE session_id=? AND path='/api/demo/analysis' AND status=202 AND json_extract(body_json,'$.data.analysis.attemptId')=?")
+      .run(status, JSON.stringify({ error: { code,
+        message: code === 'AI_REVIEW_CLOSED' ? 'Human review closed this analysis attempt. Read the version history.' : 'Analysis was interrupted. Read the saved case and retry with a new key.',
+        requestId: attemptId, retryable: code === 'AI_INTERRUPTED' } }), session, attemptId);
   }
   health(): boolean { return Boolean(this.db.prepare('SELECT 1 AS ready').get()); }
   close(): void { if (this.closed) return; this.closed = true; try { this.db.close(); } finally { this.releaseLock(); } }

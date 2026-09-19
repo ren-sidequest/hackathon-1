@@ -1,10 +1,10 @@
 {
-  "schemaVersion": "1.0",
-  "sessionId": "90b3d55d-2675-45ed-8fc6-d9b8a82ab6f8",
-  "taskId": "6dbf5cd7-021b-4d3f-aac9-e72217534f4f",
+  "schemaVersion": "2.0",
+  "sessionId": "17e65067-2dfb-49de-a0e0-737613478332",
+  "taskId": "5a504c4f-45e4-4c1e-bcc4-6d6cf60a463a",
   "datasetVersion": "harbourcart-2026-09-v1",
-  "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-  "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+  "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+  "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
   "requirementId": "business-problem-solving",
   "decision": "confirm",
   "comment": "Synthetic API test decision: confirm this bounded work-sample evidence only; causal explanations and real-world performance remain uncertain."

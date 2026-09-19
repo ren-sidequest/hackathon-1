@@ -1,6 +1,6 @@
 # hackathon-1
 
-`ren-sidequest` 的黑客松项目 **EvidenceBridge**：找出候选人材料中的能力证据缺口，通过定向工作样本任务补充证据，供 HR 人工审核。MVP 是前端演示优先的浏览器 Web 应用；产品文档与概念图已接入，HR 与 Candidate 的独立前端演示均已实现，共享后端已在本轮分支实现，双端 UI API 接入待小傅完成。
+`ren-sidequest` 的黑客松项目 **EvidenceBridge**：找出候选人材料中的能力证据缺口，通过定向工作样本任务补充证据，供 HR 人工审核。MVP 是前端演示优先的浏览器 Web 应用；产品文档与概念图已接入，HR 与 Candidate 的独立前端演示均已实现，共享后端已交付单轮基线，本轮按修订 3 扩展为 V1 + 最多一次 V2，双端 UI API 接入待小傅完成。
 
 ## 从这里开始
 
@@ -18,17 +18,28 @@
 
 开工不要求汇报朋友在做什么；接手同一分支、修改重叠或共用接口受影响时再协调。双方各用自己的 GitHub 账号和本地副本，无需安装同一套个人 Skill。
 
-HR 与 Candidate 由两位协作者分别设计和实现，各自分支、各自 PR。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个开发目录。Candidate 使用 React / TypeScript / Vite，HR 使用 React + Vite；两端共享产品基线，尚无真实数据联通或统一根构建。
+现有作品继续保留；当前小傅负责 HR/Candidate 两端页面和 API 接入，本任务负责后端与合同。已建立 [app/hr/](app/hr/README.md) 与 [app/candidate/](app/candidate/README.md) 两个开发目录。Candidate 使用 React / TypeScript / Vite，HR 使用 React + Vite；两端共享产品基线，尚无真实数据联通或统一根构建。
 
-## 本轮共享后端
+## 本轮共享后端：修订 3 有限两版
 
-新增 [TypeScript + Fastify + SQLite 后端](app/backend/README.md)，保存同一任务、不可变作品、五维观察、人工决定与报告。只运行一个本机服务，保留原前端页面；固定一次提交、一次审核，不扩展多轮平台。
+新增 [TypeScript + Fastify + SQLite 后端](app/backend/README.md)，保存同一任务、不可变作品、五维观察、人工决定与报告。只运行一个本机 API 服务，保留原两端 Vite 页面。仅 V1 Needs More Evidence 开放同任务 V2；每版最多一次审核，V2 只作终局判断；保留两版作品/分析/意见，不扩展无限轮次或复杂版本平台。
 
+- [先行计划与新增验收](docs/backend/REVISION_PLAN.md)
 - [接口合同与自动 OpenAPI](docs/backend/API.md)、[小傅接入清单](docs/backend/HANDOFF.md)
 - [统一案例事实与前端替换位置](docs/backend/DATA.md)、[架构取舍](docs/backend/ADR.md)
 - [实际测试结果及未验证事项](docs/backend/TEST_RESULTS.md)、[产品验收标准](docs/backend/ACCEPTANCE.md)
 
-当前 GitHub Pages 和双端 `localStorage` 演示仍是旧前端路径；后端 API 测试与旧页面回归都不等同于双端 UI 已联通。后端通过独立分支和 PR 交付，合并与部署分别确认；产品模型真实效果仍待项目凭据与配置后验证。
+当前 GitHub Pages 和双端 `localStorage` 演示仍是旧前端路径；后端 API 测试与旧页面回归都不等同于双端 UI 已联通。schema 升为 2.0，默认新库 `var/evidencebridge-v2.sqlite`，旧 1.0 库保留且不自动迁移。本次只实施/测试/交接；远端写入、PR、合并和部署另行确认，真实模型效果仍待实际输入输出核验。
+
+后端两版独立进程验收（仓库根目录；临时合成数据库和服务由脚本清理）：
+
+```sh
+npm run build --prefix app/backend
+node app/backend/scripts/verify-revisions.mjs
+# 可选保存目录：追加 --output-dir /absolute/path/to/local-artifacts
+```
+
+结果与服务日志写入本地 artifacts，不提交；这项检查不调用模型，也不打开双端浏览器。手工演示的 `--resubmit`、配置和 reset 见后端 README。
 
 ## 当前检查
 
@@ -77,4 +88,4 @@ Codex 需要信任并重新打开该项目才能加载项目级配置。连接�
 
 ## 下一步
 
-HR 与 Candidate 均已有独立本地演示和重置入口。连接双端前，需要另行约定共享数据、任务投递与审核同步。不要复制其他项目的业务、运行目录、凭据或部署配置。
+HR 与 Candidate 均已有独立本地演示和重置入口。小傅按 API 2.0/HANDOFF 分别接通 V1 直接终局与 V1→补证→V2，验证历史回看、引文、隐私及恢复；旧单轮结果不代替新验收。不要复制其他项目的业务、运行目录、凭据或部署配置。

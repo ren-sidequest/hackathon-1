@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "SUBMISSION_LIMIT_REACHED",
+    "message": "This task accepts at most two submissions.",
+    "requestId": "7d41ca28-49e2-44b8-81da-5a6a6b742db6",
+    "retryable": false
+  }
+}

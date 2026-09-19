@@ -10,6 +10,7 @@ const FIXED_TIME = '2026-09-19T02:00:00.000Z';
 function submission(overrides = {}) {
   return {
     submissionId: 'submission-fixture', contentFingerprint: 'sha256:fixture',
+    submissionVersion: 1, previousSubmissionId: null, previousContentFingerprint: null,
     taskId: 'task-fixture', datasetVersion: 'harbourcart-v1',
     summary: 'Unique test sentence: traffic rose while conversion fell; this is not proof of causation.',
     findings: [
@@ -66,6 +67,20 @@ test('source index has stable IDs, exact JSON pointers and public text only', ()
   assert.equal(sources.at(-1).kind, 'client_reported_event');
   assert.doesNotMatch(JSON.stringify(sources), /PRIVATE_/);
   assert.equal(new Set(sources.map(item => item.sourceId)).size, sources.length);
+});
+
+test('paired V1 and V2 analyses remain separately bound even when source IDs are reused', async () => {
+  const one = submission({ submissionId: 'version-one', contentFingerprint: 'fingerprint-one' });
+  const two = submission({ submissionId: 'version-two', contentFingerprint: 'fingerprint-two', submissionVersion: 2,
+    previousSubmissionId: one.submissionId, previousContentFingerprint: one.contentFingerprint,
+    summary: 'V2 revised statement: the channel pattern is an observation, and a controlled comparison is still needed.' });
+  const manual = createAnalyzer({ mode: 'manual_simulation' });
+  const first = await manual(one); const second = await manual(two);
+  assert.throws(() => validateAnalysis(first, two), { code: 'AI_OUTPUT_INVALID' });
+  assert.throws(() => validateAnalysis(second, one), { code: 'AI_OUTPUT_INVALID' });
+  assert.equal(second.observations[0].citations[0].quote, two.summary);
+  assert.equal(first.observations[0].citations[0].quote, one.summary);
+  assert.equal(first.observations[0].citations[0].sourceId, second.observations[0].citations[0].sourceId);
 });
 
 test('duplicate or malformed source IDs fail deterministically', () => {

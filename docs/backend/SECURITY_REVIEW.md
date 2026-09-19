@@ -1,6 +1,24 @@
 # 后端安全与交付审查
 
-审查对象：本地单服务、合成案例的 TypeScript / Fastify / SQLite 后端。此文件记录 AI 子代理的独立检查与可复现测试，不代表真人审批、生产安全认证或招聘效果验证。审查日期：2026-09-19。
+审查对象：本地单服务、合成案例的 TypeScript / Fastify / SQLite 后端；修订 3 当前支持 V1 加最多一次获准 V2，合同 schema 2.0。此文件记录 AI 子代理的独立检查与可复现测试，不代表真人审批、生产安全认证或招聘效果验证。审查日期：2026-09-19。
+
+## 0. 修订 3 的独立复核
+
+根代理修改源码，QA 独立维护测试并审查 `service.ts`、`store.ts`、schema、响应投影与模型边界。**最终 145/145 通过**：其中原安全/持久化 23 项已适配 2.0，两版专项 28 项新增；分析跨版绑定另有测试。严格构建及 coverage 同样通过；完整分项、首轮失败及日志见 [TEST_RESULTS.md](TEST_RESULTS.md) 第 0 节。
+
+本轮重点与实际结论：
+
+| 边界 | 独立验证 |
+| --- | --- |
+| 两版不可变链 | 以当前 V1 ID/指纹申请 V2，任务、会话和数据版本一致；唯一索引按 session + submission_version；重复/并发请求只创建一份第二版 |
+| 许可与终局 | 只有 V1 more 开放补交；V1 两种终局关闭权限，V2 拒绝 more 和第三版；剩余额度不被当成提交许可 |
+| 人审与分析竞态 | review 在事务内冻结 running 并将对应 attempt 收据改为 409 AI_REVIEW_CLOSED；晚到成功/失败均 STALE_ANALYSIS，不修改历史或当前版；not_started 不伪造运行记录 |
+| 历史幂等 | 相同 key/请求重放旧收据，不更新当前状态；新 key 对历史 submissionId 返回 STALE_SUBMISSION；旧 session 业务请求先拒绝，reset 特殊重试不误清新数据 |
+| 历史隐私与 provenance | 历史/当前响应均受 schema 限定；V2 私人 notes 哨兵不进入当前/历史/模型输入；GET 和收据重试将每个实际 live 输出标成 replay，测试明确为 TEST-STUB |
+| 恢复与兼容 | 两版顺序、前链、每版审核/分析绑定和状态逐项复核；缺表、旧格式、错误关联 fail closed。旧 0/1 已有库在写 PRAGMA/DDL 前拒绝、字节保留；默认使用新 `evidencebridge-v2.sqlite`，无自动迁移或清空 |
+| V2 中断 | V2 running 恢复为 AI_INTERRUPTED，新 key 只重跑 V2，V1 的真实失败记录与审核原样保留；继续覆盖实际 SIGKILL、进程锁及并发重启 |
+
+未发现本轮已验证范围内阻断本地合成演示的安全缺口。首轮种子 schemaVersion 遗留为 1.0 导致测试失败，已统一使用 SCHEMA_VERSION，修复记录和失败日志保留；没有通过降低校验掩盖问题。下面第 1 节是首轮发现并已修复的问题，其回归在新版继续执行。
 
 ## 1. 已发现并修复的缺口
 
@@ -23,7 +41,7 @@
 - **SQLite**：参数化 SQL；正式提交唯一约束、不可变 UPDATE 触发器；状态与幂等响应在同一事务保存。Unix 新建数据目录权限 0700，DB 0600，WAL/SHM 无组或其他用户访问权限。`.env`、DB 与 sidecar、构建产物和依赖目录均被 Git 忽略。
 - **单实例和恢复**：同一数据库路径的存活进程锁阻止第二实例；进程 SIGKILL 后留下的死 PID 锁可自动回收。旧 running 分析变成 `AI_INTERRUPTED`，旧幂等键返回 503 而非永久 202，新键可重新分析，原提交保留。非法锁、未知 owner nonce 与既有 reclaim 锁保守保留供检查，不自动抹除。
 - **AI**：服务端固定 Responses API 地址，禁止重定向，`store:false`；显式配置后才网络调用。输入白名单、总大小、超时、最多一次重试、输出大小、固定五维、严格结构、来源存在及 UTF-16 起止逐字引文校验。仅过程事件不足以得到观察到能力的判定。失败保留作品，实时/留存回放/手工规则演示区分标记。
-- **状态与人工决定**：人审绑定当前提交与 fingerprint；只有目标 requirement 由 Confirm 变成 verified。两个不足结果保留 uncertain；正式提交与 AI 成功都不自动确认。Reset 换 session/task，迟到 AI 结果由绑定检查阻止写入新案例。
+- **状态与人工决定**：人审绑定当前提交与 fingerprint；只有目标 requirement 由 Confirm 变成 verified。V1 more 保持 uncertain 并开放一次 V2；V1 insufficient、V2 confirm/insufficient 终局，V2 不再请求补交。正式提交与 AI 成功都不自动确认。Reset 换 session/task，迟到 AI 结果由绑定检查阻止写入新案例或新版本。
 - **CLI**：`demo.mjs` / `reset.mjs` 仅接受无凭据、query、hash、路径的 loopback HTTP BASE_URL；fetch 禁止重定向。reset token 从环境取得，不接受命令行 token。独立负向子进程测试确认错误参数和错误地址在网络请求之前退出，错误输出仅含稳定代码，无 token 回显。示例生成器使用内存数据库与显式 manual_simulation，manifest 标注 0 次模型调用。
 
 ## 3. 实际执行记录
@@ -35,10 +53,10 @@ npm run build
 node --test test/security.test.mjs
 npm audit --omit=dev --json
 npm audit --json
-git check-ignore .env var/evidencebridge.sqlite var/evidencebridge.sqlite-wal var/evidencebridge.sqlite-shm node_modules dist
+git check-ignore .env var/evidencebridge-v2.sqlite var/evidencebridge-v2.sqlite-wal var/evidencebridge-v2.sqlite-shm node_modules dist
 ```
 
-截至最后复测：strict TypeScript 编译通过；安全回归 **23/23** 通过。包含真实测试子进程的重复启动、SIGKILL 后恢复，以及 3 轮 × 5 个并发启动者的死锁回收压力用例。生产依赖及含开发依赖的两次 npm audit 均报告 **0** 个已知漏洞；这只是查询时的依赖公告结果，并非代码无漏洞保证。忽略规则逐项匹配。一次误在仓库根执行的 audit 因没有根锁文件报 ENOLOCK，已在后端正确目录重跑，没有为审计另建根 package-lock。
+截至最后复测：strict TypeScript 编译通过；安全回归 **23/23**、两版专项 **28/28** 通过。包含真实测试子进程的重复启动、SIGKILL 后恢复，以及 3 轮 × 5 个并发启动者的死锁回收压力用例。上个实现阶段生产依赖及全部依赖的两次 npm audit 均报告 **0** 个已知漏洞，本轮依赖/锁文件未变且没有另称已重复查询；这是查询时的公告结果，并非代码无漏洞保证。忽略规则覆盖新默认 DB。历史一次误在仓库根执行的 audit 因没有根锁文件报 ENOLOCK，已在后端正确目录重跑，没有为审计另建根 package-lock。
 
 种子数据回归另 **7/7** 通过；API/AI 套件及最终总数由完整测试记录汇总。本审查没有使用真实模型密钥、真实候选人数据或收费调用。
 

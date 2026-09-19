@@ -1,4 +1,5 @@
 /** Fixed, synthetic case. All aggregate display data is derived from integer facts. */
+import { SCHEMA_VERSION } from './schema.js';
 export const DATASET_VERSION = 'harbourcart-2026-09-v1';
 export const SECTIONS = ['Key Findings', 'Hypotheses', 'Additional Evidence Needed', 'Recommended Next Steps'] as const;
 
@@ -144,7 +145,7 @@ Average order value = revenue / orders. Revenue change = (current revenue - prev
       uncertainty: 'Missing evidence of problem framing, tested hypotheses and prioritised actions is not proof that the candidate lacks capability.' },
   ];
   return {
-    schemaVersion: '1.0', datasetVersion: DATASET_VERSION,
+    schemaVersion: SCHEMA_VERSION, datasetVersion: DATASET_VERSION,
     candidate: { id: 'alex-chen', name: 'Alex Chen' },
     job: { id: 'junior-data-analyst', title: 'Junior Data Analyst', company: 'HarbourCart Pty Ltd', requirements },
     application: { id: 'alex-chen-demo-application', mode: 'preset', sources, initialReport },

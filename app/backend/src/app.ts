@@ -70,7 +70,7 @@ export async function createApp(options: AppOptions = {}): Promise<FastifyInstan
     code: 'NOT_FOUND', message: 'Endpoint was not found.', requestId: request.id, retryable: false,
   } }));
   await app.register(swagger, { openapi: { openapi: '3.0.3', info: {
-    title: 'EvidenceBridge local demo API', version: '1.0', description: 'One synthetic case. Human evidence review, not a hiring decision. Model keys remain server-side.',
+    title: 'EvidenceBridge local demo API', version: '2.0', description: 'One synthetic case, at most two immutable submissions. Human evidence review, not a hiring decision. Model keys remain server-side.',
   }, servers: [{ url: `http://127.0.0.1:${port}` }], components: { securitySchemes: {
     demoAdmin: { type: 'apiKey', in: 'header', name: 'X-Demo-Admin-Token' },
   } } } });
@@ -91,7 +91,7 @@ export async function createApp(options: AppOptions = {}): Promise<FastifyInstan
   });
   app.get('/api/demo', { schema: { summary: 'Read the single shared case and current report', response: responses } }, async () => service.read());
   app.post<{ Body: SendRequest }>('/api/demo/task/send', { preValidation: preWrite, schema: { summary: 'Send the preset task once', headers: WriteHeaders, body: SendSchema, response: responses } }, async (request, reply) => deliver(reply, service.send(request.body, key(request))));
-  app.post<{ Body: SubmitRequest }>('/api/demo/submission', { preValidation: preWrite, schema: { summary: 'Save an immutable public work sample; private notes are excluded', headers: WriteHeaders, body: SubmitSchema, response: submissionResponses } }, async (request, reply) => deliver(reply, service.submit(request.body, key(request))));
+  app.post<{ Body: SubmitRequest }>('/api/demo/submission', { preValidation: preWrite, schema: { summary: 'Save V1 or an explicitly permitted V2; private notes are excluded', headers: WriteHeaders, body: SubmitSchema, response: submissionResponses } }, async (request, reply) => deliver(reply, service.submit(request.body, key(request))));
   app.post<{ Body: AnalyzeRequest }>('/api/demo/analysis', { preValidation: preWrite, schema: { summary: 'Extract and validate observations from the exact saved submission', headers: WriteHeaders, body: AnalyzeSchema, response: analysisResponses } }, async (request, reply) => deliver(reply, await service.analyze(request.body, key(request))));
   app.post<{ Body: ReviewRequest }>('/api/demo/review', { preValidation: preWrite, schema: { summary: 'Save one human evidence decision; only the target requirement changes', headers: WriteHeaders, body: ReviewSchema, response: responses } }, async (request, reply) => deliver(reply, service.review(request.body, key(request))));
   app.post<{ Body: ResetRequest }>('/api/demo/reset', { preValidation: preWrite, preHandler: async request => {

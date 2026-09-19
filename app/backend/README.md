@@ -1,8 +1,8 @@
 # EvidenceBridge 本地共享后端
 
-用户确认方案：**TypeScript strict + Fastify + 原生 SQLite + 自动 OpenAPI**。单案例、单任务、一次正式提交、一次人工审核；不修改现有 HR/Candidate 页面。完整合同见 [API](../../docs/backend/API.md)、[小傅接入清单](../../docs/backend/HANDOFF.md)、[唯一数据](../../docs/backend/DATA.md)、[ADR](../../docs/backend/ADR.md)、[实际验证记录](../../docs/backend/TEST_RESULTS.md)。
+用户确认方案：**TypeScript strict + Fastify + 原生 SQLite + 自动 OpenAPI**。单案例、同一任务、V1 + 最多一次 V2 补交，每版最多一次人工审核；不修改现有 HR/Candidate 页面。完整合同见 [API](../../docs/backend/API.md)、[小傅接入清单](../../docs/backend/HANDOFF.md)、[唯一数据](../../docs/backend/DATA.md)、[ADR](../../docs/backend/ADR.md)、[实际验证记录](../../docs/backend/TEST_RESULTS.md)。
 
-交付分支 `codex/evidencebridge-backend`，开发基线 `31edc5319ee40b1d5d6e9e658a1526d7a3ab2f35`；按仓库规范通过 PR 审阅，合并与部署分别确认。远端状态以对应 PR 和当前提交的 Actions 为准。
+延续分支 `codex/evidencebridge-backend`，扩展基线 `6fb19a9`（已交付单轮版本）。用户确认修订 3，先行计划见 [REVISION_PLAN](../../docs/backend/REVISION_PLAN.md)。本次到本地实现、验证与交接；不包含远端写入/PR 更新、合并或部署。旧测试结果不代表两版已通过，当前实际结果见 TEST_RESULTS。
 
 ## 1. 安装、配置、启动
 
@@ -30,7 +30,7 @@ npm start
 | 环境变量 | 默认值 / 限制 | 说明 |
 | --- | --- | --- |
 | `PORT` | `8787`，1–65535 | 本地监听端口 |
-| `DATABASE_PATH` | `./var/evidencebridge.sqlite` | 相对启动目录解析；服务重启使用同一绝对路径恢复 |
+| `DATABASE_PATH` | `./var/evidencebridge-v2.sqlite` | 相对启动目录解析；服务重启使用同一绝对路径恢复 |
 | `DEMO_ADMIN_TOKEN` | 空；设置时 24–256 字符 | **仅 reset 使用**；空值时 reset 返回 503 |
 | `ALLOWED_ORIGINS` | `http://127.0.0.1:5173,http://127.0.0.1:4173,http://127.0.0.1:5186` | 显式 loopback HTTP origin，逗号分隔；`localhost` 与 `127.0.0.1` 不视为相同 origin |
 | `ANALYSIS_MODE` | `disabled` | `disabled / manual_simulation / live`，没有自动模式切换 |
@@ -50,12 +50,16 @@ npm start
 ```sh
 # 单独终端，从同一后端目录执行：
 npm run demo
-# 另一次新案例可选择不足分支：
+# V1 More 后停在 awaiting_revision（非终局）：
 npm run demo -- --decision needs_more_evidence
+# 新会话的完整 V1 More → V2 终局：
+npm run demo -- --resubmit
+npm run demo -- --resubmit --decision evidence_still_insufficient
+# V1 直接终局不足：
 npm run demo -- --decision evidence_still_insufficient
 ```
 
-`demo` 是合成 API 测试客户端：健康检查→读初始状态→发任务→含唯一测试句的提交→分析→脚本化人工决定→两次读回核对。默认 `confirm` 仅用于测试流程，产品服务从不自动 Confirm。分析关闭或失败时，脚本先确认作品仍在，再继续审核，并在输出报告 `analysisError`；“客户端通过”不表示 AI 成功。
+`demo` 是合成 API 测试客户端：健康检查→读初始状态→发任务→含唯一测试句的提交→分析→脚本化人工决定→两次读回核对。`--resubmit` 在同 session/task 内记录 V1 More 再创建 V2，V2 默认 confirm；V2 More 是无效选择。默认 `confirm` 仅用于测试流程，产品服务从不自动 Confirm。分析关闭或失败时，脚本先确认作品仍在，再继续审核，并在输出报告 `analysisError`；“客户端通过”不表示 AI 成功。
 
 **已有任务/提交/审核时，demo 退出并保留数据**。它从不隐式 reset。单独执行 reset 表示清空当前合成案例并生成新会话；旧引用失效。
 
@@ -72,12 +76,14 @@ npm run demo
 
 ## 3. 持久化与故障处理
 
-- SQLite 保存共享状态、不可变提交和请求收据；刷新或同库重启保留任务、作品、人工结果。WAL + FULL 同步，事务仅包围短数据库操作，外部模型调用不持有事务。
+- SQLite 保存共享状态、最多两份不可变作品、各版分析/审核及请求收据；刷新或同库重启保留 V1、awaiting_revision、V2 与历史。WAL + FULL 同步，事务仅包围短数据库操作，外部模型调用不持有事务。
 - 每个文件库只允许一个后端进程。`DATABASE_PATH + '.lock'` 保存 PID 与随机所有权标记；第二个存活实例启动失败。正常退出只移除自己的锁；已确认 PID 消失的残留锁在下次启动回收。
 - 锁文件损坏、权限不明确或进程仍在时保留文件并报启动失败。先核查占用进程及路径，确认没有进程使用后再人工处理锁；不删除数据库来“修复”。此锁面向本机单实例，不是网络文件系统分布式锁。
 - 回收死亡 PID 的残留锁时，使用 `.lock.reclaim` 短锁串行处理；若该短锁因崩溃残留，后续启动保守失败。核查没有后端存活后再人工清理残留锁文件，保留数据库与配套文件。
 - 备份前先正常停止服务，再复制 SQLite 文件和仍存在的 `-wal`、`-shm` 配套文件到本地私有目录。恢复使用完整备份并保留旧文件；不复制运行中单个 SQLite 文件作为可靠备份，不把旧 `.lock` 复制为新运行实例。
+- schema 2.0 默认新文件；旧 `.env` 若仍指向 1.0 库，请保留旧文件并显式设置新的 DATABASE_PATH。旧库不迁移、不清空，启动检测报兼容性失败而非初始化。
 - 数据版本不匹配、提交指纹/引用或状态关联损坏时，启动校验失败而非加载空案例。保留原数据库供诊断；使用新的路径建立演示，不自动迁移/修补旧库。
+- 审核时若该版分析运行，冻结为 `failed / AI_REVIEW_CLOSED`；迟到结果不进入已审核版或 V2。已有结果在所属版本只读留存。
 - 模型运行中进程中断：重启将该次分析置 `failed / AI_INTERRUPTED`，原 202 收据改为 503。GET 看最新状态；需要新尝试时用**新幂等键**，原作品保留。
 - 启动终端输出经过收敛的 JSON 元数据（requestId、方法、已知路由、状态/错误代码），不记请求正文、查询字符串、token、模型原始响应。默认无日志文件；需要本地保存时由操作者重定向终端到仓库外私有文件。
 
@@ -90,16 +96,22 @@ npm run typecheck
 npm test
 npm run test:coverage
 npm run docs:generate
+# 使用编译产物启动独立临时服务，不复用当前演示库：
+npm run build
+node scripts/verify-revisions.mjs
+# 可选：node scripts/verify-revisions.mjs --output-dir /absolute/path/to/local-artifacts
 # 从仓库根目录另执行：
 python3 scripts/check_repository.py
 git diff --check
 ```
 
-`docs:generate` 在独立内存库中使用 `manual_simulation`，不绑定公网端口、不读取产品模型配置、不调用模型；生成 [OpenAPI](../../docs/backend/openapi.json) 与 [示例清单](../../docs/backend/examples/manifest.json)。JSON 示例包含完整初始、提交、分析及审核响应和对应请求。ID、指纹、时间来自本次运行，每次生成可变化；它们是配套 fixture，不是前端应硬编码的常量。修改 API schema 后重新生成并检查差异。
+`docs:generate` 在独立内存库中使用 `manual_simulation`，不绑定公网端口、不读取产品模型配置、不调用模型；生成 [OpenAPI](../../docs/backend/openapi.json) 与 [示例清单](../../docs/backend/examples/manifest.json)。JSON 示例包含 V1 直接终局与 V1 More→V2 的两组独立会话、各版请求/响应、历史投影及上限/旧引用错误。ID、指纹、时间来自本次运行，每次生成可变化；它们是配套 fixture，不是前端应硬编码的常量。修改 API schema 后重新生成并检查差异。
+
+verify-revisions 使用临时文件库、独立真实 HTTP 服务与 CLI，保存分阶段 JSON/检查报告并清理临时服务和数据库；输出目录可用 `--output-dir` 指定。脚本使用 disabled/manual_simulation，无真实模型或 UI 操作。
 
 实际测试范围与计数统一见 [TEST_RESULTS](../../docs/backend/TEST_RESULTS.md)。客户端自检证明 HTTP API 流程，不等于浏览器双端已接通。真实模型调用/质量实验、真人验收与远端部署均另行记录。
 
-2026-09-19 已用临时文件库和真实 `node dist/server.js` 进程运行 demo/reset 脚本，10 项客户端检查通过：三分支、独特快照及引文、进程重启恢复、已有案例保护、显式重置、错误令牌、远程 URL 阻止、AI disabled 后作品可审和日志凭据排除。检查使用 manual_simulation/disabled，无模型调用；临时服务与文件已清理。这 10 项是脚本验收记录，不叠加到 Node 单测计数。
+旧 `6fb19a9` 单轮交付曾用临时文件库和真实 `node dist/server.js` 进程运行 demo/reset 脚本，10 项客户端检查通过：三分支、独特快照及引文、进程重启恢复、已有案例保护、显式重置、错误令牌、远程 URL 阻止、AI disabled 后作品可审和日志凭据排除。检查使用 manual_simulation/disabled，无模型调用；临时服务与文件已清理。这 10 项是旧单轮记录，不叠加到 Node 单测计数，也不替代本次有限两版验证；新脚本检查结果见本轮 TEST_RESULTS。
 
 ## 5. 本轮边界
 

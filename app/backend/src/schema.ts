@@ -5,8 +5,11 @@ const enums = <T extends string>(values: T[]) => Type.Union(values.map(value => 
 const exact = { additionalProperties: false } as const;
 const id = Type.String({ minLength: 1, maxLength: 80, pattern: '^[A-Za-z0-9_-]+$' });
 const nonblank = (maxLength: number) => Type.String({ minLength: 1, maxLength, pattern: '\\S' });
+export const SCHEMA_VERSION = '2.0' as const;
+export const SubmissionVersionSchema = Type.Union([Type.Literal(1), Type.Literal(2)]);
+const hash = Type.String({ pattern: '^[a-f0-9]{64}$' });
 export const binding = {
-  schemaVersion: Type.Literal('1.0'), sessionId: id,
+  schemaVersion: Type.Literal(SCHEMA_VERSION), sessionId: id,
   taskId: id, datasetVersion: id,
 };
 export const FindingSchema = Type.Object({
@@ -23,16 +26,20 @@ export const WorkSchema = Type.Object({
   processEvidence: Type.Array(EventSchema, { maxItems: 100 }),
 }, exact);
 export const SendSchema = Type.Object({ ...binding, instructions: nonblank(4000) }, exact);
-export const SubmitSchema = Type.Object({ ...binding, candidateId: id, ...WorkSchema.properties }, exact);
+export const SubmitSchema = Type.Object({ ...binding, candidateId: id,
+  submissionVersion: SubmissionVersionSchema,
+  previousSubmissionId: Type.Union([id, Type.Null()]),
+  previousContentFingerprint: Type.Union([hash, Type.Null()]),
+  ...WorkSchema.properties }, exact);
 export const AnalyzeSchema = Type.Object({
-  ...binding, submissionId: id, contentFingerprint: Type.String({ pattern: '^[a-f0-9]{64}$' }),
+  ...binding, submissionId: id, contentFingerprint: hash,
 }, exact);
 export const ReviewSchema = Type.Object({
   ...AnalyzeSchema.properties, requirementId: id,
   decision: enums(['confirm', 'needs_more_evidence', 'evidence_still_insufficient']),
   comment: nonblank(2000),
 }, exact);
-export const ResetSchema = Type.Object({ schemaVersion: Type.Literal('1.0'), sessionId: id }, exact);
+export const ResetSchema = Type.Object({ schemaVersion: Type.Literal(SCHEMA_VERSION), sessionId: id }, exact);
 export const SourceSchema = Type.Object({
   sourceId: Type.String(), location: Type.String(), text: Type.String(),
   kind: Type.Union([Type.Literal('work_sample'), Type.Literal('client_reported_event')]),
@@ -68,6 +75,18 @@ export const AnalysisStateSchema = Type.Object({
   startedAt: Type.Union([Type.String(), Type.Null()]), finishedAt: Type.Union([Type.String(), Type.Null()]),
   errorCode: Type.Union([Type.String(), Type.Null()]),
   result: Type.Union([AnalysisResultSchema, Type.Null()]),
+}, exact);
+export const VersionRecordSchema = Type.Object({
+  submission: SubmissionSchema, analysis: AnalysisStateSchema,
+  review: Type.Union([ReviewRecordSchema, Type.Null()]),
+}, exact);
+export const WorkflowSchema = Type.Object({
+  maxSubmissions: Type.Literal(2), submissionsUsed: Type.Integer({ minimum: 0, maximum: 2 }),
+  remainingSubmissions: Type.Integer({ minimum: 0, maximum: 2 }),
+  canSubmit: Type.Boolean(), canResubmit: Type.Boolean(),
+  nextSubmissionVersion: Type.Union([SubmissionVersionSchema, Type.Null()]),
+  allowedReviewDecisions: Type.Array(ReviewSchema.properties.decision, { maxItems: 3, uniqueItems: true }),
+  isTerminal: Type.Boolean(),
 }, exact);
 export const ErrorSchema = Type.Object({ error: Type.Object({
   code: Type.String(), message: Type.String(), requestId: Type.String(), retryable: Type.Boolean(),

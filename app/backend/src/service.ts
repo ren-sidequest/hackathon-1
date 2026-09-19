@@ -5,20 +5,23 @@ import { createSeed, DATASET_VERSION } from './seed.js';
 import { buildSourceIndex, validateAnalysis, type AnalysisResult, type SubmissionForAnalysis } from './analysis.js';
 import { ApiError, invariant } from './errors.js';
 import { canonicalJson, fingerprint } from './fingerprint.js';
-import { AnalysisStateSchema, SubmissionSchema, ReviewRecordSchema, type AnalyzeRequest, type AnalysisState, type ResetRequest, type ReviewRequest, type SendRequest, type Submission, type SubmitRequest } from './schema.js';
+import { AnalysisStateSchema, SubmissionSchema, ReviewRecordSchema, SCHEMA_VERSION, type AnalyzeRequest, type AnalysisState, type ResetRequest, type ReviewRequest, type SendRequest, type Submission, type SubmitRequest } from './schema.js';
 import { Store, type State, type StoredResponse } from './store.js';
 
 const blankAnalysis = (): AnalysisState => ({ status: 'not_started', attemptId: null, submissionId: null,
   contentFingerprint: null, startedAt: null, finishedAt: null, errorCode: null, result: null });
 const StateSchema = Type.Object({
-  schemaVersion: Type.Literal('1.0'), sessionId: Type.String(), datasetVersion: Type.String(), revision: Type.Integer(),
-  task: Type.Object({ taskId: Type.String(), status: Type.Union(['draft', 'sent', 'submitted', 'reviewed'].map(x => Type.Literal(x))),
+  schemaVersion: Type.Literal(SCHEMA_VERSION), sessionId: Type.String(), datasetVersion: Type.String(), revision: Type.Integer({ minimum: 0 }),
+  task: Type.Object({ taskId: Type.String(), status: Type.Union(['draft', 'sent', 'submitted', 'awaiting_revision', 'reviewed'].map(x => Type.Literal(x))),
     instructions: Type.String(), sentAt: Type.Union([Type.String(), Type.Null()]) }, { additionalProperties: false }),
-  submissionId: Type.Union([Type.String(), Type.Null()]), analysis: AnalysisStateSchema,
-  review: Type.Union([ReviewRecordSchema, Type.Null()]),
+  versions: Type.Array(Type.Object({ submissionId: Type.String(), analysis: AnalysisStateSchema,
+    review: Type.Union([ReviewRecordSchema, Type.Null()]),
+  }, { additionalProperties: false }), { maxItems: 2 }),
 }, { additionalProperties: false });
 const content = (s: SubmitRequest): SubmitRequest => ({ schemaVersion: s.schemaVersion, sessionId: s.sessionId,
   taskId: s.taskId, datasetVersion: s.datasetVersion, candidateId: s.candidateId,
+  submissionVersion: s.submissionVersion, previousSubmissionId: s.previousSubmissionId,
+  previousContentFingerprint: s.previousContentFingerprint,
   summary: s.summary, findings: s.findings, processEvidence: s.processEvidence });
 export type Analyzer = (submission: SubmissionForAnalysis) => Promise<AnalysisResult>;
 
@@ -27,40 +30,64 @@ export class DemoService {
   constructor(private readonly store: Store, private readonly analyzer: Analyzer) {
     this.store.transaction(() => {
       const saved = store.getState();
-      if (!saved) { store.setState(this.fresh()); return; }
+      if (!saved) {
+        if (store.submissionIds().length) throw new Error('Stored submissions have no workflow state; preserve this database');
+        store.setState(this.fresh()); return;
+      }
       if (!Value.Check(StateSchema, saved) || saved.datasetVersion !== DATASET_VERSION)
         throw new Error('Incompatible demo database; preserve it and select a new DATABASE_PATH');
-      if (saved.submissionId) {
-        const sub = store.getSubmission(saved.submissionId);
+      if (canonicalJson(store.submissionIds()) !== canonicalJson(saved.versions.map(v => v.submissionId)))
+        throw new Error('Stored submission history is inconsistent');
+      let previous: Submission | null = null;
+      for (const [index, version] of saved.versions.entries()) {
+        const sub = store.getSubmission(version.submissionId);
         if (!Value.Check(SubmissionSchema, sub) || sub.sessionId !== saved.sessionId || sub.taskId !== saved.task.taskId
           || sub.datasetVersion !== DATASET_VERSION || sub.candidateId !== this.seed.candidate.id
+          || sub.submissionVersion !== index + 1 || sub.previousSubmissionId !== (previous?.submissionId ?? null)
+          || sub.previousContentFingerprint !== (previous?.contentFingerprint ?? null)
           || sub.contentFingerprint !== fingerprint(content(sub)) || canonicalJson(sub.sources) !== canonicalJson(buildSourceIndex(sub)))
           throw new Error('Stored submission integrity check failed');
-        if (saved.analysis.status !== 'not_started' && (saved.analysis.submissionId !== sub.submissionId || saved.analysis.contentFingerprint !== sub.contentFingerprint))
-          throw new Error('Stored analysis binding is invalid');
-        if (saved.analysis.result) validateAnalysis(saved.analysis.result, sub);
-        if (saved.review && (saved.review.sessionId !== saved.sessionId || saved.review.taskId !== saved.task.taskId
-          || saved.review.datasetVersion !== DATASET_VERSION || saved.review.submissionId !== sub.submissionId
-          || saved.review.contentFingerprint !== sub.contentFingerprint || saved.review.requirementId !== this.seed.task.requirementId))
+        this.validateStoredAnalysis(version.analysis, sub);
+        const review = version.review;
+        if (review && (review.sessionId !== saved.sessionId || review.taskId !== saved.task.taskId
+          || review.datasetVersion !== DATASET_VERSION || review.submissionId !== sub.submissionId
+          || review.contentFingerprint !== sub.contentFingerprint || review.requirementId !== this.seed.task.requirementId
+          || (sub.submissionVersion === 2 && review.decision === 'needs_more_evidence')))
           throw new Error('Stored review binding is invalid');
+        if ((review && version.analysis.status === 'running')
+          || (index === 1 && saved.versions[0]?.review?.decision !== 'needs_more_evidence'))
+          throw new Error('Stored version transition is inconsistent');
+        previous = sub;
       }
-      if ((saved.task.status === 'reviewed') !== Boolean(saved.review)
-        || (['submitted', 'reviewed'].includes(saved.task.status)) !== Boolean(saved.submissionId)
-        || (saved.task.status === 'draft') !== (saved.task.sentAt === null)
-        || (!saved.submissionId && saved.analysis.status !== 'not_started')
-        || (saved.analysis.status === 'succeeded') !== Boolean(saved.analysis.result))
+      const current = saved.versions.at(-1);
+      const expected = current ? (current.review ? (current.review.decision === 'needs_more_evidence' ? 'awaiting_revision' : 'reviewed') : 'submitted') : null;
+      if ((expected ? saved.task.status !== expected : !['draft', 'sent'].includes(saved.task.status))
+        || (saved.task.status === 'draft') !== (saved.task.sentAt === null))
         throw new Error('Stored workflow state is inconsistent');
-      if (saved.analysis.status === 'running') {
-        saved.analysis.status = 'failed'; saved.analysis.errorCode = 'AI_INTERRUPTED';
-        saved.analysis.finishedAt = new Date().toISOString(); saved.revision += 1; store.setState(saved);
-        store.interruptPending(saved.sessionId, saved.analysis.attemptId ?? 'interrupted');
+      if (current?.analysis.status === 'running') {
+        current.analysis.status = 'failed'; current.analysis.errorCode = 'AI_INTERRUPTED';
+        current.analysis.finishedAt = new Date().toISOString(); saved.revision += 1; store.setState(saved);
+        store.interruptPending(saved.sessionId, current.analysis.attemptId!);
       }
     });
   }
+  private validateStoredAnalysis(analysis: AnalysisState, sub: Submission): void {
+    if (analysis.status === 'not_started') {
+      if (canonicalJson(analysis) !== canonicalJson(blankAnalysis())) throw new Error('Stored unstarted analysis is inconsistent');
+      return;
+    }
+    if (analysis.submissionId !== sub.submissionId || analysis.contentFingerprint !== sub.contentFingerprint
+      || !analysis.attemptId || !analysis.startedAt) throw new Error('Stored analysis binding is invalid');
+    if ((analysis.status === 'succeeded') !== Boolean(analysis.result)
+      || (analysis.status === 'failed') !== Boolean(analysis.errorCode)
+      || (analysis.status === 'running') !== (analysis.finishedAt === null))
+      throw new Error('Stored analysis state is inconsistent');
+    if (analysis.result) validateAnalysis(analysis.result, sub);
+  }
   private fresh(): State {
-    return { schemaVersion: '1.0', sessionId: randomUUID(), datasetVersion: DATASET_VERSION, revision: 0,
+    return { schemaVersion: SCHEMA_VERSION, sessionId: randomUUID(), datasetVersion: DATASET_VERSION, revision: 0,
       task: { taskId: randomUUID(), status: 'draft', instructions: this.seed.task.instructions, sentAt: null },
-      submissionId: null, analysis: blankAnalysis(), review: null };
+      versions: [] };
   }
   private state(): State { const state = this.store.getState(); if (!state) throw new Error('State missing'); return state; }
   private bind(state: State, request: ResetRequest & Partial<AnalyzeRequest>): void {
@@ -69,26 +96,35 @@ export class DemoService {
     if ('datasetVersion' in request) invariant(request.datasetVersion === state.datasetVersion, 'DATASET_MISMATCH', 'Dataset version does not match.');
   }
   private submitted(state: State, request: AnalyzeRequest): Submission {
-    invariant(state.submissionId, 'SUBMISSION_REQUIRED', 'Submit a work sample before this action.');
-    invariant(request.submissionId === state.submissionId, 'STALE_SUBMISSION', 'Submission reference is stale.');
-    const sub = this.store.getSubmission(state.submissionId);
+    const current = state.versions.at(-1);
+    invariant(current, 'SUBMISSION_REQUIRED', 'Submit a work sample before this action.');
+    invariant(request.submissionId === current.submissionId, 'STALE_SUBMISSION', 'Only the current submission accepts this action. Read history for older versions.');
+    const sub = this.store.getSubmission(current.submissionId);
     invariant(sub.contentFingerprint === request.contentFingerprint, 'CONTENT_MISMATCH', 'Submission fingerprint does not match.');
     return sub;
   }
   private projection(state: State, liveAttempt?: string) {
-    const submission = state.submissionId ? this.store.getSubmission(state.submissionId) : null;
-    const analysis = structuredClone(state.analysis);
-    if (analysis.result?.mode === 'live' && analysis.attemptId !== liveAttempt) analysis.result.mode = 'replay';
+    const versions = state.versions.map(version => {
+      const analysis = structuredClone(version.analysis);
+      if (analysis.result?.mode === 'live' && analysis.attemptId !== liveAttempt) analysis.result.mode = 'replay';
+      return { submission: this.store.getSubmission(version.submissionId), analysis, review: version.review };
+    });
+    const current = versions.at(-1);
+    const submission = current?.submission ?? null;
+    const analysis = current?.analysis ?? blankAnalysis();
+    const review = current?.review ?? null;
+    const canResubmit = state.task.status === 'awaiting_revision' && versions.length === 1;
+    const canSubmit = state.task.status === 'sent' || canResubmit;
     const requirements = this.seed.application.initialReport.map(initial => {
       const target = initial.requirementId === this.seed.task.requirementId;
-      const confirmed = target && state.review?.decision === 'confirm';
+      const confirmed = target && review?.decision === 'confirm';
       const status = confirmed ? 'verified' : initial.status;
       return { ...initial, title: this.seed.job.requirements.find(r => r.id === initial.requirementId)!.title,
         status, displayStatus: confirmed ? 'Verified through targeted task' : initial.displayStatus,
         displayLabel: confirmed ? 'Verified through targeted task' : initial.displayStatus,
-        mode: target && state.review ? 'human_reviewed' : initial.mode,
-        summary: target && state.review ? `Human evidence review: ${state.review.decision}. ${state.review.comment}` : initial.summary,
-        review: target ? state.review : null,
+        mode: target && review ? 'human_reviewed' : initial.mode,
+        summary: target && review ? `Human evidence review: ${review.decision}. ${review.comment}` : initial.summary,
+        review: target ? review : null,
         submissionSourceRefs: target && submission ? submission.sources.filter(s => s.kind === 'work_sample').map(s => ({
           submissionId: submission.submissionId, contentFingerprint: submission.contentFingerprint,
           sourceId: s.sourceId, location: s.location,
@@ -100,9 +136,17 @@ export class DemoService {
       schemaVersion: state.schemaVersion, sessionId: state.sessionId, datasetVersion: state.datasetVersion,
       revision: state.revision, candidate: this.seed.candidate, job: this.seed.job,
       application: this.seed.application, dataset: this.seed.dataset,
-      task: { ...this.seed.task, ...state.task }, submission, analysis, review: state.review,
-      report: { mode: state.review ? 'human_reviewed' : 'preset_with_current_workflow',
-        isHiringDecision: false, requirements, review: state.review },
+      task: { ...this.seed.task, ...state.task }, submission, analysis, review,
+      currentSubmissionVersion: submission?.submissionVersion ?? null, versions,
+      workflow: {
+        maxSubmissions: 2 as const, submissionsUsed: versions.length, remainingSubmissions: 2 - versions.length,
+        canSubmit, canResubmit, nextSubmissionVersion: canSubmit ? (canResubmit ? 2 as const : 1 as const) : null,
+        allowedReviewDecisions: !current || review ? [] : submission?.submissionVersion === 1
+          ? ['confirm', 'needs_more_evidence', 'evidence_still_insufficient'] : ['confirm', 'evidence_still_insufficient'],
+        isTerminal: state.task.status === 'reviewed',
+      },
+      report: { mode: review ? 'human_reviewed' : 'preset_with_current_workflow',
+        isHiringDecision: false, requirements, review },
     };
   }
   read() { return { data: this.projection(this.state()), meta: { replayed: false } }; }
@@ -116,8 +160,9 @@ export class DemoService {
     const body = structuredClone(result.body) as Record<string, unknown>;
     if ('data' in body) body['meta'] = { replayed: true };
     // A saved live result is replay on every subsequent response, including retry receipts.
-    const data = body['data'] as { analysis?: AnalysisState } | undefined;
+    const data = body['data'] as { analysis?: AnalysisState; versions?: { analysis: AnalysisState }[] } | undefined;
     if (data?.analysis?.result?.mode === 'live') data.analysis.result.mode = 'replay';
+    for (const version of data?.versions ?? []) if (version.analysis.result?.mode === 'live') version.analysis.result.mode = 'replay';
     return { status: result.status, body };
   }
   private mutate<T extends ResetRequest>(path: string, key: string, request: T, action: (state: State) => number): StoredResponse {
@@ -139,7 +184,15 @@ export class DemoService {
   submit(request: SubmitRequest, key: string): StoredResponse {
     return this.mutate('/api/demo/submission', key, request, state => {
       invariant(state.task.status !== 'draft', 'TASK_NOT_SENT', 'Send the task before submission.');
-      invariant(!state.submissionId, 'SUBMISSION_EXISTS', 'This task already has an immutable submission.');
+      const count = state.versions.length;
+      invariant(count < 2, 'SUBMISSION_LIMIT_REACHED', 'This task accepts at most two submissions.');
+      invariant(request.submissionVersion === count + 1, 'SUBMISSION_VERSION_MISMATCH', 'Read the current version before submitting.');
+      const previous = count ? this.store.getSubmission(state.versions[0]!.submissionId) : null;
+      if (count) invariant(state.task.status === 'awaiting_revision' && state.versions[0]!.review?.decision === 'needs_more_evidence',
+        'RESUBMISSION_NOT_ALLOWED', 'Only a V1 request for more evidence opens one V2 submission.');
+      invariant(request.previousSubmissionId === (previous?.submissionId ?? null)
+        && request.previousContentFingerprint === (previous?.contentFingerprint ?? null),
+        'PREVIOUS_SUBMISSION_MISMATCH', 'The previous submission ID and fingerprint must match the permitted version.');
       if (request.candidateId !== this.seed.candidate.id) throw new ApiError('CANDIDATE_MISMATCH', 409, 'Candidate reference does not match.');
       for (const list of [request.findings, request.processEvidence]) {
         if (new Set(list.map(item => item.id)).size !== list.length) throw new ApiError('DUPLICATE_ID', 400, 'IDs must be unique within each collection.');
@@ -150,16 +203,26 @@ export class DemoService {
         submittedAt: new Date().toISOString(), contentFingerprint: fingerprint(content(request)),
         processEvidenceProvenance: 'client_reported', sources: [] };
       snapshot.sources = buildSourceIndex(snapshot); this.store.insertSubmission(snapshot);
-      state.submissionId = snapshot.submissionId; state.task.status = 'submitted'; state.analysis = blankAnalysis(); return 201;
+      state.versions.push({ submissionId: snapshot.submissionId, analysis: blankAnalysis(), review: null });
+      state.task.status = 'submitted'; return 201;
     });
   }
   review(request: ReviewRequest, key: string): StoredResponse {
     return this.mutate('/api/demo/review', key, request, state => {
       this.submitted(state, request);
-      invariant(!state.review, 'REVIEW_EXISTS', 'This submission already has a final review.');
+      const current = state.versions.at(-1)!;
+      invariant(!current.review, 'REVIEW_EXISTS', 'This submission already has a human review.');
       invariant(request.requirementId === this.seed.task.requirementId, 'REQUIREMENT_MISMATCH', 'Only the target requirement can be reviewed.');
-      state.review = { ...request, reviewId: randomUUID(), reviewedAt: new Date().toISOString() };
-      state.task.status = 'reviewed'; return 200;
+      invariant(!(state.versions.length === 2 && request.decision === 'needs_more_evidence'),
+        'REVIEW_LIMIT_REACHED', 'V2 requires a terminal decision: confirm or evidence_still_insufficient.');
+      // Freeze this version before opening the next one: a late model result never changes a reviewed history entry.
+      if (current.analysis.status === 'running') {
+        current.analysis.status = 'failed'; current.analysis.errorCode = 'AI_REVIEW_CLOSED';
+        current.analysis.finishedAt = new Date().toISOString();
+        this.store.interruptPending(state.sessionId, current.analysis.attemptId!, 'AI_REVIEW_CLOSED', 409);
+      }
+      current.review = { ...request, reviewId: randomUUID(), reviewedAt: new Date().toISOString() };
+      state.task.status = request.decision === 'needs_more_evidence' ? 'awaiting_revision' : 'reviewed'; return 200;
     });
   }
   reset(request: ResetRequest, key: string): StoredResponse {
@@ -177,13 +240,14 @@ export class DemoService {
       const state = this.state(); this.bind(state, request);
       const prior = this.existing(state.sessionId, path, key, hash); if (prior) return { prior };
       const sub = this.submitted(state, request);
-      if (state.analysis.status === 'succeeded') {
+      const current = state.versions.at(-1)!;
+      if (current.analysis.status === 'succeeded') {
         const result = this.response(state); this.store.saveIdempotency(state.sessionId, path, key, hash, result); return { prior: result };
       }
-      invariant(!state.review, 'REVIEW_EXISTS', 'Analysis is closed after the final review.');
-      invariant(state.analysis.status !== 'running', 'ANALYSIS_RUNNING', 'Analysis is already running. Read the current state.');
+      invariant(!current.review, 'REVIEW_EXISTS', 'Analysis is closed after human review.');
+      invariant(current.analysis.status !== 'running', 'ANALYSIS_RUNNING', 'Analysis is already running. Read the current state.');
       const attemptId = randomUUID();
-      state.analysis = { ...blankAnalysis(), status: 'running', attemptId, submissionId: sub.submissionId,
+      current.analysis = { ...blankAnalysis(), status: 'running', attemptId, submissionId: sub.submissionId,
         contentFingerprint: sub.contentFingerprint, startedAt: new Date().toISOString() };
       state.revision += 1; this.store.setState(state);
       this.store.saveIdempotency(state.sessionId, path, key, hash, this.response(state, 202));
@@ -201,10 +265,12 @@ export class DemoService {
     }
     return this.store.transaction(() => {
       const state = this.state();
-      invariant(state.sessionId === request.sessionId && state.submissionId === sub.submissionId && state.analysis.attemptId === attemptId,
-        'STALE_ANALYSIS', 'Analysis belongs to a previous demo. Reload the current case.');
-      state.analysis.status = failure ? 'failed' : 'succeeded'; state.analysis.errorCode = failure;
-      state.analysis.result = result; state.analysis.finishedAt = new Date().toISOString(); state.revision += 1;
+      const current = state.versions.at(-1);
+      invariant(state.sessionId === request.sessionId && current?.submissionId === sub.submissionId
+        && current.analysis.attemptId === attemptId && current.analysis.status === 'running' && !current.review,
+        'STALE_ANALYSIS', 'This analysis attempt is closed or belongs to an older version or session. Reload the current case.');
+      current.analysis.status = failure ? 'failed' : 'succeeded'; current.analysis.errorCode = failure;
+      current.analysis.result = result; current.analysis.finishedAt = new Date().toISOString(); state.revision += 1;
       this.store.setState(state);
       const response = failure ? { status: failure === 'AI_DISABLED' || failure === 'AI_NOT_CONFIGURED' ? 503 : 502,
         body: { error: { code: failure, message: 'Analysis did not complete. The saved work sample remains available for human review.', requestId: attemptId, retryable: true } } }

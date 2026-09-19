@@ -1,30 +1,30 @@
-# EvidenceBridge 后端接口合同 v1.0
+# EvidenceBridge 后端接口合同 v2.0
 
-固定 HarbourCart / Junior Data Analyst / Alex Chen；一个任务、一次正式提交、一次人工审核。运行说明见 [README](../../app/backend/README.md)，完整机器合同见 [openapi.json](openapi.json)，实际测试见 [TEST_RESULTS](TEST_RESULTS.md)。
+固定 HarbourCart / Junior Data Analyst / Alex Chen；一个任务，V1 首次提交 + 最多一次 V2 补交，每版最多一次人工审核。仅 V1 的 Needs More Evidence 开放 V2；其余结果终结任务，无 V3。修订 3 范围与验收增量见 [REVISION_PLAN](REVISION_PLAN.md)。运行说明见 [README](../../app/backend/README.md)，完整机器合同见 [openapi.json](openapi.json)，实际测试见 [TEST_RESULTS](TEST_RESULTS.md)。
 
 ## 1. HTTP、响应与调用顺序
 
-默认 base：`http://127.0.0.1:8787`。顺序：`GET → send → submission → analysis（可失败）→ review → GET`。需要重演时单独 reset，再 GET 新绑定。模型失败不影响原作品和人工审核能力。
+默认 base：`http://127.0.0.1:8787`。顺序：`GET → send → V1 submission → analysis（可失败）→ review → GET`。V1 Confirm/Insufficient 直接结束；V1 More 后可在**相同 session/task/dataset** 下 `V2 submission → analysis（可失败）→ terminal review → GET`。reset 是另一次演示，不是 V2 补交。模型失败不影响原作品和人工审核能力。
 
 | 接口 | 必要请求内容 | 成功状态 / 行为 |
 | --- | --- | --- |
 | `GET /healthz` | 无 | 200 `{status:"ok",storage:"sqlite"}`；本地存储检查 |
 | `GET /api/demo` | 无 | 200 当前完整共享状态 |
 | `POST /api/demo/task/send` | 基础绑定 + `instructions` | 200，仅 draft 可发送 |
-| `POST /api/demo/submission` | 基础绑定 + `candidateId,summary,findings,processEvidence` | 201，不可变正式快照 |
+| `POST /api/demo/submission` | 基础绑定 + `candidateId,submissionVersion,previousSubmissionId,previousContentFingerprint,summary,findings,processEvidence` | 201，每版不可变正式快照 |
 | `POST /api/demo/analysis` | 基础绑定 + `submissionId,contentFingerprint` | 200 成功；同键进行中重试可得 202；失败 502/503 |
-| `POST /api/demo/review` | 分析请求字段 + `requirementId,decision,comment` | 200，保存唯一人工决定 |
-| `POST /api/demo/reset` | `schemaVersion,sessionId` + 控制令牌头 | 200，全新会话及 taskId，清除当前提交/审核 |
+| `POST /api/demo/review` | 分析请求字段 + `requirementId,decision,comment` | 200，当前版保存唯一人工决定；V2 只接受终局决定 |
+| `POST /api/demo/reset` | `schemaVersion,sessionId` + 控制令牌头 | 200，全新会话及 taskId，清除两版提交/分析/审核 |
 
 `/docs` 是 Swagger UI，`/docs/json` 和 `/docs/yaml` 是运行时文档；文档插件还提供静态资源与重定向路由。这些是辅助路由，不是新的业务能力。`OPTIONS` 处理预检。
 
 除 health 与错误外，成功响应统一为：
 
 ```json
-{"data":{"schemaVersion":"1.0","sessionId":"...","datasetVersion":"harbourcart-2026-09-v1","revision":0,"candidate":{},"job":{},"application":{},"dataset":{},"task":{},"submission":null,"analysis":{},"review":null,"report":{}},"meta":{"replayed":false}}
+{"data":{"schemaVersion":"2.0","sessionId":"...","datasetVersion":"harbourcart-2026-09-v1","revision":0,"candidate":{},"job":{},"application":{},"dataset":{},"task":{},"currentSubmissionVersion":null,"submission":null,"analysis":{},"review":null,"versions":[],"workflow":{"maxSubmissions":2,"submissionsUsed":0,"remainingSubmissions":2,"canSubmit":false,"canResubmit":false,"nextSubmissionVersion":null,"allowedReviewDecisions":[],"isTerminal":false},"report":{}},"meta":{"replayed":false}}
 ```
 
-上例省略展开字段；**可直接查看的完整响应**：[初始](examples/initial.response.json)、[已提交](examples/submission.response.json)、[手工模拟分析](examples/analysis.response.json)、[审核后 GET](examples/reviewed.response.json)。所有完整例子由真实内存 API 执行生成，`manifest.json` 标记 synthetic/manual fixture；里面的随机 ID 与时间只适用于那组例子。
+上例省略展开字段；**可直接查看的完整响应**：[初始](examples/initial.response.json)、[已提交](examples/submission.response.json)、[手工模拟分析](examples/analysis.response.json)、[审核后 GET](examples/reviewed.response.json)。另见同会话补交场景：[V1 More](examples/revision-v1-more.response.json)、[等待 V2](examples/awaiting-revision.response.json)、[V2 请求](examples/revision-v2-submission.request.json)、[两版历史](examples/revision-history.response.json)。所有完整例子由真实内存 API 执行生成，`manifest.json` 标记 synthetic/manual fixture、零模型调用；直接 V1 与 V1/V2 是两个独立场景，不混用随机 ID、时间与指纹。
 
 错误形状：
 
@@ -38,11 +38,13 @@
 
 所有 POST：`Content-Type: application/json`；`Idempotency-Key` 必填，8–100 个 ASCII 字母、数字、`_` 或 `-`，建议 `crypto.randomUUID()`。reset 额外 `X-Demo-Admin-Token`；该令牌只保护 reset，正常读/发/提交/分析/审核没有账号认证。
 
-基础绑定：`schemaVersion:"1.0", sessionId, taskId, datasetVersion`，从最新 GET 取得。`task.id` 是固定模板 ID，**不是**本次随机 `task.taskId`。ID 字段最长 80，正则 `^[A-Za-z0-9_-]+$`。提交、分析、审核都使用当前会话；reset 只需 schemaVersion/sessionId。
+基础绑定：`schemaVersion:"2.0", sessionId, taskId, datasetVersion`，从最新 GET 取得。`task.id` 是固定模板 ID，**不是**本次随机 `task.taskId`。ID 字段最长 80，正则 `^[A-Za-z0-9_-]+$`。提交、分析、审核都使用当前会话；reset 只需 schemaVersion/sessionId。
 
 | 公开字段 | 约束 / 语义 |
 | --- | --- |
 | `instructions` | 非空白字符串，最长 4000 |
+| `submissionVersion` | 必填整数 `1` 或 `2`，按当前 `workflow.nextSubmissionVersion` 构造；`3` 属 schema 错误 |
+| `previousSubmissionId` / `previousContentFingerprint` | 必填；V1 两项均 `null`，V2 须精确绑定同任务 V1 的 ID 与指纹；不以 reset 建立补交关系 |
 | `summary` | 非空白字符串，最长 8000；原文保存，不 trim |
 | `findings` | 数组，0–40 条；不强制每个板块有卡片，薄弱作品可正式提交供审核 |
 | finding | **仅** `id,section,title,detail,source,confidence`；id 在 findings 内唯一；title 非空白最长 300；detail 最长 4000，允许空 |
@@ -52,7 +54,7 @@
 | `processEvidence` | 数组，0–100 条；每条仅 `id,at,title,detail?`；id 在该数组内唯一；at 为 date-time；title 非空白最长 200；detail 最长 1000 |
 | `contentFingerprint` | 服务端生成的 64 位小写十六进制 SHA-256；客户端原样传回 |
 | `requirementId` | 只允许本任务目标 `business-problem-solving` |
-| `decision` | `confirm / needs_more_evidence / evidence_still_insufficient` |
+| `decision` | V1：`confirm / needs_more_evidence / evidence_still_insufficient`；V2：仅 `confirm / evidence_still_insufficient`；按钮以 `workflow.allowedReviewDecisions` 为准 |
 | `comment` | 共享人工审核理由；所有三分支必填，非空白最长 2000 |
 
 请求 JSON 总大小上限 **128 KiB**。JSON schema 不做字符串/数字强制转换、不自动去除额外字段；额外字段返回 `INVALID_REQUEST`。所有公开对象白名单均排除私人 `notes`。Candidate 的 notes 留在本地；旧 HR 表单若把审核备注叫 notes，接入时只把公开理由投影为 `comment`，不要发送整个表单/state。
@@ -61,7 +63,7 @@
 
 ## 3. 快照、来源与内容指纹
 
-提交成功新增 `submissionId,submittedAt,contentFingerprint,processEvidenceProvenance:"client_reported",sources`。指纹使用基础绑定、candidateId 与公开作品的规范化 JSON：对象键排序，数组顺序与文本空白保留。它不是语义指纹。正式提交无 PATCH/覆盖端点；本地编辑不改变已提交版本。
+提交成功新增 `submissionId,submittedAt,contentFingerprint,processEvidenceProvenance:"client_reported",sources`。指纹使用基础绑定、candidateId、submissionVersion、两项 previous 绑定与公开作品的规范化 JSON：对象键排序，数组顺序与文本空白保留。它不是语义指纹。正式提交无 PATCH/覆盖端点；本地编辑不改变已提交版本。V2 创建新 submissionId、指纹、来源索引、空 analysis 和空 review，不覆盖 V1。相同 sourceId 可分别出现在两版，因此引用的外层提交绑定始终必需。
 
 来源索引：
 
@@ -71,34 +73,49 @@
 | `finding:<id>:title` / `finding:<id>:detail` | `/findings/<index>/title` 或 `/detail` | `work_sample` |
 | `event:<id>:title` / `event:<id>:detail` | `/processEvidence/<index>/title` 或 `/detail` | `client_reported_event` |
 
-`location` 是提交内部 JSON pointer，事件 detail 未提供时没有该条来源。引用包含 `sourceId,location,quote,start,end`；偏移使用 JavaScript UTF-16 单元、end exclusive，须满足 `source.text.slice(start,end) === quote`。前端先校验当前 `submissionId/contentFingerprint`，再定位并用纯文本渲染；来源不是 HTML 或代码执行指令。
+`location` 是提交内部 JSON pointer，事件 detail 未提供时没有该条来源。引用包含 `sourceId,location,quote,start,end`；偏移使用 JavaScript UTF-16 单元、end exclusive，须满足 `source.text.slice(start,end) === quote`。前端先校验**所选版本**的 `submissionId/contentFingerprint`，再在该版来源中定位并用纯文本渲染；来源不是 HTML 或代码执行指令。
 
 固定申请的引用另走 `application.sources` 和 `initialReport.sourceRefs`；数据引用另走 `dataset.resources`；不要把这两类 preset 引用伪装成本次候选人实际作品。
 
-## 4. 四层状态与报告
+## 4. 四层状态、版本与报告
 
 | 字段 | 枚举 / 影响 |
 | --- | --- |
-| `task.status` | `draft → sent → submitted → reviewed`；工作中草稿不另存服务 |
-| `analysis.status` | `not_started / running / succeeded / failed`；只影响观察提取 |
-| `review.decision` | 三种结果都结束本轮；未审核时 `review:null` |
-| `report.requirements[].status` | `supported / uncertain / verified`；读取 `displayLabel` 展示 |
+| `task.status` | `draft → sent → submitted`；V1 More → `awaiting_revision` → V2 `submitted`；任一终局决定 → `reviewed` |
+| `analysis.status` | 每版独立 `not_started / running / succeeded / failed`；只影响观察提取 |
+| `review.decision` | 每版最多一次；V1 More 开放唯一补交，V1/V2 Confirm 或 Insufficient 结束任务；未审核时 `null` |
+| `report.requirements[].status` | `supported / uncertain / verified`；`displayStatus/displayLabel` 是对应展示文案 |
 
-仅 `confirm` 把目标要求改为 verified；SQL 和 Data Analysis 仍 supported。两个不足结果都保持 uncertain，任务仍 reviewed；**不重开、不重提、不恢复 working**。提交或 AI 成功都不升级报告。人工审核不要求 AI 成功；`comment` 和当前快照关联后由两端读取。`report.isHiringDecision` 恒为 false，Confirm 表示有限样本证据被人复核，不是录用。
+`currentSubmissionVersion` 初始 null，之后为 1/2。`versions` 按 V1、V2 排列，最多两个 `{submission,analysis,review}`。顶层同名字段是**最新正式版本**投影；等待 V2 或编辑 V2 本地草稿时仍指 V1。历史只读；切换历史只改变本地选择，不改变当前版本、报告或服务状态。
 
-`report.requirements[].sourceRefs` 保留初始材料引用；`submissionSourceRefs` 引用本次工作样本。更新后的未知仍存在，不把有限作品扩展为真实工作绩效或因果证明。
+| 当前状态 | canSubmit / canResubmit | nextSubmissionVersion | allowedReviewDecisions | isTerminal |
+| --- | --- | --- | --- | --- |
+| draft | false / false | null | [] | false |
+| sent | true / false | 1 | [] | false |
+| V1 submitted、未审核 | false / false | null | 三种决定 | false |
+| awaiting_revision（V1 More） | true / true | 2 | [] | false |
+| V2 submitted、未审核 | false / false | null | confirm、evidence_still_insufficient | false |
+| reviewed（V1 或 V2 终局） | false / false | null | [] | true |
+
+`workflow.maxSubmissions=2`；`submissionsUsed=versions.length`；`remainingSubmissions=2-submissionsUsed` **只是剩余额度，不是提交许可**。V1 终局后 remainingSubmissions 仍为 1，但 canSubmit=false。前端以 workflow 与当前版本渲染动作，不以剩余数字自行开放按钮。
+
+仅 `confirm` 把目标要求改为 verified；SQL 和 Data Analysis 仍 supported。More 和 Insufficient 均保持目标 uncertain，但前者仅在 V1 等待补交，后者终局。提交或 AI 成功都不升级报告。人工审核不要求 AI 成功。当前版已审核时，目标报告 `mode:human_reviewed`，summary 含本次 decision/comment；V2 提交后当前 review 为空，不沿用 V1 人审结果。`application.initialReport` 始终保留初始 before。`report.isHiringDecision` 恒为 false；Confirm 是有限样本证据经人复核，不是录用。
+
+`report.requirements[].sourceRefs` 保留初始材料引用；`submissionSourceRefs` 引用当前正式工作样本。V1 分析、审核理由及引用通过 versions 回看，不投射成 V2 结果。更新后的未知仍存在，不把有限作品扩展为真实工作绩效或因果证明。
 
 ## 5. 幂等、并发、重启和重置
 
 - 按 `sessionId + path + Idempotency-Key` 保存请求摘要与响应；同键同体重放原收据，成功时 `meta.replayed:true`；同键异体 409 `IDEMPOTENCY_CONFLICT`。
-- 不同 key 重复 send/submission/review 仍受单次状态约束，返回 409；不会产生第二个正式提交或覆盖人工决定。失败的普通写入不会部分提交。
-- 首次 analysis 请求等待本次完成。同 key 的并发重试得到 202 running 收据；完成后同 key 返回最终成功或失败收据，不重复调用模型。不同 key 在 running 时为 409 `ANALYSIS_RUNNING`。
-- 已 succeeded 的 analysis 用新 key 读取保存结果，不重新调用模型；失败后新 key 可显式重试，前提是尚未完成人工审核。同旧 key 只会读到原错误。
-- 已审核后不启动新分析；已有 succeeded 分析仍可读回。正在执行的分析完成只更新观察，不改变人工决定或证据状态。
-- GET 和收据读回中，已保存的真实 `live` 输出标为 `replay`，保留模型、时间、responseId；只有原首次完成响应显示 live。manual_simulation 永远保持该标签。
-- 进程中断时，重启将 running 改为 `failed/AI_INTERRUPTED`，关联 202 收据转为 503。客户端 GET 后决定是否以新 key 重试，不无限轮询旧收据。
-- reset 原子清除当前提交、审核与旧收据，生成新 session/task。旧一般写入返回 `STALE_SESSION`。仅**最近一次 reset 收据**被保留用于同键重试，重放不会再清空随后新提交的数据；再一次 reset 后更旧收据失效。
-- reset 与模型请求交错时，迟到结果返回 `STALE_ANALYSIS`，不写入新会话。不要把旧操作的历史成功收据直接覆盖当前页面；每次写成功/冲突后重新 GET。
+- 同一会话中，V2 已存在时旧 key 的 V1 操作仍可重放其历史收据；它不是当前 GET。新 key 向 V1 发分析/审核则报 `STALE_SUBMISSION`。**每次写成功、历史重放或冲突后都重新 GET**，不直接用收据替换页面当前版本。
+- 不同 key 的 send、同版 submission、同版 review 仍受状态/版本限制，不覆盖快照或人工决定。合法 V2 是新动作、新 key、前版精确绑定；失败普通写入不部分提交。
+- 首次 analysis 请求等待本次完成。同 key 并发重试得 202 running 收据；完成后同 key 返回最终收据，不重复调用模型。不同 key 在 running 时为 409 `ANALYSIS_RUNNING`。
+- 当前版已 succeeded，用新 key 读保存结果而不调用模型；failed 后可用新 key 显式重试，前提是该版仍为当前且未审核。已审核后不启动分析；既有成功结果保留。历史版仅通过 GET 或旧收据回看。
+- 人审提交时若当前 analysis 正 running，原子冻结为 `failed/AI_REVIEW_CLOSED`，finishedAt 固定；该 attempt 的 202 收据转为 409/AI_REVIEW_CLOSED。既有成功输出原样保留，未完成输出不伪造。随后到达的原请求结果报 `STALE_ANALYSIS`，不改变该版历史或 V2。
+- V2 新建 `not_started` analysis 与 null review；不会继承 V1 观察、决定或评论。新分析只使用 V2 公开快照与同一固定案例。
+- GET/收据读回中已保存的真实 `live` 输出标为 `replay`，保留模型、时间、responseId；只有原首次完成响应显示 live。manual_simulation 永远保持该标签。
+- 进程中断时，重启将当前 running 改为 `failed/AI_INTERRUPTED`，关联 202 收据转为 503。GET 后再决定是否以新 key 重试。awaiting_revision、两版快照、各自审核和既成结果从同库恢复。
+- reset 原子清除两版提交/分析/审核和旧收据，生成新 session/task。旧一般写入返回 `STALE_SESSION`。仅**最近一次 reset 收据**保留供同键重试，重放不再清空随后新提交；再 reset 后更旧收据失效。
+- reset 与模型交错时迟到结果为 `STALE_ANALYSIS`，不写入新会话。schema 2.0 默认用 `./var/evidencebridge-v2.sqlite`；旧 1.0 SQLite 启动检查停止加载并保留文件，显式选择新的 `DATABASE_PATH`，不迁移或自动清空。1.0 HTTP 请求为 400/INVALID_REQUEST。
 
 ## 6. AI 输出、配置及限制
 
@@ -109,7 +126,7 @@
 - `live`：仅服务端 OpenAI Responses，显式 key 和 model；输入含公开作品投影、6 个合成资源和固定观察规则。当前项目未有真实调用记录。
 - 模型输入 JSON 默认上限 96000 UTF-8 bytes（含资源/来源投影；额外提示词和 schema 另占请求空间）；提供者响应流上限 64000 bytes；`max_output_tokens:4000`。超时默认 20 秒，env 可在 100–60000ms 内设置；429/5xx/网络最多重试一次，200ms 间隔，共用同一总超时。结构/引用错误不重试。
 - 固定 HTTPS 提供者 endpoint，不跟随重定向；`store:false` 与严格 `text.format` schema。协议参见 [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs) 与 [Responses 迁移](https://developers.openai.com/api/docs/guides/migrate-to-responses)；不把 store:false 解释成零保留承诺。
-- AI 成功只证明输出结构和引用通过工程校验；真实引文不保证数字推理、因果判断或模型语义完全正确。三类 stub、提示隔离与反例测试不等于真实模型效果实验。
+- AI 成功只证明输出结构和引用通过工程校验；真实引文不保证数字推理、因果判断或模型语义完全正确。三类 stub、提示隔离与反例测试不等于真实模型效果实验；配对薄弱 V1/补充可定位证据 V2 也只是工程夹具。每版结果保留各自绑定和模式，不要求同义改写机械地产生不同结论。
 
 ## 7. 全部业务错误代码
 
@@ -124,10 +141,14 @@
 | 409 | `SUBMISSION_REQUIRED`, `TASK_NOT_SENT` | 按发送→提交→分析/审核顺序执行 |
 | 409 | `STALE_SUBMISSION`, `CONTENT_MISMATCH` | 使用当前不可变提交 ID 与指纹 |
 | 409 | `CANDIDATE_MISMATCH`, `REQUIREMENT_MISMATCH` | 使用固定候选人和目标要求 ID |
-| 409 | `TASK_ALREADY_SENT`, `SUBMISSION_EXISTS`, `REVIEW_EXISTS` | 该单次动作已完成；读当前状态，不重开 |
+| 409 | `TASK_ALREADY_SENT`, `REVIEW_EXISTS` | 任务已发送或该版已审核；读当前状态，不重开 |
+| 409 | `SUBMISSION_VERSION_MISMATCH`, `PREVIOUS_SUBMISSION_MISMATCH` | 按 workflow 构造版本号，并精确绑定 V1 ID/指纹 |
+| 409 | `RESUBMISSION_NOT_ALLOWED`, `SUBMISSION_LIMIT_REACHED` | 仅 V1 More 开放 V2；两版已用尽后结束 |
+| 409 | `REVIEW_LIMIT_REACHED` | V2 只接受 confirm 或 evidence_still_insufficient |
 | 409 | `IDEMPOTENCY_CONFLICT` | 同键不同体；核对原动作，别盲目换键覆盖 |
 | 409 | `ANALYSIS_RUNNING` | GET 观察状态，保留作品，不重复启动 |
-| 409 | `STALE_ANALYSIS` | 模型结果属于重置前会话；GET 当前案例 |
+| 409 | `AI_REVIEW_CLOSED` | 正运行分析已被该版人审冻结；读当前状态，不轮询旧 attempt |
+| 409 | `STALE_ANALYSIS` | 模型结果所属会话/当前提交/attempt 已变化或已人审冻结；GET 当前案例 |
 | 413 | `PAYLOAD_TOO_LARGE` | HTTP 请求超出 128 KiB |
 | 415 | `UNSUPPORTED_MEDIA_TYPE` | 使用 application/json |
 | 500 | `INTERNAL_ERROR` | 通用内部/序列化错误；记录 requestId，数据未自动替换 |
@@ -136,10 +157,10 @@
 | 503 | `AI_INTERRUPTED` | 重启后原进行中收据；GET 后用新 key 显式重试 |
 | 502 | `AI_TIMEOUT`, `AI_PROVIDER_ERROR`, `AI_OUTPUT_INVALID`, `AI_OUTPUT_TOO_LARGE`, `AI_INPUT_INVALID`, `AI_INPUT_TOO_LARGE`, `AI_FAILED` | 原作品保留；GET 显示 failed/errorCode，检查配置/输入；新 key 才是新尝试 |
 
-HTTP 层把分析失败统一映射为上表的 502/503，不使用适配器内部 413/422/504 作为 HTTP 合同。`AI_CONFIG_INVALID` 是启动配置检查错误，正常服务不启动；不是可依赖的常规业务响应。分析错误收据 `retryable:true` 意味作品可供后续处理，不保证立即重试会成功；未配置/错误结构需先修正原因。其它列出的业务错误默认为 retryable:false。
+HTTP 层把模型/适配器失败映射为上表的 502/503；状态竞争使用上表 409。不使用适配器内部 413/422/504 作为 HTTP 合同。`AI_CONFIG_INVALID` 是启动配置检查错误，正常服务不启动；不是可依赖的常规业务响应。分析错误收据 `retryable:true` 意味作品可供后续处理，不保证立即重试会成功；未配置/错误结构需先修正原因。其它列出的业务错误默认为 retryable:false。
 
 ## 8. 本机访问边界
 
 只监听 127.0.0.1。Host 必须是 `127.0.0.1:<实际端口>` 或 `localhost:<实际端口>`；默认前端允许 origin 为 5173/4173/5186 的 127.0.0.1，服务自己的同源 origin 也可访问。没有 Origin 的 CLI 可用；带 `Sec-Fetch-Site: cross-site` 而无 Origin 的请求被阻止。预检头仅 content-type、idempotency-key、x-demo-admin-token；不启用通配 CORS。
 
-loopback/Origin 检查不是生产角色权限。没有账号、多租户、公网共享、任意上传、JD CRUD、通知或多轮审核。前端 API 接入状态见 [HANDOFF](HANDOFF.md)。
+loopback/Origin 检查不是生产角色权限。没有账号、多租户、公网共享、任意上传、JD CRUD、通知、无限补交或历史版重新审核。前端 API 接入状态见 [HANDOFF](HANDOFF.md)。

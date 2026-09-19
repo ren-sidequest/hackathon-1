@@ -19,7 +19,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): AppConfig {
     if (parsed.origin !== origin || parsed.protocol !== 'http:' || !['localhost', '127.0.0.1'].includes(parsed.hostname))
       throw new Error('Only explicit loopback HTTP ALLOWED_ORIGINS are supported');
   }
-  return { port, databasePath: resolve(env['DATABASE_PATH'] ?? './var/evidencebridge.sqlite'), adminToken,
+  return { port, databasePath: resolve(env['DATABASE_PATH'] ?? './var/evidencebridge-v2.sqlite'), adminToken,
     allowedOrigins, analysisMode: mode as AppConfig['analysisMode'], apiKey: env['OPENAI_API_KEY'] ?? '',
     model: env['OPENAI_MODEL'] ?? '', aiTimeoutMs: timeout };
 }

@@ -1,7 +1,7 @@
 {
   "data": {
-    "schemaVersion": "1.0",
-    "sessionId": "90b3d55d-2675-45ed-8fc6-d9b8a82ab6f8",
+    "schemaVersion": "2.0",
+    "sessionId": "17e65067-2dfb-49de-a0e0-737613478332",
     "datasetVersion": "harbourcart-2026-09-v1",
     "revision": 1,
     "candidate": {
@@ -757,7 +757,7 @@
     },
     "task": {
       "id": "conversion-drop-investigation",
-      "taskId": "6dbf5cd7-021b-4d3f-aac9-e72217534f4f",
+      "taskId": "5a504c4f-45e4-4c1e-bcc4-6d6cf60a463a",
       "requirementId": "business-problem-solving",
       "title": "Conversion Drop Investigation",
       "instructions": "Investigate what is driving the conversion decline. Use the supplied data to identify the strongest signals, form testable hypotheses, and recommend a prioritised next step. Distinguish what the data shows from what still needs to be validated.",
@@ -773,7 +773,7 @@
         "business_context.md"
       ],
       "status": "sent",
-      "sentAt": "2026-09-19T03:05:40.537Z"
+      "sentAt": "2026-09-19T04:15:55.888Z"
     },
     "submission": null,
     "analysis": {
@@ -787,6 +787,18 @@
       "result": null
     },
     "review": null,
+    "currentSubmissionVersion": null,
+    "versions": [],
+    "workflow": {
+      "maxSubmissions": 2,
+      "submissionsUsed": 0,
+      "remainingSubmissions": 2,
+      "canSubmit": true,
+      "canResubmit": false,
+      "nextSubmissionVersion": 1,
+      "allowedReviewDecisions": [],
+      "isTerminal": false
+    },
     "report": {
       "mode": "preset_with_current_workflow",
       "isHiringDecision": false,

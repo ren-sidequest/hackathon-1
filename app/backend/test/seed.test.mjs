@@ -4,7 +4,7 @@ import { aggregateDataset, createSeed, DATASET_VERSION, SECTIONS } from '../dist
 
 test('seed keeps one identified case, three requirements and explicitly preset initial evidence', () => {
   const s = createSeed();
-  assert.equal(s.schemaVersion, '1.0');
+  assert.equal(s.schemaVersion, '2.0');
   assert.equal(s.datasetVersion, DATASET_VERSION);
   assert.equal(s.dataset.version, DATASET_VERSION);
   assert.equal(s.candidate.name, 'Alex Chen');

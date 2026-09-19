@@ -2,6 +2,69 @@
 
 日期：2026-09-19（Australia/Sydney）。单元/API/前端回归由独立 QA 角色 AI agent 执行；实际 HTTP 客户端复现另由架构/交付角色 AI agent 执行并核对日志。均不是外部用户试用、真人批准或比赛现场验证。
 
+## 0. 修订 3 / schema 2.0：本轮有限两版验收
+
+**当前结果：后端验收完成，双端 UI 联调待小傅接入。** 本轮实现 V1 + 最多一次获准 V2 补交；schema 2.0 的结果见本节。下方第 1–4 节保留 schema 1.0 / 提交 `6fb19a9` 的历史记录，其 116 项及 10 项结果不冒充两版验证。上述验收发生在原分支本地工作区，该验收阶段未执行提交、推送或部署；后续发布状态以 GitHub PR 为准，旧 PR/CI 结果不替代新版检查。
+
+### 0.1 执行环境与实际结果
+
+Node.js `v22.23.2`、npm `10.9.8`、macOS arm64；沿用依赖与案例 `harbourcart-2026-09-v1`。本轮日志在仓库外目录 `revisions-qa-20260919`，下文记为 `$REVISION_QA_ROOT`；配置这个变量为自己的绝对路径，不上传原始日志、DB、token 或本机路径。
+
+| 检查 | 本轮实际结果 | 记录 |
+| --- | --- | --- |
+| `npm test`（含 strict TypeScript 构建） | **145/145 通过，18.285 秒**，无失败/跳过 | `backend-tests.log` |
+| `npm run test:coverage`（重新构建） | **145/145 通过，27.102 秒** | `backend-coverage.log` |
+| 测试文件构成 | analysis 56、原 API 31、安全/持久化 23、种子 7、两版专项 28 | 保留并适配旧 116 项，新增 29 项 |
+| `npm run typecheck` | 主代理本轮复跑通过 | 与最终两版源码对应 |
+| 仓库文档/补丁检查 | **17 份文档与本地链接通过**，`git diff --check` 通过 | 新增 REVISION_PLAN；旧阶段 16 份留在历史记录 |
+| 真实 HTTP / CLI / 独立进程 | 两版补交流程及防护 **42/42 通过**，最终构建后再次全通过，单独计数 | 最终 `run-4ZVSvP/report.json`；首轮 `run-j9YDK2/report.json` 保留 |
+| 原前端必要回归 | Candidate 单测 21、E2E 9、共享 UI 10；HR 单测 8；两端 build 通过 | 主代理独立执行；`frontend-regression.log` |
+| 前端文件边界 | `git diff -- app/candidate app/hr app/shared` 为空 | 旧页面回归共 48 项，不是新版 API 联调 |
+
+从后端目录复现 `npm test`、`npm run test:coverage`；从仓库根使用相应的 `--prefix app/backend`。本轮没有调用真实模型或引入新增依赖。原前端的 HR Vite 公告与 Candidate chunk 提示仍属于既存限制，没有靠改前端代码绕过回归。
+
+首轮 **141/142**：种子仍暴露 `schemaVersion: "1.0"`，与新 2.0 合同不符；根代理将其改为共用 `SCHEMA_VERSION`，未改变 datasetVersion。失败原日志保留为 `first-tests-before-seed-fix.log`。修复后先 144 项通过，再补当前 V2 分析中断恢复，形成最终 145 项；没有删除失败断言。
+
+### 0.2 两版行为与负向覆盖
+
+专项测试：[versions.test.mjs](../../app/backend/test/versions.test.mjs)。现有 API/安全测试也已按 schema 2.0 及 `state.versions[]` 适配。
+
+- **主线与状态**：V1 直接 Confirm / Evidence Still Insufficient 终局；仅 V1 Needs More Evidence 保存具体意见并进入 awaiting_revision。`remainingSubmissions = 2 − submissionsUsed` 表示物理余量，V1 终局仍可为 1，但许可为 false、nextSubmissionVersion 为 null。
+- **真实同会话补交**：先提交薄弱 V1，读取具体审核意见，编辑客户端草稿，再在同一 session/task/dataset 创建 V2；不以 reset 或加载中间状态冒充补交。草稿不修改 V1；V2 拥有新 ID/指纹及 V1 前链，初始分析 not_started、review null，不继承旧结果。
+- **三类材料**：有依据、漂亮但无依据、把相关性当因果；两版配对分别保留当前原文、逐字引文、模式及人审结果。manual_simulation 和 TEST-STUB 模型只验证工程合同；不声称模型实际判断了答案优劣。提交或分析成功始终不自动升级证据。
+- **次数与输入**：三个新增字段必填；版号/前版 ID/指纹校验；V1 未获准和终局后拒绝 V2；V2 拒绝再请求补证及第三份作品。显式 `submissionVersion: 3` 为 400 INVALID_REQUEST；已有两版再发 schema 内的 1/2 为 409 SUBMISSION_LIMIT_REACHED。
+- **并发/幂等**：同 key 同体 V2 重放，竞争不同 key 只创建一份 V2；历史 key 同体返回对应历史收据并标 replayed，而历史 ID + 新 key 返回 STALE_SUBMISSION；旧 session 在业务收据重放前拒绝。Reset 保留其特殊重试防误清规则。
+- **分析与人审竞态**：人审仅把 running 变成 failed / AI_REVIEW_CLOSED，并把该 attempt 的 202 收据改为 409；未运行保持未运行、已成功保持原结果。V1 晚到成功/失败均 STALE_ANALYSIS，不改冻结的 V1 或 V2；冻结 V2 也不覆盖 V1 已完成收据。
+- **分版 provenance**：TEST-STUB 的首次分析响应只对刚生成的版标 live；GET/重试的顶层及历史数组均标 replay。sourceId 可在两版重复，但逐字引文和输出绑定各自 submissionId/fingerprint，不串版。
+- **隐私**：V2 根对象、finding、event 中的私人 notes 都拒绝；共享历史、当前响应、模型输入没有该字段的秘密哨兵。此前 headers/query/异常/日志脱敏及访问边界回归继续通过。
+- **持久化**：awaiting_revision、V2 submitted、V2 final 均关闭并重启恢复相同历史。实际 SIGKILL 用例继续覆盖进程锁和 V1 中断；新增 V2 running 故障注入恢复为 AI_INTERRUPTED，旧收据 503，新键仅重跑 V2，V1 真实失败记录原样保留。
+- **损坏与旧库**：历史 ID 重复、顺序颠倒、V1 错误终局但存在 V2、V2 审核旧 ID、旧结果充当当前结果均 fail closed 并保留记录。旧 user_version 0/1 的已有库在写 PRAGMA/DDL 前拒绝且文件字节不变；2 格式缺表也不静默补建。新库 user_version 2，默认文件 `var/evidencebridge-v2.sqlite`。
+
+### 0.3 当前代码覆盖率
+
+| 编译后业务模块 | 行覆盖率 | 分支覆盖率 |
+| --- | ---: | ---: |
+| analysis.js | 98.93% | 96.28% |
+| app.js | 99.21% | 89.23% |
+| config.js | 100% | 100% |
+| service.js | 100% | 96.70% |
+| store.js | 100% | 92.98% |
+| seed.js / schema.js / response-schema.js | 100% | 100% |
+
+all files 为 95.73% 行 / 95.81% 分支，含测试及部分 CLI，不作为纯业务覆盖率。server 启动与完整 CLI 路径由独立 HTTP/进程验证补充，而不是宣称均已被 instrumentation 覆盖。
+
+### 0.4 真实 HTTP 与仍待完成的验证
+
+架构/交付代理的 `verify-revisions.mjs` 启动独立服务器进程和临时 SQLite，分别验证 V2 Confirm / Insufficient、三个持久化阶段重启、错误前链/旧 ID/上限、reset、CLI 入口、disabled AI 和日志凭据排除。QA 已读取首轮及最终构建后的复跑原始报告：最终 `$REVISION_QA_ROOT/run-4ZVSvP/report.json` 为 **42/42 passed**，`modelCalls: 0`、`temporaryServicesStopped: true`、`temporaryDatabasesRemoved: true`。同目录保留服务/CLI 日志及六份合成快照；无真实候选人数据。
+
+根代理另用现有 GitNexus CLI 在本项目独立环境执行前后 `index-only` 与变更影响检查，没有使用另一个旧副本的索引或改全局配置。最终已跟踪差异报告 39 files / 234 symbols / 30 flows，工具标记 critical 表示合同/恢复核心改动影响范围大，不是发现某个具体漏洞；未跟踪的新测试不计入该静态统计，也不据此宣称全覆盖。实际正确性仍以本节 API、持久化与回归结果为据。
+
+本轮原前端回归来自独立、干净的 `31edc53` clone：E2E 9 项 12.0 秒、shared UI 10 项 9.0 秒；这是既有页面没有损坏的证据。**小傅仍需接入 schema 2.0，完成 V1→意见→V2 的双端 UI/API 联调；真实模型实验、真人评估、公网部署及新版远端 CI 均不由当前本地测试宣称完成。**
+
+---
+
+**以下第 1–4 节是 schema 1.0 历史验证记录，仅供追溯。**
+
 ## 1. 环境与改动边界
 
 为避免公开本机用户名，本文将实际独立 QA 目录记为 `$QA_ROOT`（目录名 `backend-qa-20260919`，位于仓库外）。复现前将此环境变量设为自己的绝对路径；原始日志保留在本机，不随源码上传。
@@ -151,4 +214,4 @@ npm audit --json
 - 双端 UI API 联调：待小傅接入；浏览器里的私人 notes 请求排除、点击引用定位、跨端刷新与三分支演示需届时检查。
 - 真人试用、评委演示、公网部署：本记录未执行；远端 CI 的后续状态独立见对应 PR。
 
-当前后端 API/确定性验证结论：**后端验收完成，双端 UI 联调待小傅接入。** 真实模型效果仍按上面的独立待验证项处理。
+schema 1.0 当时的 API/确定性验证结论为“后端验收完成，双端 UI 联调待小傅接入”；本次 schema 2.0 的最新结果与未验证事项以第 0 节为准。

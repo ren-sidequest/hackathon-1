@@ -21,9 +21,9 @@ function setup(t) {
   t.after(() => store.close());
   const service = new DemoService(store, analyzer);
   const d = service.read().data;
-  const binding = { schemaVersion: '1.0', sessionId: d.sessionId, taskId: d.task.taskId, datasetVersion: d.datasetVersion };
+  const binding = { schemaVersion: '2.0', sessionId: d.sessionId, taskId: d.task.taskId, datasetVersion: d.datasetVersion };
   service.send({ ...binding, instructions: d.task.instructions }, 'security-send-key');
-  service.submit({ ...binding, candidateId: d.candidate.id, summary: 'Security restore fixture: observe before attributing cause.',
+  service.submit({ ...binding, candidateId: d.candidate.id, submissionVersion: 1, previousSubmissionId: null, previousContentFingerprint: null, summary: 'Security restore fixture: observe before attributing cause.',
     findings: [], processEvidence: [{ id: 'event-1', at: '2026-09-19T02:00:00.000Z', title: 'Opened data; client-reported only.' }] }, 'security-submit-key');
   const submitted = service.read().data.submission;
   const target = { ...binding, submissionId: submitted.submissionId, contentFingerprint: submitted.contentFingerprint };
@@ -44,14 +44,14 @@ test('well-formed persisted event and final review survive integrity validation'
 });
 
 const corruptions = {
-  'review submission': state => { state.review.submissionId = 'another-submission'; },
-  'review requirement': state => { state.review.requirementId = 'sql'; },
-  'review fingerprint': state => { state.review.contentFingerprint = '0'.repeat(64); },
-  'review session': state => { state.review.sessionId = 'another-session'; },
-  'review task': state => { state.review.taskId = 'another-task'; },
-  'review dataset': state => { state.review.datasetVersion = 'another-dataset'; },
+  'review submission': state => { state.versions[0].review.submissionId = 'another-submission'; },
+  'review requirement': state => { state.versions[0].review.requirementId = 'sql'; },
+  'review fingerprint': state => { state.versions[0].review.contentFingerprint = '0'.repeat(64); },
+  'review session': state => { state.versions[0].review.sessionId = 'another-session'; },
+  'review task': state => { state.versions[0].review.taskId = 'another-task'; },
+  'review dataset': state => { state.versions[0].review.datasetVersion = 'another-dataset'; },
   'workflow status': state => { state.task.status = 'draft'; },
-  'orphaned review': state => { state.submissionId = null; },
+  'orphaned review': state => { state.versions = []; },
 };
 for (const [name, corrupt] of Object.entries(corruptions)) {
   test(`persisted ${name} mismatch is rejected rather than restoring verified evidence`, t => {
@@ -67,7 +67,7 @@ test('persisted analysis metadata must reference the current immutable submissio
   const { store, service, target } = setup(t);
   assert.equal((await service.analyze(target, 'security-analyze-key')).status, 200);
   assert.doesNotThrow(() => new DemoService(store, analyzer), 'uncorrupted baseline must restore first');
-  const state = store.getState(); state.analysis.submissionId = 'another-submission'; store.setState(state);
+  const state = store.getState(); state.versions[0].analysis.submissionId = 'another-submission'; store.setState(state);
   assert.throws(() => new DemoService(store, analyzer));
 });
 
@@ -101,7 +101,7 @@ test('request headers, private fields and raw URL queries are absent from respon
   const d = read.json().data;
   const rejected = await app.inject({ method: 'POST', url: `/api/demo/task/send?private=${secret}`, headers: {
     host: '127.0.0.1:8787', 'content-type': 'application/json', 'idempotency-key': 'security-rejected-key',
-  }, payload: { schemaVersion: '1.0', sessionId: d.sessionId, taskId: d.task.taskId, datasetVersion: d.datasetVersion,
+  }, payload: { schemaVersion: '2.0', sessionId: d.sessionId, taskId: d.task.taskId, datasetVersion: d.datasetVersion,
     instructions: d.task.instructions, notes: secret } });
   assert.equal(rejected.statusCode, 400);
   assert.equal(rejected.json().error.code, 'INVALID_REQUEST');
@@ -139,7 +139,7 @@ test('reset remains disabled without an explicitly configured server-side admin 
   const before = (await app.inject({ method: 'GET', url: '/api/demo', headers: { host: '127.0.0.1:8787' } })).json().data;
   const response = await app.inject({ method: 'POST', url: '/api/demo/reset', headers: {
     host: '127.0.0.1:8787', 'content-type': 'application/json', 'idempotency-key': 'security-disabled-reset',
-  }, payload: { schemaVersion: '1.0', sessionId: before.sessionId } });
+  }, payload: { schemaVersion: '2.0', sessionId: before.sessionId } });
   assert.equal(response.statusCode, 503);
   assert.equal(response.json().error.code, 'RESET_DISABLED');
   const after = (await app.inject({ method: 'GET', url: '/api/demo', headers: { host: '127.0.0.1:8787' } })).json().data;
@@ -175,9 +175,9 @@ test('a crashed analysis process leaves a reclaimable lock and a failed, retryab
     const store = new Store(${JSON.stringify(file)});
     const service = new DemoService(store, () => new Promise(() => {}));
     let d = service.read().data;
-    const b = {schemaVersion:'1.0',sessionId:d.sessionId,taskId:d.task.taskId,datasetVersion:d.datasetVersion};
+    const b = {schemaVersion:'2.0',sessionId:d.sessionId,taskId:d.task.taskId,datasetVersion:d.datasetVersion};
     service.send({...b,instructions:d.task.instructions},'crash-send-key');
-    service.submit({...b,candidateId:d.candidate.id,summary:'Crash recovery sample.',findings:[],processEvidence:[]},'crash-submit-key');
+    service.submit({...b,candidateId:d.candidate.id,submissionVersion:1,previousSubmissionId:null,previousContentFingerprint:null,summary:'Crash recovery sample.',findings:[],processEvidence:[]},'crash-submit-key');
     d=service.read().data;
     void service.analyze({...b,submissionId:d.submission.submissionId,contentFingerprint:d.submission.contentFingerprint},'crash-analysis-key');
     process.stdout.write('READY'); setInterval(() => {}, 1000);
@@ -190,7 +190,7 @@ test('a crashed analysis process leaves a reclaimable lock and a failed, retryab
   try {
     const service = new DemoService(store, analyzer); const d = service.read().data;
     assert.equal(d.analysis.status, 'failed'); assert.equal(d.analysis.errorCode, 'AI_INTERRUPTED');
-    const request = { schemaVersion: '1.0', sessionId: d.sessionId, taskId: d.task.taskId, datasetVersion: d.datasetVersion,
+    const request = { schemaVersion: '2.0', sessionId: d.sessionId, taskId: d.task.taskId, datasetVersion: d.datasetVersion,
       submissionId: d.submission.submissionId, contentFingerprint: d.submission.contentFingerprint };
     const previous = await service.analyze(request, 'crash-analysis-key');
     assert.equal(previous.status, 503); assert.equal(previous.body.error.code, 'AI_INTERRUPTED');

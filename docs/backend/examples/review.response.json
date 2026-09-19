@@ -1,7 +1,7 @@
 {
   "data": {
-    "schemaVersion": "1.0",
-    "sessionId": "90b3d55d-2675-45ed-8fc6-d9b8a82ab6f8",
+    "schemaVersion": "2.0",
+    "sessionId": "17e65067-2dfb-49de-a0e0-737613478332",
     "datasetVersion": "harbourcart-2026-09-v1",
     "revision": 5,
     "candidate": {
@@ -757,7 +757,7 @@
     },
     "task": {
       "id": "conversion-drop-investigation",
-      "taskId": "6dbf5cd7-021b-4d3f-aac9-e72217534f4f",
+      "taskId": "5a504c4f-45e4-4c1e-bcc4-6d6cf60a463a",
       "requirementId": "business-problem-solving",
       "title": "Conversion Drop Investigation",
       "instructions": "Investigate what is driving the conversion decline. Use the supplied data to identify the strongest signals, form testable hypotheses, and recommend a prioritised next step. Distinguish what the data shows from what still needs to be validated.",
@@ -773,15 +773,18 @@
         "business_context.md"
       ],
       "status": "reviewed",
-      "sentAt": "2026-09-19T03:05:40.537Z"
+      "sentAt": "2026-09-19T04:15:55.888Z"
     },
     "submission": {
-      "schemaVersion": "1.0",
-      "sessionId": "90b3d55d-2675-45ed-8fc6-d9b8a82ab6f8",
-      "taskId": "6dbf5cd7-021b-4d3f-aac9-e72217534f4f",
+      "schemaVersion": "2.0",
+      "sessionId": "17e65067-2dfb-49de-a0e0-737613478332",
+      "taskId": "5a504c4f-45e4-4c1e-bcc4-6d6cf60a463a",
       "datasetVersion": "harbourcart-2026-09-v1",
       "candidateId": "alex-chen",
-      "summary": "EB-CROSS-CLIENT-UNIQUE-GENERATED-EXAMPLE. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
+      "submissionVersion": 1,
+      "previousSubmissionId": null,
+      "previousContentFingerprint": null,
+      "summary": "EB-EXAMPLE-DIRECT-V1. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
       "findings": [
         {
           "id": "client-finding-1",
@@ -819,20 +822,20 @@
       "processEvidence": [
         {
           "id": "client-event-1",
-          "at": "2026-09-19T03:05:40.594Z",
+          "at": "2026-09-19T04:15:55.964Z",
           "title": "Synthetic test client assembled the public work sample",
           "detail": "Script-generated fixture event; not an observed candidate action."
         }
       ],
-      "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-      "submittedAt": "2026-09-19T03:05:40.596Z",
-      "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+      "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+      "submittedAt": "2026-09-19T04:15:55.966Z",
+      "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
       "processEvidenceProvenance": "client_reported",
       "sources": [
         {
           "sourceId": "summary",
           "location": "/summary",
-          "text": "EB-CROSS-CLIENT-UNIQUE-GENERATED-EXAMPLE. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
+          "text": "EB-EXAMPLE-DIRECT-V1. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
           "kind": "work_sample"
         },
         {
@@ -899,18 +902,18 @@
     },
     "analysis": {
       "status": "succeeded",
-      "attemptId": "22a42efb-a5a5-48b3-a613-daba5092a261",
-      "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-      "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
-      "startedAt": "2026-09-19T03:05:40.663Z",
-      "finishedAt": "2026-09-19T03:05:40.664Z",
+      "attemptId": "926edb11-987d-409e-acb5-9046059a283a",
+      "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+      "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
+      "startedAt": "2026-09-19T04:15:56.054Z",
+      "finishedAt": "2026-09-19T04:15:56.054Z",
       "errorCode": null,
       "result": {
         "mode": "manual_simulation",
         "model": null,
         "promptVersion": "evidencebridge-observations-v1",
-        "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-        "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+        "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+        "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
         "observations": [
           {
             "dimension": "Problem Framing",
@@ -920,9 +923,9 @@
               {
                 "sourceId": "summary",
                 "location": "/summary",
-                "quote": "EB-CROSS-CLIENT-UNIQUE-GENERATED-EXAMPLE. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
+                "quote": "EB-EXAMPLE-DIRECT-V1. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
                 "start": 0,
-                "end": 190
+                "end": 170
               }
             ],
             "scope": "Manual simulation: presence of submitted text only, not validated reasoning or competence.",
@@ -995,40 +998,297 @@
         ],
         "provenance": {
           "provider": "manual_rules",
-          "generatedAt": "2026-09-19T03:05:40.663Z",
+          "generatedAt": "2026-09-19T04:15:56.054Z",
           "responseId": null,
           "processEvidence": "client_reported"
         }
       }
     },
     "review": {
-      "schemaVersion": "1.0",
-      "sessionId": "90b3d55d-2675-45ed-8fc6-d9b8a82ab6f8",
-      "taskId": "6dbf5cd7-021b-4d3f-aac9-e72217534f4f",
+      "schemaVersion": "2.0",
+      "sessionId": "17e65067-2dfb-49de-a0e0-737613478332",
+      "taskId": "5a504c4f-45e4-4c1e-bcc4-6d6cf60a463a",
       "datasetVersion": "harbourcart-2026-09-v1",
-      "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-      "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+      "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+      "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
       "requirementId": "business-problem-solving",
       "decision": "confirm",
       "comment": "Synthetic API test decision: confirm this bounded work-sample evidence only; causal explanations and real-world performance remain uncertain.",
-      "reviewId": "58eea879-2d65-494d-b081-47dbfce0365f",
-      "reviewedAt": "2026-09-19T03:05:40.729Z"
+      "reviewId": "fa38d1e1-7bbe-4d69-9b92-1ba1c869d449",
+      "reviewedAt": "2026-09-19T04:15:56.162Z"
+    },
+    "currentSubmissionVersion": 1,
+    "versions": [
+      {
+        "submission": {
+          "schemaVersion": "2.0",
+          "sessionId": "17e65067-2dfb-49de-a0e0-737613478332",
+          "taskId": "5a504c4f-45e4-4c1e-bcc4-6d6cf60a463a",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "candidateId": "alex-chen",
+          "submissionVersion": 1,
+          "previousSubmissionId": null,
+          "previousContentFingerprint": null,
+          "summary": "EB-EXAMPLE-DIRECT-V1. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
+          "findings": [
+            {
+              "id": "client-finding-1",
+              "section": "Key Findings",
+              "title": "Compare the Paid Search signal",
+              "detail": "Paid Search conversion moved from 3.20% to 1.80%; its current traffic share is 36.10%.",
+              "source": "website_traffic.csv",
+              "confidence": "High"
+            },
+            {
+              "id": "client-finding-2",
+              "section": "Hypotheses",
+              "title": "Traffic quality is a hypothesis",
+              "detail": "New acquisition and page changes are possible explanations, not proven causes. The supplied aggregates do not identify a causal effect.",
+              "source": "business_context.md",
+              "confidence": "Medium"
+            },
+            {
+              "id": "client-finding-3",
+              "section": "Additional Evidence Needed",
+              "title": "Request a comparable breakdown",
+              "detail": "Request comparable pre/post campaign, device and landing-page cohorts plus funnel events; separate traffic composition from experience changes.",
+              "source": "landing_pages.csv",
+              "confidence": "High"
+            },
+            {
+              "id": "client-finding-4",
+              "section": "Recommended Next Steps",
+              "title": "Validate before changing spend",
+              "detail": "Prioritise a funnel and cohort check, then run a bounded comparison before changing incremental advertising spend.",
+              "source": "business_context.md",
+              "confidence": "Medium"
+            }
+          ],
+          "processEvidence": [
+            {
+              "id": "client-event-1",
+              "at": "2026-09-19T04:15:55.964Z",
+              "title": "Synthetic test client assembled the public work sample",
+              "detail": "Script-generated fixture event; not an observed candidate action."
+            }
+          ],
+          "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+          "submittedAt": "2026-09-19T04:15:55.966Z",
+          "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
+          "processEvidenceProvenance": "client_reported",
+          "sources": [
+            {
+              "sourceId": "summary",
+              "location": "/summary",
+              "text": "EB-EXAMPLE-DIRECT-V1. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:client-finding-1:title",
+              "location": "/findings/0/title",
+              "text": "Compare the Paid Search signal",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:client-finding-1:detail",
+              "location": "/findings/0/detail",
+              "text": "Paid Search conversion moved from 3.20% to 1.80%; its current traffic share is 36.10%.",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:client-finding-2:title",
+              "location": "/findings/1/title",
+              "text": "Traffic quality is a hypothesis",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:client-finding-2:detail",
+              "location": "/findings/1/detail",
+              "text": "New acquisition and page changes are possible explanations, not proven causes. The supplied aggregates do not identify a causal effect.",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:client-finding-3:title",
+              "location": "/findings/2/title",
+              "text": "Request a comparable breakdown",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:client-finding-3:detail",
+              "location": "/findings/2/detail",
+              "text": "Request comparable pre/post campaign, device and landing-page cohorts plus funnel events; separate traffic composition from experience changes.",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:client-finding-4:title",
+              "location": "/findings/3/title",
+              "text": "Validate before changing spend",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:client-finding-4:detail",
+              "location": "/findings/3/detail",
+              "text": "Prioritise a funnel and cohort check, then run a bounded comparison before changing incremental advertising spend.",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "event:client-event-1:title",
+              "location": "/processEvidence/0/title",
+              "text": "Synthetic test client assembled the public work sample",
+              "kind": "client_reported_event"
+            },
+            {
+              "sourceId": "event:client-event-1:detail",
+              "location": "/processEvidence/0/detail",
+              "text": "Script-generated fixture event; not an observed candidate action.",
+              "kind": "client_reported_event"
+            }
+          ]
+        },
+        "analysis": {
+          "status": "succeeded",
+          "attemptId": "926edb11-987d-409e-acb5-9046059a283a",
+          "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+          "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
+          "startedAt": "2026-09-19T04:15:56.054Z",
+          "finishedAt": "2026-09-19T04:15:56.054Z",
+          "errorCode": null,
+          "result": {
+            "mode": "manual_simulation",
+            "model": null,
+            "promptVersion": "evidencebridge-observations-v1",
+            "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+            "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
+            "observations": [
+              {
+                "dimension": "Problem Framing",
+                "status": "observed",
+                "statement": "The candidate supplied an executive summary.",
+                "citations": [
+                  {
+                    "sourceId": "summary",
+                    "location": "/summary",
+                    "quote": "EB-EXAMPLE-DIRECT-V1. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
+                    "start": 0,
+                    "end": 170
+                  }
+                ],
+                "scope": "Manual simulation: presence of submitted text only, not validated reasoning or competence.",
+                "uncertainty": "Accuracy, evidential support and causation remain unverified. A human must assess the cited work."
+              },
+              {
+                "dimension": "Evidence Navigation",
+                "status": "observed",
+                "statement": "The candidate supplied text under Key Findings.",
+                "citations": [
+                  {
+                    "sourceId": "finding:client-finding-1:detail",
+                    "location": "/findings/0/detail",
+                    "quote": "Paid Search conversion moved from 3.20% to 1.80%; its current traffic share is 36.10%.",
+                    "start": 0,
+                    "end": 86
+                  }
+                ],
+                "scope": "Manual simulation: presence of submitted text only, not validated reasoning or competence.",
+                "uncertainty": "Accuracy, evidential support and causation remain unverified. A human must assess the cited work."
+              },
+              {
+                "dimension": "Hypothesis Formation",
+                "status": "observed",
+                "statement": "The candidate supplied text under Hypotheses.",
+                "citations": [
+                  {
+                    "sourceId": "finding:client-finding-2:detail",
+                    "location": "/findings/1/detail",
+                    "quote": "New acquisition and page changes are possible explanations, not proven causes. The supplied aggregates do not identify a causal effect.",
+                    "start": 0,
+                    "end": 135
+                  }
+                ],
+                "scope": "Manual simulation: presence of submitted text only, not validated reasoning or competence.",
+                "uncertainty": "Accuracy, evidential support and causation remain unverified. A human must assess the cited work."
+              },
+              {
+                "dimension": "Evidence Seeking",
+                "status": "observed",
+                "statement": "The candidate supplied text under Additional Evidence Needed.",
+                "citations": [
+                  {
+                    "sourceId": "finding:client-finding-3:detail",
+                    "location": "/findings/2/detail",
+                    "quote": "Request comparable pre/post campaign, device and landing-page cohorts plus funnel events; separate traffic composition from experience changes.",
+                    "start": 0,
+                    "end": 143
+                  }
+                ],
+                "scope": "Manual simulation: presence of submitted text only, not validated reasoning or competence.",
+                "uncertainty": "Accuracy, evidential support and causation remain unverified. A human must assess the cited work."
+              },
+              {
+                "dimension": "Decision Making",
+                "status": "observed",
+                "statement": "The candidate supplied text under Recommended Next Steps.",
+                "citations": [
+                  {
+                    "sourceId": "finding:client-finding-4:detail",
+                    "location": "/findings/3/detail",
+                    "quote": "Prioritise a funnel and cohort check, then run a bounded comparison before changing incremental advertising spend.",
+                    "start": 0,
+                    "end": 114
+                  }
+                ],
+                "scope": "Manual simulation: presence of submitted text only, not validated reasoning or competence.",
+                "uncertainty": "Accuracy, evidential support and causation remain unverified. A human must assess the cited work."
+              }
+            ],
+            "provenance": {
+              "provider": "manual_rules",
+              "generatedAt": "2026-09-19T04:15:56.054Z",
+              "responseId": null,
+              "processEvidence": "client_reported"
+            }
+          }
+        },
+        "review": {
+          "schemaVersion": "2.0",
+          "sessionId": "17e65067-2dfb-49de-a0e0-737613478332",
+          "taskId": "5a504c4f-45e4-4c1e-bcc4-6d6cf60a463a",
+          "datasetVersion": "harbourcart-2026-09-v1",
+          "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+          "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
+          "requirementId": "business-problem-solving",
+          "decision": "confirm",
+          "comment": "Synthetic API test decision: confirm this bounded work-sample evidence only; causal explanations and real-world performance remain uncertain.",
+          "reviewId": "fa38d1e1-7bbe-4d69-9b92-1ba1c869d449",
+          "reviewedAt": "2026-09-19T04:15:56.162Z"
+        }
+      }
+    ],
+    "workflow": {
+      "maxSubmissions": 2,
+      "submissionsUsed": 1,
+      "remainingSubmissions": 1,
+      "canSubmit": false,
+      "canResubmit": false,
+      "nextSubmissionVersion": null,
+      "allowedReviewDecisions": [],
+      "isTerminal": true
     },
     "report": {
       "mode": "human_reviewed",
       "isHiringDecision": false,
       "review": {
-        "schemaVersion": "1.0",
-        "sessionId": "90b3d55d-2675-45ed-8fc6-d9b8a82ab6f8",
-        "taskId": "6dbf5cd7-021b-4d3f-aac9-e72217534f4f",
+        "schemaVersion": "2.0",
+        "sessionId": "17e65067-2dfb-49de-a0e0-737613478332",
+        "taskId": "5a504c4f-45e4-4c1e-bcc4-6d6cf60a463a",
         "datasetVersion": "harbourcart-2026-09-v1",
-        "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-        "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+        "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+        "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
         "requirementId": "business-problem-solving",
         "decision": "confirm",
         "comment": "Synthetic API test decision: confirm this bounded work-sample evidence only; causal explanations and real-world performance remain uncertain.",
-        "reviewId": "58eea879-2d65-494d-b081-47dbfce0365f",
-        "reviewedAt": "2026-09-19T03:05:40.729Z"
+        "reviewId": "fa38d1e1-7bbe-4d69-9b92-1ba1c869d449",
+        "reviewedAt": "2026-09-19T04:15:56.162Z"
       },
       "requirements": [
         {
@@ -1086,70 +1346,70 @@
           "title": "Business Problem Solving",
           "displayLabel": "Verified through targeted task",
           "review": {
-            "schemaVersion": "1.0",
-            "sessionId": "90b3d55d-2675-45ed-8fc6-d9b8a82ab6f8",
-            "taskId": "6dbf5cd7-021b-4d3f-aac9-e72217534f4f",
+            "schemaVersion": "2.0",
+            "sessionId": "17e65067-2dfb-49de-a0e0-737613478332",
+            "taskId": "5a504c4f-45e4-4c1e-bcc4-6d6cf60a463a",
             "datasetVersion": "harbourcart-2026-09-v1",
-            "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-            "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+            "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+            "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
             "requirementId": "business-problem-solving",
             "decision": "confirm",
             "comment": "Synthetic API test decision: confirm this bounded work-sample evidence only; causal explanations and real-world performance remain uncertain.",
-            "reviewId": "58eea879-2d65-494d-b081-47dbfce0365f",
-            "reviewedAt": "2026-09-19T03:05:40.729Z"
+            "reviewId": "fa38d1e1-7bbe-4d69-9b92-1ba1c869d449",
+            "reviewedAt": "2026-09-19T04:15:56.162Z"
           },
           "submissionSourceRefs": [
             {
-              "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-              "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+              "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+              "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
               "sourceId": "summary",
               "location": "/summary"
             },
             {
-              "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-              "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+              "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+              "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
               "sourceId": "finding:client-finding-1:title",
               "location": "/findings/0/title"
             },
             {
-              "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-              "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+              "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+              "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
               "sourceId": "finding:client-finding-1:detail",
               "location": "/findings/0/detail"
             },
             {
-              "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-              "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+              "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+              "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
               "sourceId": "finding:client-finding-2:title",
               "location": "/findings/1/title"
             },
             {
-              "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-              "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+              "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+              "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
               "sourceId": "finding:client-finding-2:detail",
               "location": "/findings/1/detail"
             },
             {
-              "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-              "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+              "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+              "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
               "sourceId": "finding:client-finding-3:title",
               "location": "/findings/2/title"
             },
             {
-              "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-              "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+              "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+              "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
               "sourceId": "finding:client-finding-3:detail",
               "location": "/findings/2/detail"
             },
             {
-              "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-              "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+              "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+              "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
               "sourceId": "finding:client-finding-4:title",
               "location": "/findings/3/title"
             },
             {
-              "submissionId": "3443af5f-c324-438d-b96e-2b522ff4bf64",
-              "contentFingerprint": "acb86bc2c1161bc5e18aea614a33af9d13ace798ad01c31047e6d5ec59febf87",
+              "submissionId": "f4f859ae-24bd-4e76-84ff-d2f350993779",
+              "contentFingerprint": "807423a0c1a8a9cf25211469838e58f1553764283eb61974231595261ca53f6e",
               "sourceId": "finding:client-finding-4:detail",
               "location": "/findings/3/detail"
             }

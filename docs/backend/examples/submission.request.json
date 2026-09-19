@@ -1,10 +1,13 @@
 {
-  "schemaVersion": "1.0",
-  "sessionId": "90b3d55d-2675-45ed-8fc6-d9b8a82ab6f8",
-  "taskId": "6dbf5cd7-021b-4d3f-aac9-e72217534f4f",
+  "schemaVersion": "2.0",
+  "sessionId": "17e65067-2dfb-49de-a0e0-737613478332",
+  "taskId": "5a504c4f-45e4-4c1e-bcc4-6d6cf60a463a",
   "datasetVersion": "harbourcart-2026-09-v1",
   "candidateId": "alex-chen",
-  "summary": "EB-CROSS-CLIENT-UNIQUE-GENERATED-EXAMPLE. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
+  "submissionVersion": 1,
+  "previousSubmissionId": null,
+  "previousContentFingerprint": null,
+  "summary": "EB-EXAMPLE-DIRECT-V1. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation.",
   "findings": [
     {
       "id": "client-finding-1",
@@ -42,7 +45,7 @@
   "processEvidence": [
     {
       "id": "client-event-1",
-      "at": "2026-09-19T03:05:40.594Z",
+      "at": "2026-09-19T04:15:55.964Z",
       "title": "Synthetic test client assembled the public work sample",
       "detail": "Script-generated fixture event; not an observed candidate action."
     }

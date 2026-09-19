@@ -6,6 +6,21 @@
 
 本文的 first concept image 指 [候选人核心工作台概念图](assets/candidate-workspace-concept.jpg)，second concept image 指 [HR / Candidate 双端流程概念图](assets/dual-role-flow-concept.png)。两张原图可在 Baseline 中直接预览。图 2 的文本框、配色和共享后端示意不覆盖 Baseline 的调查板、统一视觉与前端演示优先要求。
 
+## 当前执行范围：修订 3 有限两版（2026-09-19）
+
+用户已确认本节覆盖早期仅前端模拟/单轮约定；视觉布局、主题、调查板与固定人物场景继续保留。正式任务、作品、分析、审核与报告使用共享 API 2.0；下面保留的前端展示优先原则不把正式双端同步降回各自 localStorage。实现结果与联调完成情况以[实际测试](../backend/TEST_RESULTS.md)为准，不由文档更新推断。
+
+- 一个 HarbourCart / Junior Data Analyst / Alex Chen 案例、三个要求、Business Problem Solving 一个缺口、同一 Conversion Drop Investigation 与 datasetVersion。
+- V1 可直接 Confirm 或 Evidence Still Insufficient 终局；仅 V1 Needs More Evidence 提供具体缺证意见，并开放同 session/task 的一次 V2。V2 只允许 Confirm / Evidence Still Insufficient；不开放 V3 或重开原审核。
+- V1 More 后目标仍 Uncertain，状态为 awaiting_revision。Candidate 看到真实 comment、在隔离的 V2 草稿补充；V1 正式作品和既有分析/审核保持不变，不重新出题/更换资源或从头重做。
+- V2 创建独立 submissionId/指纹，analysis 初始 not_started、review=null。最多两版作品及各自分析/意见只读回看；引用先选版本再定位，旧观察不显示为 V2 结果。
+- UI 读取 workflow.canSubmit/canResubmit/nextSubmissionVersion/allowedReviewDecisions/isTerminal 控制动作；remainingSubmissions 只是额度，不代表终局后仍可提交。
+- 只有当前版人工 Confirm 更新目标要求；SQL 与 Data Analysis 保持初始支持。两种不足仍 Uncertain，提交/AI 成功不自动确认，不构成录用决定。
+- 申请/初始报告/任务仍明确 preset；AI 仅做各版工作样本五维观察。保留上传外观时不把任意本地文件伪装成已被预置报告分析。私人 notes 留本地；真实模型实验与双端浏览器验收分别记录。
+
+固定两版只读回看属于本轮；无限轮次、复杂 diff、通用历史、PDF/OCR、动态出题、账号/多租户、通知与公网部署仍后置。见[实施计划](../backend/REVISION_PLAN.md)、[API](../backend/API.md)与[前端接入](../backend/HANDOFF.md)。
+
+
 ---
 
 ## 1. What This MVP Is
@@ -37,8 +52,8 @@ Therefore:
 - Candidate task execution and HR evidence review should look complete and convincing.
 - Back-end systems should be minimized unless they are necessary for the visible demo.
 - Static or predetermined data is fully acceptable.
-- Mock state, local state, pre-generated outputs, fixed charts, simulated interactions, and deterministic timelines are acceptable.
-- Authentication, production databases, persistent storage, production upload pipelines, production AI orchestration, and other infrastructure are outside the core MVP requirement.
+- Labelled mock state and pre-generated visual material remain acceptable for supporting demonstrations; formal V1/V2 submissions, review and shared evidence reports use the confirmed API scope above.
+- Production authentication, database platforms, upload pipelines and full AI orchestration remain outside the core MVP; the confirmed local SQLite persistence and API are required for the formal workflow.
 
 The intended standard is:
 
@@ -266,13 +281,13 @@ Both roles belong to the same EvidenceBridge product.
 1. View job requirements
 2. View candidate Evidence Report
 3. Identify `Uncertain` capability
-4. Review generated targeted micro-task
+4. Review the preset targeted micro-task
 5. Confirm and send task
 6. Receive candidate submission
 7. Review final work sample
 8. Review process evidence
 9. Review AI-extracted observable evidence
-10. Confirm / request more evidence / mark still insufficient
+10. V1: Confirm / request one V2 revision / mark still insufficient; V2: Confirm / mark still insufficient
 11. View updated Evidence Report
 
 ### Candidate-side flow
@@ -286,7 +301,7 @@ Both roles belong to the same EvidenceBridge product.
 7. Produce final work sample
 8. Submit work sample
 9. Wait for HR review
-10. View review status
+10. View review status; only V1 Needs More Evidence opens a separate V2 draft, followed by one terminal review
 
 ---
 
@@ -383,8 +398,9 @@ Recommended stages:
 
 - Application Submitted
 - Task Received / Task Completed
-- In Review
-- Review Complete
+- In Review (current submitted version)
+- Awaiting Revision (V1 Needs More Evidence only)
+- Review Complete (terminal V1 or V2)
 
 The page should be simple.
 
@@ -500,10 +516,10 @@ Each dimension may include:
 Actions:
 
 - Confirm
-- Needs More Evidence
+- Needs More Evidence (V1 only; requests at most one targeted V2 revision)
 - Evidence Still Insufficient
 
-AI assists the review; it does not replace HR.
+V2 supports only Confirm or Evidence Still Insufficient; each version has one immutable review. AI assists the review; it does not replace HR.
 
 ---
 
@@ -612,7 +628,7 @@ High priority:
 
 ### Backend priority
 
-Secondary and optional for the MVP unless a backend function is directly required to make the visible demo work.
+A lightweight shared service for the confirmed V1/V2 evidence flow is in scope. Production infrastructure remains secondary; do not broaden the service beyond the approved workflow.
 
 Acceptable shortcuts:
 
@@ -628,7 +644,7 @@ Acceptable shortcuts:
 
 The hackathon goal is not production infrastructure, backend completeness, or production readiness.
 
-The goal is to make the browser-based product experience feel real, coherent, and presentation-ready. If a front-end simulation communicates the concept more clearly and reliably than a partially built backend, use the front-end simulation.
+The goal is to make the browser-based product experience feel real, coherent, and presentation-ready. Supporting visual previews may remain simulated and labelled. Formal V1/V2 handoff and human-review acceptance use the shared service, not independent simulated business state.
 
 ---
 

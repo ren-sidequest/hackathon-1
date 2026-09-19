@@ -11,6 +11,9 @@ export function submissionRequest(data, unique = `EB-CROSS-CLIENT-UNIQUE-${rando
   assert.ok(search, 'Paid Search fixture is required');
   return {
     ...binding(data), candidateId: data.candidate.id,
+    submissionVersion: data.workflow.nextSubmissionVersion,
+    previousSubmissionId: data.workflow.nextSubmissionVersion === 2 ? data.submission.submissionId : null,
+    previousContentFingerprint: data.workflow.nextSubmissionVersion === 2 ? data.submission.contentFingerprint : null,
     summary: `${unique}. Traffic changed by ${metrics.change.trafficPct.toFixed(2)}%, while conversion moved from ${metrics.previous.conversionPct.toFixed(1)}% to ${metrics.current.conversionPct.toFixed(1)}%. Orders fell from ${metrics.previous.orders} to ${metrics.current.orders}. These observations do not establish causation.`,
     findings: [
       { id: 'client-finding-1', section: 'Key Findings', title: 'Compare the Paid Search signal', detail: `Paid Search conversion moved from ${search.previous.toFixed(2)}% to ${search.conversion.toFixed(2)}%; its current traffic share is ${search.trafficSharePct.toFixed(2)}%.`, source: 'website_traffic.csv', confidence: 'High' },
@@ -29,12 +32,22 @@ export function reviewRequest(data, decision = 'confirm') {
       : 'Synthetic API test decision: current evidence remains uncertain; request a comparable cohort and causal validation before drawing stronger conclusions.' };
 }
 export function verifyCitations(data) {
-  for (const observation of data.analysis.result?.observations ?? []) {
-    for (const citation of observation.citations) {
-      const source = data.submission.sources.find(item => item.sourceId === citation.sourceId);
-      assert.ok(source, 'Citation source exists in current snapshot');
-      assert.equal(source.location, citation.location);
-      assert.equal(source.text.slice(citation.start, citation.end), citation.quote);
+  for (const version of data.versions ?? [data]) {
+    const { submission, analysis, review } = version;
+    if (review) {
+      assert.equal(review.submissionId, submission.submissionId);
+      assert.equal(review.contentFingerprint, submission.contentFingerprint);
+    }
+    if (!analysis.result) continue;
+    assert.equal(analysis.result.submissionId, submission.submissionId);
+    assert.equal(analysis.result.contentFingerprint, submission.contentFingerprint);
+    for (const observation of analysis.result.observations) {
+      for (const citation of observation.citations) {
+        const source = submission.sources.find(item => item.sourceId === citation.sourceId);
+        assert.ok(source, 'Citation source exists in its own version snapshot');
+        assert.equal(source.location, citation.location);
+        assert.equal(source.text.slice(citation.start, citation.end), citation.quote);
+      }
     }
   }
 }
@@ -47,6 +60,7 @@ export function baseUrl(env = process.env) {
   return url.origin;
 }
 export function httpClient(base) {
+  base = baseUrl({ BASE_URL: base });
   return async (path, body, extraHeaders = {}) => {
     const response = await fetch(`${base}${path}`, {
       method: body === undefined ? 'GET' : 'POST', redirect: 'error', signal: AbortSignal.timeout(75_000),
@@ -62,57 +76,85 @@ export function httpClient(base) {
   };
 }
 
-/** An explicit API test action, never an automatic product review or implicit reset. */
-export async function runDemo({ base = baseUrl(), decision = 'confirm' } = {}) {
-  if (!decisions.includes(decision)) throw Object.assign(new Error('Use one of the three documented decisions.'), { code: 'INVALID_DECISION' });
+/** An explicit synthetic API test; resubmission is never simulated by a reset. */
+export async function runDemo({ base = baseUrl(), decision = 'confirm', resubmit = false } = {}) {
+  if (!decisions.includes(decision) || (resubmit && decision === 'needs_more_evidence')) {
+    throw Object.assign(new Error('V2 accepts only a terminal decision.'), { code: 'INVALID_DECISION' });
+  }
   const api = httpClient(base);
-  const health = await api('/healthz');
-  assert.equal(health.status, 'ok');
+  assert.equal((await api('/healthz')).status, 'ok');
   const initial = (await api('/api/demo')).data;
-  if (initial.task.status !== 'draft' || initial.submission || initial.review) {
-    throw Object.assign(new Error('Existing case retained. Use the separate reset command intentionally or choose a fresh database.'), { code: 'CASE_NOT_FRESH' });
+  if (initial.schemaVersion !== '2.0') throw Object.assign(new Error('Use a contract 2.0 service; the existing case is untouched.'), { code: 'UNSUPPORTED_CONTRACT' });
+  if (initial.task.status !== 'draft' || initial.submission || initial.review || initial.versions.length) {
+    throw Object.assign(new Error('Existing case retained; choose an intentional reset or a new database.'), { code: 'CASE_NOT_FRESH' });
   }
   const sent = (await api('/api/demo/task/send', { ...binding(initial), instructions: initial.task.instructions })).data;
-  const request = submissionRequest(sent);
-  const submitted = (await api('/api/demo/submission', request)).data;
-  const firstRead = (await api('/api/demo')).data;
-  assert.deepEqual(firstRead.submission, submitted.submission);
-  assert.equal(firstRead.submission.summary, request.summary);
-  assert.deepEqual(firstRead.submission.findings, request.findings);
-  assert.deepEqual(firstRead.submission.processEvidence, request.processEvidence);
-  let analysisError = null;
-  try { verifyCitations((await api('/api/demo/analysis', analysisRequest(firstRead))).data); }
-  catch (error) {
-    if (!/^AI_[A-Z_]+$/.test(error.code ?? '')) throw error;
-    analysisError = error.code;
+  const analysisErrors = [];
+  const submitAndAnalyze = async data => {
+    assert.equal(data.workflow.canSubmit, true);
+    const request = submissionRequest(data);
+    if (request.submissionVersion === 2) request.summary += ` V2 addresses this specific shared review request: ${data.review.comment}`;
+    const submitted = (await api('/api/demo/submission', request)).data;
+    const firstRead = (await api('/api/demo')).data;
+    assert.deepEqual(firstRead.submission, submitted.submission);
+    for (const key of ['summary', 'findings', 'processEvidence']) assert.deepEqual(firstRead.submission[key], request[key]);
+    try { verifyCitations((await api('/api/demo/analysis', analysisRequest(firstRead))).data); }
+    catch (error) {
+      if (!/^AI_[A-Z_]+$/.test(error.code ?? '')) throw error;
+      analysisErrors.push({ submissionVersion: request.submissionVersion, code: error.code });
+    }
+    const beforeReview = (await api('/api/demo')).data;
+    assert.deepEqual(beforeReview.submission, submitted.submission);
+    if (analysisErrors.some(error => error.submissionVersion === request.submissionVersion)) assert.equal(beforeReview.analysis.status, 'failed');
+    return beforeReview;
+  };
+  const v1 = await submitAndAnalyze(sent);
+  let reviewed = (await api('/api/demo/review', reviewRequest(v1, resubmit ? 'needs_more_evidence' : decision))).data;
+  if (resubmit) {
+    assert.equal(reviewed.task.status, 'awaiting_revision');
+    assert.equal(reviewed.workflow.canResubmit, true);
+    const frozenV1 = structuredClone(reviewed.versions[0]);
+    const v2 = await submitAndAnalyze(reviewed);
+    assert.equal(v2.sessionId, initial.sessionId);
+    assert.equal(v2.task.taskId, initial.task.taskId);
+    assert.equal(v2.submission.submissionVersion, 2);
+    assert.notEqual(v2.submission.submissionId, frozenV1.submission.submissionId);
+    assert.equal(v2.submission.previousSubmissionId, frozenV1.submission.submissionId);
+    assert.equal(v2.submission.previousContentFingerprint, frozenV1.submission.contentFingerprint);
+    assert.deepEqual(v2.versions[0], frozenV1);
+    reviewed = (await api('/api/demo/review', reviewRequest(v2, decision))).data;
   }
-  const beforeReview = (await api('/api/demo')).data;
-  assert.deepEqual(beforeReview.submission, submitted.submission);
-  if (analysisError) assert.equal(beforeReview.analysis.status, 'failed');
-  const reviewed = (await api('/api/demo/review', reviewRequest(beforeReview, decision))).data;
   const readA = (await api('/api/demo')).data;
   const readB = (await api('/api/demo')).data;
-  assert.deepEqual(readA.submission, submitted.submission);
+  assert.deepEqual(readA.submission, reviewed.submission);
   assert.deepEqual(readA.review, reviewed.review);
   assert.deepEqual(readA.report, readB.report);
-  assert.deepEqual(readA.review, readB.review);
-  assert.equal(readA.task.status, 'reviewed');
+  assert.deepEqual(readA.versions, readB.versions);
+  assert.equal(readA.task.status, decision === 'needs_more_evidence' ? 'awaiting_revision' : 'reviewed');
+  assert.equal(readA.workflow.isTerminal, decision !== 'needs_more_evidence');
+  verifyCitations(readA);
   for (const requirement of readA.report.requirements) {
     const original = initial.report.requirements.find(item => item.requirementId === requirement.requirementId);
-    const expected = requirement.requirementId === initial.task.requirementId && decision === 'confirm' ? 'verified' : original.status;
-    assert.equal(requirement.status, expected);
+    assert.equal(requirement.status, requirement.requirementId === initial.task.requirementId && decision === 'confirm' ? 'verified' : original.status);
   }
   return { status: 'passed', scope: 'synthetic HTTP test client, not dual-UI integration or a real human review',
-    decision, analysisStatus: readA.analysis.status, analysisMode: readA.analysis.result?.mode ?? null,
-    analysisError, submissionId: readA.submission.submissionId, contentFingerprint: readA.submission.contentFingerprint,
-    resetPerformed: false };
+    decision, resubmit, currentSubmissionVersion: readA.currentSubmissionVersion, taskStatus: readA.task.status,
+    analysisStatus: readA.analysis.status, analysisMode: readA.analysis.result?.mode ?? null,
+    analysisError: analysisErrors.at(-1)?.code ?? null, analysisErrors,
+    submissionId: readA.submission.submissionId, contentFingerprint: readA.submission.contentFingerprint,
+    versionsPreserved: readA.versions.length, resetPerformed: false };
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const args = process.argv.slice(2);
   try {
-    if (args.length && (args.length !== 2 || args[0] !== '--decision')) throw Object.assign(new Error('Usage: npm run demo -- [--decision confirm|needs_more_evidence|evidence_still_insufficient]'), { code: 'INVALID_ARGUMENTS' });
-    console.log(JSON.stringify(await runDemo({ decision: args[1] ?? 'confirm' }), null, 2));
+    const args = process.argv.slice(2);
+    let resubmit = false; let decision = 'confirm'; let decisionSet = false;
+    for (let index = 0; index < args.length; index++) {
+      if (args[index] === '--resubmit' && !resubmit) resubmit = true;
+      else if (args[index] === '--decision' && !decisionSet && args[index + 1]) { decision = args[++index]; decisionSet = true; }
+      else throw Object.assign(new Error('Unexpected demo argument.'), { code: 'INVALID_ARGUMENTS' });
+    }
+    console.log(JSON.stringify(await runDemo({ decision, resubmit }), null, 2));
   } catch (error) {
     const code = /^[A-Z_]{1,80}$/.test(error.code ?? '') ? error.code : 'CLIENT_CHECK_FAILED';
     console.error(`Demo client stopped: ${code}. Existing state was not reset. Check /api/demo and the README.`);

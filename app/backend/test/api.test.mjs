@@ -26,11 +26,12 @@ async function get(app) {
   return response.json().data;
 }
 function bindings(data) {
-  return { schemaVersion: '1.0', sessionId: data.sessionId, taskId: data.task.taskId, datasetVersion: data.datasetVersion };
+  return { schemaVersion: '2.0', sessionId: data.sessionId, taskId: data.task.taskId, datasetVersion: data.datasetVersion };
 }
 function sample(data, overrides = {}) {
   return {
     ...bindings(data), candidateId: data.candidate.id,
+    submissionVersion: 1, previousSubmissionId: null, previousContentFingerprint: null,
     summary: `  Traffic grew 18% while conversion fell from 3.4% to 2.6%. ${UNIQUE}  `,
     findings: [
       { id: 'finding-unique', section: 'Key Findings', title: 'Paid Search warrants investigation', detail: 'The overall rate fell by 0.8 percentage points; this alone does not establish a cause.', source: 'website_traffic.csv', confidence: 'High' },
@@ -75,7 +76,7 @@ function reviewRequest(data, decision = 'confirm') {
   return { ...analysisBinding(data), requirementId: data.task.requirementId, decision, comment: 'Reviewed the submitted sources and retained the scope limitations.' };
 }
 async function reset(app, data, options = {}) {
-  return post(app, '/reset', { schemaVersion: '1.0', sessionId: data.sessionId }, { ...options, headers: { 'x-demo-admin-token': ADMIN, ...(options.headers ?? {}) } });
+  return post(app, '/reset', { schemaVersion: '2.0', sessionId: data.sessionId }, { ...options, headers: { 'x-demo-admin-token': ADMIN, ...(options.headers ?? {}) } });
 }
 
 // Product workflow is validated with independent requests, not browser localStorage.
@@ -84,7 +85,7 @@ test('initial shared state exposes the fixed case, separate statuses and readine
   const health = await app.inject({ method: 'GET', url: '/healthz', headers: { host: HOST } });
   assert.equal(health.statusCode, 200);
   const data = await get(app);
-  assert.equal(data.schemaVersion, '1.0');
+  assert.equal(data.schemaVersion, '2.0');
   assert.equal(data.candidate.name, 'Alex Chen');
   assert.equal(data.task.status, 'draft');
   assert.equal(data.analysis.status, 'not_started');
@@ -142,13 +143,15 @@ test('send → unique immutable submission → analysis → Confirm updates only
 });
 
 for (const decision of ['needs_more_evidence', 'evidence_still_insufficient']) {
-  test(`${decision} closes this round without upgrading or reopening evidence`, async t => {
+  test(`${decision} preserves uncertainty and exposes the bounded follow-up state`, async t => {
     const app = await fixture(t);
     const { data } = await submitted(app);
     success(await post(app, '/review', reviewRequest(data, decision)));
     const reviewed = await get(app);
     assert.equal(reviewed.review.decision, decision);
-    assert.equal(reviewed.task.status, 'reviewed');
+    assert.equal(reviewed.task.status, decision === 'needs_more_evidence' ? 'awaiting_revision' : 'reviewed');
+    assert.equal(reviewed.workflow.canResubmit, decision === 'needs_more_evidence');
+    assert.equal(reviewed.workflow.isTerminal, decision !== 'needs_more_evidence');
     assert.deepEqual(reviewed.report.requirements.map(item => item.status), ['supported', 'supported', 'uncertain']);
     failure(await post(app, '/submission', sample(reviewed)), 409);
     failure(await post(app, '/review', reviewRequest(reviewed)), 409);
@@ -292,7 +295,7 @@ test('disabled or failed AI preserves public work and allows explicit human revi
 test('reset requires its token, invalidates old bindings, and is itself idempotent', async t => {
   const app = await fixture(t);
   const { data } = await submitted(app);
-  failure(await post(app, '/reset', { schemaVersion: '1.0', sessionId: data.sessionId }), [401, 403]);
+  failure(await post(app, '/reset', { schemaVersion: '2.0', sessionId: data.sessionId }), [401, 403]);
   failure(await reset(app, data, { headers: { 'x-demo-admin-token': 'incorrect-token' } }), [401, 403]);
   assert.deepEqual(await get(app), data);
   const first = await reset(app, data, { key: 'same-reset-key' });
@@ -506,7 +509,7 @@ test('inconsistent saved state fails startup and is preserved for diagnosis rath
     const current = JSON.parse(preserved.prepare('SELECT state_json FROM demo_state WHERE id=1').get().state_json);
     assert.equal(current.sessionId, original.sessionId);
     assert.equal(current.task.status, 'reviewed');
-    assert.equal(current.review, null);
+    assert.deepEqual(current.versions, []);
   } finally { preserved.close(); }
 });
 
@@ -559,11 +562,11 @@ test('stored running analysis becomes interrupted after restart and its old pend
   const db = new DatabaseSync(options.databasePath);
   const stored = JSON.parse(db.prepare('SELECT state_json FROM demo_state WHERE id=1').get().state_json);
   // Deterministic interruption fault injection; no live model or candidate data involved.
-  stored.analysis = { status: 'running', attemptId: 'qa-interrupted-attempt', submissionId: data.submission.submissionId,
+  stored.versions[0].analysis = { status: 'running', attemptId: 'qa-interrupted-attempt', submissionId: data.submission.submissionId,
     contentFingerprint: data.submission.contentFingerprint, startedAt: '2026-09-19T02:00:00.000Z', finishedAt: null, errorCode: null, result: null };
   db.prepare('UPDATE demo_state SET state_json=? WHERE id=1').run(JSON.stringify(stored));
   db.prepare('INSERT INTO idempotency VALUES(?,?,?,?,?,?)').run(data.sessionId, '/api/demo/analysis', 'interrupted-analysis-key', fingerprint(payload), 202,
-    JSON.stringify({ data: { ...data, analysis: stored.analysis }, meta: { replayed: false } }));
+    JSON.stringify({ data: { ...data, analysis: stored.versions[0].analysis }, meta: { replayed: false } }));
   db.close();
   const restored = await createApp(options);
   await restored.ready();

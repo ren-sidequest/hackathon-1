@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "EvidenceBridge local demo API",
-    "version": "1.0",
-    "description": "One synthetic case. Human evidence review, not a hiring decision. Model keys remain server-side."
+    "version": "2.0",
+    "description": "One synthetic case, at most two immutable submissions. Human evidence review, not a hiring decision. Model keys remain server-side."
   },
   "components": {
     "securitySchemes": {
@@ -38,13 +38,16 @@
               "submission",
               "analysis",
               "review",
+              "currentSubmissionVersion",
+              "versions",
+              "workflow",
               "report"
             ],
             "properties": {
               "schemaVersion": {
                 "type": "string",
                 "enum": [
-                  "1.0"
+                  "2.0"
                 ]
               },
               "sessionId": {
@@ -664,6 +667,12 @@
                       {
                         "type": "string",
                         "enum": [
+                          "awaiting_revision"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
                           "reviewed"
                         ]
                       }
@@ -692,6 +701,9 @@
                       "taskId",
                       "datasetVersion",
                       "candidateId",
+                      "submissionVersion",
+                      "previousSubmissionId",
+                      "previousContentFingerprint",
                       "summary",
                       "findings",
                       "processEvidence",
@@ -705,7 +717,7 @@
                       "schemaVersion": {
                         "type": "string",
                         "enum": [
-                          "1.0"
+                          "2.0"
                         ]
                       },
                       "sessionId": {
@@ -731,6 +743,46 @@
                         "maxLength": 80,
                         "pattern": "^[A-Za-z0-9_-]+$",
                         "type": "string"
+                      },
+                      "submissionVersion": {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "enum": [
+                              1
+                            ]
+                          },
+                          {
+                            "type": "number",
+                            "enum": [
+                              2
+                            ]
+                          }
+                        ]
+                      },
+                      "previousSubmissionId": {
+                        "anyOf": [
+                          {
+                            "minLength": 1,
+                            "maxLength": 80,
+                            "pattern": "^[A-Za-z0-9_-]+$",
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "previousContentFingerprint": {
+                        "anyOf": [
+                          {
+                            "pattern": "^[a-f0-9]{64}$",
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
                       },
                       "summary": {
                         "minLength": 1,
@@ -1280,7 +1332,7 @@
                       "schemaVersion": {
                         "type": "string",
                         "enum": [
-                          "1.0"
+                          "2.0"
                         ]
                       },
                       "sessionId": {
@@ -1361,6 +1413,851 @@
                   }
                 ]
               },
+              "currentSubmissionVersion": {
+                "anyOf": [
+                  {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "enum": [
+                          1
+                        ]
+                      },
+                      {
+                        "type": "number",
+                        "enum": [
+                          2
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "versions": {
+                "maxItems": 2,
+                "type": "array",
+                "items": {
+                  "additionalProperties": false,
+                  "type": "object",
+                  "required": [
+                    "submission",
+                    "analysis",
+                    "review"
+                  ],
+                  "properties": {
+                    "submission": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "schemaVersion",
+                        "sessionId",
+                        "taskId",
+                        "datasetVersion",
+                        "candidateId",
+                        "submissionVersion",
+                        "previousSubmissionId",
+                        "previousContentFingerprint",
+                        "summary",
+                        "findings",
+                        "processEvidence",
+                        "submissionId",
+                        "submittedAt",
+                        "contentFingerprint",
+                        "processEvidenceProvenance",
+                        "sources"
+                      ],
+                      "properties": {
+                        "schemaVersion": {
+                          "type": "string",
+                          "enum": [
+                            "2.0"
+                          ]
+                        },
+                        "sessionId": {
+                          "minLength": 1,
+                          "maxLength": 80,
+                          "pattern": "^[A-Za-z0-9_-]+$",
+                          "type": "string"
+                        },
+                        "taskId": {
+                          "minLength": 1,
+                          "maxLength": 80,
+                          "pattern": "^[A-Za-z0-9_-]+$",
+                          "type": "string"
+                        },
+                        "datasetVersion": {
+                          "minLength": 1,
+                          "maxLength": 80,
+                          "pattern": "^[A-Za-z0-9_-]+$",
+                          "type": "string"
+                        },
+                        "candidateId": {
+                          "minLength": 1,
+                          "maxLength": 80,
+                          "pattern": "^[A-Za-z0-9_-]+$",
+                          "type": "string"
+                        },
+                        "submissionVersion": {
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "enum": [
+                                1
+                              ]
+                            },
+                            {
+                              "type": "number",
+                              "enum": [
+                                2
+                              ]
+                            }
+                          ]
+                        },
+                        "previousSubmissionId": {
+                          "anyOf": [
+                            {
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[A-Za-z0-9_-]+$",
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "previousContentFingerprint": {
+                          "anyOf": [
+                            {
+                              "pattern": "^[a-f0-9]{64}$",
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "summary": {
+                          "minLength": 1,
+                          "maxLength": 8000,
+                          "pattern": "\\S",
+                          "type": "string"
+                        },
+                        "findings": {
+                          "maxItems": 40,
+                          "type": "array",
+                          "items": {
+                            "additionalProperties": false,
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "section",
+                              "title",
+                              "detail",
+                              "source",
+                              "confidence"
+                            ],
+                            "properties": {
+                              "id": {
+                                "minLength": 1,
+                                "maxLength": 80,
+                                "pattern": "^[A-Za-z0-9_-]+$",
+                                "type": "string"
+                              },
+                              "section": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "Key Findings"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "Hypotheses"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "Additional Evidence Needed"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "Recommended Next Steps"
+                                    ]
+                                  }
+                                ]
+                              },
+                              "title": {
+                                "minLength": 1,
+                                "maxLength": 300,
+                                "pattern": "\\S",
+                                "type": "string"
+                              },
+                              "detail": {
+                                "maxLength": 4000,
+                                "type": "string"
+                              },
+                              "source": {
+                                "maxLength": 80,
+                                "type": "string"
+                              },
+                              "confidence": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "High"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "Medium"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "Low"
+                                    ]
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        },
+                        "processEvidence": {
+                          "maxItems": 100,
+                          "type": "array",
+                          "items": {
+                            "additionalProperties": false,
+                            "type": "object",
+                            "required": [
+                              "id",
+                              "at",
+                              "title"
+                            ],
+                            "properties": {
+                              "id": {
+                                "minLength": 1,
+                                "maxLength": 80,
+                                "pattern": "^[A-Za-z0-9_-]+$",
+                                "type": "string"
+                              },
+                              "at": {
+                                "format": "date-time",
+                                "type": "string"
+                              },
+                              "title": {
+                                "minLength": 1,
+                                "maxLength": 200,
+                                "pattern": "\\S",
+                                "type": "string"
+                              },
+                              "detail": {
+                                "maxLength": 1000,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "submissionId": {
+                          "minLength": 1,
+                          "maxLength": 80,
+                          "pattern": "^[A-Za-z0-9_-]+$",
+                          "type": "string"
+                        },
+                        "submittedAt": {
+                          "type": "string"
+                        },
+                        "contentFingerprint": {
+                          "type": "string"
+                        },
+                        "processEvidenceProvenance": {
+                          "type": "string",
+                          "enum": [
+                            "client_reported"
+                          ]
+                        },
+                        "sources": {
+                          "type": "array",
+                          "items": {
+                            "additionalProperties": false,
+                            "type": "object",
+                            "required": [
+                              "sourceId",
+                              "location",
+                              "text",
+                              "kind"
+                            ],
+                            "properties": {
+                              "sourceId": {
+                                "type": "string"
+                              },
+                              "location": {
+                                "type": "string"
+                              },
+                              "text": {
+                                "type": "string"
+                              },
+                              "kind": {
+                                "anyOf": [
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "work_sample"
+                                    ]
+                                  },
+                                  {
+                                    "type": "string",
+                                    "enum": [
+                                      "client_reported_event"
+                                    ]
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "analysis": {
+                      "additionalProperties": false,
+                      "type": "object",
+                      "required": [
+                        "status",
+                        "attemptId",
+                        "submissionId",
+                        "contentFingerprint",
+                        "startedAt",
+                        "finishedAt",
+                        "errorCode",
+                        "result"
+                      ],
+                      "properties": {
+                        "status": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "not_started"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "running"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "succeeded"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "enum": [
+                                "failed"
+                              ]
+                            }
+                          ]
+                        },
+                        "attemptId": {
+                          "anyOf": [
+                            {
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[A-Za-z0-9_-]+$",
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "submissionId": {
+                          "anyOf": [
+                            {
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[A-Za-z0-9_-]+$",
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "contentFingerprint": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "startedAt": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "finishedAt": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "errorCode": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "result": {
+                          "anyOf": [
+                            {
+                              "additionalProperties": false,
+                              "type": "object",
+                              "required": [
+                                "mode",
+                                "model",
+                                "promptVersion",
+                                "submissionId",
+                                "contentFingerprint",
+                                "observations",
+                                "provenance"
+                              ],
+                              "properties": {
+                                "mode": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "live"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "manual_simulation"
+                                      ]
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "replay"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                "model": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "promptVersion": {
+                                  "type": "string"
+                                },
+                                "submissionId": {
+                                  "minLength": 1,
+                                  "maxLength": 80,
+                                  "pattern": "^[A-Za-z0-9_-]+$",
+                                  "type": "string"
+                                },
+                                "contentFingerprint": {
+                                  "type": "string"
+                                },
+                                "observations": {
+                                  "type": "array",
+                                  "items": {
+                                    "additionalProperties": false,
+                                    "type": "object",
+                                    "required": [
+                                      "dimension",
+                                      "status",
+                                      "statement",
+                                      "citations",
+                                      "scope",
+                                      "uncertainty"
+                                    ],
+                                    "properties": {
+                                      "dimension": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "Problem Framing"
+                                            ]
+                                          },
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "Evidence Navigation"
+                                            ]
+                                          },
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "Hypothesis Formation"
+                                            ]
+                                          },
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "Evidence Seeking"
+                                            ]
+                                          },
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "Decision Making"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      "status": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "observed"
+                                            ]
+                                          },
+                                          {
+                                            "type": "string",
+                                            "enum": [
+                                              "not_observed"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      "statement": {
+                                        "type": "string"
+                                      },
+                                      "citations": {
+                                        "type": "array",
+                                        "items": {
+                                          "additionalProperties": false,
+                                          "type": "object",
+                                          "required": [
+                                            "sourceId",
+                                            "location",
+                                            "quote",
+                                            "start",
+                                            "end"
+                                          ],
+                                          "properties": {
+                                            "sourceId": {
+                                              "type": "string"
+                                            },
+                                            "location": {
+                                              "type": "string"
+                                            },
+                                            "quote": {
+                                              "type": "string"
+                                            },
+                                            "start": {
+                                              "minimum": 0,
+                                              "type": "integer"
+                                            },
+                                            "end": {
+                                              "minimum": 1,
+                                              "type": "integer"
+                                            }
+                                          }
+                                        }
+                                      },
+                                      "scope": {
+                                        "type": "string"
+                                      },
+                                      "uncertainty": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                },
+                                "provenance": {
+                                  "additionalProperties": false,
+                                  "type": "object",
+                                  "required": [
+                                    "provider",
+                                    "generatedAt",
+                                    "responseId",
+                                    "processEvidence"
+                                  ],
+                                  "properties": {
+                                    "provider": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "openai"
+                                          ]
+                                        },
+                                        {
+                                          "type": "string",
+                                          "enum": [
+                                            "manual_rules"
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    "generatedAt": {
+                                      "type": "string"
+                                    },
+                                    "responseId": {
+                                      "anyOf": [
+                                        {
+                                          "type": "string"
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "processEvidence": {
+                                      "type": "string",
+                                      "enum": [
+                                        "client_reported"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "review": {
+                      "anyOf": [
+                        {
+                          "additionalProperties": false,
+                          "type": "object",
+                          "required": [
+                            "schemaVersion",
+                            "sessionId",
+                            "taskId",
+                            "datasetVersion",
+                            "submissionId",
+                            "contentFingerprint",
+                            "requirementId",
+                            "decision",
+                            "comment",
+                            "reviewId",
+                            "reviewedAt"
+                          ],
+                          "properties": {
+                            "schemaVersion": {
+                              "type": "string",
+                              "enum": [
+                                "2.0"
+                              ]
+                            },
+                            "sessionId": {
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[A-Za-z0-9_-]+$",
+                              "type": "string"
+                            },
+                            "taskId": {
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[A-Za-z0-9_-]+$",
+                              "type": "string"
+                            },
+                            "datasetVersion": {
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[A-Za-z0-9_-]+$",
+                              "type": "string"
+                            },
+                            "submissionId": {
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[A-Za-z0-9_-]+$",
+                              "type": "string"
+                            },
+                            "contentFingerprint": {
+                              "pattern": "^[a-f0-9]{64}$",
+                              "type": "string"
+                            },
+                            "requirementId": {
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[A-Za-z0-9_-]+$",
+                              "type": "string"
+                            },
+                            "decision": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "confirm"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "needs_more_evidence"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "evidence_still_insufficient"
+                                  ]
+                                }
+                              ]
+                            },
+                            "comment": {
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S",
+                              "type": "string"
+                            },
+                            "reviewId": {
+                              "minLength": 1,
+                              "maxLength": 80,
+                              "pattern": "^[A-Za-z0-9_-]+$",
+                              "type": "string"
+                            },
+                            "reviewedAt": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "workflow": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "maxSubmissions",
+                  "submissionsUsed",
+                  "remainingSubmissions",
+                  "canSubmit",
+                  "canResubmit",
+                  "nextSubmissionVersion",
+                  "allowedReviewDecisions",
+                  "isTerminal"
+                ],
+                "properties": {
+                  "maxSubmissions": {
+                    "type": "number",
+                    "enum": [
+                      2
+                    ]
+                  },
+                  "submissionsUsed": {
+                    "minimum": 0,
+                    "maximum": 2,
+                    "type": "integer"
+                  },
+                  "remainingSubmissions": {
+                    "minimum": 0,
+                    "maximum": 2,
+                    "type": "integer"
+                  },
+                  "canSubmit": {
+                    "type": "boolean"
+                  },
+                  "canResubmit": {
+                    "type": "boolean"
+                  },
+                  "nextSubmissionVersion": {
+                    "anyOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "type": "number",
+                            "enum": [
+                              1
+                            ]
+                          },
+                          {
+                            "type": "number",
+                            "enum": [
+                              2
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "allowedReviewDecisions": {
+                    "maxItems": 3,
+                    "uniqueItems": true,
+                    "type": "array",
+                    "items": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "confirm"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "needs_more_evidence"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "enum": [
+                            "evidence_still_insufficient"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "isTerminal": {
+                    "type": "boolean"
+                  }
+                }
+              },
               "report": {
                 "additionalProperties": false,
                 "type": "object",
@@ -1402,7 +2299,7 @@
                           "schemaVersion": {
                             "type": "string",
                             "enum": [
-                              "1.0"
+                              "2.0"
                             ]
                           },
                           "sessionId": {
@@ -1571,7 +2468,7 @@
                                 "schemaVersion": {
                                   "type": "string",
                                   "enum": [
-                                    "1.0"
+                                    "2.0"
                                   ]
                                 },
                                 "sessionId": {
@@ -1831,7 +2728,7 @@
                   "schemaVersion": {
                     "type": "string",
                     "enum": [
-                      "1.0"
+                      "2.0"
                     ]
                   },
                   "sessionId": {
@@ -1912,7 +2809,7 @@
     },
     "/api/demo/submission": {
       "post": {
-        "summary": "Save an immutable public work sample; private notes are excluded",
+        "summary": "Save V1 or an explicitly permitted V2; private notes are excluded",
         "requestBody": {
           "required": true,
           "content": {
@@ -1926,6 +2823,9 @@
                   "taskId",
                   "datasetVersion",
                   "candidateId",
+                  "submissionVersion",
+                  "previousSubmissionId",
+                  "previousContentFingerprint",
                   "summary",
                   "findings",
                   "processEvidence"
@@ -1934,7 +2834,7 @@
                   "schemaVersion": {
                     "type": "string",
                     "enum": [
-                      "1.0"
+                      "2.0"
                     ]
                   },
                   "sessionId": {
@@ -1960,6 +2860,46 @@
                     "maxLength": 80,
                     "pattern": "^[A-Za-z0-9_-]+$",
                     "type": "string"
+                  },
+                  "submissionVersion": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "enum": [
+                          1
+                        ]
+                      },
+                      {
+                        "type": "number",
+                        "enum": [
+                          2
+                        ]
+                      }
+                    ]
+                  },
+                  "previousSubmissionId": {
+                    "anyOf": [
+                      {
+                        "minLength": 1,
+                        "maxLength": 80,
+                        "pattern": "^[A-Za-z0-9_-]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "previousContentFingerprint": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[a-f0-9]{64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "summary": {
                     "minLength": 1,
@@ -2164,7 +3104,7 @@
                   "schemaVersion": {
                     "type": "string",
                     "enum": [
-                      "1.0"
+                      "2.0"
                     ]
                   },
                   "sessionId": {
@@ -2282,7 +3222,7 @@
                   "schemaVersion": {
                     "type": "string",
                     "enum": [
-                      "1.0"
+                      "2.0"
                     ]
                   },
                   "sessionId": {
@@ -2417,7 +3357,7 @@
                   "schemaVersion": {
                     "type": "string",
                     "enum": [
-                      "1.0"
+                      "2.0"
                     ]
                   },
                   "sessionId": {

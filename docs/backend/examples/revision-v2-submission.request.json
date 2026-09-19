@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "2.0",
+  "sessionId": "b3ef91eb-f272-42c9-9239-7ca8645b9506",
+  "taskId": "9ade3b08-f27f-454e-978e-e3ac0a753e8d",
+  "datasetVersion": "harbourcart-2026-09-v1",
+  "candidateId": "alex-chen",
+  "submissionVersion": 2,
+  "previousSubmissionId": "8d05b34e-5f0f-4d1c-ae1e-74c0e1ddd3b9",
+  "previousContentFingerprint": "3c198ae27a7de10d4f199e9e8b749feec82fa7549b8205d73de696085a1baa87",
+  "summary": "EB-EXAMPLE-REVISION-V2. Traffic changed by 18.00%, while conversion moved from 3.4% to 2.6%. Orders fell from 34000 to 30680. These observations do not establish causation. V2 clarification: the supplied current device split lacks historical matched cohorts. It identifies a question to test, not a causal explanation.",
+  "findings": [
+    {
+      "id": "client-finding-1",
+      "section": "Key Findings",
+      "title": "Compare the Paid Search signal",
+      "detail": "Paid Search conversion moved from 3.20% to 1.80%; its current traffic share is 36.10%.",
+      "source": "website_traffic.csv",
+      "confidence": "High"
+    },
+    {
+      "id": "client-finding-2",
+      "section": "Hypotheses",
+      "title": "Traffic quality is a hypothesis",
+      "detail": "New acquisition and page changes are possible explanations, not proven causes. The supplied aggregates do not identify a causal effect.",
+      "source": "business_context.md",
+      "confidence": "Medium"
+    },
+    {
+      "id": "client-finding-3",
+      "section": "Additional Evidence Needed",
+      "title": "Request a comparable breakdown",
+      "detail": "Request comparable pre/post campaign, device and landing-page cohorts plus funnel events; separate traffic composition from experience changes.",
+      "source": "landing_pages.csv",
+      "confidence": "High"
+    },
+    {
+      "id": "client-finding-4",
+      "section": "Recommended Next Steps",
+      "title": "Validate before changing spend",
+      "detail": "Prioritise a funnel and cohort check, then run a bounded comparison before changing incremental advertising spend.",
+      "source": "business_context.md",
+      "confidence": "Medium"
+    }
+  ],
+  "processEvidence": [
+    {
+      "id": "client-event-1",
+      "at": "2026-09-19T04:15:56.755Z",
+      "title": "Synthetic test client assembled the public work sample",
+      "detail": "Script-generated fixture event; not an observed candidate action."
+    }
+  ]
+}

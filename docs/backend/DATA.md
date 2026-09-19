@@ -4,12 +4,12 @@
 
 ## 1. 固定身份与来源
 
-- `schemaVersion: "1.0"`；`datasetVersion: "harbourcart-2026-09-v1"`。
+- API `schemaVersion: "2.0"`；资源 `datasetVersion: "harbourcart-2026-09-v1"` 保持不变。V1/V2 是 `submissionVersion`，不是新资源版本；同一补交流程不换题、不换数据。
 - HarbourCart Pty Ltd / Junior Data Analyst / Alex Chen；ID 分别使用岗位 `junior-data-analyst`、候选人 `alex-chen`。
 - 要求 ID：`sql`、`data-analysis`、`business-problem-solving`。前两项初始 `supported`，第三项 `uncertain`。
 - 任务模板 ID：`conversion-drop-investigation`，名称 Conversion Drop Investigation，唯一目标 `business-problem-solving`。正式 `taskId` 由共享服务生成，前端从 GET 取得，不把模板 ID 用作本轮提交绑定。
 - 本轮建议时长统一 **20 分钟，不强制计时截止**；前端旧的 15–20 与 35–45 分钟口径同时替换。
-- 所有材料均为合成样例。初始申请、报告和任务带 `mode: "preset"`；这不是实际上传、材料解析、模型运行或独立人工认证。正式提交、AI 提取及人审状态由服务另行保存。
+- 所有材料均为合成样例。初始申请、报告和任务带 `mode: "preset"`；这不是实际上传、材料解析、模型运行或独立人工认证。正式提交、AI 提取及人审状态按 V1/V2 由服务分别保存；`versions` 只含实际产生的记录，不预填第二版。
 
 初始申请只含三个固定来源，所有 `sourceRefs[].quote` 在对应 `content` 中逐字存在：
 
@@ -75,11 +75,17 @@
 | [HR data.js](../../app/hr/src/data.js) `requirements/resources/channels` | 初始支持来自后端三种来源与可定位引用；移除未有代码/计算表支持的“joins / cleaning / dashboard”固定描述。Direct 上期 3.4875%/3.49% 改 3.075%；本期约 2.662730%。Email 本期由整数 3414 / 77600 计算；图中可展示 4.4%。全部 CSV 从 API 读。 |
 | [HR components.jsx](../../app/hr/src/components.jsx) 第 256 行 `ChannelChart` | 另有独立的固定渠道数组，尤其 Direct 3.49；改为 API channel 数据，期间文案 Previous month 改 Previous 4 weeks。 |
 | [HR main.jsx](../../app/hr/src/main.jsx) 第 861 行及 `workSections / dimensions / timeline` 渲染处 | 15–20 分钟改读 20；正式作品、事件、AI 观察读服务当前提交；原固定样例只在明确示例区展示。打开文件事件仅证明客户端报告了访问，不代表已掌握能力。 |
-| [Candidate state.ts](../../app/candidate/src/state.ts) / [HR workflow.js](../../app/hr/src/workflow.js) | 本地草稿可保留；正式状态由 API 映射。`Needs More Evidence` 本轮结束，不重开草稿；禁止本地 LOAD_SUBMISSION/REVIEW/REOPEN 模拟覆盖共享状态。Candidate 私人 notes 不发 API；HR 公开审核备注用合同字段，不发送全 state。 |
+| [Candidate state.ts](../../app/candidate/src/state.ts) / [HR workflow.js](../../app/hr/src/workflow.js) | 本地草稿可保留；正式状态由 API 映射。仅当前 V1 的 Needs More Evidence 开放隔离 V2 草稿；读取真实 comment 与 workflow；V2/终局禁止再补交，不重开旧审核。禁止本地 LOAD_SUBMISSION/REVIEW/REOPEN 模拟覆盖共享状态。Candidate 私人 notes 不发 API；HR 公开审核备注用合同字段，不发送全 state。 |
 
 `dataset.channels` 兼容 Candidate 的 `channel/traffic/growth/orders/conversion/previous/revenue`，另附 `id/before/current/trafficSharePct`。HR 可把 `channel` 映射为 `name`、`conversion` 映射为 `current`，金额和百分比在 UI 格式化；不要把格式化字符串存成事实数据。
 
-## 5. 实际验证与范围
+## 5. 两版数据关联与验证范围
+
+- sessionId 是演示会话，taskId 是同一任务，datasetVersion 是固定资源版本；submissionVersion 为 1/2，revision 为状态更新次数。
+- V1 前版 ID/指纹为 null；V2 明确关联同会话 V1。两个 submissionId/指纹和 sources 各自保存，哪怕复用 finding.id，来源定位也要以所属 submissionId 为外层作用域。
+- V2 可保留或修订 V1 的公开卡片，但其提交是新快照；原版保持不变。补充意见不意味着后端补发隐藏数据/参考答案，仍围绕现有资源说明推理与缺失证据。
+- 正常、薄弱、错误推理与 V1→V2 成对案例可在独立 session/测试库运行；不因此增加候选人或岗位管理。
+
 
 在后端目录执行 `npm run build && node --test test/seed.test.mjs`。种子套件验证：固定身份与 preset 状态、10 条整数事实、总体/渠道/图表复算、六资源内容与 UTF-8 大小、Paid Search 设备精确分区、初始真实引文与计算表、重置确定性及深拷贝、无私人 notes 字段。
 

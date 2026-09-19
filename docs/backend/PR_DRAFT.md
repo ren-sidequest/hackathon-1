@@ -1,47 +1,45 @@
-# 后端 PR 说明草稿
+# 修订 3 后端变更说明草稿
 
-分支 `codex/evidencebridge-backend`；开发基线 `31edc5319ee40b1d5d6e9e658a1526d7a3ab2f35`。此文件记录提交前的本地验证与说明，实际发布及 CI 状态以对应 PR 为准。初始基线为 `8b0231e`，执行期间发现远端新增 #5 主题与侧栏更新后快进同步并补跑最新回归，没有改写前端代码。
+延续分支 `codex/evidencebridge-backend`，本轮扩展基线 `6fb19a9`（此前单轮交付）。用户已确认同一任务 V1 + 最多一次 V2；本草稿记录本地实现和验证阶段；该阶段未执行提交、推送、PR 更新、合并或部署。后续发布与合并状态以 GitHub PR 为准，旧版 CI 不替代新版检查。
 
 ## 1. 目的
 
-让固定 HarbourCart / Junior Data Analyst / Alex Chen 案例通过一个共享 API 保存同一任务、正式作品、来源观察、人工决定和报告。证明真实作品可传递、可定位、可由人审核；不做候选人总分或自动录用判断。
+让候选人依据 HR 的具体缺证意见，在同一 HarbourCart / Junior Data Analyst / Alex Chen 任务里补充一次证据。原 V1 作品、分析和审核意见留存，V2 独立提交、分析与终局审核；不以重置或覆盖原文伪装补交。继续证明可定位证据与人工判断，不做候选人总分或自动录用。
 
 ## 2. 方案
 
-用户确认 TypeScript + Fastify + SQLite + 自动 OpenAPI。独立后端包、单本机进程、单 SQLite 文件；一次提交快照、一次人工审核，两个不足分支保持 uncertain 并结束本轮。统一事实从整数数据计算。五维提取使用服务端模型适配，schema/逐字引用校验；默认 disabled，手工模拟明确标注。
+沿用 TypeScript + Fastify + SQLite、六个业务端点及本机三个服务。API schema 2.0：V1 More → awaiting_revision → V2；V1 Confirm/Insufficient 可直接结束，V2 只接受两个终局。每版最多一次审核；GET 增加两版只读 versions 与明确 workflow，保留当前投影。两版仍使用同 session/task/dataset，V2 精确绑定 V1 ID/指纹。
 
-取舍见 [ADR](ADR.md)，业务/错误合同见 [API](API.md)。无上传、OCR、岗位/账号 CRUD、微服务、多轮历史、生产身份体系或公网部署。
+运行中分析遇人审时冻结为 AI_REVIEW_CLOSED，迟到结果不改历史或 V2；幂等旧收据与当前 GET 分开。默认新库 `var/evidencebridge-v2.sqlite`，旧 1.0 库保留、启动显式报兼容错误，不自动迁移/清空。取舍见 [REVISION_PLAN](REVISION_PLAN.md)、[ADR](ADR.md)、[API](API.md)。不加入无限轮次、复杂 diff、上传/OCR、动态出题、岗位/账号平台或公网部署。
 
 ## 3. 实际改动
 
-- `app/backend/`：源码、锁定依赖、配置示例、测试、测试客户端与运行说明。
-- `docs/backend/`：合同、OpenAPI 与配对合成样例、数据来源/前端替换清单、验收、测试、审查及交接。
-- 根 README、PROJECT_PLAN、AGENTS 增补本轮状态与真实命令；仓库文档检查增加后端交付入口；新增后端检查 workflow（本地验证不代替远端运行）。
-- 项目忽略规则覆盖数据库、sidecar、锁与本地配置。前端和共享 UI 相对最终基线 diff 为空。
+- 后端 schema/service/store：两版状态、前版绑定、只读历史、当前报告、原子审核与分析关闭、版本/数据库兼容性检查。
+- API/持久化/安全测试：适配旧基线，并补两版主线、非法版本、旧引用、竞争、重启、重置和旧库保留。
+- demo `--resubmit`、独立进程 HTTP 两版验收脚本、2.0 OpenAPI 与配套 synthetic/manual 样例；零真实模型调用。
+- 根 README/PROJECT_PLAN/AGENTS、两份产品基线的最小范围同步，API/DATA/ADR/验收/交接更新；新增先行计划入口。
+- 前端、共享 UI 源码与锁文件不修改；浏览器 API 接入仍由小傅完成。数据业务事实版本仍为 harbourcart-2026-09-v1。
 
-## 4. 验证结果
+## 4. 本地验证与证据边界
 
-| 范围 | 实际命令/步骤 | 结果 |
-|---|---|---|
-| 后端安装与类型 | `npm ci --prefix app/backend`、`npm run typecheck --prefix app/backend` | 通过 |
-| 后端套件 | `npm test --prefix app/backend` | 116/116 |
-| 核心代码覆盖 | `npm run test:coverage --prefix app/backend` | 116/116，分模块记录见 TEST_RESULTS |
-| 实际 HTTP + 独立进程 | demo/reset 客户端，三结果、同库重启、失效引用/凭据保护 | 10/10 |
-| 自动合同 | `npm run docs:generate --prefix app/backend` 连续两次 | 通过，OpenAPI 内容哈希一致 |
-| 最新前端基线 | Candidate test/build/E2E/shared UI，HR test/build | 21+9+10+8 项测试与两端构建通过 |
-| 仓库检查 | `python3 scripts/check_repository.py`、`git diff --check` | 16 文档入口/链接与空白检查通过 |
-| 后端依赖公告 | `npm audit --prefix app/backend` | 查询时 0 个已知漏洞 |
+| 范围 | 命令 / 方法 | 本轮记录 |
+| --- | --- | --- |
+| 类型与构建 | `npm run typecheck --prefix app/backend`、`npm run build --prefix app/backend` | 通过；实际命令/环境见 TEST_RESULTS |
+| 后端套件 | `npm test --prefix app/backend` | 145/145：适配原 116 项 + 新增 29 项 |
+| 代码覆盖 | `npm run test:coverage --prefix app/backend` | 同 145 项；模块覆盖见 TEST_RESULTS，不叠加测试总数 |
+| 真实 HTTP + 独立服务进程 | build 后 `node app/backend/scripts/verify-revisions.mjs` | 42/42；含两种 V2 终局、分阶段同库重启及 demo CLI；单列于 node:test |
+| 自动合同 | `npm run docs:generate --prefix app/backend` | 2.0 OpenAPI 与配套样例；生成记录见 TEST_RESULTS |
+| 既有前端回归 | Candidate test/build/E2E/shared UI，HR test/build | 本轮重新运行 48 项 + 两端构建通过；不是 API 联调 |
+| 仓库文档与空白 | `python3 scripts/check_repository.py`、`git diff --check` | 17 文档入口/本地链接通过，空白检查通过 |
 
-以上为 macOS arm64、Node.js 22.23.2、npm 10.9.8 上的本地验证，对应最终基线及本轮后端改动。具体环境、日志、修复前失败与最终重测记录见 [TEST_RESULTS](TEST_RESULTS.md)及[安全审查](SECURITY_REVIEW.md)。现有 HR Vite 依赖有 high 级公告，Candidate 有既存 chunk 警告，本轮未升级或重构前端。
+具体运行环境、日志、修复前失败与重测、检查者身份见 [TEST_RESULTS](TEST_RESULTS.md)和[安全审查](SECURITY_REVIEW.md)。原单轮的 116 项与 10 项客户端检查仅作历史基线，不加到本轮计数，不替代两版验证。所有内容审查是 AI agent 审查，不冒称真人验收。
 
-本地记录尚未验证：真实模型效果与人工评估、双端 UI API 联调、真人试用、跨平台、远端 CI、公网部署。远端 CI 后续结果另列于 PR；55 项 AI 适配测试都是确定性工程测试，实际 HTTP 模拟也不是模型效果实验。
+尚未验证：真实模型输入输出效果实验、双端浏览器 API 联调、真人试用、跨平台运行、本轮远端 CI 和公网部署。manual_simulation、stub 与 HTTP 工程验证都不是模型质量实验。现有前端依赖公告与 chunk 警告继续如实记录，本轮不升级前端。
 
 ## 5. 审阅重点
 
-- 白名单字段与私人 notes 排除；共享 HR 理由单独用 comment。
-- 提交和审核绑定、幂等、reset/模型迟到结果、崩溃恢复与 PID 锁竞态。
-- 初始来源与当前作品分开；datasetVersion/指纹/逐字引用一致；仅 Confirm 改变目标要求。
-- 本地 reset 令牌、模型凭据、日志及 SQLite 文件的边界；Node 22 原生 SQLite experimental 提示。
-- 小傅按 [HANDOFF](HANDOFF.md) 接页面后，独立完成真正双端 UI 验证；后端 API 通过不替代这一环节。
-
-部署状态：未部署。交付执行到独立分支推送和创建 PR；合并与部署分别确认。提交作者及远端操作均核对为本人账号，不使用其他协作者身份。
+- V1 More 才开放 V2；remainingSubmissions 是容量不是许可；V1 终局不误开放，V2 无 More/V3。
+- 两版快照/评论/引文不可串用；V2 初始无继承的分析或审核；当前报告与只读历史分清。
+- 运行中人审冻结、模型迟到、旧 key 历史重放后 GET、新 key 旧提交冲突、并发补交及重启/reset。
+- 私人 notes 两版均留在本地；公开 comment 白名单；旧 1.0 文件保持、显式新路径；原本机访问/令牌/日志保护保留。
+- 小傅按 [HANDOFF](HANDOFF.md) 接线并逐项完成真实 UI 验收；真实模型实验独立补证。后端工程通过不代替这两项。
