@@ -16,8 +16,8 @@
 .eb-preserve,.eb-dialog pre { white-space:pre-wrap; overflow-wrap:anywhere; }
 .eb-actions { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:18px; }
 .eb-action { display:inline-flex; justify-content:center; align-items:center; gap:8px; border:1px solid var(--border-strong); padding:9px 14px; border-radius:7px; background:var(--surface); color:var(--text-primary); font:inherit; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; }
-.eb-action:hover { background:var(--surface-hover); }
-.eb-action.primary { color:var(--on-accent); background:var(--role-primary); border-color:var(--role-primary); }
+.eb-action:hover:not(:disabled) { background:var(--surface-hover); }
+.eb-action.primary { color:var(--on-accent); background:var(--role-primary); border-color:var(--text-link); }
 .eb-action.danger { color:var(--danger-text); }
 .eb-action:disabled { opacity:.55; cursor:not-allowed; }
 .eb-connected :is(button,a,input,textarea,select):focus-visible,.eb-dialog :is(button,a,input,textarea,select):focus-visible { outline:3px solid var(--focus-ring); outline-offset:2px; }
@@ -53,7 +53,7 @@
 .eb-connected th,.eb-connected td,.eb-dialog th,.eb-dialog td { padding:12px 10px; border-bottom:1px solid var(--border); text-align:left; }
 .eb-connected th,.eb-dialog th { color:var(--text-secondary); background:var(--surface-soft); }
 .eb-tabs { display:flex; flex-wrap:wrap; gap:6px; padding-bottom:16px; }
-.eb-tabs button[aria-selected=true] { background:var(--role-soft); border-color:var(--role-border); color:var(--role-primary); }
+.eb-tabs button[aria-selected=true] { background:var(--role-soft); border-color:var(--role-border); color:var(--text-link); }
 .eb-workbench { display:grid; grid-template-columns:220px minmax(0,1.5fr) minmax(280px,1fr); gap:18px; align-items:start; }
 .eb-workbench>.eb-panel { padding:18px; }
 .eb-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:16px 0; }
@@ -126,3 +126,23 @@
 .eb-observation-map span { color:var(--warning-text); margin-right:5px; }
 .eb-observation-map [data-observed=true] span { color:var(--success-text); }
 .eb-observation-map small { display:block; }
+
+.eb-connected .eb-action.primary { background:var(--accent-gradient); border-color:var(--accent-border); box-shadow:var(--accent-shadow); }
+.eb-connected .eb-action.primary:hover:not(:disabled) { background:var(--accent-gradient-hover); }
+
+.eb-connected { background-image:var(--page-glow); background-attachment:fixed; }
+.eb-connected .eb-api-topbar { background:transparent; border-bottom-color:var(--accent-border); }
+.eb-connected .eb-heading h1 { font-size:clamp(26px,2.5vw,38px); font-weight:650; line-height:1.2; letter-spacing:-1px; }
+.eb-connected .eb-panel { border-radius:12px; }
+.eb-connected .eb-panel { background:var(--glass-fallback); }
+.eb-connected .eb-action:not(.primary):not(.danger):not(.r5-queue-hide) { color:var(--text-link); background:var(--secondary-gradient),var(--surface); }
+.eb-connected .eb-action:not(.primary):not(.danger):not(.r5-queue-hide):hover:not(:disabled) { background:var(--secondary-gradient),var(--surface-hover); border-color:var(--accent-border); }
+@supports (backdrop-filter:blur(1px)) {
+  .eb-connected .eb-panel { background:var(--glass-fill); backdrop-filter:blur(14px); }
+}
+/* Dense reading/editing areas keep a solid base; avoid nested backdrop filters. */
+.eb-connected .eb-review-note { background:var(--role-soft); backdrop-filter:none; }
+.eb-connected :is(.eb-workbench,.eb-review-grid) .eb-panel { background:var(--surface); backdrop-filter:none; }
+.eb-connected .eb-action.primary { min-height:42px; padding-inline:20px; }
+.eb-connected .eb-bar-track i:not(.previous i),.eb-channel-bar i { background:var(--accent-gradient); }
+.eb-dialog::backdrop { background:#000b; }

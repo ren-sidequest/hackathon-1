@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SpotlightCard } from './gold-interactions';
 import type { Demo } from './api-types';
 import { compareWork, workflowSteps, type PublicVersion } from './workspace-model';
 
@@ -28,7 +29,7 @@ export function DataOverview({ dataset, onEvent }: { dataset: Demo['dataset']; o
     ['Conversion rate', `${current.conversionPct.toFixed(2)}%`, `${change.conversionPercentagePoints.toFixed(2)} pp`],
     ['Total orders', current.orders.toLocaleString(), `${change.ordersPct.toFixed(1)}%`],
     ['Ad spend', `AUD ${(current.adSpendCents / 100).toLocaleString()}`, `${change.adSpendPct.toFixed(1)}%`],
-  ].map(([label, value, delta]) => <div className="eb-metric" key={label}><small>{label}</small><strong>{value}</strong><small>{delta} vs previous period</small></div>)}</div>
+  ].map(([label, value, delta]) => <SpotlightCard as="div" className="eb-metric" key={label}><small>{label}</small><strong>{value}</strong><small>{delta} vs previous period</small></SpotlightCard>)}</div>
     <h3>Four-week period comparison</h3><div className="eb-chart-legend"><span>▧ Previous</span><span>■ Current</span></div><div className="eb-period-bars">{(['sessions', 'orders'] as const).map(metric => <div key={metric}><strong>{metric === 'sessions' ? 'Sessions' : 'Orders'}</strong>{bar(previous[metric], Math.max(1, previous[metric], current[metric]), 'previous', previous[metric].toLocaleString())}{bar(current[metric], Math.max(1, previous[metric], current[metric]), 'current', current[metric].toLocaleString())}</div>)}</div>
     <div className="eb-data-controls"><label>Channel<select aria-label="Filter channel" value={channel} onChange={e => { setChannel(e.target.value); onEvent?.(`Filtered ${e.target.value}`); }}><option>All channels</option>{dataset.channels.map(c => <option key={c.id}>{c.channel}</option>)}</select></label><label>Sort rows<select aria-label="Sort channel rows" value={sort} onChange={e => setSort(e.target.value)}><option value="default">Dataset order</option><option value="conversion">Conversion · lowest first</option><option value="traffic">Sessions · highest first</option></select></label></div>
     <h3>Conversion by channel</h3><div className="eb-channel-bars" aria-label="Channel conversion comparison">{rows.map(c => <div key={c.id}><strong>{c.channel}</strong>{bar(c.previous, scale, 'previous', `${c.previous.toFixed(2)}%`)}{bar(c.conversion, scale, 'current', `${c.conversion.toFixed(2)}%`)}</div>)}</div>

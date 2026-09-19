@@ -3,11 +3,11 @@ import { readPreference, resolveTheme, sidebarKey, writePreference } from '../..
 
 afterEach(() => vi.unstubAllGlobals());
 describe('shared UI preference policy', () => {
-  it('uses the system only when no valid explicit preference exists', () => {
-    expect(resolveTheme(null, true)).toBe('dark');
-    expect(resolveTheme('invalid', false)).toBe('light');
-    expect(resolveTheme('light', true)).toBe('light');
-    expect(resolveTheme('dark', false)).toBe('dark');
+  it('defaults to night mode and preserves an explicit day or night choice', () => {
+    expect(resolveTheme(null)).toBe('dark');
+    expect(resolveTheme('invalid')).toBe('dark');
+    expect(resolveTheme('light')).toBe('light');
+    expect(resolveTheme('dark')).toBe('dark');
   });
   it('survives browsers that reject storage access', () => {
     vi.stubGlobal('localStorage', { getItem: () => { throw Error('blocked'); }, setItem: () => { throw Error('quota'); } });

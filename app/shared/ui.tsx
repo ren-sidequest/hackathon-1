@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, type ReactNode } from 'react';
+import { GoldBackdrop } from './gold-backdrop';
 import { applyTheme, readPreference, resolveTheme, sidebarKey, themeKey, writePreference, type Theme } from './preferences';
 
 function Glyph({ name }: { name: 'sun' | 'moon' | 'menu' | 'close' | 'collapse' | 'brand' }) {
@@ -13,12 +14,11 @@ function Glyph({ name }: { name: 'sun' | 'moon' | 'menu' | 'close' | 'collapse' 
 }
 
 export function ThemeSwitch() {
-  const [theme, setTheme] = useState<Theme>(() => resolveTheme(document.documentElement.dataset.theme ?? null, false));
+  const [theme, setTheme] = useState<Theme>(() => resolveTheme(document.documentElement.dataset.theme ?? null));
   const preference = useRef(readPreference(themeKey));
   useEffect(() => {
-    const system = matchMedia('(prefers-color-scheme: dark)');
     const update = () => {
-      const next = resolveTheme(preference.current, system.matches);
+      const next = resolveTheme(preference.current);
       applyTheme(next);
       setTheme(next);
     };
@@ -28,12 +28,11 @@ export function ThemeSwitch() {
         update();
       }
     };
-    system.addEventListener('change', update);
     window.addEventListener('storage', storage);
     // A lazy-loaded app may mount after another tab changes the preference.
     preference.current = readPreference(themeKey);
     update();
-    return () => { system.removeEventListener('change', update); window.removeEventListener('storage', storage); };
+    return () => window.removeEventListener('storage', storage);
   }, []);
   const toggle = () => {
     const next = theme === 'light' ? 'dark' : 'light';
@@ -113,6 +112,7 @@ export function Sidebar({ role, activePage, items, onNavigate, user, helpLabel, 
   }, [mobileOpen]);
   const visit = (id: string) => { closeMobile(); onNavigate(id); };
   return <>
+    <GoldBackdrop />
     {mobileOpen && <div className="eb-sidebar-backdrop" aria-hidden="true" onClick={() => closeMobile()}/>}
     <aside ref={panel} id="eb-sidebar" className={`eb-sidebar${collapsed ? ' is-collapsed' : ''}${mobileOpen ? ' is-open' : ''}`} aria-label={`${role === 'hr' ? 'HR' : 'Candidate'} workspace`} role={mobileOpen ? 'dialog' : undefined} aria-modal={mobileOpen || undefined}>
       <button type="button" className="eb-mobile-close" aria-label="Close navigation" onClick={() => closeMobile()}><Glyph name="close"/></button>

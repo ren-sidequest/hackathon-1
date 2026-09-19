@@ -1,0 +1,14 @@
+/* Restrained black/gold adaptations of SpotlightCard and StarBorder. */
+:root { --interaction-glow:rgb(219 184 92 / 0.11); --interaction-line:#e9c978; }
+:root[data-theme="light"] { --interaction-glow:rgb(145 105 28 / 0.08); --interaction-line:#a57a2b; }
+.eb-spotlight,.eb-star-border { position:relative; }
+.eb-spotlight::before { content:""; position:absolute; inset:0; border-radius:inherit; background:radial-gradient(320px circle at var(--spot-x,50%) var(--spot-y,50%),var(--interaction-glow),transparent 75%); opacity:0; transition:opacity 180ms ease; pointer-events:none; }
+@media(hover:hover) and (pointer:fine) { .eb-spotlight[data-spot-active="true"]::before { opacity:1; } }
+.eb-spotlight:focus-within::before { opacity:0.6; }
+.eb-star-trail { position:absolute; inset:0; border-radius:inherit; padding:1px; pointer-events:none; overflow:hidden; mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask-composite:exclude; }
+.eb-star-trail::before { content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent,var(--interaction-line),transparent) -60% 0/35% 1px no-repeat,linear-gradient(90deg,transparent,var(--interaction-line),transparent) 160% 100%/35% 1px no-repeat; animation:eb-gold-perimeter 9s ease-in-out infinite alternate; opacity:0.8; }
+@keyframes eb-gold-perimeter { to { background-position:160% 0,-60% 100%; } }
+@media(prefers-reduced-motion:reduce) {
+  .eb-spotlight::before { display:none; transition:none; }
+  .eb-star-trail::before { animation:none; background-position:50% 0,50% 100%; opacity:0.35; }
+}

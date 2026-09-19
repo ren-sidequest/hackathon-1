@@ -111,7 +111,7 @@ test('actual V1 → More → V2 → Confirm, immutable histories, quotations and
   expect(final.report.requirements.map((r:{status:string})=>r.status)).toEqual(['supported','supported','verified']);
   expect(final.workflow.canSubmit).toBe(false);expect(final.versions[0]).toEqual(reviewedV1.versions[0]);
   expect(JSON.stringify(final)).not.toContain('PRIVATE');expect(writes.join('')).not.toContain('PRIVATE');expect(errors).toEqual([]);
-  await hr.getByRole('switch',{name:'Night mode'}).click();await expect(hr.locator('.eb-sidebar')).toHaveCSS('background-color','rgb(13, 24, 41)');
+  await hr.getByRole('switch',{name:'Night mode'}).check();await expect(hr.locator('.eb-sidebar')).toHaveCSS('background-color','rgb(6, 6, 6)');
   await hr.screenshot({path:info.outputPath('hr-v2-confirmed-dark.png'),fullPage:true,animations:'disabled'});
   await candidate.screenshot({path:info.outputPath('candidate-v2-status.png'),fullPage:true,animations:'disabled'});
 });
@@ -152,7 +152,7 @@ test('server reset isolates old drafts; stale binding is refreshed without repla
 test('API dataset, downloads, theme/sidebar and narrow-screen navigation',async({page:candidate,context},info)=>{
   const hr=await context.newPage();await startPair(candidate,hr,'Data check');await candidate.getByRole('button',{name:'Back to investigation'}).click();await expect(candidate.locator('.eb-metrics').getByText('1,180,000',{exact:true})).toBeVisible();await expect(candidate.locator('.eb-metrics').getByText('30,680',{exact:true})).toBeVisible();await expect(candidate.getByText('426,000',{exact:true})).toBeVisible();await expect(candidate.getByText('31,200',{exact:true})).toHaveCount(0);
   const dl=candidate.waitForEvent('download');await candidate.getByRole('button',{name:'Download website_traffic.csv',exact:true}).click();expect(await readFile((await(await dl).path())!,'utf8')).toContain('426000');
-  await candidate.getByRole('switch',{name:'Night mode'}).click();await candidate.getByRole('button',{name:'Collapse sidebar',exact:true}).click();await expect(candidate.locator('[data-eb-content]')).toHaveCSS('margin-left','64px');await candidate.reload();await expect(candidate.getByRole('switch',{name:'Night mode'})).toBeChecked();await candidate.getByRole('button',{name:'Expand sidebar',exact:true}).click();await expect(candidate.locator('.eb-sidebar')).toHaveCSS('width','232px');await candidate.screenshot({path:info.outputPath('candidate-workspace-dark.png'),fullPage:true,animations:'disabled'});
+  await candidate.getByRole('switch',{name:'Night mode'}).check();await candidate.getByRole('button',{name:'Collapse sidebar',exact:true}).click();await expect(candidate.locator('[data-eb-content]')).toHaveCSS('margin-left','64px');await candidate.reload();await expect(candidate.getByRole('switch',{name:'Night mode'})).toBeChecked();await candidate.getByRole('button',{name:'Expand sidebar',exact:true}).click();await expect(candidate.locator('.eb-sidebar')).toHaveCSS('width','232px');await candidate.screenshot({path:info.outputPath('candidate-workspace-dark.png'),fullPage:true,animations:'disabled'});
   await candidate.setViewportSize({width:390,height:844});await candidate.getByRole('button',{name:'Open navigation'}).click();await expect(candidate.getByRole('dialog').getByRole('switch',{name:'Night mode'})).toBeVisible();await candidate.keyboard.press('Escape');await expect(candidate.getByRole('button',{name:'Open navigation'})).toBeFocused();expect(await candidate.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Sidebar, useSidebar } from '../ui';
 import { Dialog } from '../api-ui';
+import { GlideSelect } from '../glide-select';
 import { profiles } from './fixtures';
 import { usePreview } from './preview-store';
 import { HRPreview } from './hr-preview';
@@ -30,10 +31,10 @@ export default function Revision5App({role:initialRole}:{role:'hr'|'candidate'})
     <div className="eb-main" data-eb-content>
       <header className="eb-api-topbar">{sidebar.menuButton}<span>{role==='hr'?'Hiring workspace':'Candidate workspace'} / {pages.find(p=>p[0]===page)?.[1]}</span><span className="r5-mode">Revision 5 · UI preview</span></header>
       <main id="r5-main" tabIndex={-1} className="eb-content">
-        <section className="r5-preview-banner" aria-label="Preview status"><div><strong>Frontend mock · synthetic materials and illustrative marks</strong><details><summary>Local preview scope</summary><p>No new backend connection, model call or saved hiring decision. Changes stay in this browser origin. The API 2.0 build remains separate.</p></details></div><label>Preview role<select aria-label="Preview role" value={role} onChange={e=>switchRole(e.target.value as typeof role)}><option value="hr">HR</option><option value="candidate">Candidate</option></select></label></section>
+        <section className="r5-preview-banner" aria-label="Preview status"><div><strong>Frontend mock · synthetic materials and illustrative marks</strong><details><summary>Local preview scope</summary><p>No new backend connection, model call or saved hiring decision. Changes stay in this browser origin. The API 2.0 build remains separate.</p></details></div><label>Preview role<GlideSelect ariaLabel="Preview role" value={role} onChange={value=>switchRole(value as typeof role)} options={[{value:'hr',label:'HR'},{value:'candidate',label:'Candidate'}]}/></label></section>
         {controller.error&&<p role="alert" className="eb-feedback">{controller.error}</p>}
         {controller.notice&&controller.notice!==dismissedNotice&&<p role="status" className="r5-notice">{controller.notice} <button className="eb-action" aria-label="Dismiss notice" onClick={()=>setDismissedNotice(controller.notice)}>×</button></p>}
-        {(role==='candidate'||['evidence','tasks'].includes(page))&&<div className="r5-person-bar"><span className="r5-avatar">{profile.initials}</span><div><strong>{profile.name}</strong><small>{profile.subtitle}</small></div><label>Demo identity<select aria-label="Current candidate" value={candidateId} onChange={e=>select(e.target.value)}>{profiles.map(p=><option value={p.id} key={p.id}>{p.name}</option>)}</select></label></div>}
+        {(role==='candidate'||['evidence','tasks'].includes(page))&&<div className="r5-person-bar"><span className="r5-avatar">{profile.initials}</span><div><strong>{profile.name}</strong><small>{profile.subtitle}</small></div><label>Demo identity<GlideSelect ariaLabel="Current candidate" value={candidateId} onChange={value=>select(value)} options={profiles.map(p=>({value:p.id,label:p.name}))}/></label></div>}
         {role==='hr'?<HRPreview key={candidateId} profile={profile} page={page} go={go} select={select} controller={controller}/>:<CandidatePreview key={`${candidateId}.${controller.state.sessionId}`} profile={profile} page={page} go={go} controller={controller}/>}
         <footer className="eb-footer">EvidenceBridge · Reviewable evidence. Human decisions. · Preview identities are not accounts.</footer>
       </main>
