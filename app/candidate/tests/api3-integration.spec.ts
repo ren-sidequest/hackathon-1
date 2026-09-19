@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
-const backend='http://127.0.0.1:8793', candidateUrl='http://127.0.0.1:6373', hrUrl='http://127.0.0.1:6386';
+const backend=`http://127.0.0.1:${process.env.EB_API3_TEST_BACKEND_PORT ?? '8793'}`, candidateUrl=`http://127.0.0.1:${process.env.EB_API3_TEST_CANDIDATE_PORT ?? '6373'}`, hrUrl=`http://127.0.0.1:${process.env.EB_API3_TEST_HR_PORT ?? '6386'}`;
 const token='API3-UI-SYNTHETIC-test-reset-token';
 const people=['alex-chen','maya-patel','leo-zhang','sam-taylor'];
 async function read(request:APIRequestContext,id='alex-chen') {const r=await request.get(`${backend}/api/demo?candidateId=${id}`);expect(r.ok()).toBeTruthy();return (await r.json()).data;}
@@ -17,8 +17,9 @@ async function seedSubmission(request:APIRequestContext,id='alex-chen',summary='
 async function nav(page:Page,name:string) {await page.getByRole('navigation',{name:'Main navigation'}).getByRole('button',{name,exact:true}).click();}
 async function refresh(page:Page) {await page.getByRole('button',{name:'Refresh shared case',exact:true}).click();await expect(page.getByRole('button',{name:'Refresh shared case',exact:true})).toBeEnabled();await expect(page.getByText('Connected · four-person shared case',{exact:true})).toBeVisible();}
 async function glide(page:Page,label:string,value:string) {await page.getByRole('combobox',{name:label,exact:true}).click();await page.getByRole('listbox',{name:label,exact:true}).locator(`[data-value="${value}"]`).click();await expect(page.getByRole('combobox',{name:label,exact:true})).toHaveAttribute('data-value',value);}
-async function open(page:Page,role:'hr'|'candidate',id='alex-chen',section='') {await page.goto(`${role==='hr'?hrUrl:candidateUrl}/?candidateId=${id}${section?`#${section}`:''}`);await expect(page.getByText('Connected · four-person shared case',{exact:true})).toBeVisible();await expect(page.getByRole('combobox',{name:'Current candidate',exact:true})).toHaveAttribute('data-value',id);}
-async function sendTask(page:Page,id:string,target:string) {await open(page,'hr',id,'tasks');await glide(page,'Target skill',target);await page.getByLabel('Evidence gap / task reason',{exact:true}).fill('A bounded evidence gap needs verification.');await page.getByRole('button',{name:'Send task',exact:true}).click();await expect(page.getByRole('button',{name:'Send task',exact:true})).toHaveCount(0);}
+async function open(page:Page,role:'hr'|'candidate',id='alex-chen',section='') {await page.goto(`${role==='hr'?hrUrl:candidateUrl}/?candidateId=${id}${section?`#${section}`:''}`);await expect(page.getByText('Connected · four-person shared case',{exact:true})).toBeVisible();if(role==='candidate'||(section!=='' && !['company','comparison'].includes(section)))await expect(page.getByRole('combobox',{name:'Current candidate',exact:true})).toHaveAttribute('data-value',id);}
+async function chooseStage(page:Page,value:string) {await page.getByRole('combobox',{name:'Assessment stage',exact:true}).click();await page.getByRole('option',{name:value==='application_review'?/Application materials/:new RegExp('Task V'+value.slice(-1))}).click();}
+async function sendTask(page:Page,id:string,target:string) {await open(page,'hr',id,'tasks');await glide(page,'Target skill',target);await page.getByLabel('Evidence gap / task reason',{exact:true}).fill('A bounded evidence gap needs verification.');await page.getByRole('button',{name:'Preview work brief',exact:true}).click();await page.getByRole('button',{name:'Continue to confirmation',exact:true}).click();await page.getByRole('button',{name:'Send task',exact:true}).click();await expect(page.getByRole('button',{name:'Send task',exact:true})).toHaveCount(0);}
 async function start(page:Page,id='alex-chen') {await open(page,'candidate',id,'tasks');await page.getByRole('button',{name:'Start V1 draft',exact:true}).click();await expect(page.getByLabel('Executive summary',{exact:true})).toBeVisible();}
 async function submit(page:Page,request:APIRequestContext,id:string,version:number,summary:string) {await page.getByLabel('Executive summary',{exact:true}).fill(summary);await page.getByRole('button',{name:`Submit V${version}`,exact:true}).click();await page.getByRole('button',{name:`Confirm V${version} submission`,exact:true}).click();await expect.poll(async()=>(await read(request,id)).currentSubmissionVersion).toBe(version);await expect(page.getByRole('dialog')).toHaveCount(0);}
 async function review(page:Page,decision:string,comment:string) {await page.getByRole('button',{name:decision,exact:true}).click();await page.getByLabel('Public review comment',{exact:true}).fill(comment);await page.getByRole('button',{name:'Save evidence review',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);}
@@ -143,7 +144,7 @@ test('T08 shortlist persists independently, turns stale on new work, and preserv
 test('T17 real resources, row-to-card, dark mode and mobile navigation retain the existing UI',async({page,request},info)=>{
   await seedTask(request);await start(page);await expect(page.locator('.eb-metrics').getByText('1,180,000',{exact:true})).toBeVisible();await expect(page.locator('.eb-metrics').getByText('30,680',{exact:true})).toBeVisible();await expect(page.getByText('31,200',{exact:true})).toHaveCount(0);
   await page.getByLabel('Find a resource',{exact:true}).fill('website');await page.getByRole('button',{name:'website_traffic.csv',exact:true}).click();await page.getByLabel('Filter resource rows').fill('Paid Search');await expect(page.getByRole('dialog').locator('tbody tr')).toHaveCount(2);await page.getByRole('dialog').getByRole('button',{name:/Create card from row/}).first().click();await expect(page.getByLabel('Evidence source',{exact:true})).toHaveValue('website_traffic.csv');await page.getByLabel('Observation or idea').fill('A bounded data observation');await page.getByRole('button',{name:'Save card',exact:true}).click();await expect(page.locator('.eb-board')).toContainText('A bounded data observation');
-  await page.getByRole('switch',{name:'Night mode'}).uncheck();await page.getByRole('switch',{name:'Night mode'}).check();await page.reload();await expect(page.getByRole('switch',{name:'Night mode'})).toBeChecked();await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Open navigation'}).click();await page.getByRole('dialog').getByRole('button',{name:'My task',exact:true}).click();await expect(page.getByRole('button',{name:'Open navigation'})).toBeFocused();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:info.outputPath('api3-candidate-mobile-dark.png'),fullPage:true});
+  await expect(page.getByRole('switch',{name:'Night mode'})).toBeChecked();await page.getByRole('switch',{name:'Night mode'}).click();await expect(page.getByRole('switch',{name:'Night mode'})).not.toBeChecked();await page.getByRole('switch',{name:'Night mode'}).click();await page.reload();await expect(page.getByRole('switch',{name:'Night mode'})).toBeChecked();await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Open navigation'}).click();await page.getByRole('dialog').getByRole('button',{name:'My task',exact:true}).click();await expect(page.getByRole('button',{name:'Open navigation'})).toBeFocused();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:info.outputPath('api3-candidate-mobile-dark.png'),fullPage:true});
 });
 
 test('T18 in-flight analysis does not block human review and its late result never reopens the closed version',async({page:hr,request})=>{
@@ -151,11 +152,11 @@ test('T18 in-flight analysis does not block human review and its late result nev
 });
 
 test('T19 SQL task marks are server-calculated, application reuse is explicit, and V2 starts unassessed',async({page,request})=>{
-  await seedTask(request,'maya-patel','sql');const before=await seedSubmission(request,'maya-patel','😀 SQL checks: unique order IDs, period boundaries and denominator reconciliation.');await open(page,'hr','maya-patel','evidence');await glide(page,'Assessment stage','task_v1');await page.getByRole('button',{name:'Edit human assessment',exact:true}).click();
+  await seedTask(request,'maya-patel','sql');const before=await seedSubmission(request,'maya-patel','😀 SQL checks: unique order IDs, period boundaries and denominator reconciliation.');await open(page,'hr','maya-patel','evidence');await chooseStage(page,'task_v1');await page.getByRole('button',{name:'Edit human assessment',exact:true}).click();
   for(const criterion of ['S1','S2','S3']) {await page.getByLabel('Edit criterion').selectOption(criterion);await page.getByLabel('Human mark').selectOption('2');for(const label of ['Judgment reason','Support / checked scope','Missing evidence / counter-evidence','Uncertainty','Next step'])await page.getByLabel(label,{exact:true}).fill(`${criterion}: bounded synthetic review of visible original SQL text.`);await page.getByLabel('Exact source quotation').fill(before.submission.summary);await page.getByRole('button',{name:'Add source quotation',exact:true}).click();}
   await page.getByLabel('Explicitly reuse application assessment').check();await page.getByLabel('Assessment operator label').fill('Synthetic task reviewer');await page.getByRole('button',{name:'Save assessment revision',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);
   const assessed=await read(request,'maya-patel');expect(assessed.assessment.task_v1.score.skills.find((s:any)=>s.requirementId==='sql').percentage).toBe(50);expect(assessed.assessment.task_v1.reusedItems).toHaveLength(7);expect(assessed.assessment.application_review).toEqual(before.assessment.application_review);expect(assessed.review).toBeNull();expect(assessed.shortlist.status).toBe('not_retained');
-  await post(request,'/review',{...binding(assessed),submissionId:assessed.submission.submissionId,contentFingerprint:assessed.submission.contentFingerprint,decision:'needs_more_evidence',comment:'Clarify the join boundary.'});await seedSubmission(request,'maya-patel','V2 adds a bounded join check.');await refresh(page);await glide(page,'Assessment stage','task_v2');expect((await read(request,'maya-patel')).assessment.task_v2).toBeNull();await expect(page.locator('.r5-evidence-rail .r5-mark').filter({hasText:'Not assessed'})).toHaveCount(10);await glide(page,'Assessment stage','task_v1');await expect(page.getByRole('button',{name:'Edit human assessment',exact:true})).toBeDisabled();
+  await post(request,'/review',{...binding(assessed),submissionId:assessed.submission.submissionId,contentFingerprint:assessed.submission.contentFingerprint,decision:'needs_more_evidence',comment:'Clarify the join boundary.'});await seedSubmission(request,'maya-patel','V2 adds a bounded join check.');await refresh(page);await chooseStage(page,'task_v2');expect((await read(request,'maya-patel')).assessment.task_v2).toBeNull();await expect(page.locator('.r5-evidence-rail .r5-mark').filter({hasText:'Not assessed'})).toHaveCount(10);await chooseStage(page,'task_v1');await expect(page.getByRole('button',{name:'Edit human assessment',exact:true})).toBeDisabled();
 });
 
 test('T20 failed analysis exposes its status and leaves original work and manual review usable',async({page,request})=>{
@@ -171,4 +172,89 @@ test('T21 a stale V1 review form keeps its comment after another client advances
 test('T22 confirmed save followed by GET failure is not reported as a fresh view or duplicated',async({page,request})=>{
   await open(page,'hr','alex-chen','evidence');await page.getByRole('button',{name:'Edit human assessment',exact:true}).click();await page.getByLabel('Judgment reason').fill('SAVED BUT VIEW REFRESH FAILED');await page.getByLabel('Assessment operator label').fill('Synthetic reviewer');await page.route('**/api/demo?**',route=>route.abort());await page.getByRole('button',{name:'Save assessment revision',exact:true}).click();
   await expect(page.getByRole('dialog')).toBeVisible();await expect(page.getByLabel('Judgment reason')).toHaveValue('SAVED BUT VIEW REFRESH FAILED');await expect(page.getByRole('alert').first()).toContainText('CONNECTION_UNCERTAIN');await expect(page.getByText(/Saved on the shared service.*Refresh is still needed/)).toBeVisible();expect((await read(request)).assessment.application_review.assessmentRevision).toBe(2);await page.unroute('**/api/demo?**');await page.getByRole('dialog').getByRole('button',{name:'Cancel',exact:true}).click();await refresh(page);await expect(page.getByText('Human assessment · revision 2',{exact:true})).toBeVisible();expect((await read(request)).assessment.application_review.assessmentRevision).toBe(2);
+});
+
+
+test('T25 guided overview, stable review panels, contextual task and themed feedback',async({page,context,request},info)=>{
+  await open(page,'hr','alex-chen','company');
+  await expect(page.getByLabel('Role overview')).toContainText('Junior Data Analyst');
+  await expect(page.locator('.guide-work-chain details')).toHaveCount(3);
+  await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));await page.screenshot({path:info.outputPath('company-dark.png'),fullPage:true});
+  await page.getByRole('button',{name:'View candidates →',exact:true}).click();
+  await page.getByRole('button',{name:'Open Alex Chen',exact:true}).click();
+  const left=page.locator('.guide-review-grid>.r5-original-pane'), right=page.locator('.guide-review-grid>section');
+  expect(Math.abs((await left.boundingBox())!.height-(await right.boundingBox())!.height)).toBeLessThan(2);
+  await page.getByRole('button',{name:/^S2 ·/}).click();
+  const y=await page.evaluate(()=>scrollY);
+  await page.getByRole('button',{name:/^B3 ·/}).click();
+  expect(Math.abs(await page.evaluate(()=>scrollY)-y)).toBeLessThan(2);
+  await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));await page.screenshot({path:info.outputPath('evidence-dark.png'),fullPage:true});
+  await page.getByRole('button',{name:'Prepare task from B3',exact:true}).click();
+  await expect(page.getByRole('combobox',{name:'Target skill',exact:true})).toHaveAttribute('data-value','business-problem-solving');
+  await expect(page.getByLabel('Evidence gap / task reason',{exact:true})).not.toHaveValue('');
+  await page.getByLabel('Evidence gap / task reason',{exact:true}).fill('Keep this B3 evidence gap while checking the source.');
+  await page.getByRole('button',{name:'← Back to evidence · B3',exact:true}).click();
+  await expect(page.getByRole('button',{name:/^B3 ·/})).toHaveAttribute('aria-expanded','true');
+  await nav(page,'Targeted tasks');
+  await expect(page.getByLabel('Evidence gap / task reason',{exact:true})).toHaveValue('Keep this B3 evidence gap while checking the source.');
+  await page.getByRole('button',{name:'Preview work brief',exact:true}).click();
+  await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));await page.screenshot({path:info.outputPath('task-brief-dark.png'),fullPage:true});
+  await page.getByRole('button',{name:'Continue to confirmation',exact:true}).click();
+  expect((await read(request)).task.status).toBe('draft');
+  await page.getByRole('button',{name:'Send task',exact:true}).click();
+  await expect(page.getByLabel('Action feedback')).toContainText('Task sent');
+  await expect(page.getByRole('navigation',{name:'Candidate journey'})).toContainText('Candidate to act');
+  const candidate=await context.newPage();await start(candidate);
+  await expect(candidate.getByRole('navigation',{name:'Work area shortcuts'})).toBeVisible();
+  await submit(candidate,request,'alex-chen',1,'A bounded comparison with explicitly stated uncertainty.');
+  await expect(candidate).toHaveURL(/#history$/);
+  await expect(candidate.getByLabel('Action feedback')).toContainText('Work submitted');
+  await candidate.screenshot({path:info.outputPath('submitted-dark.png'),fullPage:true});
+  await page.evaluate(()=>document.documentElement.dataset.theme='light');
+  await nav(page,'Company & role');await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));await page.screenshot({path:info.outputPath('company-light.png'),fullPage:true});
+  await nav(page,'Evidence & marks');await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));await page.screenshot({path:info.outputPath('evidence-light.png'),fullPage:true});
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator('[data-eb-content]')).toHaveCSS('margin-left','0px');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(391);
+  await page.evaluate(()=>window.scrollTo(0,0));await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));await page.screenshot({path:info.outputPath('evidence-mobile.png'),fullPage:true});
+});
+
+test('T26 coverage labels show independent server values and open the owned criterion',async({page,request},info)=>{
+  await page.setViewportSize({width:1440,height:1100});
+  await open(page,'hr');
+  const compare=await(await request.get(`${backend}/api/demo/comparison`)).json();
+  for(const row of compare.data.candidates) {
+    const cell=page.locator(`tr[data-candidate="${row.candidate.id}"] .guide-coverage-cell`);
+    const score=row.assessment.score;
+    const numeric=score.criteria.filter((c:any)=>typeof c.mark==='number').length;
+    await expect(cell.locator('.guide-coverage-track button')).toHaveCount(10);
+    await expect(cell.locator('[data-state=covered]')).toHaveCount(numeric);
+    await expect(cell.locator('.guide-coverage-badge strong')).toHaveText(`${numeric} / 10`);
+    await expect(cell.locator('.guide-points-badge>strong')).toHaveText(`${score.accruedScore.toFixed(1)} / 100`);
+    await expect(cell.locator('.guide-coverage-badge')).toHaveAttribute('data-state',numeric===10?'complete':'partial');
+    const bounds=(await cell.boundingBox())!;
+    expect(bounds.height).toBeLessThanOrEqual(66);
+    expect(bounds.width).toBeLessThanOrEqual(180);
+    const badges=await cell.locator('.guide-coverage-labels>div').all();
+    expect(Math.abs((await badges[0].boundingBox())!.y-(await badges[1].boundingBox())!.y)).toBeLessThan(1);
+  }
+  await expect(page.locator('.r5-compare-table')).toHaveCSS('min-width','950px');
+  expect(await page.locator('.eb-table-scroll').evaluate(e=>e.scrollWidth-e.clientWidth)).toBeLessThanOrEqual(1);
+  await page.locator('tr[data-candidate="alex-chen"] .guide-coverage-cell').screenshot({path:info.outputPath('coverage-dark.png')});
+  await page.locator('.r5-compare-table').screenshot({path:info.outputPath('comparison-dark.png')});
+  await page.getByRole('switch',{name:'Night mode'}).click();
+  await page.locator('tr[data-candidate="alex-chen"] .guide-coverage-cell').screenshot({path:info.outputPath('coverage-light.png')});
+  await page.locator('.r5-compare-table').screenshot({path:info.outputPath('comparison-light.png')});
+  await page.getByRole('button',{name:/Sam Taylor · B4 ·/}).click();
+  await expect(page.getByRole('combobox',{name:'Current candidate',exact:true})).toHaveAttribute('data-value','sam-taylor');
+  await expect(page.getByRole('button',{name:/^B4 ·/})).toHaveAttribute('aria-expanded','true');
+  await expect(page.getByRole('button',{name:/^B4 ·/})).toBeFocused();
+  await nav(page,'Compare candidates');
+  await page.getByRole('button',{name:/Alex Chen · S1 ·/}).click();
+  await expect(page.getByRole('combobox',{name:'Current candidate',exact:true})).toHaveAttribute('data-value','alex-chen');
+  await expect(page.getByRole('button',{name:/^S1 ·/})).toHaveAttribute('aria-expanded','true');
+  await expect(page.locator('.r5-inline-source')).toContainText('Alex Chen');
+  await nav(page,'Compare candidates');
+  await page.getByRole('button',{name:/Alex Chen · B4 ·/}).click();
+  await expect(page.getByRole('button',{name:/^B4 ·/})).toHaveAttribute('aria-expanded','true');
 });
