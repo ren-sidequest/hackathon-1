@@ -13,6 +13,18 @@ beforeEach(() => {
   vi.stubGlobal('sessionStorage', { getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => values.set(key, value), removeItem: (key: string) => values.delete(key) });
 });
 describe('independent API3 client', () => {
+  it('keeps the exact request through an HTML 401 login response and successful retry', async () => {
+    const fetcher = vi.fn().mockResolvedValueOnce(new Response('<html>Authentication required</html>', {status:401})).mockResolvedValueOnce(response(initial));
+    const client = new Api3Client('/gateway', 'auth-receipt', fetcher);
+    await expect(client.write('/task/send', baseBinding(data))).rejects.toMatchObject({code:'WRITE_AUTH_REQUIRED',status:401});
+    const receipt = structuredClone(client.pending);
+    const restored = new Api3Client('/gateway', 'auth-receipt', fetcher);
+    expect(restored.pending).toEqual(receipt);
+    await restored.retry();
+    expect(fetcher.mock.calls[0][1].body).toBe(fetcher.mock.calls[1][1].body);
+    expect(fetcher.mock.calls[0][1].headers['Idempotency-Key']).toBe(fetcher.mock.calls[1][1].headers['Idempotency-Key']);
+    expect(restored.pending).toBeNull();
+  });
   it('reads an explicitly bound person and the whole comparison', async () => {
     const fetcher = vi.fn().mockResolvedValueOnce(response(initial)).mockResolvedValueOnce(response(comparison));
     const client = new Api3Client('http://127.0.0.1:8793', 'test', fetcher);

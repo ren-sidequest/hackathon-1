@@ -150,17 +150,17 @@ test('T09 lost submission response reuses the exact persisted idempotency receip
 });
 
 test('T10 server reset makes an old-session submission stale and leaves new case empty',async({page:candidate,request})=>{
-  await seedTask(request);await start(candidate);await candidate.getByLabel('Executive summary').fill('OLD-SESSION-DRAFT');await reset(request);await candidate.getByRole('button',{name:'Submit V1',exact:true}).click();await candidate.getByRole('button',{name:'Confirm V1 submission',exact:true}).click();await expect(candidate.getByRole('alert').first()).toContainText('STALE_SESSION');expect((await read(request)).submission).toBeNull();await nav(candidate,'My task');await expect(candidate.getByRole('heading',{name:'No supplementary task requested',exact:true})).toBeVisible();await expect(candidate.getByText('OLD-SESSION-DRAFT',{exact:true})).toHaveCount(0);
+  await seedTask(request);await start(candidate);await candidate.getByLabel('Executive summary').fill('OLD-SESSION-DRAFT');await reset(request);await candidate.getByRole('button',{name:'Submit V1',exact:true}).click();await candidate.getByRole('button',{name:'Confirm V1 submission',exact:true}).click();await expect(candidate.locator('details').filter({has:candidate.locator('summary',{hasText:'Connection details & diagnostics'})})).toContainText('STALE_SESSION');expect((await read(request)).submission).toBeNull();await nav(candidate,'My task');await expect(candidate.getByRole('heading',{name:'No supplementary task requested',exact:true})).toBeVisible();await expect(candidate.getByText('OLD-SESSION-DRAFT',{exact:true})).toHaveCount(0);
 });
 
 test('T11 stale assessment revision is rejected and preserves the second reviewer form',async({page,context,request})=>{
   const other=await context.newPage();for(const p of [page,other]) {await open(p,'hr','alex-chen','evidence');await p.getByRole('button',{name:'Edit human assessment',exact:true}).click();await p.getByLabel('Assessment operator label').fill('Synthetic reviewer');}
   await page.getByLabel('Judgment reason').fill('First reviewer saved decision.');await page.getByRole('button',{name:'Save assessment revision',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);
-  await other.getByLabel('Judgment reason').fill('KEEP SECOND REVIEWER INPUT');await other.getByRole('button',{name:'Save assessment revision',exact:true}).click();await expect(other.getByRole('dialog')).toBeVisible();await expect(other.getByLabel('Judgment reason')).toHaveValue('KEEP SECOND REVIEWER INPUT');await expect(other.getByRole('alert').first()).toContainText('ASSESSMENT_CONFLICT');expect((await read(request)).assessment.application_review.assessmentRevision).toBe(2);
+  await other.getByLabel('Judgment reason').fill('KEEP SECOND REVIEWER INPUT');await other.getByRole('button',{name:'Save assessment revision',exact:true}).click();await expect(other.getByRole('dialog')).toBeVisible();await expect(other.getByLabel('Judgment reason')).toHaveValue('KEEP SECOND REVIEWER INPUT');await expect(other.locator('details').filter({has:other.locator('summary',{hasText:'Connection details & diagnostics'})})).toContainText('ASSESSMENT_CONFLICT');expect((await read(request)).assessment.application_review.assessmentRevision).toBe(2);
 });
 
 test('T12 unavailable service keeps local draft and never substitutes preview data',async({page:candidate,request})=>{
-  await seedTask(request);await start(candidate);await candidate.getByLabel('Executive summary').fill('KEEP-API3-DRAFT');await candidate.route('**/api/demo?**',route=>route.abort());await candidate.getByRole('button',{name:'Refresh shared case',exact:true}).click();await expect(candidate.getByRole('alert').first()).toContainText('CONNECTION_UNCERTAIN');await expect(candidate.getByLabel('Executive summary')).toHaveValue('KEEP-API3-DRAFT');await expect(candidate.getByText('Frontend mock · synthetic materials and illustrative marks',{exact:true})).toHaveCount(0);await candidate.unroute('**/api/demo?**');await refresh(candidate);await submit(candidate,request,'alex-chen',1,'Recovered real API draft.');
+  await seedTask(request);await start(candidate);await candidate.getByLabel('Executive summary').fill('KEEP-API3-DRAFT');await candidate.route('**/api/demo?**',route=>route.abort());await candidate.getByRole('button',{name:'Refresh shared case',exact:true}).click();await expect(candidate.locator('details').filter({has:candidate.locator('summary',{hasText:'Connection details & diagnostics'})})).toContainText('CONNECTION_UNCERTAIN');await expect(candidate.getByLabel('Executive summary')).toHaveValue('KEEP-API3-DRAFT');await expect(candidate.getByText('Frontend mock · synthetic materials and illustrative marks',{exact:true})).toHaveCount(0);await candidate.unroute('**/api/demo?**');await refresh(candidate);await submit(candidate,request,'alex-chen',1,'Recovered real API draft.');
 });
 
 test('T13 a slow previous candidate response never becomes the newly selected identity',async({page})=>{
@@ -208,7 +208,7 @@ test('T19 SQL task marks are server-calculated, application reuse is explicit, a
 });
 
 test('T20 failed analysis exposes its status and leaves original work and manual review usable',async({page,request})=>{
-  await seedTask(request);const submitted=await seedSubmission(request,'alex-chen','TEST_DISABLED: limited work still open for human review.');await open(page,'hr','alex-chen','tasks');await page.getByRole('button',{name:'Run evidence analysis',exact:true}).click();await expect(page.getByRole('alert').first()).toContainText('AI_DISABLED');await review(page,'Evidence Still Insufficient','The visible work still leaves an evidence gap.');const final=await read(request);expect(final.submission).toEqual(submitted.submission);expect(final.analysis.status).toBe('failed');expect(final.workflow.isTerminal).toBe(true);expect(final.assessment.task_v1).toBeNull();
+  await seedTask(request);const submitted=await seedSubmission(request,'alex-chen','TEST_DISABLED: limited work still open for human review.');await open(page,'hr','alex-chen','tasks');await page.getByRole('button',{name:'Run evidence analysis',exact:true}).click();await expect(page.locator('details').filter({has:page.locator('summary',{hasText:'Connection details & diagnostics'})})).toContainText('AI_DISABLED');await review(page,'Evidence Still Insufficient','The visible work still leaves an evidence gap.');const final=await read(request);expect(final.submission).toEqual(submitted.submission);expect(final.analysis.status).toBe('failed');expect(final.workflow.isTerminal).toBe(true);expect(final.assessment.task_v1).toBeNull();
 });
 
 test('T21 a stale V1 review form keeps its comment after another client advances to V2',async({page,request})=>{
@@ -219,7 +219,7 @@ test('T21 a stale V1 review form keeps its comment after another client advances
 
 test('T22 confirmed save followed by GET failure is not reported as a fresh view or duplicated',async({page,request})=>{
   await open(page,'hr','alex-chen','evidence');await page.getByRole('button',{name:'Edit human assessment',exact:true}).click();await page.getByLabel('Judgment reason').fill('SAVED BUT VIEW REFRESH FAILED');await page.getByLabel('Assessment operator label').fill('Synthetic reviewer');await page.route('**/api/demo?**',route=>route.abort());await page.getByRole('button',{name:'Save assessment revision',exact:true}).click();
-  await expect(page.getByRole('dialog')).toBeVisible();await expect(page.getByLabel('Judgment reason')).toHaveValue('SAVED BUT VIEW REFRESH FAILED');await expect(page.getByRole('alert').first()).toContainText('CONNECTION_UNCERTAIN');await expect(page.getByText(/Saved on the shared service.*Refresh is still needed/)).toBeVisible();expect((await read(request)).assessment.application_review.assessmentRevision).toBe(2);await page.unroute('**/api/demo?**');await page.getByRole('dialog').getByRole('button',{name:'Cancel',exact:true}).click();await refresh(page);await expect(page.getByText('Human assessment · revision 2',{exact:true})).toBeVisible();expect((await read(request)).assessment.application_review.assessmentRevision).toBe(2);
+  await expect(page.getByRole('dialog')).toBeVisible();await expect(page.getByLabel('Judgment reason')).toHaveValue('SAVED BUT VIEW REFRESH FAILED');await expect(page.locator('details').filter({has:page.locator('summary',{hasText:'Connection details & diagnostics'})})).toContainText('CONNECTION_UNCERTAIN');await expect(page.getByText(/Saved on the shared service.*Refresh is still needed/)).toBeVisible();expect((await read(request)).assessment.application_review.assessmentRevision).toBe(2);await page.unroute('**/api/demo?**');await page.getByRole('dialog').getByRole('button',{name:'Cancel',exact:true}).click();await refresh(page);await expect(page.getByText('Human assessment · revision 2',{exact:true})).toBeVisible();expect((await read(request)).assessment.application_review.assessmentRevision).toBe(2);
 });
 
 
@@ -305,4 +305,47 @@ test('T26 coverage labels show independent server values and open the owned crit
   await nav(page,'Compare candidates');
   await page.getByRole('button',{name:/Alex Chen · B4 ·/}).click();
   await expect(page.getByRole('button',{name:/^B4 ·/})).toHaveAttribute('aria-expanded','true');
+});
+
+
+test('T29 explicit target, distinct reviewed counts and stage report exports', async({page,request},info)=>{
+  await open(page,'hr');
+  const list=(await (await request.get(`${backend}/api/demo/comparison`)).json()).data;
+  const counts=page.getByLabel('Applications reviewed',{exact:true});
+  await expect(counts).toContainText(`${list.candidates.filter((r:any)=>r.assessment?.score.assessmentComplete).length}/4`);
+  await expect(counts).toContainText(`${list.candidates.filter((r:any)=>r.assessment?.score.complete).length}/4 complete core evidence`);
+  await expect(page.getByRole('columnheader',{name:'Core analytical evidence match'})).toBeVisible();
+  await open(page,'hr','alex-chen','tasks');
+  await expect(page.getByRole('combobox',{name:'Target skill',exact:true})).toHaveAttribute('data-value','');
+  await page.getByLabel('Evidence gap / task reason',{exact:true}).fill('A meaningful gap needs checking.');
+  await expect(page.getByRole('button',{name:'Preview work brief',exact:true})).toBeDisabled();
+  await glide(page,'Target skill','sql');
+  await page.getByLabel('Evidence gap / task reason',{exact:true}).fill('Verify the join grain.');
+  await page.getByRole('button',{name:'Preview work brief',exact:true}).click();
+  await expect(page.locator('.guide-task-brief')).toContainText('SQL');
+  await nav(page,'Evidence & marks');
+  const downloaded=page.waitForEvent('download');await page.getByRole('button',{name:'Export assessment report',exact:true}).click();
+  const file=await downloaded;expect(file.suggestedFilename()).toContain('alex-chen-application_review');
+  const report=await readFile((await file.path())!,'utf8');
+  expect(report).toContain('Mark: NE');expect(report).toContain('UTF-16');expect(report).toContain('not a full JD match');
+  for(const theme of ['dark','light']) {await page.getByRole('switch',{name:'Night mode'}).setChecked(theme==='dark');await page.screenshot({path:info.outputPath(`polish-${theme}.png`),fullPage:true});}
+});
+
+test('T30 HTML authentication failure keeps a submission and retries its exact request',async({page,request})=>{
+  await seedTask(request);await start(page);
+  await page.getByLabel('Executive summary',{exact:true}).fill('PRESERVE-AUTH-DRAFT');
+  const attempts:Array<{body:string|null;key:string|undefined}>=[];let allow=false;
+  await page.route('**/api/demo/submission',async route=>{
+    attempts.push({body:route.request().postData(),key:route.request().headers()['idempotency-key']});
+    if(!allow)await route.fulfill({status:401,contentType:'text/html',body:'<html>Login required</html>'});else await route.continue();
+  });
+  await page.getByRole('button',{name:'Submit V1',exact:true}).click();
+  await page.getByRole('button',{name:'Confirm V1 submission',exact:true}).click();
+  const dialog=page.getByRole('dialog');await expect(dialog).toContainText('Editing access required');
+  await expect(page.getByLabel('Executive summary',{exact:true})).toHaveValue('PRESERVE-AUTH-DRAFT');
+  expect((await read(request)).submission).toBeNull();
+  allow=true;await dialog.getByRole('button',{name:'Retry original action',exact:true}).click();
+  await expect(dialog).toHaveCount(0);expect(attempts).toHaveLength(2);expect(attempts[1]).toEqual(attempts[0]);
+  expect((await read(request)).submission.summary).toBe('PRESERVE-AUTH-DRAFT');
+  await expect(page.getByRole('heading',{name:'Work and public feedback'})).toBeVisible();
 });

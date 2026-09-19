@@ -1,3 +1,4 @@
+import { nextStep } from './next-step';
 import { SpotlightCard } from '../gold-interactions';
 import React, { useEffect, useRef, useState } from 'react';
 import type { Demo, RequirementId } from '../api3-types';
@@ -20,13 +21,14 @@ export function CompanyOverview({ data, compare }: { data: Demo; compare: () => 
 }
 
 export function Journey({ data, role, page, go }: { data: Demo; role: 'hr' | 'candidate'; page: string; go: (page: string) => void }) {
+  const next = nextStep(data, role, page);
   const sent = data.task.status !== 'draft', hasWork = data.versions.length > 0;
   const status = data.workflow.isTerminal ? 'Review complete' : data.workflow.canResubmit ? 'V2 requested · Candidate to act' : hasWork ? 'Work submitted · HR to review' : sent ? 'Task sent · Candidate to act' : 'Application evidence available';
   const items = role === 'hr' ? [['comparison', 'Compare'], ['evidence', 'Inspect evidence'], ['tasks', sent ? 'Task & review' : 'Supplement if needed'], ['shortlist', 'Human decision']] : [['application', 'Materials'], ['tasks', 'Task brief'], ['workspace', 'Work on task'], ['history', 'Submission & feedback']];
   return <nav className="guide-journey" aria-label="Candidate journey"><div><strong>{data.candidate.name}</strong><span>{status}</span></div><ol>{items.map(([id, label], i) => {
     const unavailable = role === 'candidate' && ((id === 'workspace' && !data.workflow.canSubmit) || (id === 'history' && !hasWork));
     return <li key={id}><button aria-current={page === id ? 'step' : undefined} disabled={unavailable} title={unavailable ? id === 'history' ? 'Available after your first submission' : 'Available when a task is open for work' : undefined} onClick={() => go(id)}><span>{i + 1}</span>{label}</button></li>;
-  })}</ol></nav>;
+  })}</ol><div className="guide-journey-next"><span><strong>Next step</strong> {next.detail}</span>{next.page !== page && <button className="eb-action" onClick={() => go(next.page)}>{next.label} →</button>}</div></nav>;
 }
 
 export function FloatingNotice({ message, error, dismiss, action }: { message: string; error?: boolean; dismiss: () => void; action?: { label: string; run: () => void } }) {
