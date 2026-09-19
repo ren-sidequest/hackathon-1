@@ -120,3 +120,20 @@ test('resource search, numeric sort and row-to-card preserve the exact source an
   await submit(page,1,'A limited observation from the supplied data.');await role(page,'hr');await nav(page,'Targeted tasks');
   await expect(page.locator('.eb-review-grid')).toContainText(`Source row ${row}`);await expect(page.locator('body')).not.toContainText('DO NOT SHARE ROW NOTES');
 });
+
+test('a candidate draft never rolls back a newer same-origin HR shortlist when storage delivery is delayed',async({page,context})=>{
+  await page.goto('/');await task(page,'Alex Chen');
+  const candidate=await context.newPage();
+  await candidate.addInitScript(()=>window.addEventListener('storage',event=>event.stopImmediatePropagation()));
+  await candidate.goto(page.url());await role(candidate,'candidate');await candidate.getByRole('button',{name:'Start V1 draft',exact:true}).click();
+  const key='evidencebridge.revision5.ui-preview.v1';
+  const old=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);
+  await nav(page,'Compare candidates');await page.getByRole('button',{name:'Retain Sam Rivera',exact:true}).click();await page.getByLabel('Human shortlist reason').fill('Keep this newer HR decision.');await page.getByRole('button',{name:'Save local shortlist decision',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);
+  await candidate.getByLabel('Executive summary',{exact:true}).fill('Draft typed from a stale tab');
+  const saved=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);
+  expect(saved.revision).toBe(old.revision+1);expect(saved.shortlist['preview-sam'].retained).toBe(true);expect(saved.workDrafts).toEqual({});
+  await candidate.reload();await role(candidate,'candidate');await candidate.getByRole('button',{name:'Continue V1 draft',exact:true}).click();await expect(candidate.getByLabel('Executive summary',{exact:true})).toHaveValue('Draft typed from a stale tab');
+  // A late event carrying the old payload reads current storage, not that payload.
+  await page.evaluate(({key,old})=>window.dispatchEvent(new StorageEvent('storage',{key,newValue:JSON.stringify(old)})),{key,old});
+  await nav(page,'Retained candidates');await expect(page.locator('section.eb-panel').filter({has:page.getByRole('heading',{name:'Sam Rivera',exact:true})})).toContainText('Keep this newer HR decision.');
+});

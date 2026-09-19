@@ -1,3 +1,5 @@
+> **修订5新增API3**：四人、rubric、名单见 [新版交接](R5_HANDOFF.md)。以下保留API2兼容资料；API2用 `npm run start:legacy`，默认 `npm start` 已切到独立API3新库。两端现有UI仍为API2，四人UI待接入。
+
 # 给小傅：双端 API 接入清单
 
 当前按修订 3 交付 **API 2.0 有限两版**后端、合同与合成数据，**HR 与 Candidate 页面尚未接入**。不要把 API 客户端成功写成现场双端 UI 已跑通。后端实际计数/结果见 [TEST_RESULTS](TEST_RESULTS.md)，接口见 [API](API.md)，运行见 [README](../../app/backend/README.md)。

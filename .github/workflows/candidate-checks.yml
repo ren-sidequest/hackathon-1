@@ -12,7 +12,7 @@ permissions:
 jobs:
   candidate:
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     defaults:
       run:
         working-directory: app/candidate
@@ -26,6 +26,7 @@ jobs:
           cache: npm
           cache-dependency-path: app/candidate/package-lock.json
       - run: npm ci
+      - run: python3 ../../scripts/frontend-types-v3.py --check
       - run: npm test
       - run: npm run build
       - run: npx playwright install --with-deps chromium
@@ -35,3 +36,4 @@ jobs:
       - run: npm run test:revision5
       - run: npm ci --prefix ../backend --no-audit --no-fund
       - run: npm run test:api
+      - run: npm run test:api3

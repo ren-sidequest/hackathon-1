@@ -114,3 +114,8 @@ git diff --check
 独立本地评审预览（前端 mock）：Candidate `http://127.0.0.1:5973`，HR `http://127.0.0.1:5986`。构建文件、启动日志和进程清单在忽略目录 `.ci-results/workspace-preview/`。每个端口的模拟数据独立；演示完整流程请在同一端口通过 Preview role 切换角色。原 5873 / 5886 合并版保持不变。本轮通过独立 PR 提交审阅；按用户要求暂不合并，不替换已发布版本。
 
 GitNexus 索引刷新再次停留在 Analyzer 启动阶段，无完成结果；已停止本次核对路径后的分析子进程。索引未刷新，不影响上述实际构建与测试证据。
+
+
+## 2026-09-19 双端本地整合补充
+
+基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。

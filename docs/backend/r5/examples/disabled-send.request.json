@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "3.0",
+  "sessionId": "48badb62-9fe5-409a-9a8f-ccd2e19ba699",
+  "candidateId": "leo-zhang",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbourcart-2026-09-v1",
+  "taskId": "1e1212ee-ceb6-4e20-87f3-114e9f9beff4",
+  "targetRequirementId": "sql",
+  "templateId": "harbourcart-sql-v1",
+  "instructions": "Use harbourcart-2026-09-v1 to write a readable query fragment for the two-period conversion comparison. Explain the input grain, time windows, aggregation and any join. Describe practical checks and expected check results for relevant duplicates, missing values and zero denominators. Submit query text, explanations and checks; this is static code review, not online SQL execution. Shared resources overlap and must not be added as independent populations.",
+  "gapReason": "Synthetic failure-path test only; a well-supported candidate may skip a task."
+}

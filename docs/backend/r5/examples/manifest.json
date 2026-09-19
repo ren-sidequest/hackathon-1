@@ -1,0 +1,524 @@
+{
+  "schemaVersion": "3.0",
+  "generatedAt": "2026-09-19T08:16:44.829Z",
+  "kind": "executed-in-memory-synthetic-fixtures",
+  "modelCalls": 0,
+  "scope": "Owned four-candidate API 3.0 requests. Random IDs, hashes and times belong to this run; read fresh state in a running service. Preset annotations are AI-authored fixtures, not completed human calibration.",
+  "requests": [
+    {
+      "name": "comparison-initial",
+      "mode": "manual_simulation",
+      "path": "/api/demo/comparison",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "comparison-initial.response.json"
+    },
+    {
+      "name": "initial-alex-chen",
+      "mode": "manual_simulation",
+      "path": "/api/demo?candidateId=alex-chen",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "initial-alex-chen.response.json"
+    },
+    {
+      "name": "initial-maya-patel",
+      "mode": "manual_simulation",
+      "path": "/api/demo?candidateId=maya-patel",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "initial-maya-patel.response.json"
+    },
+    {
+      "name": "initial-leo-zhang",
+      "mode": "manual_simulation",
+      "path": "/api/demo?candidateId=leo-zhang",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "initial-leo-zhang.response.json"
+    },
+    {
+      "name": "initial-sam-taylor",
+      "mode": "manual_simulation",
+      "path": "/api/demo?candidateId=sam-taylor",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "initial-sam-taylor.response.json"
+    },
+    {
+      "name": "error-missing-candidate",
+      "mode": "manual_simulation",
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 400,
+      "responseFile": "error-missing-candidate.response.json"
+    },
+    {
+      "name": "shortlist-retain",
+      "mode": "manual_simulation",
+      "path": "/api/demo/shortlist",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "shortlist-retain.response.json",
+      "requestFile": "shortlist-retain.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-shortlist-retain"
+      }
+    },
+    {
+      "name": "application-assessment-revision",
+      "mode": "manual_simulation",
+      "path": "/api/demo/assessment",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "application-assessment-revision.response.json",
+      "requestFile": "application-assessment-revision.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-application-assessment-revision"
+      }
+    },
+    {
+      "name": "shortlist-reconfirm",
+      "mode": "manual_simulation",
+      "path": "/api/demo/shortlist",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "shortlist-reconfirm.response.json",
+      "requestFile": "shortlist-reconfirm.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-shortlist-reconfirm"
+      }
+    },
+    {
+      "name": "alex-chen-send",
+      "mode": "manual_simulation",
+      "path": "/api/demo/task/send",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "alex-chen-send.response.json",
+      "requestFile": "alex-chen-send.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-alex-chen-send"
+      }
+    },
+    {
+      "name": "alex-chen-error-private-notes",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 400,
+      "responseFile": "alex-chen-error-private-notes.response.json",
+      "requestFile": "alex-chen-error-private-notes.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-alex-chen-error-private-notes"
+      }
+    },
+    {
+      "name": "alex-chen-v1-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "alex-chen-v1-submission.response.json",
+      "requestFile": "alex-chen-v1-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-alex-chen-v1-submission"
+      }
+    },
+    {
+      "name": "alex-chen-v1-analysis",
+      "mode": "manual_simulation",
+      "path": "/api/demo/analysis",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "alex-chen-v1-analysis.response.json",
+      "requestFile": "alex-chen-v1-analysis.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-alex-chen-v1-analysis"
+      }
+    },
+    {
+      "name": "alex-chen-v1-assessment",
+      "mode": "manual_simulation",
+      "path": "/api/demo/assessment",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "alex-chen-v1-assessment.response.json",
+      "requestFile": "alex-chen-v1-assessment.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-alex-chen-v1-assessment"
+      }
+    },
+    {
+      "name": "alex-chen-v1-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "alex-chen-v1-more.response.json",
+      "requestFile": "alex-chen-v1-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-alex-chen-v1-more"
+      }
+    },
+    {
+      "name": "alex-chen-v2-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "alex-chen-v2-submission.response.json",
+      "requestFile": "alex-chen-v2-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-alex-chen-v2-submission"
+      }
+    },
+    {
+      "name": "alex-chen-error-v2-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 409,
+      "responseFile": "alex-chen-error-v2-more.response.json",
+      "requestFile": "alex-chen-error-v2-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-alex-chen-error-v2-more"
+      }
+    },
+    {
+      "name": "alex-chen-v2-terminal",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "alex-chen-v2-terminal.response.json",
+      "requestFile": "alex-chen-v2-terminal.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-alex-chen-v2-terminal"
+      }
+    },
+    {
+      "name": "maya-patel-send",
+      "mode": "manual_simulation",
+      "path": "/api/demo/task/send",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "maya-patel-send.response.json",
+      "requestFile": "maya-patel-send.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-maya-patel-send"
+      }
+    },
+    {
+      "name": "maya-patel-error-private-notes",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 400,
+      "responseFile": "maya-patel-error-private-notes.response.json",
+      "requestFile": "maya-patel-error-private-notes.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-maya-patel-error-private-notes"
+      }
+    },
+    {
+      "name": "maya-patel-v1-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "maya-patel-v1-submission.response.json",
+      "requestFile": "maya-patel-v1-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-maya-patel-v1-submission"
+      }
+    },
+    {
+      "name": "maya-patel-v1-analysis",
+      "mode": "manual_simulation",
+      "path": "/api/demo/analysis",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "maya-patel-v1-analysis.response.json",
+      "requestFile": "maya-patel-v1-analysis.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-maya-patel-v1-analysis"
+      }
+    },
+    {
+      "name": "maya-patel-v1-assessment",
+      "mode": "manual_simulation",
+      "path": "/api/demo/assessment",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "maya-patel-v1-assessment.response.json",
+      "requestFile": "maya-patel-v1-assessment.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-maya-patel-v1-assessment"
+      }
+    },
+    {
+      "name": "maya-patel-v1-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "maya-patel-v1-more.response.json",
+      "requestFile": "maya-patel-v1-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-maya-patel-v1-more"
+      }
+    },
+    {
+      "name": "maya-patel-v2-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "maya-patel-v2-submission.response.json",
+      "requestFile": "maya-patel-v2-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-maya-patel-v2-submission"
+      }
+    },
+    {
+      "name": "maya-patel-error-v2-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 409,
+      "responseFile": "maya-patel-error-v2-more.response.json",
+      "requestFile": "maya-patel-error-v2-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-maya-patel-error-v2-more"
+      }
+    },
+    {
+      "name": "maya-patel-v2-terminal",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "maya-patel-v2-terminal.response.json",
+      "requestFile": "maya-patel-v2-terminal.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-maya-patel-v2-terminal"
+      }
+    },
+    {
+      "name": "sam-taylor-send",
+      "mode": "manual_simulation",
+      "path": "/api/demo/task/send",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "sam-taylor-send.response.json",
+      "requestFile": "sam-taylor-send.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-sam-taylor-send"
+      }
+    },
+    {
+      "name": "sam-taylor-error-private-notes",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 400,
+      "responseFile": "sam-taylor-error-private-notes.response.json",
+      "requestFile": "sam-taylor-error-private-notes.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-sam-taylor-error-private-notes"
+      }
+    },
+    {
+      "name": "sam-taylor-v1-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "sam-taylor-v1-submission.response.json",
+      "requestFile": "sam-taylor-v1-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-sam-taylor-v1-submission"
+      }
+    },
+    {
+      "name": "sam-taylor-v1-analysis",
+      "mode": "manual_simulation",
+      "path": "/api/demo/analysis",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "sam-taylor-v1-analysis.response.json",
+      "requestFile": "sam-taylor-v1-analysis.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-sam-taylor-v1-analysis"
+      }
+    },
+    {
+      "name": "sam-taylor-v1-assessment",
+      "mode": "manual_simulation",
+      "path": "/api/demo/assessment",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "sam-taylor-v1-assessment.response.json",
+      "requestFile": "sam-taylor-v1-assessment.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-sam-taylor-v1-assessment"
+      }
+    },
+    {
+      "name": "sam-taylor-v1-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "sam-taylor-v1-more.response.json",
+      "requestFile": "sam-taylor-v1-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-sam-taylor-v1-more"
+      }
+    },
+    {
+      "name": "sam-taylor-v2-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "sam-taylor-v2-submission.response.json",
+      "requestFile": "sam-taylor-v2-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-sam-taylor-v2-submission"
+      }
+    },
+    {
+      "name": "sam-taylor-error-v2-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 409,
+      "responseFile": "sam-taylor-error-v2-more.response.json",
+      "requestFile": "sam-taylor-error-v2-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-sam-taylor-error-v2-more"
+      }
+    },
+    {
+      "name": "sam-taylor-v2-terminal",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "sam-taylor-v2-terminal.response.json",
+      "requestFile": "sam-taylor-v2-terminal.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-sam-taylor-v2-terminal"
+      }
+    },
+    {
+      "name": "comparison-final",
+      "mode": "manual_simulation",
+      "path": "/api/demo/comparison",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "comparison-final.response.json"
+    },
+    {
+      "name": "admin-reset",
+      "mode": "manual_simulation",
+      "path": "/api/demo/reset",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "admin-reset.response.json",
+      "requestFile": "admin-reset.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-admin-reset",
+        "X-Demo-Admin-Token": "<LOCAL_ADMIN_TOKEN>"
+      }
+    },
+    {
+      "name": "disabled-initial",
+      "mode": "disabled",
+      "path": "/api/demo?candidateId=leo-zhang",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "disabled-initial.response.json"
+    },
+    {
+      "name": "disabled-send",
+      "mode": "disabled",
+      "path": "/api/demo/task/send",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "disabled-send.response.json",
+      "requestFile": "disabled-send.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-disabled-send"
+      }
+    },
+    {
+      "name": "disabled-submission",
+      "mode": "disabled",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "disabled-submission.response.json",
+      "requestFile": "disabled-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-disabled-submission"
+      }
+    },
+    {
+      "name": "analysis-disabled-error",
+      "mode": "disabled",
+      "path": "/api/demo/analysis",
+      "method": "POST",
+      "status": 503,
+      "responseFile": "analysis-disabled-error.response.json",
+      "requestFile": "analysis-disabled-error.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-analysis-disabled-error"
+      }
+    },
+    {
+      "name": "analysis-failed-state",
+      "mode": "disabled",
+      "path": "/api/demo?candidateId=leo-zhang",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "analysis-failed-state.response.json"
+    }
+  ]
+}

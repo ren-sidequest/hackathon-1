@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "AI_DISABLED",
+    "message": "Analysis did not complete. The saved work remains available for human review.",
+    "requestId": "6363cf75-7472-4f4c-aea8-b8b9c1df26b9",
+    "retryable": false
+  }
+}

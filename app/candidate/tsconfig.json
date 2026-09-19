@@ -10,5 +10,5 @@
       "react/*": ["./node_modules/@types/react/*"]
     }
   },
-  "include": ["src", "vite.config.ts", "playwright.config.ts", "playwright.api.config.ts", "playwright.shared.config.ts", "playwright.revision5.config.ts", "tests", "../hr/src/ApiApp.tsx", "../hr/src/Revision5App.tsx"]
+  "include": ["src", "vite.config.ts", "playwright.config.ts", "playwright.api.config.ts", "playwright.shared.config.ts", "playwright.revision5.config.ts", "playwright.api3.config.ts", "tests", "../hr/src/ApiApp.tsx", "../hr/src/Revision5App.tsx", "../hr/src/Api3App.tsx"]
 }

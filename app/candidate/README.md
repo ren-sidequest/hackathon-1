@@ -64,3 +64,8 @@ Vitest 覆盖状态迁移、提交校验、数据一致性与损坏草稿恢复�
 视觉核对与已知差异见 [design-qa.md](design-qa.md)。默认不修改 HR 端；涉及共享组件或跨端数据时先协调。
 
 排错：端口占用或缺少依赖看启动终端；运行时错误看浏览器控制台；测试失败看 `test-results/` 的截图和 trace（`npx playwright show-trace <trace.zip>`）。
+
+
+## 2026-09-19 双端本地整合补充
+
+基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](../../docs/FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。

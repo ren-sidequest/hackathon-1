@@ -3,17 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.23.0" },
+  "engines": {
+    "node": ">=22.23.0"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "start": "node --env-file-if-exists=.env dist/server.js",
+    "start": "node --env-file-if-exists=.env dist/r5/server.js",
     "dev": "npm run build && npm start",
     "test": "npm run build && node --test test/*.test.mjs",
     "test:coverage": "npm run build && node --experimental-test-coverage --test test/*.test.mjs",
-    "docs:generate": "npm run build && node scripts/export-contract.mjs",
+    "docs:generate": "npm run build && node scripts/export-r5-contract.mjs",
     "demo": "node --env-file-if-exists=.env scripts/demo.mjs",
-    "reset": "node --env-file-if-exists=.env scripts/reset.mjs"
+    "reset": "node --env-file-if-exists=.env scripts/reset.mjs",
+    "start:legacy": "node --env-file-if-exists=.env dist/server.js",
+    "docs:generate:legacy": "npm run build && node scripts/export-contract.mjs",
+    "test:r5": "npm run build && node --test test/r5-*.test.mjs",
+    "migrate:v3": "node scripts/migrate-v3.mjs"
   },
   "dependencies": {
     "@fastify/swagger": "9.8.1",
