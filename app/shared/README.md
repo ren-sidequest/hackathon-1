@@ -11,7 +11,7 @@ HR 与 Candidate 共用的轻量 UI 源码，不是第三个应用。使用现�
 
 先导入各端页面 CSS，再导入共享 tokens 与 shell。两端 Vite 配置显式允许读取 `app/` 下的共享源码，并通过 `resolve.dedupe` 从本端依赖解析 React，避免混用两端的 React 版本。Candidate 的 TypeScript `paths` 将共享源码的 React 类型解析到本端已安装的类型包；HR 继续使用 JavaScript，由 Vite 转译共享 TSX。
 
-原外观组件不读取或迁移业务 reducer；新增 api-types / api / use-api / api-ui / connected.css 负责 API 2.0 接入，详见 [前端交接](../../docs/FRONTEND_API_HANDOFF.md)。浏览器通过本机后端读取共享案例，不直接访问数据库或模型。数字评分系统暂缓；既有审核状态与证据标签维持原语义。
+原外观组件不读取或迁移业务 reducer；新增 api-types / api / use-api / api-ui / connected.css 负责 API 2.0 接入，详见 [前端交接](../../docs/FRONTEND_API_HANDOFF.md)。浏览器通过本机后端读取共享案例，不直接访问数据库或模型。本 PR 尚未实现数字评分；修订 5 已批准公开 rubric、人工评估与确定性计算，后续按新版合同接入。既有证据审核不等同于评分或人工名单操作。
 
 ## 偏好与交互
 

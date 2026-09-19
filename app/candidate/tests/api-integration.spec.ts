@@ -164,3 +164,53 @@ test('unavailable API preserves local input and never falls back to simulated sh
   await expect(candidate.getByRole('button',{name:'Submit V1 work sample',exact:true})).toBeEnabled();
   await submit(candidate,1);
 });
+
+for (const [decision, heading] of [
+  ['Confirm evidence', 'V2: Evidence confirmed'],
+  ['Evidence Still Insufficient', 'V2: Evidence still insufficient'],
+] as const) {
+  test(`My Tasks shows the current V2 review after ${decision}, preserving V1 history`, async ({ page: candidate, context, request }, info) => {
+    const hr = await context.newPage();
+    const v1Comment = 'V1 feedback: explain which evidence would distinguish the hypotheses.';
+    const v2Comment = `V2 final feedback: ${decision}. This task is closed.`;
+    await startPair(candidate, hr, 'V1 task-page review regression.');
+    await submit(candidate, 1);
+    await hr.goto(`${hrUrl}/#review`);
+    await refresh(hr);
+    await decide(hr, 'Needs More Evidence', v1Comment);
+
+    await candidate.goto(`${candidateUrl}/#tasks`);
+    await refresh(candidate);
+    await expect(candidate.getByRole('heading', { name: 'V1: Needs more evidence', exact: true })).toBeVisible();
+    await expect(candidate.getByText(v1Comment, { exact: true })).toBeVisible();
+    await candidate.getByRole('button', { name: 'Copy V1 into a V2 draft', exact: true }).click();
+    await candidate.getByRole('button', { name: 'Preview work sample', exact: true }).click();
+    await candidate.getByLabel('Executive summary', { exact: true }).fill('V2 task-page review regression.');
+    await submit(candidate, 2);
+    await candidate.goto(`${candidateUrl}/#tasks`);
+    await refresh(candidate);
+    await expect(candidate.getByText(v1Comment, { exact: true })).toHaveCount(0);
+
+    await hr.goto(`${hrUrl}/#review`);
+    await refresh(hr);
+    await decide(hr, decision, v2Comment);
+    await refresh(candidate);
+    await expect(candidate.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    await expect(candidate.getByText(v2Comment, { exact: true })).toBeVisible();
+    await expect(candidate.getByText(v1Comment, { exact: true })).toHaveCount(0);
+    await expect(candidate.getByRole('button', { name: /Start V2|Copy V1|Continue V2|Start V3/ })).toHaveCount(0);
+    await candidate.reload();
+    await expect(candidate.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    await expect(candidate.getByText(v2Comment, { exact: true })).toBeVisible();
+    await candidate.screenshot({ path: info.outputPath('candidate-tasks-v2-final.png'), fullPage: true, animations: 'disabled' });
+
+    await candidate.getByRole('button', { name: 'View submitted versions', exact: true }).click();
+    await candidate.getByLabel('Submission version', { exact: true }).selectOption('1');
+    await expect(candidate.getByRole('heading', { name: 'V1: Needs more evidence', exact: true })).toBeVisible();
+    await expect(candidate.getByText(v1Comment, { exact: true })).toBeVisible();
+    await candidate.getByLabel('Submission version', { exact: true }).selectOption('2');
+    await expect(candidate.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    const { data } = await (await request.get(`${backend}/api/demo`)).json();
+    expect(data.versions.map((v: { review: { comment: string } }) => v.review.comment)).toEqual([v1Comment, v2Comment]);
+  });
+}
