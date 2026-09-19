@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import { createTargetAnalyzer, profileFor } from '../dist/r5/analysis.js';
 import { AnalysisError } from '../dist/analysis.js';
 // Transport stubs only. These verify provider payload/profile contracts, not real model quality.
-const work = target => ({sessionId:'session-test',candidateId:'maya-patel',jobId:'junior-data-analyst',taskId:'task-test',targetRequirementId:target,
-  datasetVersion:'harbourcart-2026-09-v1',submissionId:'submission-test',contentFingerprint:'f'.repeat(64),
+const work = target => ({sessionId:'session-test',candidateId:'ann-li',jobId:'junior-data-analyst',taskId:'task-test',targetRequirementId:target,
+  datasetVersion:'harbour-retail-2026-09-v1',submissionId:'submission-test',contentFingerprint:'f'.repeat(64),
   summary:'🔎 中文\nA cause remains unverified; test matched groups.',findings:[],processEvidence:[],notes:'PRIVATE-NOTES-MUST-NOT-ENTER'});
 const observations = target => profileFor(target).dimensions.map(dimension=>({dimension,status:'not_observed',statement:'TEST-STUB: insufficient direct support.',citations:[],scope:'Synthetic work only.',uncertainty:'Human review required.'}));
 const response = values => Response.json({id:'resp_r5_test',model:'test-model',status:'completed',output:[{type:'message',role:'assistant',content:[{type:'output_text',text:JSON.stringify({observations:values})}]}]});
@@ -17,9 +17,10 @@ for(const target of ['sql','data-analysis','business-problem-solving'])test(`R5 
     assert.deepEqual(body.text.format.schema.properties.observations.items.properties.dimension.enum,profileFor(target).dimensions);
     assert.equal(body.text.format.schema.properties.observations.minItems,profileFor(target).dimensions.length);
     assert.match(body.input[0].content,new RegExp(target));assert.doesNotMatch(body.input[0].content,/Alex Chen/);
+    assert.match(body.input[0].content,/statement, scope and uncertainty in English/);assert.match(body.input[0].content,/source quotes verbatim/);
     assert.match(body.input[0].content,/untrusted data/);assert.match(body.input[0].content,/not.*score|Do not score/);
     const publicInput=body.input[1].content;
-    assert.match(publicInput,/maya-patel/);assert.match(publicInput,/session-test/);assert.match(publicInput,/junior-data-analyst/);
+    assert.match(publicInput,/ann-li/);assert.match(publicInput,/session-test/);assert.match(publicInput,/junior-data-analyst/);
     assert.doesNotMatch(JSON.stringify(body),/PRIVATE-NOTES-MUST-NOT-ENTER/);
     return response(observations(target));
   }});

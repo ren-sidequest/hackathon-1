@@ -8,11 +8,11 @@ import { AnalysisError } from '../dist/analysis.js';
 // Independent product assertions. TEST-STUB/manual rules only: zero external model calls.
 const HOST = '127.0.0.1:8787';
 const ADMIN = 'R5-TEST-STUB-admin-token-synthetic';
-const PEOPLE = ['alex-chen', 'maya-patel', 'leo-zhang', 'sam-taylor'];
+const PEOPLE = ['amy-chen', 'ann-li', 'david-liu', 'jamie-parker'];
 const TEMPLATES = [
-  { targetRequirementId: 'sql', templateId: 'harbourcart-sql-v1', criterionIds: ['S1', 'S2', 'S3'] },
-  { targetRequirementId: 'data-analysis', templateId: 'harbourcart-data-analysis-v1', criterionIds: ['D1', 'D2', 'D3'] },
-  { targetRequirementId: 'business-problem-solving', templateId: 'harbourcart-bps-v1', criterionIds: ['B1', 'B2', 'B3', 'B4'] },
+  { targetRequirementId: 'sql', templateId: 'harbour-retail-sql-v1', criterionIds: ['S1', 'S2', 'S3'] },
+  { targetRequirementId: 'data-analysis', templateId: 'harbour-retail-data-analysis-v1', criterionIds: ['D1', 'D2', 'D3'] },
+  { targetRequirementId: 'business-problem-solving', templateId: 'harbour-retail-bps-v1', criterionIds: ['B1', 'B2', 'B3', 'B4'] },
 ];
 const CRITERIA = ['S1', 'S2', 'S3', 'D1', 'D2', 'D3', 'B1', 'B2', 'B3', 'B4'];
 const MORE = 'TEST-STUB public review: identify a matched comparison and show what different results would mean; retain uncertainty.';
@@ -41,7 +41,7 @@ function post(app, path, payload, key = randomUUID(), headers = {}) {
     host: HOST, 'content-type': 'application/json', 'idempotency-key': key, ...headers,
   }, payload });
 }
-function base(d) { return { schemaVersion: '3.0', sessionId: d.sessionId, candidateId: d.candidate.id, jobId: d.job.id, datasetVersion: d.datasetVersion }; }
+function base(d) { return { schemaVersion: '4.0', sessionId: d.sessionId, candidateId: d.candidate.id, jobId: d.job.id, datasetVersion: d.datasetVersion }; }
 function binding(d) { return { ...base(d), taskId: d.task.taskId, targetRequirementId: d.task.targetRequirementId }; }
 function sendBody(d, template = TEMPLATES[2]) {
   return { ...binding(d), targetRequirementId: template.targetRequirementId, templateId: template.templateId,
@@ -68,7 +68,7 @@ async function unchanged(app, person, action, statuses = [400, 409]) {
 for (const person of PEOPLE) for (const template of TEMPLATES) {
   test(`R5 ${person} / ${template.targetRequirementId}: thin V1 → More → independent V2, fixed target and no V3`, async t => {
     const app = await fixture(t); const initial = await read(app, person);
-    assert.equal(initial.schemaVersion, '3.0'); assert.equal(initial.candidate.id, person);
+    assert.equal(initial.schemaVersion, '4.0'); assert.equal(initial.candidate.id, person);
     assert.equal(initial.workflow.canSubmit, false); assert.deepEqual(initial.versions, []);
     const sent = await send(app, person, template);
     assert.equal(sent.task.targetRequirementId, template.targetRequirementId);
@@ -123,7 +123,7 @@ for (const person of PEOPLE) for (const decision of ['confirm', 'evidence_still_
 
 test('R5 explicit candidate selection and strict public ownership DTOs', async t => {
   const app = await fixture(t);
-  for (const url of ['/api/demo', '/api/demo?candidateId=unknown', '/api/demo?candidateId=alex-chen&extra=value']) {
+  for (const url of ['/api/demo', '/api/demo?candidateId=unknown', '/api/demo?candidateId=amy-chen&extra=value']) {
     error(await app.inject({ method: 'GET', url, headers: { host: HOST } }), [400]);
   }
   const d = await read(app); const body = sendBody(d);
@@ -145,7 +145,7 @@ test('R5 global operation key never returns a different candidate receipt; same 
   assert.deepEqual(replay.json().data, result.json().data);
   await unchanged(app, PEOPLE[1], () => post(app, '/task/send', sendBody(b, TEMPLATES[0]), key), [409]);
   await unchanged(app, PEOPLE[0], () => post(app, '/task/send', { ...request, gapReason: 'Changed request content.' }, key), [409]);
-  ok(await post(app, '/reset', { schemaVersion:'3.0', sessionId:a.sessionId }, randomUUID(), { 'x-demo-admin-token': ADMIN }));
+  ok(await post(app, '/reset', { schemaVersion:'4.0', sessionId:a.sessionId }, randomUUID(), { 'x-demo-admin-token': ADMIN }));
   await unchanged(app, PEOPLE[0], () => post(app, '/task/send', request, key), [409]);
 });
 
@@ -171,9 +171,9 @@ test('R5 local Origin/Host enforcement, administrator reset and old-session inva
   const app = await fixture(t); const before = await read(app);
   for (const headers of [{ host: 'other.invalid:8787' }, { host: HOST, origin: 'null' },
     { host: HOST, origin: 'http://127.0.0.1:5173.attacker.invalid' }, { host: HOST, 'sec-fetch-site': 'cross-site' }]) {
-    error(await app.inject({ method: 'GET', url: '/api/demo?candidateId=alex-chen', headers }), [403]);
+    error(await app.inject({ method: 'GET', url: '/api/demo?candidateId=amy-chen', headers }), [403]);
   }
-  const reset = { schemaVersion: '3.0', sessionId: before.sessionId };
+  const reset = { schemaVersion: '4.0', sessionId: before.sessionId };
   for (const headers of [{}, { 'x-demo-admin-token': 'wrong-token' }]) await unchanged(app, PEOPLE[0], () => post(app, '/reset', reset, randomUUID(), headers), [403]);
   const rows = await Promise.all(PEOPLE.map(person => first(app, person)));
   const prior = rows[0]; ok(await post(app, '/reset', reset, randomUUID(), { 'x-demo-admin-token': ADMIN }));
@@ -232,14 +232,14 @@ test('R5 company/rubric/application fixtures expose four owned immutable evidenc
   const app = await fixture(t); const c = await comparison(app);
   assert.equal(c.stage, 'application_review'); assert.equal(c.candidates.length, 4);
   assert.deepEqual(c.candidates.map(row => row.candidate.id).sort(), [...PEOPLE].sort());
-  assert.equal(c.company.name, 'HarbourCart Pty Ltd'); assert.equal(c.company.approximateHeadcount, 25);
+  assert.equal(c.company.name, 'Harbour Retail'); assert.equal(Object.hasOwn(c.company,'approximateHeadcount'), false);
   assert.equal(c.rubric.criteria.length, 10); assert.deepEqual(c.rubric.requirements.map(r => r.maxScore), [30, 30, 40]);
   assert.equal(c.rubric.calibrationStatus, 'human_calibration_pending');
   const fingerprints = new Set();
   for (const person of PEOPLE) {
     const d = await read(app, person); assert.equal(d.application.candidateId, person);
     assert.equal(d.application.provenance, 'synthetic'); fingerprints.add(d.application.fingerprint);
-    assert.equal(d.application.baseline.label, '合成案例·预置人工评估');
+    assert.equal(d.application.baseline.label, 'AI-authored demo assessment · Human calibration pending');
     assert.equal(d.application.baseline.provenance.humanCalibration, 'pending');
     verifyItems(d.application, d.application.baseline.items);
     assert.equal(d.assessment.application_review.assessmentRevision, 1); assert.equal(d.assessment.task_v1, null);
@@ -416,7 +416,7 @@ for (const closure of ['review', 'reset', 'v2']) test(`R5 delayed analysis after
   const d = await first(app); const key = randomUUID(); const pending = post(app, '/analysis', analysisBody(d), key).then(response => response);
   await entered;
   const replay = await post(app, '/analysis', analysisBody(d), key); ok(replay, 202); assert.equal(replay.json().meta.replayed, true);
-  if (closure === 'reset') ok(await post(app, '/reset', { schemaVersion:'3.0', sessionId:d.sessionId }, randomUUID(), { 'x-demo-admin-token': ADMIN }));
+  if (closure === 'reset') ok(await post(app, '/reset', { schemaVersion:'4.0', sessionId:d.sessionId }, randomUUID(), { 'x-demo-admin-token': ADMIN }));
   else {
     const reviewed = ok(await post(app, '/review', reviewBody(d, closure === 'v2' ? 'needs_more_evidence' : 'confirm')));
     if (closure === 'v2') ok(await post(app, '/submission', sample(reviewed, 2)), 201);

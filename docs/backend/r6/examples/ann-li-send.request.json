@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "4.0",
+  "sessionId": "dcd27813-7e44-40ed-8ced-f9e3552755c8",
+  "candidateId": "ann-li",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "taskId": "139b9575-0b07-4d82-9f24-c487cc78218a",
+  "targetRequirementId": "sql",
+  "templateId": "harbour-retail-sql-v1",
+  "instructions": "First consider an existing query or explanation that addresses the selected gap. For this short task, use harbour-retail-2026-09-v1 to write a readable query fragment for the two-period conversion comparison. Explain the input grain, time windows, aggregation and any join. Describe practical checks and expected results for relevant duplicates, missing values and zero denominators. Submit text through the work-sample form; this is static review, not SQL execution or a general file upload. Shared resources overlap and are not independent populations.",
+  "gapReason": "Synthetic example: a human identifies a bounded evidence gap."
+}

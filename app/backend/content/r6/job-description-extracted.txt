@@ -1,0 +1,123 @@
+--- Page 1 ---
+Harbour Retail — Junior Data Analyst Demo JD 
+Junior Data Analyst 
+Company: Harbour Retail 
+Location: Sydney, NSW 
+Employment Type: Full-time 
+Experience Level: Entry Level / Junior 
+Team: Data & Analytics 
+About Harbour Retail 
+Harbour Retail is a growing Sydney-based e-commerce startup using data to improve 
+customer acquisition, digital shopping experiences and commercial performance. 
+As the business grows, we are looking for a Junior Data Analyst to support the team in 
+turning website marketing and sales data into clear insights that help teams make 
+better decisions. 
+You will work with members of the Data, Marketing and Commercial teams and will be 
+supported by more experienced analysts. This role is suited to a recent graduate or 
+early-career analyst who enjoys working with data, investigating business questions and 
+communicating findings clearly. 
+About the Role 
+As a Junior Data Analyst, you will help collect, validate, analyses and interpret business 
+data across website traffic, marketing channels and online sales. 
+Your work will include routine reporting as well as ad hoc investigations into changes in 
+business performance. 
+A key part of the role is not only calculating metrics, but understanding what those 
+metrics mean, identifying when further evidence is required, and communicating 
+findings to non-technical stakeholders. 
+Key Responsibilities 
+Data Preparation and Quality 
+• Collect, organize and validate data from sales, website and marketing sources. 
+• Check datasets for missing values, inconsistencies and obvious data-quality 
+issues. 
+• Maintain clear documentation of data sources, calculations and analytical 
+assumptions. 
+• Support reliable and consistent reporting across business teams. 
+SQL and Data Analysis 
+
+--- Page 2 ---
+• Write basic SQL queries to extract, filter, group and summaries business data. 
+• Use aggregation techniques to analyses performance across products, time 
+periods and acquisition channels. 
+• Calculate and monitor key business metrics such as website traffic, orders and 
+conversion rates. 
+• Compare results across periods or customer/channel segments to identify 
+meaningful changes. 
+Business Analysis and Problem Solving 
+• Investigate changes in business performance and identify possible explanations 
+supported by available data. 
+• Distinguish between what the data directly shows and what remains uncertain. 
+• Identify when additional data is required before reaching a business conclusion. 
+• Perform ad hoc analysis to support questions raised by Marketing, Product or 
+Commercial teams. 
+• Translate analytical findings into practical next steps or recommendations where 
+the available evidence supports them. 
+Reporting and Visualization 
+• Assist in creating recurring reports, tables and dashboards using Excel or 
+business-intelligence tools. 
+• Present metrics and analytical findings in a clear, structured and accessible 
+format. 
+• Support the development of simple visualizations that help stakeholders 
+understand trends and performance. 
+Stakeholder Communication 
+• Explain analytical findings clearly to colleagues who may not have a technical 
+background. 
+• Summaries the business implications of an analysis rather than only presenting 
+calculations. 
+• Clearly communicate assumptions, limitations and areas where further 
+investigation is required. 
+• Collaborate with cross-functional teams to understand business questions and 
+data requirements. 
+Skills and Experience 
+
+--- Page 3 ---
+Essential 
+• Bachelor’s degree, or near completion, in Data Analytics, Business Analytics, 
+Statistics, Mathematics, Computer Science, Economics or a related discipline. 
+• Foundational knowledge of SQL, including filtering, grouping and basic 
+aggregation. 
+• Strong Excel or spreadsheet skills. 
+• Ability to calculate and interpret basic business metrics. 
+• Strong analytical and structured problem-solving skills. 
+• High attention to detail and commitment to data accuracy. 
+• Ability to explain analytical findings clearly in written and verbal form. 
+• Willingness to learn and work in a fast-moving startup environment. 
+Desirable 
+• Internship, university project or portfolio experience involving data analysis. 
+• Familiarity with Python or R. 
+• Exposure to Power BI, Tableau or another data-visualization platform. 
+• Basic understanding of digital analytics, e-commerce or marketing performance 
+metrics. 
+• Experience presenting analytical work to non-technical audiences. 
+What Good Looks Like in This Role 
+A successful Junior Data Analyst does more than produce correct calculations. 
+You should be able to: 
+• identify the right metric for a business question; 
+• analyses data accurately; 
+• recognize when a conclusion is or is not supported by the available evidence; 
+• explain your reasoning clearly; 
+• identify what additional information may be required; and 
+• turn analysis into a sensible next step for the business. 
+Example Business Questions You May Work On 
+• Why has website conversion changed even though traffic has increased? 
+• Which acquisition channels appear to be driving changes in customer behavior? 
+
+--- Page 4 ---
+• Does the available evidence support changing marketing investment? 
+• What additional information would be needed before recommending a 
+commercial action? 
+• How should an analytical finding be explained to a Marketing Manager or other 
+non-technical stakeholder? 
+Tools 
+You may work with: 
+• SQL 
+• Microsoft Excel / Google Sheets 
+• Power BI or similar BI tools 
+• Basic Python or R where appropriate 
+• Website, marketing and sales datasets 
+What We Value 
+We value candidates who are curious, evidence-driven and comfortable saying when 
+the available data is not sufficient to support a conclusion. 
+For a junior role, we do not expect you to know everything. We are interested in how 
+you approach a problem, how carefully you work with evidence, and how clearly you 
+explain your reasoning. 
+ 

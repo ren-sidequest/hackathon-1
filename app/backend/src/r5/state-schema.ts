@@ -1,9 +1,8 @@
 import { Type } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
 import { canonicalJson, fingerprint } from '../fingerprint.js';
-import { buildSourceIndex, PROMPT_VERSION, validateAnalysis } from '../analysis.js';
-import { createSeed, DATASET_VERSION } from '../seed.js';
-import { AnalysisStateSchema as LegacyAnalysisStateSchema, ReviewRecordSchema as LegacyReviewRecordSchema } from '../schema.js';
+import { buildSourceIndex } from '../analysis.js';
+import { createSeed, DATASET_VERSION } from './task-seed.js';
 import { CANDIDATE_IDS, FIXTURE_VERSION, JOB, TASK_TEMPLATES, getApplication, validateAssessmentItems, type EvidenceSnapshot } from './fixtures.js';
 import { CRITERIA, RUBRIC_VERSION } from './rubric.js';
 import { calculateScores } from './scoring.js';
@@ -29,18 +28,12 @@ const PersonSchema = Type.Object({ candidateId: CandidateSchema, application: Ap
   assessments: Type.Array(Type.Object({ ...AssessmentRecordSchema.properties, assessmentId: id, operatorLabel: text(120) }, exact), { minItems: 1 }),
   shortlist: Type.Array(Type.Object({ ...ShortlistEventSchema.properties, reason: text(2000), operatorLabel: text(120) }, exact)),
 }, exact);
-export const StateSchema = Type.Object({ schemaVersion: Type.Literal('3.0'), sessionId: id, datasetVersion: Type.Literal(DATASET_VERSION),
+export const StateSchema = Type.Object({ schemaVersion: Type.Literal('4.0'), sessionId: id, datasetVersion: Type.Literal(DATASET_VERSION),
   fixtureVersion: Type.Literal(FIXTURE_VERSION), rubricVersion: Type.Literal(RUBRIC_VERSION), revision: Type.Integer({ minimum: 0 }),
   people: Type.Object(Object.fromEntries(CANDIDATE_IDS.map(candidate => [candidate, PersonSchema])), exact) }, exact);
-const OldStateSchema = Type.Object({ schemaVersion: Type.Literal('2.0'), sessionId: id, datasetVersion: Type.Literal(DATASET_VERSION),
-  revision: Type.Integer({ minimum: 0 }), task: Type.Object({ taskId: id,
-    status: Type.Union(['draft', 'sent', 'submitted', 'awaiting_revision', 'reviewed'].map(status => Type.Literal(status))),
-    instructions: Type.String({ minLength: 1, maxLength: 4000 }), sentAt: nullable(Type.String({ minLength: 1 })),
-  }, exact), versions: Type.Array(Type.Object({ submissionId: id, analysis: LegacyAnalysisStateSchema,
-    review: nullable(LegacyReviewRecordSchema) }, exact), { maxItems: 2 }) }, exact);
 
 function requireIntegrity(condition: unknown, message: string): asserts condition {
-  if (!condition) throw new Error(`Stored revision5 integrity: ${message}; preserve database`);
+  if (!condition) throw new Error(`Stored revision6 integrity: ${message}; preserve database`);
 }
 function equal(left: unknown, right: unknown): boolean { return canonicalJson(left) === canonicalJson(right); }
 function time(value: string): number {
@@ -53,7 +46,7 @@ function content(submission: SavedSubmission) {
     datasetVersion: submission.datasetVersion, candidateId: submission.candidateId, submissionVersion: submission.submissionVersion,
     previousSubmissionId: submission.previousSubmissionId, previousContentFingerprint: submission.previousContentFingerprint,
     summary: submission.summary, findings: submission.findings, processEvidence: submission.processEvidence };
-  return submission.schemaVersion === '3.0' ? { ...common, jobId: submission.jobId, targetRequirementId: submission.targetRequirementId } : common;
+  return submission.schemaVersion === '4.0' ? { ...common, jobId: submission.jobId, targetRequirementId: submission.targetRequirementId } : common;
 }
 function snapshot(person: PersonState, stage: Stage): EvidenceSnapshot {
   if (stage === 'application_review') return person.application;
@@ -66,8 +59,8 @@ function baseline(person: PersonState): AssessmentRecord {
   const application = getApplication(person.candidateId);
   return { assessmentId: `preset-${person.candidateId}`, candidateId: person.candidateId, jobId: JOB.id, rubricVersion: RUBRIC_VERSION,
     stage: 'application_review', evidenceSnapshotId: application.evidenceSnapshotId, fingerprint: application.fingerprint,
-    submissionId: null, contentFingerprint: null, assessmentRevision: 1, status: 'reviewed', annotationMode: 'preset_human',
-    operatorLabel: 'Synthetic preset; AI-authored fixture, human calibration pending', createdAt: '2026-09-19T00:00:00.000Z',
+    submissionId: null, contentFingerprint: null, assessmentRevision: 1, status: 'reviewed', annotationMode: 'ai_authored',
+    operatorLabel: 'AI-authored demo assessment · Human calibration pending', createdAt: '2026-09-19T00:00:00.000Z',
     items: structuredClone(application.baseline.items), reuseApplication: null, reusedItems: [], score: calculateScores(application.baseline.items) };
 }
 function validateAnalysisState(person: PersonState, version: Version): void {
@@ -86,8 +79,7 @@ function validateAnalysisState(person: PersonState, version: Version): void {
     else requireIntegrity(analysis.result === null && analysis.errorCode && /^AI_[A-Z_]+$/.test(analysis.errorCode), 'failed analysis fields');
   }
   if (analysis.result) {
-    if (submission.schemaVersion === '2.0' && analysis.result.promptVersion === PROMPT_VERSION) validateAnalysis(analysis.result, submission);
-    else validateTargetAnalysis(analysis.result, { ...submission, candidateId: person.candidateId, jobId: JOB.id, targetRequirementId: person.task.targetRequirementId! });
+    validateTargetAnalysis(analysis.result, { ...submission, candidateId: person.candidateId, jobId: JOB.id, targetRequirementId: person.task.targetRequirementId! });
   }
 }
 
@@ -120,9 +112,7 @@ export function validateState(input: unknown): asserts input is State {
       requireIntegrity(version.evidenceSnapshotId === `submission:${sub.submissionId}` && sub.contentFingerprint === fingerprint(content(sub))
         && equal(sub.sources, buildSourceIndex(sub)), 'submission content fingerprint/source index');
       requireIntegrity(task.sentAt && time(sub.submittedAt) >= time(task.sentAt), 'submission predates sent task');
-      if (sub.schemaVersion === '2.0') requireIntegrity(candidateId === 'alex-chen' && task.targetRequirementId === 'business-problem-solving'
-        && (!previous || previous.submission.schemaVersion === '2.0'), 'legacy submission scope');
-      else requireIntegrity(sub.jobId === JOB.id && sub.targetRequirementId === task.targetRequirementId, 'submission job/target binding');
+      requireIntegrity(sub.schemaVersion === '4.0' && sub.jobId === JOB.id && sub.targetRequirementId === task.targetRequirementId, 'submission schema/job/target binding');
       for (const finding of sub.findings) requireIntegrity(!finding.source || resources.includes(finding.source), 'unknown task resource');
       if (previous) requireIntegrity(previous.review?.decision === 'needs_more_evidence'
         && time(sub.submittedAt) >= time(previous.review.reviewedAt), 'V2 requires preceding V1 More');
@@ -133,8 +123,7 @@ export function validateState(input: unknown): asserts input is State {
         requireIntegrity(review.sessionId === state.sessionId && review.taskId === task.taskId && review.datasetVersion === DATASET_VERSION
           && review.submissionId === sub.submissionId && review.contentFingerprint === sub.contentFingerprint
           && (index === 0 || review.decision !== 'needs_more_evidence') && version.analysis.status !== 'running', 'review owner/version binding');
-        if (review.schemaVersion === '2.0') requireIntegrity(sub.schemaVersion === '2.0' && review.requirementId === task.targetRequirementId, 'legacy review requirement binding');
-        else requireIntegrity(review.candidateId === candidateId && review.jobId === JOB.id && review.targetRequirementId === task.targetRequirementId, 'review candidate/job/target binding');
+        requireIntegrity(review.schemaVersion === '4.0' && review.candidateId === candidateId && review.jobId === JOB.id && review.targetRequirementId === task.targetRequirementId, 'review schema/candidate/job/target binding');
         requireIntegrity(time(review.reviewedAt) >= time(sub.submittedAt), 'review predates submission');
         if (version.analysis.finishedAt) requireIntegrity(time(version.analysis.finishedAt) <= time(review.reviewedAt), 'analysis completed after terminal review');
         requireIntegrity(!reviewIds.has(review.reviewId), 'duplicate review ID'); reviewIds.add(review.reviewId);
@@ -193,15 +182,7 @@ export function validateState(input: unknown): asserts input is State {
   }
 }
 
-export function validateLegacyPayload(payload: OldMigrationPayload): void {
-  requireIntegrity(Value.Check(OldStateSchema, payload.legacyState), 'strict legacy workflow shape');
-  const old = payload.legacyState;
-  requireIntegrity(payload.submissions.length === old.versions.length, 'legacy submission count');
-  for (const [index, version] of old.versions.entries()) requireIntegrity(payload.submissions[index]?.submissionId === version.submissionId, 'legacy submission ordering');
-  // A converted state is validated separately; these are the original-only invariants that wrapping would hide.
-  requireIntegrity((old.task.status === 'draft') === (old.task.sentAt === null), 'legacy sentAt/status binding');
-  for (const version of old.versions) if (version.analysis.result) {
-    const submission = payload.submissions.find(item => item.submissionId === version.submissionId);
-    requireIntegrity(submission, 'legacy analysis submission missing'); validateAnalysis(version.analysis.result, submission);
-  }
+/** Legacy histories belong to the historical executable and database, never the new people. */
+export function validateLegacyPayload(_payload: OldMigrationPayload): never {
+  throw new Error('Legacy identity conversion is retired in revision 6; preserve the old database and initialize a separate new session');
 }

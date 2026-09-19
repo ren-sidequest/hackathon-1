@@ -11,17 +11,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
-      EB_API4_BACKEND_ROOT: ${{ github.workspace }}/.api4-contract
+      # Exercise this PR's actual frontend/backend tree, not an older pin.
+      EB_API4_BACKEND_ROOT: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          persist-credentials: false
-      # The frontend PR does not copy or modify backend implementation.
-      # Pin the independently delivered contract until coordinated release.
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          ref: ff053cbcb70fff230020913e76e2fafe4402dd12
-          path: .api4-contract
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
@@ -30,12 +24,13 @@ jobs:
           cache-dependency-path: |
             app/candidate/package-lock.json
             app/hr/package-lock.json
-            .api4-contract/app/backend/package-lock.json
+            app/backend/package-lock.json
       - run: npm ci --prefix app/candidate
       - run: npm ci --prefix app/hr
-      - run: npm ci --prefix .api4-contract/app/backend
-      - run: python3 .api4-contract/scripts/frontend-types-v4.py --check
-      - run: cmp app/shared/api4-types.ts .api4-contract/app/shared/api4-types.ts
+      - run: npm ci --prefix app/backend
+      - run: npm run docs:generate --prefix app/backend
+      - run: git diff --exit-code -- docs/backend/r6/openapi.json
+      - run: python3 scripts/frontend-types-v4.py --check
       - run: npm test --prefix app/candidate
       - run: npm run build --prefix app/candidate
       - run: npm run build --prefix app/hr

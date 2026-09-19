@@ -1,0 +1,3590 @@
+{
+  "fixtureVersion": "harbour-retail-applications-v1",
+  "rubricVersion": "harbour-retail-junior-analyst-rubric-v1",
+  "jdVersion": "harbour-retail-junior-analyst-jd-v1",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "status": "ai_authored_local_review_human_calibration_pending",
+  "checks": {
+    "candidates": 4,
+    "assessmentItems": 40,
+    "ownedUtf16Citations": 145,
+    "jdRequirements": 19,
+    "jdAlignmentRows": 76,
+    "scoreMethod": "mark / 4 * 10, with NE producing null overall; fixed 30/30/40 weights",
+    "sourceHashVerification": "All 27 manifest file hashes and sizes checked; original PDF page checks are recorded separately."
+  },
+  "notPerformed": [
+    "Human rubric calibration",
+    "Independent expert validation",
+    "Original SQL execution",
+    "CV employment or education verification",
+    "Model execution or measured AUC",
+    "New frontend browser integration",
+    "Deployment"
+  ],
+  "candidates": [
+    {
+      "candidateId": "amy-chen",
+      "evidenceSnapshotId": "amy-chen-application-r6-v1",
+      "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+      "annotationMode": "ai_authored",
+      "humanCalibration": "pending",
+      "assessmentComplete": true,
+      "items": [
+        {
+          "criterionId": "S1",
+          "mark": 4,
+          "support": "The input grain is explicit; the query aggregates by that grain, requires no join, and proposes a zero-row duplicate check.",
+          "gaps": "No material counting defect is visible in the supplied static query.",
+          "rationale": "The input grain is explicit; the query aggregates by that grain, requires no join, and proposes a zero-row duplicate check. No material counting defect is visible in the supplied static query.",
+          "nextStep": "Inspect the actual export and run the proposed duplicate check before operational use.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "channel_analysis.md",
+            "channel_analysis.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.sql",
+              "location": "/sources/2/text",
+              "start": 226,
+              "end": 395,
+              "quote": "-- Prepared input: channel_period_metrics, one row per (period_start, channel).\n-- period_start identifies a complete four-week reporting window, not a transaction date."
+            }
+          ]
+        },
+        {
+          "criterionId": "S2",
+          "mark": 4,
+          "support": "The non-overlapping four-week windows map to the two exact DATE literals in the filter and matching period/channel groups.",
+          "gaps": "The query trusts prepared period labels; this is disclosed rather than an execution claim.",
+          "rationale": "The non-overlapping four-week windows map to the two exact DATE literals in the filter and matching period/channel groups. The query trusts prepared period labels; this is disclosed rather than an execution claim.",
+          "nextStep": "Check that the upstream exporter assigns the documented boundaries.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "channel_analysis.md",
+            "channel_analysis.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.sql",
+              "location": "/sources/2/text",
+              "start": 396,
+              "end": 467,
+              "quote": "-- Previous: [2026-03-02,2026-03-30); current: [2026-03-30,2026-04-27)."
+            }
+          ]
+        },
+        {
+          "criterionId": "S3",
+          "mark": 4,
+          "support": "Duplicate expectations, invalid counts, zero denominators, reconciliation and time-window verification are actionable and appropriate to the prepared table.",
+          "gaps": "The checks are proposed; no execution result is attached.",
+          "rationale": "Duplicate expectations, invalid counts, zero denominators, reconciliation and time-window verification are actionable and appropriate to the prepared table. The checks are proposed; no execution result is attached.",
+          "nextStep": "Record the check outputs and investigate flagged rows before using a real export.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "channel_analysis.md",
+            "channel_analysis.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.sql",
+              "location": "/sources/2/text",
+              "start": 982,
+              "end": 1532,
+              "quote": "-- Proposed pre-report checks (not recorded execution results):\n-- 1. GROUP BY period_start, channel HAVING COUNT(*) > 1 should return zero rows.\n-- 2. Count null or negative counts; investigate every flagged row before publishing.\n-- 3. A zero-session group returns NULL, not a valid zero conversion rate.\n-- 4. Reconcile each period to the prepared totals in channel_analysis.md.\n-- 5. Confirm the upstream export actually uses the stated windows and definitions;\n--    this query trusts period labels and does not verify the raw timestamp mapping."
+            }
+          ]
+        },
+        {
+          "criterionId": "D1",
+          "mark": 4,
+          "support": "The stated orders/sessions formula and integer table reproduce the total growth and both absolute and relative conversion changes.",
+          "gaps": "No material arithmetic or unit error is visible in these calculations.",
+          "rationale": "The stated orders/sessions formula and integer table reproduce the total growth and both absolute and relative conversion changes. No material arithmetic or unit error is visible in these calculations.",
+          "nextStep": "Keep the raw integer counts alongside rounded display values.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "channel_analysis.md",
+            "channel_analysis.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1049,
+              "end": 1210,
+              "quote": "- Total sessions: 4,000 to 5,000 (+25.0%).\n- Completed orders: 200 to 225 (+12.5%).\n- Overall conversion: 5.0% to 4.5% (-0.5 percentage points; -10.0% relative)."
+            }
+          ]
+        },
+        {
+          "criterionId": "D2",
+          "mark": 4,
+          "support": "Both channels and their changing weights are compared; the report explicitly avoids averaging rates and double-counting SQL/table populations.",
+          "gaps": "The channel comparison is descriptive; campaign-level behaviour is outside this material.",
+          "rationale": "Both channels and their changing weights are compared; the report explicitly avoids averaging rates and double-counting SQL/table populations. The channel comparison is descriptive; campaign-level behaviour is outside this material.",
+          "nextStep": "Seek an aligned finer-grain breakdown if the business decision needs an explanation of the change.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "channel_analysis.md",
+            "channel_analysis.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1211,
+              "end": 1485,
+              "quote": "- Paid Search conversion: 4.0% to 3.0%; its session share rises from 37.5% to 48.0%.\n- Organic conversion: 5.6% to approximately 5.8846%.\n- Aggregate rates use total orders divided by total sessions, not an unweighted average of channel percentages. Round after calculating."
+            }
+          ]
+        },
+        {
+          "criterionId": "D3",
+          "mark": 4,
+          "support": "Prepared counts, definitions and formulas make the worksheet reproducible, with missing export checks and overlapping populations disclosed.",
+          "gaps": "Raw transactions and the original export are absent, so this supports the documented calculation rather than independent extraction quality.",
+          "rationale": "Prepared counts, definitions and formulas make the worksheet reproducible, with missing export checks and overlapping populations disclosed. Raw transactions and the original export are absent, so this supports the documented calculation rather than independent extraction quality.",
+          "nextStep": "Verify the original export definitions and timestamp mapping before adopting the result.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "channel_analysis.md",
+            "channel_analysis.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1487,
+              "end": 1659,
+              "quote": "The SQL file and this table describe the same population. They are not two sets of orders. The upstream timestamp mapping and original export checks remain to be inspected."
+            }
+          ]
+        },
+        {
+          "criterionId": "B1",
+          "mark": 2,
+          "support": "The note connects a falling rate and rising order count to investigating paid-traffic composition before interpreting promotion.",
+          "gaps": "The decision to be supported, owner and practical analysis constraint are not explicit.",
+          "rationale": "The note connects a falling rate and rising order count to investigating paid-traffic composition before interpreting promotion. The decision to be supported, owner and practical analysis constraint are not explicit.",
+          "nextStep": "State the decision the operations team needs to make and the available investigation time.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "channel_analysis.md",
+            "channel_analysis.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1698,
+              "end": 2088,
+              "quote": "Orders increased even though overall conversion fell. Paid Search brought more sessions and orders, but converted a smaller share of its sessions. Before interpreting an increase in promotional activity, I would look at the paid-traffic composition. Campaign mix is one possible explanation, not a demonstrated cause. I would request campaign and device breakdowns for the same two periods."
+            }
+          ]
+        },
+        {
+          "criterionId": "B2",
+          "mark": 3,
+          "support": "The rate/count observations are kept separate from a campaign-mix hypothesis without claiming a proven cause.",
+          "gaps": "A competing explanation such as a measurement or within-group change is not developed.",
+          "rationale": "The rate/count observations are kept separate from a campaign-mix hypothesis without claiming a proven cause. A competing explanation such as a measurement or within-group change is not developed.",
+          "nextStep": "Describe one plausible competing explanation and what current evidence does not settle.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "channel_analysis.md",
+            "channel_analysis.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1948,
+              "end": 2015,
+              "quote": "Campaign mix is one possible explanation, not a demonstrated cause."
+            }
+          ]
+        },
+        {
+          "criterionId": "B3",
+          "mark": 2,
+          "support": "The request names specific dimensions and aligned periods.",
+          "gaps": "It does not describe the comparison or what contrasting results would imply for the explanation.",
+          "rationale": "The request names specific dimensions and aligned periods. It does not describe the comparison or what contrasting results would imply for the explanation.",
+          "nextStep": "Explain how different results from the requested breakdown would change the conclusion.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "channel_analysis.md",
+            "channel_analysis.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 2016,
+              "end": 2088,
+              "quote": "I would request campaign and device breakdowns for the same two periods."
+            }
+          ]
+        },
+        {
+          "criterionId": "B4",
+          "mark": 2,
+          "support": "A relevant first investigative action is identified before interpreting promotion.",
+          "gaps": "The note lacks an explicit sequence beyond that first look and a way to validate the resulting recommendation.",
+          "rationale": "A relevant first investigative action is identified before interpreting promotion. The note lacks an explicit sequence beyond that first look and a way to validate the resulting recommendation.",
+          "nextStep": "Specify the next step after the comparison and how the operations team will check its result.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "channel_analysis.md",
+            "channel_analysis.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1845,
+              "end": 1947,
+              "quote": "Before interpreting an increase in promotional activity, I would look at the paid-traffic composition."
+            }
+          ]
+        }
+      ],
+      "score": {
+        "status": "complete",
+        "assessmentComplete": true,
+        "complete": true,
+        "coveragePercent": 100,
+        "accruedScore": 82.5,
+        "overallScore": 82.5,
+        "overallPercentage": 82.5,
+        "criteria": [
+          {
+            "criterionId": "S1",
+            "requirementId": "sql",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "S2",
+            "requirementId": "sql",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "S3",
+            "requirementId": "sql",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "D1",
+            "requirementId": "data-analysis",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "D2",
+            "requirementId": "data-analysis",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "D3",
+            "requirementId": "data-analysis",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "B1",
+            "requirementId": "business-problem-solving",
+            "mark": 2,
+            "status": "assessed",
+            "contribution": 5
+          },
+          {
+            "criterionId": "B2",
+            "requirementId": "business-problem-solving",
+            "mark": 3,
+            "status": "assessed",
+            "contribution": 7.5
+          },
+          {
+            "criterionId": "B3",
+            "requirementId": "business-problem-solving",
+            "mark": 2,
+            "status": "assessed",
+            "contribution": 5
+          },
+          {
+            "criterionId": "B4",
+            "requirementId": "business-problem-solving",
+            "mark": 2,
+            "status": "assessed",
+            "contribution": 5
+          }
+        ],
+        "skills": [
+          {
+            "requirementId": "sql",
+            "criterionIds": [
+              "S1",
+              "S2",
+              "S3"
+            ],
+            "maxScore": 30,
+            "assessmentComplete": true,
+            "complete": true,
+            "evaluatedCount": 3,
+            "neCount": 0,
+            "pendingCount": 0,
+            "accruedScore": 30,
+            "score": 30,
+            "percentage": 100
+          },
+          {
+            "requirementId": "data-analysis",
+            "criterionIds": [
+              "D1",
+              "D2",
+              "D3"
+            ],
+            "maxScore": 30,
+            "assessmentComplete": true,
+            "complete": true,
+            "evaluatedCount": 3,
+            "neCount": 0,
+            "pendingCount": 0,
+            "accruedScore": 30,
+            "score": 30,
+            "percentage": 100
+          },
+          {
+            "requirementId": "business-problem-solving",
+            "criterionIds": [
+              "B1",
+              "B2",
+              "B3",
+              "B4"
+            ],
+            "maxScore": 40,
+            "assessmentComplete": true,
+            "complete": true,
+            "evaluatedCount": 4,
+            "neCount": 0,
+            "pendingCount": 0,
+            "accruedScore": 22.5,
+            "score": 22.5,
+            "percentage": 56.25
+          }
+        ]
+      },
+      "jdAlignment": [
+        {
+          "jdRequirementId": "data-quality",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV reports checking missing/inconsistent values; the SQL proposes explicit duplicate, invalid-count and reconciliation checks.",
+          "remainingUnknowns": "Actual export checks and repeatable execution remain unobserved; this is work-specific evidence, not a personality claim.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 781,
+              "end": 853,
+              "quote": "Checked data for missing or inconsistent values before weekly reporting."
+            },
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.sql",
+              "location": "/sources/2/text",
+              "start": 1128,
+              "end": 1213,
+              "quote": "-- 2. Count null or negative counts; investigate every flagged row before publishing."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "accuracy",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV reports checking missing/inconsistent values; the SQL proposes explicit duplicate, invalid-count and reconciliation checks.",
+          "remainingUnknowns": "Actual export checks and repeatable execution remain unobserved; this is work-specific evidence, not a personality claim.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 781,
+              "end": 853,
+              "quote": "Checked data for missing or inconsistent values before weekly reporting."
+            },
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.sql",
+              "location": "/sources/2/text",
+              "start": 1128,
+              "end": 1213,
+              "quote": "-- 2. Count null or negative counts; investigate every flagged row before publishing."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "sql-extraction",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV describes SQL grouping/aggregation; the companion shows a period/channel SUM query at a stated grain.",
+          "remainingUnknowns": "Original transaction extraction and execution are not attached.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1471,
+              "end": 1542,
+              "quote": "Used filtering, grouping and aggregation to summaries transaction data."
+            },
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.sql",
+              "location": "/sources/2/text",
+              "start": 918,
+              "end": 980,
+              "quote": "GROUP BY period_start, channel\nORDER BY period_start, channel;"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "foundational-sql",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV describes SQL grouping/aggregation; the companion shows a period/channel SUM query at a stated grain.",
+          "remainingUnknowns": "Original transaction extraction and execution are not attached.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1471,
+              "end": 1542,
+              "quote": "Used filtering, grouping and aggregation to summaries transaction data."
+            },
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.sql",
+              "location": "/sources/2/text",
+              "start": 918,
+              "end": 980,
+              "quote": "GROUP BY period_start, channel\nORDER BY period_start, channel;"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "business-metrics",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV names traffic/orders/conversion; the prepared worksheet reproduces those metrics and weighted channel comparisons.",
+          "remainingUnknowns": "Raw definitions and original export quality remain to be checked.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1049,
+              "end": 1143,
+              "quote": "Calculated website traffic, orders and conversion rates across different acquisition channels."
+            },
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1133,
+              "end": 1210,
+              "quote": "- Overall conversion: 5.0% to 4.5% (-0.5 percentage points; -10.0% relative)."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "metric-interpretation",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV names traffic/orders/conversion; the prepared worksheet reproduces those metrics and weighted channel comparisons.",
+          "remainingUnknowns": "Raw definitions and original export quality remain to be checked.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1049,
+              "end": 1143,
+              "quote": "Calculated website traffic, orders and conversion rates across different acquisition channels."
+            },
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1133,
+              "end": 1210,
+              "quote": "- Overall conversion: 5.0% to 4.5% (-0.5 percentage points; -10.0% relative)."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "digital-metrics",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV names traffic/orders/conversion; the prepared worksheet reproduces those metrics and weighted channel comparisons.",
+          "remainingUnknowns": "Raw definitions and original export quality remain to be checked.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1049,
+              "end": 1143,
+              "quote": "Calculated website traffic, orders and conversion rates across different acquisition channels."
+            },
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1133,
+              "end": 1210,
+              "quote": "- Overall conversion: 5.0% to 4.5% (-0.5 percentage points; -10.0% relative)."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "business-investigation",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The operations note separates rate/count observations from a campaign-mix hypothesis and asks for further breakdowns.",
+          "remainingUnknowns": "The decision, competing explanations and contrasting outcomes need clarification.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1948,
+              "end": 2088,
+              "quote": "Campaign mix is one possible explanation, not a demonstrated cause. I would request campaign and device breakdowns for the same two periods."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "structured-problem-solving",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The operations note separates rate/count observations from a campaign-mix hypothesis and asks for further breakdowns.",
+          "remainingUnknowns": "The decision, competing explanations and contrasting outcomes need clarification.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1948,
+              "end": 2088,
+              "quote": "Campaign mix is one possible explanation, not a demonstrated cause. I would request campaign and device breakdowns for the same two periods."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "reporting-visualisation",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims Excel reporting; a clear written table/report is supplied.",
+          "remainingUnknowns": "No actual workbook, chart or dashboard artifact is attached; a Markdown table does not demonstrate tool execution.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 696,
+              "end": 777,
+              "quote": "Prepared Excel tables showing website traffic, order volume and conversion rates."
+            },
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 975,
+              "end": 999,
+              "quote": "## Calculation worksheet"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "stakeholder-communication",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The short operations note explains why increasing orders and falling conversion can coexist.",
+          "remainingUnknowns": "The written note supplies limited communication evidence; verbal delivery and cross-functional collaboration are unverified.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1698,
+              "end": 1844,
+              "quote": "Orders increased even though overall conversion fell. Paid Search brought more sessions and orders, but converted a smaller share of its sessions."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "written-verbal-communication",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The short operations note explains why increasing orders and falling conversion can coexist.",
+          "remainingUnknowns": "The written note supplies limited communication evidence; verbal delivery and cross-functional collaboration are unverified.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1698,
+              "end": 1844,
+              "quote": "Orders increased even though overall conversion fell. Paid Search brought more sessions and orders, but converted a smaller share of its sessions."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "relevant-degree",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV states Bachelor of Information Technology, Data Analytics major, with a June 2026 completion window.",
+          "remainingUnknowns": "Confirm degree completion and the related-discipline interpretation; institution and WAM earn no core-rubric points.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 139,
+              "end": 173,
+              "quote": "Bachelor of Information Technology"
+            },
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 175,
+              "end": 197,
+              "quote": "•Major: Data Analytics"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "spreadsheets",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV states Excel/Google Sheets and Excel reporting experience.",
+          "remainingUnknowns": "Inspect a workbook or a short demonstration before treating strong spreadsheet proficiency as established.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1906,
+              "end": 1989,
+              "quote": "Technical Skills: SQL, Microsoft Excel, Google Sheets, Basic Python, Basic Power BI"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "learning",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV lists willingness to learn.",
+          "remainingUnknowns": "Self-description is not verified behaviour; no personality score is inferred.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2095,
+              "end": 2173,
+              "quote": "Core Skills: Attention to detail, teamwork, organization, willingness to learn"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "analysis-experience",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV describes an e-commerce reporting internship and a university channel-analysis project; the latter has a labelled synthetic companion.",
+          "remainingUnknowns": "The companion is newly AI-authored demo content, not recovered employment work or an independently verified project.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 878,
+              "end": 928,
+              "quote": "Online Sales Channel Analysis — University Project"
+            },
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 288,
+              "end": 359,
+              "quote": "Companion to the university project named in Amy's CV (March-May 2026)."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "python-r",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims basic Python and basic Power BI.",
+          "remainingUnknowns": "No code, notebook or BI artifact demonstrates those tool skills.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1906,
+              "end": 1989,
+              "quote": "Technical Skills: SQL, Microsoft Excel, Google Sheets, Basic Python, Basic Power BI"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "bi-tools",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims basic Python and basic Power BI.",
+          "remainingUnknowns": "No code, notebook or BI artifact demonstrates those tool skills.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1906,
+              "end": 1989,
+              "quote": "Technical Skills: SQL, Microsoft Excel, Google Sheets, Basic Python, Basic Power BI"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "nontechnical-presentation",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "A short note aimed at an operations team is available as written audience-oriented evidence.",
+          "remainingUnknowns": "No oral analytical presentation or independent audience feedback is supplied.",
+          "sourceRefs": [
+            {
+              "candidateId": "amy-chen",
+              "evidenceSnapshotId": "amy-chen-application-r6-v1",
+              "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+              "sourceId": "channel_analysis.md",
+              "location": "/sources/1/text",
+              "start": 1661,
+              "end": 1697,
+              "quote": "## Short note to the operations team"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "candidateId": "ann-li",
+      "evidenceSnapshotId": "ann-li-application-r6-v1",
+      "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+      "annotationMode": "ai_authored",
+      "humanCalibration": "pending",
+      "assessmentComplete": true,
+      "items": [
+        {
+          "criterionId": "S1",
+          "mark": 4,
+          "support": "The query retrieves the documented customer-snapshot grain with an exact snapshot filter and proposes unique-customer checks; no join or aggregation is needed for this extraction.",
+          "gaps": "Feature construction is outside this excerpt, so the mark concerns the visible extraction only.",
+          "rationale": "The query retrieves the documented customer-snapshot grain with an exact snapshot filter and proposes unique-customer checks; no join or aggregation is needed for this extraction. Feature construction is outside this excerpt, so the mark concerns the visible extraction only.",
+          "nextStep": "Inspect the upstream feature table contract before using the extract.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "churn_method_note.md",
+            "cohort_extract.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cohort_extract.sql",
+              "location": "/sources/2/text",
+              "start": 247,
+              "end": 310,
+              "quote": "-- customer_features: one row per (customer_id, snapshot_date)."
+            }
+          ]
+        },
+        {
+          "criterionId": "S2",
+          "mark": 2,
+          "support": "The as-of date and feature/outcome ordering are explicit and the SQL filters the stated snapshot.",
+          "gaps": "The extract does not implement the feature-window boundary, label-window audit or a group/period comparison; only part of the comparison requirement is observable.",
+          "rationale": "The as-of date and feature/outcome ordering are explicit and the SQL filters the stated snapshot. The extract does not implement the feature-window boundary, label-window audit or a group/period comparison; only part of the comparison requirement is observable.",
+          "nextStep": "Supply the feature/label time-window query or a small aligned comparison and explain its boundaries.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "churn_method_note.md",
+            "cohort_extract.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cohort_extract.sql",
+              "location": "/sources/2/text",
+              "start": 311,
+              "end": 471,
+              "quote": "-- The prepared cohort contains 45,000 customers at snapshot_date 2025-12-31.\n-- Feature windows end before 2026-01-01; churn_next_60d is a later outcome label."
+            }
+          ]
+        },
+        {
+          "criterionId": "S3",
+          "mark": 3,
+          "support": "The expected row and class counts, uniqueness, valid-label checks and fold-local missing-value treatment are specific.",
+          "gaps": "Missing-value investigation and time-window audit methods are not fully specified in the query material.",
+          "rationale": "The expected row and class counts, uniqueness, valid-label checks and fold-local missing-value treatment are specific. Missing-value investigation and time-window audit methods are not fully specified in the query material.",
+          "nextStep": "Show a check query and expected result for feature timing and missing-value handling.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "churn_method_note.md",
+            "cohort_extract.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cohort_extract.sql",
+              "location": "/sources/2/text",
+              "start": 817,
+              "end": 1122,
+              "quote": "-- Proposed checks: unique customer_id within this snapshot; 45,000 rows;\n-- 6,750 positive labels and 38,250 negative labels; labels in {0,1}.\n-- Inspect missing feature values; learn any imputation only on training folds.\n-- The feature construction SQL and outcome-window audit are not in this extract."
+            }
+          ]
+        },
+        {
+          "criterionId": "D1",
+          "mark": 4,
+          "support": "Customer counts, prevalence, majority-class accuracy and recall are correctly distinguished; these are not website-conversion or hiring percentages.",
+          "gaps": "No measured capstone model-performance result is supplied or inferred from the internship AUC.",
+          "rationale": "Customer counts, prevalence, majority-class accuracy and recall are correctly distinguished; these are not website-conversion or hiring percentages. No measured capstone model-performance result is supplied or inferred from the internship AUC.",
+          "nextStep": "Keep prepared cohort arithmetic separate from any later measured model result.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "churn_method_note.md",
+            "cohort_extract.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 1024,
+              "end": 1248,
+              "quote": "Positive prevalence is 6,750 / 45,000 = 15.0%. Predicting the majority class for everyone would produce 85.0% accuracy and zero recall of churn cases; accuracy alone is therefore a poor selection criterion for this exercise."
+            }
+          ]
+        },
+        {
+          "criterionId": "D2",
+          "mark": 2,
+          "support": "The procedure proposes a common comparison setup and the note provides a relevant majority-class baseline.",
+          "gaps": "There are no actual model-comparison results or period/segment behaviour comparisons to interpret.",
+          "rationale": "The procedure proposes a common comparison setup and the note provides a relevant majority-class baseline. There are no actual model-comparison results or period/segment behaviour comparisons to interpret.",
+          "nextStep": "Provide a compact, reproducible comparison table with the common evaluation population and baseline.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "churn_method_note.md",
+            "cohort_extract.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 1606,
+              "end": 1810,
+              "quote": "3. Fit preprocessing within each training fold. Compare logistic regression, random forest and XGBoost with the same folds. Class weighting is applied during training, not by modifying the holdout labels."
+            }
+          ]
+        },
+        {
+          "criterionId": "D3",
+          "mark": 4,
+          "support": "Counts, split allocation, fold-local preprocessing and holdout boundaries form a reviewable procedure, with missing implementation and temporal limits explicitly stated.",
+          "gaps": "This documents a proposed method, not reproducibility of a completed model run.",
+          "rationale": "Counts, split allocation, fold-local preprocessing and holdout boundaries form a reviewable procedure, with missing implementation and temporal limits explicitly stated. This documents a proposed method, not reproducibility of a completed model run.",
+          "nextStep": "Retain the scope label and attach implementation and audit outputs if an executed result is claimed.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "churn_method_note.md",
+            "cohort_extract.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2183,
+              "end": 2474,
+              "quote": "These are a prepared cohort and a reviewable procedure, not observed model outputs. Feature-construction code, the label-window audit and execution records would be needed to validate implementation. A customer-random split does not by itself establish performance in a later trading period."
+            }
+          ]
+        },
+        {
+          "criterionId": "B1",
+          "mark": 2,
+          "support": "The note connects a risk score to prioritising follow-up and names relevant operational considerations.",
+          "gaps": "It does not define a particular business question, decision or feasible contact constraint for this project.",
+          "rationale": "The note connects a risk score to prioritising follow-up and names relevant operational considerations. It does not define a particular business question, decision or feasible contact constraint for this project.",
+          "nextStep": "Clarify the decision to support and the practical limit the analyst should use.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "churn_method_note.md",
+            "cohort_extract.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2545,
+              "end": 2704,
+              "quote": "A risk score could help a business prioritise follow-up. A contact policy would still need capacity, intervention cost, customer consent and measured outcomes."
+            }
+          ]
+        },
+        {
+          "criterionId": "B2",
+          "mark": 3,
+          "support": "Association, cause and an intervention effect are correctly separated, and the note avoids treating AUC as a business outcome.",
+          "gaps": "Alternative explanations of churn or of model behaviour are not examined.",
+          "rationale": "Association, cause and an intervention effect are correctly separated, and the note avoids treating AUC as a business outcome. Alternative explanations of churn or of model behaviour are not examined.",
+          "nextStep": "Identify a plausible alternative explanation to check before recommending an intervention.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "churn_method_note.md",
+            "cohort_extract.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2023,
+              "end": 2158,
+              "quote": "5. SHAP can describe model associations. It does not establish why customers leave or show that changing a feature would prevent churn."
+            }
+          ]
+        },
+        {
+          "criterionId": "B3",
+          "mark": 2,
+          "support": "Specific additional evidence is requested to validate the analytical implementation.",
+          "gaps": "The request does not set out contrasting results that would distinguish a business explanation or intervention choice.",
+          "rationale": "Specific additional evidence is requested to validate the analytical implementation. The request does not set out contrasting results that would distinguish a business explanation or intervention choice.",
+          "nextStep": "Describe the comparison and the different implications expected from the requested evidence.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "churn_method_note.md",
+            "cohort_extract.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2267,
+              "end": 2382,
+              "quote": "Feature-construction code, the label-window audit and execution records would be needed to validate implementation."
+            }
+          ]
+        },
+        {
+          "criterionId": "B4",
+          "mark": 2,
+          "support": "The note identifies sensible checks before using scores for customer follow-up and avoids promising an unmeasured gain.",
+          "gaps": "It stops short of an ordered feasible business action and an explicit validation measure.",
+          "rationale": "The note identifies sensible checks before using scores for customer follow-up and avoids promising an unmeasured gain. It stops short of an ordered feasible business action and an explicit validation measure.",
+          "nextStep": "Agree a small next step with a business owner and state how its result would be checked.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "churn_method_note.md",
+            "cohort_extract.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2602,
+              "end": 2812,
+              "quote": "A contact policy would still need capacity, intervention cost, customer consent and measured outcomes. This note does not specify a campaign budget, select a retention intervention or claim revenue improvement."
+            }
+          ]
+        }
+      ],
+      "score": {
+        "status": "complete",
+        "assessmentComplete": true,
+        "complete": true,
+        "coveragePercent": 100,
+        "accruedScore": 70,
+        "overallScore": 70,
+        "overallPercentage": 70,
+        "criteria": [
+          {
+            "criterionId": "S1",
+            "requirementId": "sql",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "S2",
+            "requirementId": "sql",
+            "mark": 2,
+            "status": "assessed",
+            "contribution": 5
+          },
+          {
+            "criterionId": "S3",
+            "requirementId": "sql",
+            "mark": 3,
+            "status": "assessed",
+            "contribution": 7.5
+          },
+          {
+            "criterionId": "D1",
+            "requirementId": "data-analysis",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "D2",
+            "requirementId": "data-analysis",
+            "mark": 2,
+            "status": "assessed",
+            "contribution": 5
+          },
+          {
+            "criterionId": "D3",
+            "requirementId": "data-analysis",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "B1",
+            "requirementId": "business-problem-solving",
+            "mark": 2,
+            "status": "assessed",
+            "contribution": 5
+          },
+          {
+            "criterionId": "B2",
+            "requirementId": "business-problem-solving",
+            "mark": 3,
+            "status": "assessed",
+            "contribution": 7.5
+          },
+          {
+            "criterionId": "B3",
+            "requirementId": "business-problem-solving",
+            "mark": 2,
+            "status": "assessed",
+            "contribution": 5
+          },
+          {
+            "criterionId": "B4",
+            "requirementId": "business-problem-solving",
+            "mark": 2,
+            "status": "assessed",
+            "contribution": 5
+          }
+        ],
+        "skills": [
+          {
+            "requirementId": "sql",
+            "criterionIds": [
+              "S1",
+              "S2",
+              "S3"
+            ],
+            "maxScore": 30,
+            "assessmentComplete": true,
+            "complete": true,
+            "evaluatedCount": 3,
+            "neCount": 0,
+            "pendingCount": 0,
+            "accruedScore": 22.5,
+            "score": 22.5,
+            "percentage": 75
+          },
+          {
+            "requirementId": "data-analysis",
+            "criterionIds": [
+              "D1",
+              "D2",
+              "D3"
+            ],
+            "maxScore": 30,
+            "assessmentComplete": true,
+            "complete": true,
+            "evaluatedCount": 3,
+            "neCount": 0,
+            "pendingCount": 0,
+            "accruedScore": 25,
+            "score": 25,
+            "percentage": 83.33333333333334
+          },
+          {
+            "requirementId": "business-problem-solving",
+            "criterionIds": [
+              "B1",
+              "B2",
+              "B3",
+              "B4"
+            ],
+            "maxScore": 40,
+            "assessmentComplete": true,
+            "complete": true,
+            "evaluatedCount": 4,
+            "neCount": 0,
+            "pendingCount": 0,
+            "accruedScore": 22.5,
+            "score": 22.5,
+            "percentage": 56.25
+          }
+        ]
+      },
+      "jdAlignment": [
+        {
+          "jdRequirementId": "data-quality",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV describes transaction cleaning; the companion proposes uniqueness, label-count and fold-local missing-value checks.",
+          "remainingUnknowns": "Feature construction, actual checks and label-window audit remain absent.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 578,
+              "end": 670,
+              "quote": "Cleaned and analysed more than 300,000 customer transaction records using Python and pandas."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cohort_extract.sql",
+              "location": "/sources/2/text",
+              "start": 817,
+              "end": 890,
+              "quote": "-- Proposed checks: unique customer_id within this snapshot; 45,000 rows;"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "accuracy",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV describes transaction cleaning; the companion proposes uniqueness, label-count and fold-local missing-value checks.",
+          "remainingUnknowns": "Feature construction, actual checks and label-window audit remain absent.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 578,
+              "end": 670,
+              "quote": "Cleaned and analysed more than 300,000 customer transaction records using Python and pandas."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cohort_extract.sql",
+              "location": "/sources/2/text",
+              "start": 817,
+              "end": 890,
+              "quote": "-- Proposed checks: unique customer_id within this snapshot; 45,000 rows;"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "sql-extraction",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims regional sales/retention SQL; the attached query only illustrates one snapshot extraction.",
+          "remainingUnknowns": "The original comparison query and aggregation are not attached; the simple extract is not a substitute for that claim.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 673,
+              "end": 782,
+              "quote": "Wrote SQL queries to compare sales, customer retention and repeat-purchase rates across six regional markets."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cohort_extract.sql",
+              "location": "/sources/2/text",
+              "start": 625,
+              "end": 665,
+              "quote": "WHERE snapshot_date = DATE '2025-12-31';"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "foundational-sql",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims regional sales/retention SQL; the attached query only illustrates one snapshot extraction.",
+          "remainingUnknowns": "The original comparison query and aggregation are not attached; the simple extract is not a substitute for that claim.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 673,
+              "end": 782,
+              "quote": "Wrote SQL queries to compare sales, customer retention and repeat-purchase rates across six regional markets."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cohort_extract.sql",
+              "location": "/sources/2/text",
+              "start": 625,
+              "end": 665,
+              "quote": "WHERE snapshot_date = DATE '2025-12-31';"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "business-metrics",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims model evaluation; the note correctly derives prevalence and the majority-class baseline from a prepared cohort.",
+          "remainingUnknowns": "No executed capstone metric, retail outcome or group/period analysis result is attached. Internship AUC 0.82 is a separate CV claim.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 859,
+              "end": 904,
+              "quote": "achieving an AUC of 0.82 on the test dataset."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 1024,
+              "end": 1070,
+              "quote": "Positive prevalence is 6,750 / 45,000 = 15.0%."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "metric-interpretation",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims model evaluation; the note correctly derives prevalence and the majority-class baseline from a prepared cohort.",
+          "remainingUnknowns": "No executed capstone metric, retail outcome or group/period analysis result is attached. Internship AUC 0.82 is a separate CV claim.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 859,
+              "end": 904,
+              "quote": "achieving an AUC of 0.82 on the test dataset."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 1024,
+              "end": 1070,
+              "quote": "Positive prevalence is 6,750 / 45,000 = 15.0%."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "business-investigation",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The method separates associations from intervention effects and identifies evidence needed before customer follow-up.",
+          "remainingUnknowns": "A concrete business decision, competing explanation and operational validation plan need further evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2023,
+              "end": 2158,
+              "quote": "5. SHAP can describe model associations. It does not establish why customers leave or show that changing a feature would prevent churn."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2545,
+              "end": 2601,
+              "quote": "A risk score could help a business prioritise follow-up."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "structured-problem-solving",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The method separates associations from intervention effects and identifies evidence needed before customer follow-up.",
+          "remainingUnknowns": "A concrete business decision, competing explanation and operational validation plan need further evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2023,
+              "end": 2158,
+              "quote": "5. SHAP can describe model associations. It does not establish why customers leave or show that changing a feature would prevent churn."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2545,
+              "end": 2601,
+              "quote": "A risk score could help a business prioritise follow-up."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "reporting-visualisation",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims Tableau dashboards and summaries; the method note supplies written tables and procedures.",
+          "remainingUnknowns": "No dashboard, visualisation or executable report artifact is attached.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 993,
+              "end": 1082,
+              "quote": "Created a Tableau dashboard showing customer segments, churn rates and purchasing trends."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 1250,
+              "end": 1273,
+              "quote": "## Reviewable procedure"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "stakeholder-communication",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV reports marketing summaries; the method note clearly communicates methodological limits.",
+          "remainingUnknowns": "Verbal performance and translating model detail for a non-technical decision-maker remain unverified.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1085,
+              "end": 1144,
+              "quote": "Prepared weekly dashboard summaries for the marketing team."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2383,
+              "end": 2474,
+              "quote": "A customer-random split does not by itself establish performance in a later trading period."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "written-verbal-communication",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV reports marketing summaries; the method note clearly communicates methodological limits.",
+          "remainingUnknowns": "Verbal performance and translating model detail for a non-technical decision-maker remain unverified.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1085,
+              "end": 1144,
+              "quote": "Prepared weekly dashboard summaries for the marketing team."
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 2383,
+              "end": 2474,
+              "quote": "A customer-random split does not by itself establish performance in a later trading period."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "relevant-degree",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV states a completed Statistics bachelor degree and a Data Science master due November 2026.",
+          "remainingUnknowns": "Confirm completion/status; grades and institution names are not scored.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 336,
+              "end": 369,
+              "quote": "Bachelor of Science in Statistics"
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 73,
+              "end": 95,
+              "quote": "Master of Data Science"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "spreadsheets",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected CV and companions focus on programming, modelling and BI; no strong Excel/spreadsheet evidence is supplied.",
+          "remainingUnknowns": "Ask for existing spreadsheet work or a small demonstration; do not infer weakness from absence.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 3029,
+              "end": 3068,
+              "quote": "Tools: Git, GitHub and Jupyter Notebook"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "learning",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV lists participation in workshops and industry panels.",
+          "remainingUnknowns": "Participation does not verify a learning disposition or performance in a startup.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2271,
+              "end": 2354,
+              "quote": "Attended machine-learning workshops, industry panels and student networking events."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "analysis-experience",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV lists an analytics internship and a customer churn capstone with a matching labelled synthetic method illustration.",
+          "remainingUnknowns": "Employment, original repository and independent authorship are unverified.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1234,
+              "end": 1278,
+              "quote": "Customer Churn Prediction - Capstone Project"
+            },
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "churn_method_note.md",
+              "location": "/sources/1/text",
+              "start": 297,
+              "end": 340,
+              "quote": "Companion to Ann's March-May 2026 capstone."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "python-r",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV explicitly claims Python and R coursework/projects.",
+          "remainingUnknowns": "No original executable Python/R artifact or run is supplied.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2778,
+              "end": 2805,
+              "quote": "Programming: Python, R, SQL"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "bi-tools",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV lists Tableau and Power BI and describes a dashboard.",
+          "remainingUnknowns": "The dashboard or workbook has not been supplied for inspection.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2970,
+              "end": 3026,
+              "quote": "Visualisation: Tableau, Power BI, matplotlib and ggplot2"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "digital-metrics",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV describes retail transactions, retention and repeat-purchase comparisons.",
+          "remainingUnknowns": "The companion is a churn-method illustration, not a demonstrated e-commerce conversion or marketing-performance analysis.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 673,
+              "end": 782,
+              "quote": "Wrote SQL queries to compare sales, customer retention and repeat-purchase rates across six regional markets."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "nontechnical-presentation",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV states marketing summaries and a team presentation contribution.",
+          "remainingUnknowns": "Audience suitability and individual spoken delivery are not demonstrated.",
+          "sourceRefs": [
+            {
+              "candidateId": "ann-li",
+              "evidenceSnapshotId": "ann-li-application-r6-v1",
+              "fingerprint": "2a139adf598f894d67a1da690d532626ea82286b53c76200f2b540b4158fef3c",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2648,
+              "end": 2721,
+              "quote": "Assisted with data preparation and development of the final presentation."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "candidateId": "david-liu",
+      "evidenceSnapshotId": "david-liu-application-r6-v1",
+      "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+      "annotationMode": "ai_authored",
+      "humanCalibration": "pending",
+      "assessmentComplete": true,
+      "items": [
+        {
+          "criterionId": "S1",
+          "mark": 4,
+          "support": "The task grain, unique user key and left join support one row per task; source-ID and duplicate checks are proposed.",
+          "gaps": "The query is application retrieval, not an analytical aggregation; unnecessary aggregation earns no credit and is not required for this question.",
+          "rationale": "The task grain, unique user key and left join support one row per task; source-ID and duplicate checks are proposed. The query is application retrieval, not an analytical aggregation; unnecessary aggregation earns no credit and is not required for this question.",
+          "nextStep": "Check the actual key constraints and compare returned IDs with the source.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "project_readme.md",
+            "task_queries.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 420,
+              "end": 496,
+              "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+            }
+          ]
+        },
+        {
+          "criterionId": "S2",
+          "mark": "NE",
+          "support": "The CV, application SQL and database note were checked.",
+          "gaps": "The only query is a current user task list; no period or analytical group comparison is supplied.",
+          "rationale": "The CV, application SQL and database note were checked. The only query is a current user task list; no period or analytical group comparison is supplied.",
+          "nextStep": "Provide an existing basic SQL comparison with clear groups or time boundaries.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "project_readme.md",
+            "task_queries.sql"
+          ],
+          "sourceRefs": []
+        },
+        {
+          "criterionId": "S3",
+          "mark": 4,
+          "support": "Empty results, duplicate risk, source reconciliation and missing display-name behaviour have explicit expected outcomes appropriate to this retrieval query.",
+          "gaps": "No actual run log or authenticated handler is supplied; this is a static checking plan.",
+          "rationale": "Empty results, duplicate risk, source reconciliation and missing display-name behaviour have explicit expected outcomes appropriate to this retrieval query. No actual run log or authenticated handler is supplied; this is a static checking plan.",
+          "nextStep": "Run these cases and inspect access enforcement separately before operational use.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "project_readme.md",
+            "task_queries.sql"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 853,
+              "end": 1125,
+              "quote": "-- A user with no tasks receives an empty result.\n-- A task with a valid creator should appear once, not once per other task.\n-- The returned task IDs should match the user's task IDs in the source table.\n-- A missing display name should not remove a task from the result."
+            }
+          ]
+        },
+        {
+          "criterionId": "D1",
+          "mark": "NE",
+          "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+          "gaps": "No business metric, denominator or analytical calculation is supplied.",
+          "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business metric, denominator or analytical calculation is supplied.",
+          "nextStep": "Provide a small existing calculation with definitions, units and working.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "project_readme.md",
+            "task_queries.sql"
+          ],
+          "sourceRefs": []
+        },
+        {
+          "criterionId": "D2",
+          "mark": "NE",
+          "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+          "gaps": "No period-over-period or analytical segment comparison is supplied.",
+          "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No period-over-period or analytical segment comparison is supplied.",
+          "nextStep": "Provide an aligned period or group comparison and explain its meaning.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "project_readme.md",
+            "task_queries.sql"
+          ],
+          "sourceRefs": []
+        },
+        {
+          "criterionId": "D3",
+          "mark": "NE",
+          "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+          "gaps": "The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+          "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+          "nextStep": "Supply the working and limitations for a simple business analysis.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "project_readme.md",
+            "task_queries.sql"
+          ],
+          "sourceRefs": []
+        },
+        {
+          "criterionId": "B1",
+          "mark": "NE",
+          "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+          "gaps": "The software feature scope does not frame a business-analysis decision.",
+          "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software feature scope does not frame a business-analysis decision.",
+          "nextStep": "Describe a business question and the decision it should support.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "project_readme.md",
+            "task_queries.sql"
+          ],
+          "sourceRefs": []
+        },
+        {
+          "criterionId": "B2",
+          "mark": "NE",
+          "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+          "gaps": "No business-analysis interpretation or causal hypothesis is supplied.",
+          "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business-analysis interpretation or causal hypothesis is supplied.",
+          "nextStep": "Separate observed facts from hypotheses in an existing analysis.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "project_readme.md",
+            "task_queries.sql"
+          ],
+          "sourceRefs": []
+        },
+        {
+          "criterionId": "B3",
+          "mark": "NE",
+          "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+          "gaps": "No business hypothesis or evidence request to distinguish explanations is supplied.",
+          "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business hypothesis or evidence request to distinguish explanations is supplied.",
+          "nextStep": "Explain what further data would clarify a business question and why.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "project_readme.md",
+            "task_queries.sql"
+          ],
+          "sourceRefs": []
+        },
+        {
+          "criterionId": "B4",
+          "mark": "NE",
+          "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+          "gaps": "Functional software checks are supplied, but no evidence-led business recommendation is present.",
+          "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. Functional software checks are supplied, but no evidence-led business recommendation is present.",
+          "nextStep": "Provide a practical recommendation and a way to check its outcome.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "project_readme.md",
+            "task_queries.sql"
+          ],
+          "sourceRefs": []
+        }
+      ],
+      "score": {
+        "status": "needs_evidence",
+        "assessmentComplete": true,
+        "complete": false,
+        "coveragePercent": 20,
+        "accruedScore": 20,
+        "overallScore": null,
+        "overallPercentage": null,
+        "criteria": [
+          {
+            "criterionId": "S1",
+            "requirementId": "sql",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "S2",
+            "requirementId": "sql",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          },
+          {
+            "criterionId": "S3",
+            "requirementId": "sql",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "D1",
+            "requirementId": "data-analysis",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          },
+          {
+            "criterionId": "D2",
+            "requirementId": "data-analysis",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          },
+          {
+            "criterionId": "D3",
+            "requirementId": "data-analysis",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          },
+          {
+            "criterionId": "B1",
+            "requirementId": "business-problem-solving",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          },
+          {
+            "criterionId": "B2",
+            "requirementId": "business-problem-solving",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          },
+          {
+            "criterionId": "B3",
+            "requirementId": "business-problem-solving",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          },
+          {
+            "criterionId": "B4",
+            "requirementId": "business-problem-solving",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          }
+        ],
+        "skills": [
+          {
+            "requirementId": "sql",
+            "criterionIds": [
+              "S1",
+              "S2",
+              "S3"
+            ],
+            "maxScore": 30,
+            "assessmentComplete": true,
+            "complete": false,
+            "evaluatedCount": 2,
+            "neCount": 1,
+            "pendingCount": 0,
+            "accruedScore": 20,
+            "score": null,
+            "percentage": null
+          },
+          {
+            "requirementId": "data-analysis",
+            "criterionIds": [
+              "D1",
+              "D2",
+              "D3"
+            ],
+            "maxScore": 30,
+            "assessmentComplete": true,
+            "complete": false,
+            "evaluatedCount": 0,
+            "neCount": 3,
+            "pendingCount": 0,
+            "accruedScore": 0,
+            "score": null,
+            "percentage": null
+          },
+          {
+            "requirementId": "business-problem-solving",
+            "criterionIds": [
+              "B1",
+              "B2",
+              "B3",
+              "B4"
+            ],
+            "maxScore": 40,
+            "assessmentComplete": true,
+            "complete": false,
+            "evaluatedCount": 0,
+            "neCount": 4,
+            "pendingCount": 0,
+            "accruedScore": 0,
+            "score": null,
+            "percentage": null
+          }
+        ]
+      },
+      "jdAlignment": [
+        {
+          "jdRequirementId": "data-quality",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The query describes key relationships and proposes source-ID, empty-result and duplicate checks.",
+          "remainingUnknowns": "Business data cleaning, metric reconciliation and executed check outputs are absent; no personality inference is made.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 979,
+              "end": 1057,
+              "quote": "-- The returned task IDs should match the user's task IDs in the source table."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "accuracy",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The query describes key relationships and proposes source-ID, empty-result and duplicate checks.",
+          "remainingUnknowns": "Business data cleaning, metric reconciliation and executed check outputs are absent; no personality inference is made.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 979,
+              "end": 1057,
+              "quote": "-- The returned task IDs should match the user's task IDs in the source table."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "sql-extraction",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims application SQL; the companion shows a filtered many-to-one join with deterministic ordering.",
+          "remainingUnknowns": "The evidence does not cover grouping, business aggregation or a period/channel comparison.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 619,
+              "end": 677,
+              "quote": "Wrote SQL queries to retrieve and update application data."
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 420,
+              "end": 496,
+              "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "foundational-sql",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims application SQL; the companion shows a filtered many-to-one join with deterministic ordering.",
+          "remainingUnknowns": "The evidence does not cover grouping, business aggregation or a period/channel comparison.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 619,
+              "end": 677,
+              "quote": "Wrote SQL queries to retrieve and update application data."
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 420,
+              "end": 496,
+              "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "business-metrics",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected materials are software retrieval and functional-check examples, not analytical metrics or business-investigation results.",
+          "remainingUnknowns": "Request relevant existing analysis rather than relabelling software features as business evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1207,
+              "end": 1346,
+              "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "metric-interpretation",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected materials are software retrieval and functional-check examples, not analytical metrics or business-investigation results.",
+          "remainingUnknowns": "Request relevant existing analysis rather than relabelling software features as business evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1207,
+              "end": 1346,
+              "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "business-investigation",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected materials are software retrieval and functional-check examples, not analytical metrics or business-investigation results.",
+          "remainingUnknowns": "Request relevant existing analysis rather than relabelling software features as business evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1207,
+              "end": 1346,
+              "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "structured-problem-solving",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected materials are software retrieval and functional-check examples, not analytical metrics or business-investigation results.",
+          "remainingUnknowns": "Request relevant existing analysis rather than relabelling software features as business evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1207,
+              "end": 1346,
+              "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "digital-metrics",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected materials are software retrieval and functional-check examples, not analytical metrics or business-investigation results.",
+          "remainingUnknowns": "Request relevant existing analysis rather than relabelling software features as business evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1207,
+              "end": 1346,
+              "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "reporting-visualisation",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "A database note is supplied, but no analytical report, chart, dashboard or business table is present.",
+          "remainingUnknowns": "An existing analytical reporting artifact is needed.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1130,
+              "end": 1206,
+              "quote": "The material shows a proposed application query and basic checking approach."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "stakeholder-communication",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims teamwork and communication; the database note is a readable technical explanation.",
+          "remainingUnknowns": "Explaining analytical implications to non-technical stakeholders and spoken performance remain unobserved.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2322,
+              "end": 2418,
+              "quote": "Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn"
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 886,
+              "end": 960,
+              "quote": "The join retrieves the creator display name; it should not multiply tasks."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "written-verbal-communication",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims teamwork and communication; the database note is a readable technical explanation.",
+          "remainingUnknowns": "Explaining analytical implications to non-technical stakeholders and spoken performance remain unobserved.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2322,
+              "end": 2418,
+              "quote": "Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn"
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 886,
+              "end": 960,
+              "quote": "The join retrieves the creator display name; it should not multiply tasks."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "relevant-degree",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV states a Computer Science bachelor degree with expected November 2026 completion.",
+          "remainingUnknowns": "Confirm near-completion status; the software specialism is not automatically an analytical work sample.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 92,
+              "end": 120,
+              "quote": "Bachelor of Computer Science"
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 121,
+              "end": 150,
+              "quote": "• Major: Software Development"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "spreadsheets",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The CV and companions contain no spreadsheet claim or workbook.",
+          "remainingUnknowns": "Request existing spreadsheet evidence rather than assume proficiency or inability.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2221,
+              "end": 2319,
+              "quote": "Software Skills: Object-oriented programming, REST APIs, basic testing, debugging, data structures"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "learning",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV lists willingness to learn and coding-workshop attendance.",
+          "remainingUnknowns": "These statements do not establish personal disposition or on-the-job learning.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2322,
+              "end": 2418,
+              "quote": "Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "analysis-experience",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The CV internship and supplied university sample concern software applications.",
+          "remainingUnknowns": "No completed analysis internship or analytical portfolio artifact is present in the checked scope.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 351,
+              "end": 404,
+              "quote": "Software Development Intern - Nexus Digital Solutions"
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 523,
+              "end": 597,
+              "quote": "without adding a new analytics internship or unmentioned business project."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "python-r",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "Python appears in the CV skills list.",
+          "remainingUnknowns": "No Python/R analysis sample or execution is supplied.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2118,
+              "end": 2218,
+              "quote": "Technical Skills: Java, Python, JavaScript, React, Node.js, Spring Boot, SQL, Git, GitHub, Basic AWS"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "bi-tools",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "No BI or data-visualisation platform exposure is described in the checked material.",
+          "remainingUnknowns": "Request relevant evidence if available; do not infer a verified deficit.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2118,
+              "end": 2218,
+              "quote": "Technical Skills: Java, Python, JavaScript, React, Node.js, Spring Boot, SQL, Git, GitHub, Basic AWS"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "nontechnical-presentation",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "Event assistance and technical-team work are described, but no analytical presentation is supplied.",
+          "remainingUnknowns": "Analytical presentation to a non-technical audience remains unobserved.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1967,
+              "end": 2035,
+              "quote": "Helped participants with registration and basic technical questions."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "candidateId": "jamie-parker",
+      "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+      "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+      "annotationMode": "ai_authored",
+      "humanCalibration": "pending",
+      "assessmentComplete": true,
+      "items": [
+        {
+          "criterionId": "S1",
+          "mark": "NE",
+          "support": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence.",
+          "gaps": "No SQL query, aggregation or join material is supplied.",
+          "rationale": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence. No SQL query, aggregation or join material is supplied.",
+          "nextStep": "Provide an existing basic SQL query and explain its input grain.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "campaign_brief.md",
+            "social_reporting.md"
+          ],
+          "sourceRefs": []
+        },
+        {
+          "criterionId": "S2",
+          "mark": "NE",
+          "support": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence.",
+          "gaps": "No SQL time-window or group-comparison logic is supplied.",
+          "rationale": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence. No SQL time-window or group-comparison logic is supplied.",
+          "nextStep": "Provide a small SQL comparison with clear filters and boundaries.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "campaign_brief.md",
+            "social_reporting.md"
+          ],
+          "sourceRefs": []
+        },
+        {
+          "criterionId": "S3",
+          "mark": "NE",
+          "support": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence.",
+          "gaps": "No SQL validation method or query result check is supplied.",
+          "rationale": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence. No SQL validation method or query result check is supplied.",
+          "nextStep": "Show appropriate checks and expected results beside a SQL example.",
+          "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "campaign_brief.md",
+            "social_reporting.md"
+          ],
+          "sourceRefs": []
+        },
+        {
+          "criterionId": "D1",
+          "mark": 4,
+          "support": "The formulas reproduce the integer counts, and the source distinguishes action counts, followers and platform-reported reach rather than treating them as orders.",
+          "gaps": "This is a written worksheet illustration, not an inspected Excel workbook.",
+          "rationale": "The formulas reproduce the integer counts, and the source distinguishes action counts, followers and platform-reported reach rather than treating them as orders. This is a written worksheet illustration, not an inspected Excel workbook.",
+          "nextStep": "Check these formulas against the original export or workbook when available.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "campaign_brief.md",
+            "social_reporting.md"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1062,
+              "end": 1205,
+              "quote": "In the worksheet, total interactions use SUM(likes, comments, shares): 400 in May and 520 in June. Net new followers = end - start: 100 and 80."
+            }
+          ]
+        },
+        {
+          "criterionId": "D2",
+          "mark": 2,
+          "support": "The month comparison identifies differing movements and avoids combining overlapping reach into unique people.",
+          "gaps": "A useful overall change is visible but per-post or content-group comparisons and exposure context are missing.",
+          "rationale": "The month comparison identifies differing movements and avoids combining overlapping reach into unique people. A useful overall change is visible but per-post or content-group comparisons and exposure context are missing.",
+          "nextStep": "Supply an aligned per-post or content-group breakdown to inspect the aggregate change.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "campaign_brief.md",
+            "social_reporting.md"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1432,
+              "end": 1521,
+              "quote": "June had more reported reach and interaction actions, while net new followers were lower."
+            }
+          ]
+        },
+        {
+          "criterionId": "D3",
+          "mark": 4,
+          "support": "The table and SUM/subtraction working are reproducible; the source and absent export, finer detail and causal evidence are disclosed.",
+          "gaps": "No workbook, chart artifact or original dashboard export is attached; the mark covers written working only.",
+          "rationale": "The table and SUM/subtraction working are reproducible; the source and absent export, finer detail and causal evidence are disclosed. No workbook, chart artifact or original dashboard export is attached; the mark covers written working only.",
+          "nextStep": "Attach the export and inspect a workbook or chart directly before claiming those tool skills.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "campaign_brief.md",
+            "social_reporting.md"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1767,
+              "end": 1936,
+              "quote": "The figures were copied from platform dashboards. The original export and per-post breakdown are not attached. The worksheet does not test which content caused a change."
+            }
+          ]
+        },
+        {
+          "criterionId": "B1",
+          "mark": 3,
+          "support": "The brief identifies a target audience, campaign purpose, two-week plan and a separately itemised AUD 300 allowance.",
+          "gaps": "Recognition is not operationally defined, so the planning question is clearer than the success decision.",
+          "rationale": "The brief identifies a target audience, campaign purpose, two-week plan and a separately itemised AUD 300 allowance. Recognition is not operationally defined, so the planning question is clearer than the success decision.",
+          "nextStep": "Define what evidence would show progress toward the stated awareness goal.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "campaign_brief.md",
+            "social_reporting.md"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "campaign_brief.md",
+              "location": "/sources/1/text",
+              "start": 638,
+              "end": 976,
+              "quote": "The concept cafe wants nearby university students to recognise its weekday offering. The team compared three fictional local cafe concepts for message clarity, posting frequency and student offers. The proposed theme is an affordable weekday study break, with two short product posts and one student-oriented post each week for two weeks."
+            }
+          ]
+        },
+        {
+          "criterionId": "B2",
+          "mark": 3,
+          "support": "The planning boundary and social tracker limitations avoid claiming observed sales effects or proven content causation.",
+          "gaps": "Competing explanations for the reporting changes are not developed.",
+          "rationale": "The planning boundary and social tracker limitations avoid claiming observed sales effects or proven content causation. Competing explanations for the reporting changes are not developed.",
+          "nextStep": "Name a plausible alternative explanation before interpreting any campaign effect.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "campaign_brief.md",
+            "social_reporting.md"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "campaign_brief.md",
+              "location": "/sources/1/text",
+              "start": 532,
+              "end": 627,
+              "quote": "This is a planning artefact, not evidence that a campaign was launched or that sales increased."
+            }
+          ]
+        },
+        {
+          "criterionId": "B3",
+          "mark": 1,
+          "support": "Relevant supplementary material is identified for review.",
+          "gaps": "The request is broad: no aligned comparison or distinguishing result is specified, so support is weaker than a specific data request.",
+          "rationale": "Relevant supplementary material is identified for review. The request is broad: no aligned comparison or distinguishing result is specified, so support is weaker than a specific data request.",
+          "nextStep": "Specify the exact breakdown and what differing results would tell the marketing lead.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "campaign_brief.md",
+            "social_reporting.md"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1522,
+              "end": 1615,
+              "quote": "The content calendar and popular-post examples can be reviewed alongside the platform export."
+            }
+          ]
+        },
+        {
+          "criterionId": "B4",
+          "mark": 2,
+          "support": "Pre-publication checks precede reporting and the brief names observable measures for a follow-up review.",
+          "gaps": "The measures are not linked to a clear awareness success criterion or decision about the next plan.",
+          "rationale": "Pre-publication checks precede reporting and the brief names observable measures for a follow-up review. The measures are not linked to a clear awareness success criterion or decision about the next plan.",
+          "nextStep": "Explain how the review result would change the next action and agree an appropriate comparison.",
+          "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+          "checkedSourceIds": [
+            "cv-public.txt",
+            "campaign_brief.md",
+            "social_reporting.md"
+          ],
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "campaign_brief.md",
+              "location": "/sources/1/text",
+              "start": 1259,
+              "end": 1459,
+              "quote": "Check the offer wording, links and image rights before publishing. Review platform reach and interaction actions after the two-week period; collect common customer questions for the next content plan."
+            }
+          ]
+        }
+      ],
+      "score": {
+        "status": "needs_evidence",
+        "assessmentComplete": true,
+        "complete": false,
+        "coveragePercent": 70,
+        "accruedScore": 47.5,
+        "overallScore": null,
+        "overallPercentage": null,
+        "criteria": [
+          {
+            "criterionId": "S1",
+            "requirementId": "sql",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          },
+          {
+            "criterionId": "S2",
+            "requirementId": "sql",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          },
+          {
+            "criterionId": "S3",
+            "requirementId": "sql",
+            "mark": "NE",
+            "status": "needs_evidence",
+            "contribution": null
+          },
+          {
+            "criterionId": "D1",
+            "requirementId": "data-analysis",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "D2",
+            "requirementId": "data-analysis",
+            "mark": 2,
+            "status": "assessed",
+            "contribution": 5
+          },
+          {
+            "criterionId": "D3",
+            "requirementId": "data-analysis",
+            "mark": 4,
+            "status": "assessed",
+            "contribution": 10
+          },
+          {
+            "criterionId": "B1",
+            "requirementId": "business-problem-solving",
+            "mark": 3,
+            "status": "assessed",
+            "contribution": 7.5
+          },
+          {
+            "criterionId": "B2",
+            "requirementId": "business-problem-solving",
+            "mark": 3,
+            "status": "assessed",
+            "contribution": 7.5
+          },
+          {
+            "criterionId": "B3",
+            "requirementId": "business-problem-solving",
+            "mark": 1,
+            "status": "assessed",
+            "contribution": 2.5
+          },
+          {
+            "criterionId": "B4",
+            "requirementId": "business-problem-solving",
+            "mark": 2,
+            "status": "assessed",
+            "contribution": 5
+          }
+        ],
+        "skills": [
+          {
+            "requirementId": "sql",
+            "criterionIds": [
+              "S1",
+              "S2",
+              "S3"
+            ],
+            "maxScore": 30,
+            "assessmentComplete": true,
+            "complete": false,
+            "evaluatedCount": 0,
+            "neCount": 3,
+            "pendingCount": 0,
+            "accruedScore": 0,
+            "score": null,
+            "percentage": null
+          },
+          {
+            "requirementId": "data-analysis",
+            "criterionIds": [
+              "D1",
+              "D2",
+              "D3"
+            ],
+            "maxScore": 30,
+            "assessmentComplete": true,
+            "complete": true,
+            "evaluatedCount": 3,
+            "neCount": 0,
+            "pendingCount": 0,
+            "accruedScore": 25,
+            "score": 25,
+            "percentage": 83.33333333333334
+          },
+          {
+            "requirementId": "business-problem-solving",
+            "criterionIds": [
+              "B1",
+              "B2",
+              "B3",
+              "B4"
+            ],
+            "maxScore": 40,
+            "assessmentComplete": true,
+            "complete": true,
+            "evaluatedCount": 4,
+            "neCount": 0,
+            "pendingCount": 0,
+            "accruedScore": 22.5,
+            "score": 22.5,
+            "percentage": 56.25
+          }
+        ]
+      },
+      "jdAlignment": [
+        {
+          "jdRequirementId": "data-quality",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The tracker separates actions, follower counts and overlapping reach; formulas match the prepared figures.",
+          "remainingUnknowns": "Original export checks and actual spreadsheet reconciliation remain unobserved; no personality inference is made.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1267,
+              "end": 1397,
+              "quote": "It keeps follower counts separate from interaction counts and does not add overlapping monthly reach into a unique-audience total."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "accuracy",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The tracker separates actions, follower counts and overlapping reach; formulas match the prepared figures.",
+          "remainingUnknowns": "Original export checks and actual spreadsheet reconciliation remain unobserved; no personality inference is made.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1267,
+              "end": 1397,
+              "quote": "It keeps follower counts separate from interaction counts and does not add overlapping monthly reach into a unique-audience total."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "sql-extraction",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The CV, tracker and campaign brief supply no SQL claim or query.",
+          "remainingUnknowns": "Request SQL evidence if available; absence is not an observed incorrect query.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "campaign_brief.md",
+              "location": "/sources/1/text",
+              "start": 1555,
+              "end": 1622,
+              "quote": "It is relevant marketing context, not demonstrated SQL proficiency."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "foundational-sql",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The CV, tracker and campaign brief supply no SQL claim or query.",
+          "remainingUnknowns": "Request SQL evidence if available; absence is not an observed incorrect query.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "campaign_brief.md",
+              "location": "/sources/1/text",
+              "start": 1555,
+              "end": 1622,
+              "quote": "It is relevant marketing context, not demonstrated SQL proficiency."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "business-metrics",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV describes social reporting and the worksheet reproduces interaction and follower changes with defined units.",
+          "remainingUnknowns": "This is platform reporting, not demonstrated website conversion or sales analysis.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2383,
+              "end": 2458,
+              "quote": "Excel: Data entry, sorting, filtering, basic SUM formulas and simple charts"
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1161,
+              "end": 1205,
+              "quote": "Net new followers = end - start: 100 and 80."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "metric-interpretation",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV describes social reporting and the worksheet reproduces interaction and follower changes with defined units.",
+          "remainingUnknowns": "This is platform reporting, not demonstrated website conversion or sales analysis.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2383,
+              "end": 2458,
+              "quote": "Excel: Data entry, sorting, filtering, basic SUM formulas and simple charts"
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1161,
+              "end": 1205,
+              "quote": "Net new followers = end - start: 100 and 80."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "digital-metrics",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV describes social reporting and the worksheet reproduces interaction and follower changes with defined units.",
+          "remainingUnknowns": "This is platform reporting, not demonstrated website conversion or sales analysis.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2383,
+              "end": 2458,
+              "quote": "Excel: Data entry, sorting, filtering, basic SUM formulas and simple charts"
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1161,
+              "end": 1205,
+              "quote": "Net new followers = end - start: 100 and 80."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "business-investigation",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The brief frames a cafe-awareness plan and the report describes changes without unsupported sales attribution.",
+          "remainingUnknowns": "Alternative explanations, discriminating evidence requests and a decision-linked validation plan remain thin.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "campaign_brief.md",
+              "location": "/sources/1/text",
+              "start": 638,
+              "end": 722,
+              "quote": "The concept cafe wants nearby university students to recognise its weekday offering."
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1616,
+              "end": 1748,
+              "quote": "This tracker has no website sessions, orders, advertising spend or campaign attribution; it gives no sales or conversion conclusion."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "structured-problem-solving",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The brief frames a cafe-awareness plan and the report describes changes without unsupported sales attribution.",
+          "remainingUnknowns": "Alternative explanations, discriminating evidence requests and a decision-linked validation plan remain thin.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "campaign_brief.md",
+              "location": "/sources/1/text",
+              "start": 638,
+              "end": 722,
+              "quote": "The concept cafe wants nearby university students to recognise its weekday offering."
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1616,
+              "end": 1748,
+              "quote": "This tracker has no website sessions, orders, advertising spend or campaign attribution; it gives no sales or conversion conclusion."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "reporting-visualisation",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims a basic tracker/chart; a clear written reporting table and narrative are supplied.",
+          "remainingUnknowns": "No Excel file or rendered chart is supplied, so spreadsheet execution and visualisation production are unverified.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2383,
+              "end": 2458,
+              "quote": "Excel: Data entry, sorting, filtering, basic SUM formulas and simple charts"
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1206,
+              "end": 1266,
+              "quote": "The report uses a simple two-column chart for monthly reach."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "stakeholder-communication",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The written update identifies differing reach, interaction and follower changes for a marketing lead; CV claims presentations.",
+          "remainingUnknowns": "Actual spoken analytical communication and cross-functional performance remain unverified.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1432,
+              "end": 1521,
+              "quote": "June had more reported reach and interaction actions, while net new followers were lower."
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2459,
+              "end": 2542,
+              "quote": "Communication: Copywriting, presentations, customer enquiries and team coordination"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "written-verbal-communication",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The written update identifies differing reach, interaction and follower changes for a marketing lead; CV claims presentations.",
+          "remainingUnknowns": "Actual spoken analytical communication and cross-functional performance remain unverified.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1432,
+              "end": 1521,
+              "quote": "June had more reported reach and interaction actions, while net new followers were lower."
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2459,
+              "end": 2542,
+              "quote": "Communication: Copywriting, presentations, customer enquiries and team coordination"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "relevant-degree",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV states a 2026 Business bachelor degree majoring in Marketing.",
+          "remainingUnknowns": "A human reviewer should determine whether this is a related discipline for this JD and confirm completion.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 459,
+              "end": 500,
+              "quote": "Bachelor of Business - Major in Marketing"
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 501,
+              "end": 515,
+              "quote": "Graduated 2026"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "spreadsheets",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The CV explicitly describes basic Excel operations; the written companion illustrates SUM/subtraction working.",
+          "remainingUnknowns": "This is not evidence of the JD's stronger spreadsheet requirement or an inspected workbook.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2383,
+              "end": 2458,
+              "quote": "Excel: Data entry, sorting, filtering, basic SUM formulas and simple charts"
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 1062,
+              "end": 1160,
+              "quote": "In the worksheet, total interactions use SUM(likes, comments, shares): 400 in May and 520 in June."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "learning",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "No direct learning or feedback-response evidence is supplied by the checked CV and companions.",
+          "remainingUnknowns": "Do not infer personality from marketing experience; discuss a concrete learning example.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 356,
+              "end": 407,
+              "quote": "Seeking an entry-level opportunity to contribute to"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "analysis-experience",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims routine platform reporting; the synthetic tracker offers a bounded marketing-data example.",
+          "remainingUnknowns": "This does not establish a broader analytics internship or independent original analysis.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1015,
+              "end": 1114,
+              "quote": "Recorded monthly reach, follower growth and engagement figures from platform dashboards in an Excel"
+            },
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "social_reporting.md",
+              "location": "/sources/2/text",
+              "start": 495,
+              "end": 573,
+              "quote": "This is a small reporting worksheet, not SQL or an advanced analytics project."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "python-r",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The listed tools are marketing/creative tools; the checked materials supply no Python/R or BI-platform claim.",
+          "remainingUnknowns": "Do not substitute Canva, PowerPoint or platform dashboards for programming/BI evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2315,
+              "end": 2382,
+              "quote": "Tools: Canva, CapCut, Meta Business Suite, Mailchimp and PowerPoint"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "bi-tools",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The listed tools are marketing/creative tools; the checked materials supply no Python/R or BI-platform claim.",
+          "remainingUnknowns": "Do not substitute Canva, PowerPoint or platform dashboards for programming/BI evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2315,
+              "end": 2382,
+              "quote": "Tools: Canva, CapCut, Meta Business Suite, Mailchimp and PowerPoint"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "nontechnical-presentation",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims a class presentation of a campaign recommendation and creative materials.",
+          "remainingUnknowns": "This is a presentation claim, not an inspected analytical talk to a non-technical business audience.",
+          "sourceRefs": [
+            {
+              "candidateId": "jamie-parker",
+              "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+              "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2137,
+              "end": 2211,
+              "quote": "Presented the campaign recommendation and creative materials to the class."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "b3Explanation": {
+    "label": "AI-authored demo assessment · Human calibration pending",
+    "companyRequirement": "Identify when additional data is required before reaching a business conclusion.",
+    "criterion": {
+      "id": "B3",
+      "requirementId": "business-problem-solving",
+      "title": "Evidence requests that distinguish explanations",
+      "maxScore": 10,
+      "observableSupport": "Request relevant data and explain what different results would imply for competing explanations.",
+      "anchors": {
+        "0": "A circular or irrelevant method is explicitly presented as verifying the proposed explanation.",
+        "2": "Specific additional data is requested, but how it distinguishes explanations is not explained.",
+        "4": "Specific data, a comparison method and the contrasting implications are clear."
+      }
+    },
+    "criterionId": "B3",
+    "mark": 2,
+    "support": "The request names specific dimensions and aligned periods.",
+    "gaps": "It does not describe the comparison or what contrasting results would imply for the explanation.",
+    "rationale": "The request names specific dimensions and aligned periods. It does not describe the comparison or what contrasting results would imply for the explanation.",
+    "nextStep": "Explain how different results from the requested breakdown would change the conclusion.",
+    "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+    "checkedSourceIds": [
+      "cv-public.txt",
+      "channel_analysis.md",
+      "channel_analysis.sql"
+    ],
+    "sourceRefs": [
+      {
+        "candidateId": "amy-chen",
+        "evidenceSnapshotId": "amy-chen-application-r6-v1",
+        "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+        "sourceId": "channel_analysis.md",
+        "location": "/sources/1/text",
+        "start": 2016,
+        "end": 2088,
+        "quote": "I would request campaign and device breakdowns for the same two periods."
+      }
+    ],
+    "contribution": 5,
+    "maxContribution": 10,
+    "markMaximum": 4,
+    "rubricVersion": "harbour-retail-junior-analyst-rubric-v1",
+    "fixtureVersion": "harbour-retail-applications-v1"
+  }
+}

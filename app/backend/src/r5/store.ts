@@ -1,11 +1,50 @@
 import { DatabaseSync } from 'node:sqlite';
-import { chmodSync, mkdirSync, openSync, writeFileSync, closeSync, readFileSync, unlinkSync, realpathSync, existsSync } from 'node:fs';
+import { chmodSync, mkdirSync, openSync, writeFileSync, closeSync, readSync, readFileSync, unlinkSync, realpathSync, existsSync, statSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { basename, dirname, resolve } from 'node:path';
 import { ApiError } from '../errors.js';
 
 export type StoredResponse = { status: number; body: unknown };
 export type Receipt = StoredResponse & { hash: string };
+export const DATABASE_FORMAT_VERSION = 4;
+
+/** Header-only check: even a read-only SQLite connection may create WAL shared-memory files. */
+export function inspectDatabaseHeader(path: string): number | null {
+  if (!existsSync(path)) return null;
+  if (!statSync(path).isFile()) throw new Error('Database path must be a regular file');
+  const fd = openSync(path, 'r'); const header = Buffer.alloc(100);
+  try {
+    const length = readSync(fd, header, 0, header.length, 0);
+    if (length === 0) return 0;
+    if (length < 100 || header.subarray(0, 16).toString('ascii') !== 'SQLite format 3\0')
+      throw new Error('Invalid SQLite header; preserve the existing file');
+    return header.readUInt32BE(60);
+  } finally { closeSync(fd); }
+}
+
+function inspectRevisionTables(db: DatabaseSync, validateExisting?: (state: unknown) => void): number {
+  const format = db.prepare('PRAGMA user_version').get() as { user_version: number };
+  const objects = db.prepare("SELECT name,type FROM sqlite_master WHERE name NOT LIKE 'sqlite_%'").all() as { name: string; type: string }[];
+  if (format.user_version !== DATABASE_FORMAT_VERSION && (format.user_version !== 0 || objects.length !== 0))
+    throw new Error('Incompatible database format; preserve this file and initialize a separate revision-6 DATABASE_PATH');
+  if (format.user_version === DATABASE_FORMAT_VERSION) {
+    for (const [table, columns] of [
+      ['revision_state', ['id', 'state_json']],
+      ['revision_receipts', ['session_id', 'candidate_id', 'path', 'key', 'request_hash', 'status', 'body_json']],
+    ] as const) {
+      if (!objects.some(object => object.name === table && object.type === 'table')) throw new Error('Stored database schema is incomplete; preserve it for diagnosis');
+      const actual = db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
+      if (columns.some(column => !actual.some(item => item.name === column))) throw new Error('Stored database schema is incomplete; preserve it for diagnosis');
+    }
+    const rows = db.prepare('SELECT id,state_json FROM revision_state').all() as { id: number; state_json: string }[];
+    if (rows.length > 1 || (rows[0] && rows[0].id !== 1)) throw new Error('Stored database has unexpected aggregate rows; preserve it for diagnosis');
+    const row = rows[0];
+    if (!row && Number((db.prepare('SELECT count(*) AS n FROM revision_receipts').get() as { n: number }).n) !== 0)
+      throw new Error('Stored database has receipts without its aggregate; preserve it for recovery');
+    if (row && validateExisting) validateExisting(JSON.parse(row.state_json) as unknown);
+  }
+  return format.user_version;
+}
 
 export class ReceiptOwnershipError extends ApiError {
   constructor() { super('IDEMPOTENCY_OWNER_MISMATCH', 409, 'Idempotency key belongs to a different operation owner.'); }
@@ -51,7 +90,7 @@ export function canonicalDatabasePath(path: string): string {
   return existsSync(absolute) ? realpathSync(absolute) : resolve(realpathSync(dirname(absolute)), basename(absolute));
 }
 
-/** Caller owns the transaction. Also used by the explicit copy-only migrator. */
+/** Caller owns the transaction. New sessions only; historical identity conversion is retired. */
 export function createRevisionTables(db: DatabaseSync): void {
   db.exec(`
     CREATE TABLE revision_state (id INTEGER PRIMARY KEY CHECK (id=1), state_json TEXT NOT NULL);
@@ -60,7 +99,7 @@ export function createRevisionTables(db: DatabaseSync): void {
       request_hash TEXT NOT NULL, status INTEGER NOT NULL, body_json TEXT NOT NULL,
       PRIMARY KEY(session_id,path,key)
     );
-    PRAGMA user_version = 3;
+    PRAGMA user_version = 4;
   `);
 }
 
@@ -77,31 +116,35 @@ export class RevisionStore {
   private closed = false;
   private inTransaction = false;
 
-  constructor(path: string) {
+  constructor(path: string, validateExisting?: (state: unknown) => void) {
     if (path !== ':memory:') mkdirSync(dirname(resolve(path)), { recursive: true, mode: 0o700 });
     path = canonicalDatabasePath(path);
     this.releaseLock = acquireDatabaseLock(path);
     let opened: DatabaseSync | undefined;
     try {
-      opened = new DatabaseSync(path); this.db = opened;
-      // Read-only inspection precedes journal settings, permissions, DDL and format changes.
-      const format = this.db.prepare('PRAGMA user_version').get() as { user_version: number };
-      const objects = this.db.prepare("SELECT name,type FROM sqlite_master WHERE name NOT LIKE 'sqlite_%'").all() as { name: string; type: string }[];
-      if (format.user_version !== 3 && (format.user_version !== 0 || objects.length !== 0))
-        throw new Error('Incompatible database format; preserve this file and use the explicit v2-to-v3 copy migration or a new DATABASE_PATH');
-      if (format.user_version === 3) {
-        for (const [table, columns] of [
-          ['revision_state', ['id', 'state_json']],
-          ['revision_receipts', ['session_id', 'candidate_id', 'path', 'key', 'request_hash', 'status', 'body_json']],
-        ] as const) {
-          if (!objects.some(object => object.name === table && object.type === 'table')) throw new Error('Stored database schema is incomplete; preserve it for diagnosis');
-          const actual = this.db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[];
-          if (columns.some(column => !actual.some(item => item.name === column))) throw new Error('Stored database schema is incomplete; preserve it for diagnosis');
+      if (path !== ':memory:') {
+        const headerVersion = inspectDatabaseHeader(path);
+        if (headerVersion !== null && headerVersion !== 0 && headerVersion !== DATABASE_FORMAT_VERSION)
+          throw new Error('Incompatible database format; preserve this file and initialize a separate revision-6 DATABASE_PATH');
+        if ((headerVersion === null || headerVersion === 0) && ['-wal', '-shm', '-journal'].some(suffix => existsSync(`${path}${suffix}`)))
+          throw new Error('Uninitialized database has journal sidecars; preserve all files for recovery');
+        if (headerVersion !== null && statSync(path).size > 0) {
+          const preflight = new DatabaseSync(path, { readOnly: true });
+          try { inspectRevisionTables(preflight, validateExisting); } finally { preflight.close(); }
         }
       }
+      opened = new DatabaseSync(path); this.db = opened;
+      // Read-only inspection precedes journal settings, permissions, DDL and format changes.
+      const formatVersion = inspectRevisionTables(this.db, validateExisting);
       if (path !== ':memory:') chmodSync(path, 0o600);
-      this.db.exec('PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000; PRAGMA foreign_keys=ON;');
-      if (format.user_version === 0) this.transaction(() => createRevisionTables(this.db));
+      this.db.exec('PRAGMA synchronous=FULL; PRAGMA busy_timeout=5000; PRAGMA foreign_keys=ON;');
+      if (formatVersion === 0) {
+        // Commit the format marker to the main header before enabling WAL. A first-run crash
+        // must not leave header=0 with the only format-4 marker in an orphaned WAL.
+        this.db.exec('PRAGMA journal_mode=DELETE;');
+        this.transaction(() => createRevisionTables(this.db));
+      }
+      this.db.exec('PRAGMA journal_mode=WAL;');
     } catch (error) { opened?.close(); this.releaseLock(); throw error; }
   }
 

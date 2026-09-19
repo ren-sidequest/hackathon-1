@@ -4,7 +4,7 @@
 
 HR and Candidate default to `VITE_APP_MODE=api4-connected`. API4 business UI lives in `app/shared/api4`; the existing black/gold and light/gold shell, resource explorer and card editor remain shared. No new dependency or backend implementation is introduced.
 
-The frontend starts from main `80d153b` and consumes the frozen backend contract at `ff053cbcb70fff230020913e76e2fafe4402dd12` (backend PR14). `app/shared/api4-types.ts` is an unchanged generated handoff artifact, not a separately designed schema. The frontend must be released with a compatible API4 backend/content set and independent v4 database. Current API3 production is not an API4 server. This local implementation does not approve merge, deployment or database replacement.
+The original frontend implementation started from main `80d153b` and consumed the frozen backend contract at `ff053cbcb70fff230020913e76e2fafe4402dd12` (backend PR14). PR16 is now integrated into PR14 for joint verification; the current checkout contains both API4 implementations. `app/shared/api4-types.ts` is a generated handoff artifact, not a separately designed schema. Release requires a compatible API4 backend/content set and independent v4 database. Current API3 production is not an API4 server. User-approved code integration does not include deployment or database replacement.
 
 Historical modes remain explicit: `api3-connected`, `connected` (API2), `revision5-preview`, `standalone`. They are not fallback data sources for API4. Run API3 with its historical executable, content and database together; the new backend is not an API3 compatibility server.
 
@@ -25,12 +25,12 @@ Historical modes remain explicit: `api3-connected`, `connected` (API2), `revisio
 
 Node 24 LTS and the existing lockfiles are used. Install each app with its own `npm ci`. Do not install new versions or copy `.env` / credentials from another checkout.
 
-Before backend PR14 is integrated, set `EB_API4_BACKEND_ROOT` to an isolated checkout of the frozen backend (repository root, not `app/backend`). Install its backend dependencies. The browser runner builds that backend unchanged, then opens a temporary SQLite database on loopback. It reads no `.env` and calls no external model. Test reset is confined to that temporary database; its synthetic test token never reaches frontend code.
+Set `EB_API4_BACKEND_ROOT` to the current repository root (not `app/backend`). Install its backend dependencies. The browser runner builds that backend, then opens a temporary SQLite database on loopback. It reads no `.env` and calls no external model. Test reset is confined to that temporary database; its synthetic test token never reaches frontend code. The external frozen-backend setup was only required before PR14/PR16 integration; see [API contract testing](API_CONTRACT_TESTING.md) for the current and historical targets.
 
 PowerShell example, from this frontend root:
 
 ```powershell
-$env:EB_API4_BACKEND_ROOT = (Resolve-Path ../hackathon-1-api4-backend).Path
+$env:EB_API4_BACKEND_ROOT = (Get-Location).Path
 npm ci --prefix app/candidate
 npm ci --prefix app/hr
 npm ci --prefix "$env:EB_API4_BACKEND_ROOT/app/backend"
@@ -48,7 +48,7 @@ The browser suite uses backend `8894`, Candidate `6474`, HR `6487`. Override wit
 
 For an interactive preview, follow the frozen backend's isolated startup instructions using a separate v4 database, no administrator token and `manual_simulation`. Start each frontend with `VITE_APP_MODE=api4-connected` and `VITE_API_BASE_URL` pointing to that service. With gateway deployment the base is `/gateway`; never bundle passwords or model credentials. No production write/reset is part of local acceptance.
 
-The independent `API4 frontend integration` workflow pins the backend handoff commit, checks generated type identity and runs frontend builds plus real browser workflows. Historical workflow checks continue covering their historical contracts. When the backend contract changes, update the pinned version only after joint validation.
+The independent `API4 frontend integration` workflow now tests the current combined PR tree, checks OpenAPI/generated types and runs frontend builds plus real browser workflows. Historical API3 remains pinned to its matching executable, with all test cases retained. Do not substitute a past API4 backend for the current code under review.
 
 ## Acceptance and demonstration
 
@@ -58,7 +58,7 @@ Suggested 3–5 minute demonstration: company/JD → compare four → inspect a 
 
 Human calibration, real model quality, real hiring effectiveness, production gateway patching, release backup/restore and deployment approval are separate team responsibilities. Browser interception tests for authentication errors do not prove production gateway deployment.
 
-## Executed local acceptance
+## Original frontend-only acceptance (before PR14 integration)
 
 At frontend baseline `80d153b` plus this working change, against the unchanged backend `ff053cb`:
 

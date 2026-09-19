@@ -1,0 +1,18 @@
+--- a/nginx-public-read.conf
++++ b/nginx-public-read.conf
+@@ -55,7 +55,7 @@
+         add_header WWW-Authenticate 'Basic realm="EvidenceBridge write access"' always;
+         add_header Cache-Control no-store always;
+         add_header X-Content-Type-Options nosniff always;
+-        return 401 '{"error":{"code":"WRITE_AUTH_REQUIRED","message":"Viewing is public. To save changes, sign in at https://101.37.80.98/gateway/write-access in another tab, then return here and submit again. 浏览免登录；保存修改前请在新标签页打开上述地址登录，然后返回重试。","requestId":"gateway","retryable":false}}';
++        return 401 '{"error":{"code":"WRITE_AUTH_REQUIRED","message":"Viewing is public. To save changes, sign in at https://101.37.80.98/gateway/write-access in another tab, then return here and submit again.","requestId":"gateway","retryable":false}}';
+     }
+     location ~ ^/gateway/api/demo/reset(?:/|$) { return 404; }
+     location /gateway/api/demo {
+--- a/write-access.html
++++ b/write-access.html
+@@ -1 +1 @@
+-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EvidenceBridge · 修改权限</title><style>body{font:16px/1.8 system-ui,sans-serif;margin:60px auto;padding:24px;max-width:680px;background:#f5f7fb;color:#142138}main{background:white;padding:32px;border-radius:16px}a{color:#175dcc}h1{font-size:26px}</style><main><h1>修改权限已验证</h1><p>浏览页面无需登录。当前浏览器已验证网站账号，可以提交作品、保存评分和审核结果。</p><p>如果刚才的操作提示需要登录，请返回原标签页重新提交；未自动执行任何修改。</p><p><a href="/hr/">打开 HR 端</a> · <a href="/candidate/">打开 Candidate 端</a></p><p>这是一套共享演示：登录者共用修改权限，并非独立角色账号。请勿在公共电脑保存密码。需要纯只读访问时，使用新的无痕窗口；关闭全部无痕窗口结束该会话。</p></main></html>
+\ No newline at end of file
++<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EvidenceBridge · Editing access</title><style>body{font:16px/1.8 system-ui,sans-serif;margin:60px auto;padding:24px;max-width:680px;background:#f5f7fb;color:#142138}main{background:white;padding:32px;border-radius:16px}a{color:#175dcc}h1{font-size:26px}</style><main><h1>Editing access verified</h1><p>Viewing is public. This browser has verified the shared demo credentials and can submit work, save assessments and review evidence.</p><p>If your previous action requested a login, return to the original tab and submit again. Signing in does not automatically save or replay an action.</p><p><a href="/hr/">Open HR workspace</a> · <a href="/candidate/">Open Candidate workspace</a></p><p>This is a shared demonstration, not separate role accounts. Anyone with editing access shares the same write permissions. Do not save credentials on a public computer. For read-only viewing, use a fresh private window; close all private windows to end that private session.</p></main></html>
+\ No newline at end of file

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "4.0",
+  "sessionId": "dcd27813-7e44-40ed-8ced-f9e3552755c8",
+  "candidateId": "amy-chen",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "action": "retain",
+  "reason": "Synthetic human-decision example: retain for further review within the stated evidence limits.",
+  "stage": "application_review",
+  "evidenceSnapshotId": "amy-chen-application-r6-v1",
+  "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+  "assessmentRevision": 1,
+  "rubricVersion": "harbour-retail-junior-analyst-rubric-v1",
+  "expectedShortlistRevision": 0,
+  "operatorLabel": "Synthetic example operator"
+}

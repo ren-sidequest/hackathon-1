@@ -1,10 +1,13 @@
 // Test-only temporary SQLite service. No .env, formal DB or model credential reads.
 import { mkdtemp, rm, writeFile, readFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { createRevision5App } from '../../backend/dist/r5/app.js';
-import { AnalysisError } from '../../backend/dist/analysis.js';
-import { createTargetAnalyzer } from '../../backend/dist/r5/analysis.js';
+import { join, resolve } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+const root=resolve(process.env.EB_API3_BACKEND_ROOT || fileURLToPath(new URL('../../../',import.meta.url)));
+const backendModule=async path=>import(pathToFileURL(resolve(root,'app/backend/dist',path)).href);
+const { createRevision5App }=await backendModule('r5/app.js');
+const { AnalysisError }=await backendModule('analysis.js');
+const { createTargetAnalyzer }=await backendModule('r5/analysis.js');
 const port=Number(process.env.EB_API3_TEST_BACKEND_PORT ?? 8793), candidatePort=process.env.EB_API3_TEST_CANDIDATE_PORT ?? '6373', hrPort=process.env.EB_API3_TEST_HR_PORT ?? '6386';
 const directory = await mkdtemp(join(tmpdir(),'evidencebridge-api3-browser-'));
 const control = new URL('../../../.ci-results/api3-test-control.json',import.meta.url);

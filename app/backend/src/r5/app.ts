@@ -1,14 +1,18 @@
+import { readFileSync } from 'node:fs';
+import { CONTENT_MANIFEST } from './content.js';
+import { validateState } from './state-schema.js';
+import { SCHEMA_VERSION } from './schema.js';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest, type FastifyError } from 'fastify';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
-import { timingSafeEqual, randomUUID } from 'node:crypto';
+import { timingSafeEqual, randomUUID, createHash } from 'node:crypto';
 import { Type } from '@sinclair/typebox';
 import { Value } from '@sinclair/typebox/value';
 import { RevisionStore as Store, type StoredResponse } from './store.js';
 import { RevisionService as DemoService } from './service.js';
 import { type Analyzer } from './analysis.js';
 import { createTargetAnalyzer as createAnalyzer } from './analysis.js';
-import { createSeed } from '../seed.js';
+import { createSeed } from './task-seed.js';
 import { defaultOrigins, type AppConfig } from '../config.js';
 import { ApiError } from '../errors.js';
 import { EnvelopeSchema, ComparisonEnvelopeSchema } from './response-schema.js';
@@ -22,7 +26,7 @@ export async function createRevision5App(options: AppOptions = {}): Promise<Fast
   const adminToken = options.adminToken ?? '';
   if (adminToken && (adminToken.length < 24 || adminToken.length > 256))
     throw new Error('Invalid demo admin token length');
-  const store = new Store(options.databasePath ?? ':memory:');
+  const store = new Store(options.databasePath ?? ':memory:', validateState);
   let service: DemoService;
   try {
     const context = createSeed().dataset.resources.map(r => `SOURCE ${r.id}\n${r.content}`).join('\n\n');
@@ -47,7 +51,7 @@ export async function createRevision5App(options: AppOptions = {}): Promise<Fast
   app.addHook('onClose', async () => store.close());
   // Reject contract drift rather than silently stripping fields during serialization.
   app.addHook('preSerialization', async (request, reply, payload) => {
-    if (reply.statusCode < 300 && request.routeOptions.url?.startsWith('/api/demo')) {
+    if (reply.statusCode < 300 && request.routeOptions.url?.startsWith('/api/demo') && !request.routeOptions.url.startsWith('/api/demo/materials/')) {
       const schema = [
         '/api/demo/comparison', '/api/demo/reset'
       ].includes(request.routeOptions.url) ? ComparisonEnvelopeSchema : EnvelopeSchema;
@@ -77,14 +81,17 @@ export async function createRevision5App(options: AppOptions = {}): Promise<Fast
       throw new ApiError('ORIGIN_NOT_ALLOWED', 403, 'Cross-site request is not allowed.');
     if (origin)
       reply.header('Access-Control-Allow-Origin', origin).header('Vary', 'Origin');
+    const requestedVersion = request.headers['x-evidencebridge-schema-version'];
+    if (requestedVersion && requestedVersion !== SCHEMA_VERSION)
+      throw new ApiError('SCHEMA_MISMATCH', 409, 'This service uses API 4.0 and new applicant identities. Use a compatible client; old drafts and IDs are not remapped.');
     if (request.method === 'OPTIONS') {
       const requested = String(request.headers['access-control-request-headers'] ?? '').toLowerCase().split(',').map(h => h.trim()).filter(Boolean);
       if (requested.some(h => ![
-        'content-type', 'idempotency-key', 'x-demo-admin-token'
+        'content-type', 'idempotency-key', 'x-demo-admin-token', 'x-evidencebridge-schema-version'
       ].includes(h)))
         throw new ApiError('HEADER_NOT_ALLOWED', 403, 'Requested header is not allowed.');
       reply.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        .header('Access-Control-Allow-Headers', 'Content-Type, Idempotency-Key, X-Demo-Admin-Token').code(204).send();
+        .header('Access-Control-Allow-Headers', 'Content-Type, Idempotency-Key, X-Demo-Admin-Token, X-EvidenceBridge-Schema-Version').code(204).send();
     }
   });
   app.addHook('onResponse', async (request, reply) => {
@@ -130,7 +137,7 @@ export async function createRevision5App(options: AppOptions = {}): Promise<Fast
   await app.register(swagger, {
     openapi: {
       openapi: '3.0.3', info: {
-        title: 'EvidenceBridge local demo API', version: '3.0', description: 'Four owned synthetic candidate workflows, fixed job/rubric and three targeted templates. V1 plus at most one approved V2 per person. Assessment, evidence review and human shortlist are separate. Loopback demo; no authentication or automated hiring rank.',
+        title: 'EvidenceBridge local demo API', version: '4.0', description: 'Four owned synthetic candidate workflows, fixed job/rubric and three targeted templates. V1 plus at most one approved V2 per person. Assessment, evidence review and human shortlist are separate. Loopback demo; no authentication or automated hiring rank.',
       }, servers: [
         {
           url: `http://127.0.0.1:${port}`
@@ -188,12 +195,15 @@ export async function createRevision5App(options: AppOptions = {}): Promise<Fast
   const preWrite = async (request: FastifyRequest) => {
     if (!/^application\/json(?:\s*;.*)?$/i.test(request.headers['content-type'] ?? ''))
       throw new ApiError('UNSUPPORTED_MEDIA_TYPE', 415, 'Use application/json.');
+    const body = request.body as {schemaVersion?: unknown} | null;
+    if (body && typeof body === 'object' && body.schemaVersion !== undefined && body.schemaVersion !== SCHEMA_VERSION)
+      throw new ApiError('SCHEMA_MISMATCH', 409, 'Use API 4.0 with a fresh session and the new applicant IDs. Preserve legacy data separately.');
   };
   app.get('/healthz', {
     schema: {
       summary: 'Storage readiness; never invokes a model', response: {
         200: Type.Object({
-          status: Type.Literal('ok'), storage: Type.Literal('sqlite'), schemaVersion: Type.Literal('3.0')
+          status: Type.Literal('ok'), storage: Type.Literal('sqlite'), schemaVersion: Type.Literal('4.0')
         })
       }
     }
@@ -201,7 +211,7 @@ export async function createRevision5App(options: AppOptions = {}): Promise<Fast
     if (!store.health())
       throw new Error('Database health check failed');
     return {
-      status: 'ok', storage: 'sqlite', schemaVersion: '3.0'
+      status: 'ok', storage: 'sqlite', schemaVersion: '4.0'
     };
   });
   app.get<{
@@ -209,8 +219,12 @@ export async function createRevision5App(options: AppOptions = {}): Promise<Fast
       candidateId: PersonId;
     };
   }>('/api/demo', {
+    preValidation: async request => {
+      if (['alex-chen','maya-patel','leo-zhang','sam-taylor'].includes(String(request.query?.candidateId)))
+        throw new ApiError('SCHEMA_MISMATCH', 409, 'Legacy applicant IDs belong to API3. Select an API4 applicant explicitly; histories are not renamed.');
+    },
     schema: {
-      summary: 'Read one explicitly selected candidate; no implicit Alex', querystring: QuerySchema, response: responses
+      summary: 'Read one explicitly selected applicant; no legacy ID aliases', querystring: QuerySchema, response: responses
     }
   }, async (request) => service.read(request.query.candidateId));
   app.get('/api/demo/comparison', {
@@ -220,6 +234,25 @@ export async function createRevision5App(options: AppOptions = {}): Promise<Fast
       }), response: comparisonResponses
     }
   }, async () => service.comparison());
+  // Fixed, fictional originals only. No user-supplied filesystem path is read.
+  const materialFiles = new Map([
+    ['job-description.pdf', 'job-description.pdf'],
+    ...['amy-chen', 'ann-li', 'david-liu', 'jamie-parker'].map(id => [`${id}/cv.pdf`, `${id}/cv.pdf`] as [string, string])
+  ]);
+  app.get<{Params:{'*':string}}>('/api/demo/materials/*', {
+    schema: {summary:'Download a fixed fictional original PDF; default displayed CV text is minimized',
+      querystring:Type.Object({}, {additionalProperties:false}),
+      response:{200:Type.String({format:'binary'}), ...errorResponses}}
+  }, async (request, reply) => {
+    const path = materialFiles.get(request.params['*']);
+    if (!path) throw new ApiError('NOT_FOUND',404,'This fixed material is not available.');
+    const bytes = readFileSync(new URL(`../../content/r6/${path}`, import.meta.url));
+    const expected = CONTENT_MANIFEST.files.find(file => file.file === path)?.sha256;
+    if (createHash('sha256').update(bytes).digest('hex') !== expected)
+      throw new ApiError('MATERIAL_INTEGRITY_MISMATCH', 503, 'The original material differs from the frozen content manifest. Preserve the release and request an integrity check.');
+    return reply.type('application/pdf').header('Content-Disposition', `attachment; filename="${path.replace('/', '-') }"`)
+      .header('X-Content-Provenance', 'User-supplied fictional original; not independently verified').send(bytes);
+  });
   app.post<{
     Body: AssessmentRequest;
   }>('/api/demo/assessment', {

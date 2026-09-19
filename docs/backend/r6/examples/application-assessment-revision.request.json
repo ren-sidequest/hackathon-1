@@ -1,0 +1,278 @@
+{
+  "schemaVersion": "4.0",
+  "sessionId": "dcd27813-7e44-40ed-8ced-f9e3552755c8",
+  "candidateId": "amy-chen",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "stage": "application_review",
+  "evidenceSnapshotId": "amy-chen-application-r6-v1",
+  "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+  "submissionId": null,
+  "contentFingerprint": null,
+  "rubricVersion": "harbour-retail-junior-analyst-rubric-v1",
+  "expectedAssessmentRevision": 1,
+  "items": [
+    {
+      "criterionId": "S1",
+      "mark": 4,
+      "rationale": "The input grain is explicit; the query aggregates by that grain, requires no join, and proposes a zero-row duplicate check. No material counting defect is visible in the supplied static query.",
+      "support": "The input grain is explicit; the query aggregates by that grain, requires no join, and proposes a zero-row duplicate check.",
+      "gaps": "No material counting defect is visible in the supplied static query.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "nextStep": "Inspect the actual export and run the proposed duplicate check before operational use.",
+      "checkedSourceIds": [
+        "cv-public.txt",
+        "channel_analysis.md",
+        "channel_analysis.sql"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "amy-chen",
+          "evidenceSnapshotId": "amy-chen-application-r6-v1",
+          "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+          "sourceId": "channel_analysis.sql",
+          "location": "/sources/2/text",
+          "start": 226,
+          "end": 395,
+          "quote": "-- Prepared input: channel_period_metrics, one row per (period_start, channel).\n-- period_start identifies a complete four-week reporting window, not a transaction date."
+        }
+      ]
+    },
+    {
+      "criterionId": "S2",
+      "mark": 4,
+      "rationale": "The non-overlapping four-week windows map to the two exact DATE literals in the filter and matching period/channel groups. The query trusts prepared period labels; this is disclosed rather than an execution claim.",
+      "support": "The non-overlapping four-week windows map to the two exact DATE literals in the filter and matching period/channel groups.",
+      "gaps": "The query trusts prepared period labels; this is disclosed rather than an execution claim.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "nextStep": "Check that the upstream exporter assigns the documented boundaries.",
+      "checkedSourceIds": [
+        "cv-public.txt",
+        "channel_analysis.md",
+        "channel_analysis.sql"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "amy-chen",
+          "evidenceSnapshotId": "amy-chen-application-r6-v1",
+          "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+          "sourceId": "channel_analysis.sql",
+          "location": "/sources/2/text",
+          "start": 396,
+          "end": 467,
+          "quote": "-- Previous: [2026-03-02,2026-03-30); current: [2026-03-30,2026-04-27)."
+        }
+      ]
+    },
+    {
+      "criterionId": "S3",
+      "mark": 4,
+      "rationale": "Duplicate expectations, invalid counts, zero denominators, reconciliation and time-window verification are actionable and appropriate to the prepared table. The checks are proposed; no execution result is attached.",
+      "support": "Duplicate expectations, invalid counts, zero denominators, reconciliation and time-window verification are actionable and appropriate to the prepared table.",
+      "gaps": "The checks are proposed; no execution result is attached.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "nextStep": "Record the check outputs and investigate flagged rows before using a real export.",
+      "checkedSourceIds": [
+        "cv-public.txt",
+        "channel_analysis.md",
+        "channel_analysis.sql"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "amy-chen",
+          "evidenceSnapshotId": "amy-chen-application-r6-v1",
+          "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+          "sourceId": "channel_analysis.sql",
+          "location": "/sources/2/text",
+          "start": 982,
+          "end": 1532,
+          "quote": "-- Proposed pre-report checks (not recorded execution results):\n-- 1. GROUP BY period_start, channel HAVING COUNT(*) > 1 should return zero rows.\n-- 2. Count null or negative counts; investigate every flagged row before publishing.\n-- 3. A zero-session group returns NULL, not a valid zero conversion rate.\n-- 4. Reconcile each period to the prepared totals in channel_analysis.md.\n-- 5. Confirm the upstream export actually uses the stated windows and definitions;\n--    this query trusts period labels and does not verify the raw timestamp mapping."
+        }
+      ]
+    },
+    {
+      "criterionId": "D1",
+      "mark": 4,
+      "rationale": "The stated orders/sessions formula and integer table reproduce the total growth and both absolute and relative conversion changes. No material arithmetic or unit error is visible in these calculations.",
+      "support": "The stated orders/sessions formula and integer table reproduce the total growth and both absolute and relative conversion changes.",
+      "gaps": "No material arithmetic or unit error is visible in these calculations.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "nextStep": "Keep the raw integer counts alongside rounded display values.",
+      "checkedSourceIds": [
+        "cv-public.txt",
+        "channel_analysis.md",
+        "channel_analysis.sql"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "amy-chen",
+          "evidenceSnapshotId": "amy-chen-application-r6-v1",
+          "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+          "sourceId": "channel_analysis.md",
+          "location": "/sources/1/text",
+          "start": 1049,
+          "end": 1210,
+          "quote": "- Total sessions: 4,000 to 5,000 (+25.0%).\n- Completed orders: 200 to 225 (+12.5%).\n- Overall conversion: 5.0% to 4.5% (-0.5 percentage points; -10.0% relative)."
+        }
+      ]
+    },
+    {
+      "criterionId": "D2",
+      "mark": 4,
+      "rationale": "Both channels and their changing weights are compared; the report explicitly avoids averaging rates and double-counting SQL/table populations. The channel comparison is descriptive; campaign-level behaviour is outside this material.",
+      "support": "Both channels and their changing weights are compared; the report explicitly avoids averaging rates and double-counting SQL/table populations.",
+      "gaps": "The channel comparison is descriptive; campaign-level behaviour is outside this material.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "nextStep": "Seek an aligned finer-grain breakdown if the business decision needs an explanation of the change.",
+      "checkedSourceIds": [
+        "cv-public.txt",
+        "channel_analysis.md",
+        "channel_analysis.sql"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "amy-chen",
+          "evidenceSnapshotId": "amy-chen-application-r6-v1",
+          "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+          "sourceId": "channel_analysis.md",
+          "location": "/sources/1/text",
+          "start": 1211,
+          "end": 1485,
+          "quote": "- Paid Search conversion: 4.0% to 3.0%; its session share rises from 37.5% to 48.0%.\n- Organic conversion: 5.6% to approximately 5.8846%.\n- Aggregate rates use total orders divided by total sessions, not an unweighted average of channel percentages. Round after calculating."
+        }
+      ]
+    },
+    {
+      "criterionId": "D3",
+      "mark": 4,
+      "rationale": "Prepared counts, definitions and formulas make the worksheet reproducible, with missing export checks and overlapping populations disclosed. Raw transactions and the original export are absent, so this supports the documented calculation rather than independent extraction quality.",
+      "support": "Prepared counts, definitions and formulas make the worksheet reproducible, with missing export checks and overlapping populations disclosed.",
+      "gaps": "Raw transactions and the original export are absent, so this supports the documented calculation rather than independent extraction quality.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "nextStep": "Verify the original export definitions and timestamp mapping before adopting the result.",
+      "checkedSourceIds": [
+        "cv-public.txt",
+        "channel_analysis.md",
+        "channel_analysis.sql"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "amy-chen",
+          "evidenceSnapshotId": "amy-chen-application-r6-v1",
+          "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+          "sourceId": "channel_analysis.md",
+          "location": "/sources/1/text",
+          "start": 1487,
+          "end": 1659,
+          "quote": "The SQL file and this table describe the same population. They are not two sets of orders. The upstream timestamp mapping and original export checks remain to be inspected."
+        }
+      ]
+    },
+    {
+      "criterionId": "B1",
+      "mark": 2,
+      "rationale": "The note connects a falling rate and rising order count to investigating paid-traffic composition before interpreting promotion. The decision to be supported, owner and practical analysis constraint are not explicit.",
+      "support": "The note connects a falling rate and rising order count to investigating paid-traffic composition before interpreting promotion.",
+      "gaps": "The decision to be supported, owner and practical analysis constraint are not explicit.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "nextStep": "State the decision the operations team needs to make and the available investigation time.",
+      "checkedSourceIds": [
+        "cv-public.txt",
+        "channel_analysis.md",
+        "channel_analysis.sql"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "amy-chen",
+          "evidenceSnapshotId": "amy-chen-application-r6-v1",
+          "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+          "sourceId": "channel_analysis.md",
+          "location": "/sources/1/text",
+          "start": 1698,
+          "end": 2088,
+          "quote": "Orders increased even though overall conversion fell. Paid Search brought more sessions and orders, but converted a smaller share of its sessions. Before interpreting an increase in promotional activity, I would look at the paid-traffic composition. Campaign mix is one possible explanation, not a demonstrated cause. I would request campaign and device breakdowns for the same two periods."
+        }
+      ]
+    },
+    {
+      "criterionId": "B2",
+      "mark": 3,
+      "rationale": "The rate/count observations are kept separate from a campaign-mix hypothesis without claiming a proven cause. A competing explanation such as a measurement or within-group change is not developed.",
+      "support": "The rate/count observations are kept separate from a campaign-mix hypothesis without claiming a proven cause.",
+      "gaps": "A competing explanation such as a measurement or within-group change is not developed.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "nextStep": "Describe one plausible competing explanation and what current evidence does not settle.",
+      "checkedSourceIds": [
+        "cv-public.txt",
+        "channel_analysis.md",
+        "channel_analysis.sql"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "amy-chen",
+          "evidenceSnapshotId": "amy-chen-application-r6-v1",
+          "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+          "sourceId": "channel_analysis.md",
+          "location": "/sources/1/text",
+          "start": 1948,
+          "end": 2015,
+          "quote": "Campaign mix is one possible explanation, not a demonstrated cause."
+        }
+      ]
+    },
+    {
+      "criterionId": "B3",
+      "mark": 2,
+      "rationale": "The request names specific dimensions and aligned periods. It does not describe the comparison or what contrasting results would imply for the explanation.",
+      "support": "The request names specific dimensions and aligned periods.",
+      "gaps": "It does not describe the comparison or what contrasting results would imply for the explanation.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "nextStep": "Explain how different results from the requested breakdown would change the conclusion.",
+      "checkedSourceIds": [
+        "cv-public.txt",
+        "channel_analysis.md",
+        "channel_analysis.sql"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "amy-chen",
+          "evidenceSnapshotId": "amy-chen-application-r6-v1",
+          "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+          "sourceId": "channel_analysis.md",
+          "location": "/sources/1/text",
+          "start": 2016,
+          "end": 2088,
+          "quote": "I would request campaign and device breakdowns for the same two periods."
+        }
+      ]
+    },
+    {
+      "criterionId": "B4",
+      "mark": 2,
+      "rationale": "A relevant first investigative action is identified before interpreting promotion. The note lacks an explicit sequence beyond that first look and a way to validate the resulting recommendation.",
+      "support": "A relevant first investigative action is identified before interpreting promotion.",
+      "gaps": "The note lacks an explicit sequence beyond that first look and a way to validate the resulting recommendation.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "nextStep": "Specify the next step after the comparison and how the operations team will check its result.",
+      "checkedSourceIds": [
+        "cv-public.txt",
+        "channel_analysis.md",
+        "channel_analysis.sql"
+      ],
+      "sourceRefs": [
+        {
+          "candidateId": "amy-chen",
+          "evidenceSnapshotId": "amy-chen-application-r6-v1",
+          "fingerprint": "0ca9f2a3dd2f9f792c345b451301ff85053a869f3522e90ba6a7c34626dada52",
+          "sourceId": "channel_analysis.md",
+          "location": "/sources/1/text",
+          "start": 1845,
+          "end": 1947,
+          "quote": "Before interpreting an increase in promotional activity, I would look at the paid-traffic composition."
+        }
+      ]
+    }
+  ],
+  "reuseApplication": null,
+  "operatorLabel": "Synthetic example operator; not an actual human validation"
+}

@@ -1,0 +1,8 @@
+# Hash-checked R6 fixture assets retain exact bytes across Git checkouts.
+app/backend/content/r6/** -text
+
+# PDF-derived source text intentionally retains original layout whitespace.
+# Keep normal whitespace checks for code, schemas, authored samples and docs.
+app/backend/content/r6/*/cv-extracted.txt whitespace=-blank-at-eol,-blank-at-eof
+app/backend/content/r6/*/cv-public.txt whitespace=-blank-at-eol,-blank-at-eof
+app/backend/content/r6/job-description-extracted.txt whitespace=-blank-at-eol,-blank-at-eof

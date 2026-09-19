@@ -4,7 +4,7 @@ export { ErrorSchema, WriteHeaders };
 const exact = {
   additionalProperties: false
 };
-export const SCHEMA_VERSION = '3.0' as const;
+export const SCHEMA_VERSION = '4.0' as const;
 const id = Type.String({
   minLength: 1, maxLength: 100, pattern: '^[A-Za-z0-9_.:-]+$'
 });
@@ -16,7 +16,7 @@ const nullable = <T extends import('@sinclair/typebox').TSchema>(s: T) => Type.U
 ]);
 const enumOf = <T extends string>(items: T[]) => Type.Union(items.map(x => Type.Literal(x)));
 export const CandidateSchema = enumOf([
-  'alex-chen', 'maya-patel', 'leo-zhang', 'sam-taylor'
+  'amy-chen', 'ann-li', 'david-liu', 'jamie-parker'
 ]);
 export const RequirementSchema = enumOf([
   'sql', 'data-analysis', 'business-problem-solving'

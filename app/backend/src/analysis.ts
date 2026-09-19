@@ -93,6 +93,13 @@ function validId(value: unknown): value is string {
   return typeof value === 'string' && /^[A-Za-z0-9_.:-]{1,160}$/.test(value);
 }
 
+/** An offset between a UTF-16 surrogate pair is not a complete character boundary. */
+function isTextBoundary(text: string, offset: number): boolean {
+  if (offset <= 0 || offset >= text.length) return true;
+  const previous = text.charCodeAt(offset - 1), next = text.charCodeAt(offset);
+  return !(previous >= 0xd800 && previous <= 0xdbff && next >= 0xdc00 && next <= 0xdfff);
+}
+
 /** Source locations are JSON pointers into the immutable public submission; offsets use JS UTF-16. */
 export function buildSourceIndex(submission: SubmissionForAnalysis): SourceEntry[] {
   if (!record(submission) || typeof submission.summary !== 'string'
@@ -162,6 +169,7 @@ export function validateAnalysis(result: unknown, submission: SubmissionForAnaly
       const start = citation.start as number;
       const end = citation.end as number;
       if (!source || source.location !== citation.location || start < 0 || end <= start || end > source.text.length
+          || !isTextBoundary(source.text, start) || !isTextBoundary(source.text, end)
           || source.text.slice(start, end) !== citation.quote) fail();
       const key = `${source.sourceId}:${start}:${end}`;
       if (citationKeys.has(key)) fail();
@@ -224,7 +232,9 @@ function manualResult(submission: SubmissionForAnalysis, sources: SourceEntry[],
       uncertainty: 'The absence of a display match does not establish an absence of capability. Human review is required.',
     };
     const start = source.text.search(/\S/);
-    const quote = source.text.slice(start, start + 500);
+    let end = Math.min(start + 500, source.text.length);
+    if (!isTextBoundary(source.text, end)) end--;
+    const quote = source.text.slice(start, end);
     return {
       dimension, status: 'observed',
       statement: section ? `The candidate supplied text under ${section}.` : 'The candidate supplied an executive summary.',

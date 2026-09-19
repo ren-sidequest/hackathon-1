@@ -226,3 +226,27 @@ API 浏览器测试使用独立内存数据库 / 8789 后端和 5373 / 5386 前�
 ## API3并行设计测试端口
 
 API3浏览器检查支持 EB_API3_TEST_BACKEND_PORT / EB_API3_TEST_CANDIDATE_PORT / EB_API3_TEST_HR_PORT 环境变量，默认8793/6373/6386不变。与其他工作副本并行时可用8894/6473/6486，仍由Playwright启动独立临时SQLite，不能复用正在部署的服务。Windows测试重启通过当前工作副本的PID/generation控制文件完成。设计范围、预览与验证见[四块引导式设计](docs/FRONTEND_GUIDED_UI.md)。
+
+
+## Revision 6 / API4 local implementation (2026-09-19)
+
+Current new-content contract is API4 (`schemaVersion:4.0`), Harbour Retail with Amy Chen, Ann Li, David Liu and Jamie Parker. API3 documents above describe the preserved historical cohort, not aliases for these people. See [R6 handoff](docs/backend/R6_HANDOFF.md). Use an explicit new `evidencebridge-v4.sqlite` path; no automatic migration or reset. Existing API3 frontend awaits Xiaofu's compatible change; this backend delivery does not overwrite frontend source or deploy anything.
+
+Commands from repository root:
+
+```sh
+npm run typecheck --prefix app/backend
+npm run build --prefix app/backend
+npm test --prefix app/backend
+npm run test:r6 --prefix app/backend
+npm run docs:generate --prefix app/backend
+python3 scripts/frontend-types-v4.py --check
+node app/backend/scripts/verify-r6.mjs
+node app/backend/scripts/manage-r6-database.mjs --help
+```
+
+API4 shared types are generated independently in `app/shared/api4-types.ts`. API3 frozen types and OpenAPI stay unchanged. `test:r5` names the reused internal business modules; it is not a claim that current new people use historical API3. `migrate:v3` is deliberately disabled in this new-person version; use the historical code+database together for historical records. Human calibration and real-model experiments are separate from automated tests.
+
+## API4 integrated regression targets (2026-09-20)
+
+After integrating PR16 with PR14, current frontend and backend both use API4. Earlier pending-frontend statements above are phase history. API4 CI uses the current checkout, not the frozen handoff backend. Historical API3 regression uses `EB_API3_BACKEND_ROOT` pointing to `80d153bc487201c193dd416c606d20f3210766fe`; its build helper probes actual schema 3.0, and the server/analyzer/reset CLI share that root. Preserve every existing test and assertion. Commands and isolation are documented in [API contract testing](docs/API_CONTRACT_TESTING.md). Run constrained local browser suites separately from the backend suite. Verify latest-head CI before merging; production deployment and database changes remain separate.

@@ -1,10 +1,10 @@
 name: Backend checks
 on:
   pull_request:
-    paths: ['app/backend/**', 'docs/backend/**', '.github/workflows/backend-checks.yml']
+    paths: ['app/backend/**', 'docs/backend/**', 'app/shared/api4-types.ts', 'scripts/frontend-types-v4.py', '.github/workflows/backend-checks.yml']
   push:
     branches: [main]
-    paths: ['app/backend/**', 'docs/backend/**', '.github/workflows/backend-checks.yml']
+    paths: ['app/backend/**', 'docs/backend/**', 'app/shared/api4-types.ts', 'scripts/frontend-types-v4.py', '.github/workflows/backend-checks.yml']
 permissions:
   contents: read
 jobs:
@@ -28,5 +28,7 @@ jobs:
       - run: npm test
       - run: npm run docs:generate:legacy
       - run: npm run docs:generate
-      - run: git diff --exit-code -- ../../docs/backend/openapi.json ../../docs/backend/r5/openapi.json
-      - run: node scripts/verify-r5.mjs
+      - run: git diff --exit-code -- ../../docs/backend/openapi.json ../../docs/backend/r5/openapi.json ../../docs/backend/r6/openapi.json
+      - run: python3 ../../scripts/frontend-types-v4.py --check
+      - run: node content/r6/generate-audit.mjs --check
+      - run: node scripts/verify-r6.mjs

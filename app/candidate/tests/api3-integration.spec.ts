@@ -1,6 +1,6 @@
 import { expect, test, type Page, type APIRequestContext } from '@playwright/test';
 import { readFile, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
@@ -169,7 +169,7 @@ test('T13 a slow previous candidate response never becomes the newly selected id
 });
 
 test('T14 administrator reset CLI clears four test cases without placing its token in either browser',async({page,request})=>{
-  for(const id of people)await seedTask(request,id,'sql');await open(page,'candidate');const before=await read(request);const cli=fileURLToPath(new URL('../../backend/scripts/reset.mjs',import.meta.url));const {stdout}=await promisify(execFile)(process.execPath,[cli],{env:{PATH:process.env.PATH,BASE_URL:backend,DEMO_ADMIN_TOKEN:token}});expect(JSON.parse(stdout).candidatesReset).toBe(4);await refresh(page);expect((await read(request)).sessionId).not.toBe(before.sessionId);expect(await page.evaluate(()=>JSON.stringify(localStorage)+document.body.innerText)).not.toContain(token);
+  for(const id of people)await seedTask(request,id,'sql');await open(page,'candidate');const before=await read(request);const root=resolve(process.env.EB_API3_BACKEND_ROOT || fileURLToPath(new URL('../../../',import.meta.url)));const cli=resolve(root,'app/backend/scripts/reset.mjs');const {stdout}=await promisify(execFile)(process.execPath,[cli],{env:{PATH:process.env.PATH,BASE_URL:backend,DEMO_ADMIN_TOKEN:token}});expect(JSON.parse(stdout).candidatesReset).toBe(4);await refresh(page);expect((await read(request)).sessionId).not.toBe(before.sessionId);expect(await page.evaluate(()=>JSON.stringify(localStorage)+document.body.innerText)).not.toContain(token);
 });
 
 test('T15 temporary SQLite survives service close/reopen and both windows read the saved snapshot',async({page:candidate,context,request})=>{

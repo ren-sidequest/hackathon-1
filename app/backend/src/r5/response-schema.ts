@@ -1,6 +1,6 @@
 import { Type, type TSchema } from '@sinclair/typebox';
 import { DemoSchema as LegacyDemoSchema } from '../response-schema.js';
-import { SubmissionSchema as LegacySubmissionSchema, ReviewRecordSchema as LegacyReviewSchema, SourceSchema, AnalysisResultSchema as LegacyResultSchema, AnalysisStateSchema as LegacyAnalysisSchema, ObservationSchema, WorkflowSchema } from '../schema.js';
+import { SourceSchema, AnalysisResultSchema as LegacyResultSchema, AnalysisStateSchema as LegacyAnalysisSchema, ObservationSchema, WorkflowSchema } from '../schema.js';
 import { CandidateSchema, RequirementSchema, StageSchema, FingerprintSchema, CriterionSchema, SourceRefSchema, AssessmentItemSchema, SubmitSchema, ReviewSchema, ReuseSchema, ShortlistSchema } from './schema.js';
 const o = {
   additionalProperties: false
@@ -24,12 +24,34 @@ const mark = Type.Union([
 export const CandidateInfoSchema = Type.Object({
   id: CandidateSchema, name: s(), background: s()
 }, o);
+export const SourceProvenanceSchema = Type.Object({
+  origin: choices(['user_supplied_fictional_cv', 'synthetic_demo_work_sample']),
+  filePath: s(), sha256: FingerprintSchema, pageNumbers: Type.Array(integer()), disclosure: s(),
+  downloadUrl: Type.Optional(s()),
+  redaction: Type.Optional(Type.Object({removedFields: strings(), originalSha256: FingerprintSchema}, o))
+}, o);
+export const JdSchema = Type.Object({
+  version: s(), sourceId: s(), filePath: s(), sha256: FingerprintSchema, pages: integer(), scope: s(),
+  source: Type.Object({sourceId: s(), location: s(), text: s(), fingerprint: FingerprintSchema, sha256: FingerprintSchema, downloadUrl: s()}, o),
+  requirements: Type.Array(Type.Object({id: s(), category: choices(['essential','desirable','responsibility']), statement: s(), page: integer(), start: integer(), end: integer(), quote: s(), criterionIds: Type.Array(CriterionSchema)}, o))
+}, o);
+export const JdAlignmentSchema = Type.Array(Type.Object({
+  jdRequirementId: s(), statuses: Type.Array(choices(['not_reviewed','claimed_in_cv','work_sample_evidence','further_evidence_needed'])),
+  summary: s(), remainingUnknowns: s(), sourceRefs: Type.Array(SourceRefSchema)
+}, o));
+export const GapSchema = Type.Object({
+  gapId: s(), stage: StageSchema, assessmentRevision: integer(), evidenceSnapshotId: s(), fingerprint: FingerprintSchema,
+  criterionId: CriterionSchema, targetRequirementId: RequirementSchema, mark,
+  severity: choices(['observed_problem','missing_evidence','material_gap','minor_gap']), priority: Type.Integer({minimum:1,maximum:3}),
+  priorityReason: s(), summary:s(), rationale:s(), uncertainty:s(), nextStep:s(),
+  checkedSourceIds:strings(),sourceRefs:Type.Array(SourceRefSchema),requiresHumanConfirmation:Type.Literal(true),suggestedFirstAction:s()
+}, o);
 export const CompanySchema = Type.Object({
-  id: s(), name: s(), provenance: Type.Literal('synthetic'), location: s(), approximateHeadcount: integer(), products: strings(), fulfilment: s(), hiringManager: s(), budgetApprover: s(), dedicatedRecruitingTeam: Type.Literal(false), businessProblem: s(), constraints: strings()
-}, o);
+  id:s(),name:s(),provenance:Type.Literal('user_supplied_demo_jd'),location:s(),businessDescription:s(),profileScope:s()
+},o);
 export const JobSchema = Type.Object({
-  ...LegacyDemoSchema.properties.job.properties, reportsTo: s(), successStages: strings()
-}, o);
+  ...LegacyDemoSchema.properties.job.properties,successStages:strings(),location:s(),employmentType:s(),experienceLevel:s(),team:s(),collaboratingTeams:strings(),supportedByExperiencedAnalysts:Type.Literal(true),jd:JdSchema
+},o);
 export const RubricSchema = Type.Object({
   version: s(), jobId: s(), provenance: s(), calibrationStatus: s(), label: s(), scope: s(),
   requirements: Type.Array(Type.Object({
@@ -66,7 +88,7 @@ export const PresetReportSchema = Type.Object({
   ]), displayStatus: s(), mode: Type.Literal('preset'), summary: s(), uncertainty: s(), sourceRefs: Type.Array(SourceRefSchema)
 }, o);
 const baseline = Type.Object({
-  candidateId: CandidateSchema, jobId: s(), evidenceSnapshotId: s(), fingerprint: FingerprintSchema, fixtureVersion: s(), rubricVersion: s(), stage: Type.Literal('application_review'), assessmentRevision: Type.Literal(1), annotationMode: Type.Literal('preset_human'), label: s(), status: Type.Literal('reviewed'),
+  candidateId: CandidateSchema, jobId: s(), evidenceSnapshotId: s(), fingerprint: FingerprintSchema, fixtureVersion: s(), rubricVersion: s(), stage: Type.Literal('application_review'), assessmentRevision: Type.Literal(1), annotationMode: Type.Literal('ai_authored'), label: s(), status: Type.Literal('reviewed'), assessmentComplete: b(),
   provenance: Type.Object({
     sampleType: Type.Literal('synthetic'), standardDesign: s(), actualAnnotation: s(), actualReview: s(), humanCalibration: Type.Literal('pending'), externalExpertValidation: Type.Literal(false), note: s()
   }, o), items: Type.Array(AssessmentItemSchema), score: ScoreSchema
@@ -74,8 +96,8 @@ const baseline = Type.Object({
 export const ApplicationSchema = Type.Object({
   id: s(), candidateId: CandidateSchema, jobId: s(), evidenceSnapshotId: s(), fingerprint: FingerprintSchema, fixtureVersion: s(), provenance: Type.Literal('synthetic'), materialVersion: Type.Literal(1), scope: s(),
   sources: Type.Array(Type.Object({
-    ...SourceSchema.properties, kind: Type.Literal('application')
-  }, o)), baseline, initialReport: Type.Array(PresetReportSchema)
+    ...SourceSchema.properties, kind: choices(['application','work_sample']), provenance: Type.Optional(SourceProvenanceSchema)
+  }, o)), jdAlignment: JdAlignmentSchema, baseline, initialReport: Type.Array(PresetReportSchema)
 }, o);
 export const TaskTemplateSchema = Type.Object({
   templateId: s(), title: s(), targetRequirementId: RequirementSchema, instructions: s(), timeboxMinutes: Type.Literal(20), timeboxEnforced: Type.Literal(false), datasetVersion: s(), resourceIds: strings(), observationDimensions: strings(), mode: Type.Literal('preset')
@@ -85,16 +107,12 @@ export const TaskSchema = Type.Object({
     'draft', 'sent', 'submitted', 'awaiting_revision', 'reviewed'
   ]), targetRequirementId: nullable(RequirementSchema), templateId: nullable(s()), title: s(), instructions: s(), gapReason: s(), sentAt: nullable(s()), timeboxMinutes: Type.Literal(20)
 }, o);
-export const SubmissionSchema = Type.Union([
-  LegacySubmissionSchema, Type.Object({
+export const SubmissionSchema = Type.Object({
     ...SubmitSchema.properties, submissionId: s(), submittedAt: s(), contentFingerprint: FingerprintSchema, processEvidenceProvenance: Type.Literal('client_reported'), sources: Type.Array(SourceSchema)
-  }, o)
-]);
-export const ReviewRecordSchema = Type.Union([
-  LegacyReviewSchema, Type.Object({
+  }, o);
+export const ReviewRecordSchema = Type.Object({
     ...ReviewSchema.properties, reviewId: s(), reviewedAt: s()
-  }, o)
-]);
+  }, o);
 const resultSchema = Type.Object({
   ...LegacyResultSchema.properties, observations: Type.Array(Type.Object({
     ...ObservationSchema.properties, dimension: choices([
@@ -114,7 +132,7 @@ export const AssessmentRecordSchema = Type.Object({
   assessmentId: s(), candidateId: CandidateSchema, jobId: s(), rubricVersion: s(), stage: StageSchema, evidenceSnapshotId: s(), fingerprint: FingerprintSchema, submissionId: nullable(s()), contentFingerprint: nullable(FingerprintSchema), assessmentRevision: Type.Integer({
     minimum: 1
   }), status: Type.Literal('reviewed'), annotationMode: choices([
-    'preset_human', 'human'
+    'ai_authored', 'human'
   ]), operatorLabel: s(), createdAt: s(), items: Type.Array(AssessmentItemSchema), reuseApplication: nullable(ReuseSchema), reusedItems: Type.Array(AssessmentItemSchema), score: ScoreSchema
 }, o);
 export const ShortlistBasisSchema = Type.Pick(ShortlistSchema, [
@@ -131,10 +149,10 @@ export const ShortlistViewSchema = Type.Object({
   ]), reason: nullable(s()), basis: nullable(ShortlistBasisSchema), history: Type.Array(ShortlistEventSchema)
 }, o);
 const common = {
-  schemaVersion: Type.Literal('3.0'), sessionId: s(), revision: integer(), datasetVersion: s(), fixtureVersion: s(), rubricVersion: s(), company: CompanySchema, job: JobSchema, rubric: RubricSchema
+  schemaVersion: Type.Literal('4.0'), sessionId: s(), revision: integer(), datasetVersion: s(), fixtureVersion: s(), jdVersion: s(), rubricVersion: s(), company: CompanySchema, job: JobSchema, rubric: RubricSchema
 };
 export const DemoSchema = Type.Object({
-  ...common, candidate: CandidateInfoSchema, application: ApplicationSchema, dataset: LegacyDemoSchema.properties.dataset, task: TaskSchema,
+  ...common, assessmentComplete:b(), gapSuggestions: Type.Array(GapSchema), candidate: CandidateInfoSchema, application: ApplicationSchema, dataset: LegacyDemoSchema.properties.dataset, task: TaskSchema,
   taskTemplates: Type.Object({
     sql: TaskTemplateSchema, 'data-analysis': TaskTemplateSchema, 'business-problem-solving': TaskTemplateSchema
   }, o), versions: Type.Array(VersionSchema, {
@@ -146,11 +164,11 @@ export const DemoSchema = Type.Object({
     ...WorkflowSchema.properties, canSend: b()
   }, o),
   capabilities: Type.Object({
-    contract: Type.Literal('3.0'), analysisMode: choices([
+    contract: Type.Literal('4.0'), analysisMode: choices([
       'disabled', 'manual_simulation', 'live'
     ]), analysisAvailable: b(), analysisUnavailableReason: nullable(choices([
       'AI_DISABLED', 'AI_NOT_CONFIGURED'
-    ])), upload: Type.Literal(false), authentication: Type.Literal(false), sqlExecution: Type.Literal(false)
+    ])), upload: Type.Literal(false), authentication: Type.Literal(false), authenticationScope:s(), writeAccess:Type.Object({enforcement:Type.Literal('deployment_defined'),status:Type.Literal('unknown'),loginPath:s()},o), analysisModeLabel:s(), sqlExecution: Type.Literal(false)
   }, o),
   assessment: Type.Object({
     application_review: nullable(AssessmentRecordSchema), task_v1: nullable(AssessmentRecordSchema), task_v2: nullable(AssessmentRecordSchema), history: Type.Array(AssessmentRecordSchema)
@@ -166,8 +184,8 @@ export const DemoSchema = Type.Object({
   }, o)
 }, o);
 export const ComparisonSchema = Type.Object({
-  ...common, stage: Type.Literal('application_review'), sortPolicy: s(), limitations: s(), candidates: Type.Array(Type.Object({
-    candidate: CandidateInfoSchema, application: ApplicationSchema, assessment: nullable(AssessmentRecordSchema), task: TaskSchema, taskAssessments: Type.Array(AssessmentRecordSchema), shortlist: ShortlistViewSchema
+  ...common, stage: Type.Literal('application_review'), applicationsReviewed:integer(), candidatesWithCompleteCoreEvidence:integer(), sortPolicy: s(), limitations: s(), candidates: Type.Array(Type.Object({
+    candidate: CandidateInfoSchema, application: ApplicationSchema, assessment: nullable(AssessmentRecordSchema), assessmentComplete:b(), gapSuggestions:Type.Array(GapSchema), task: TaskSchema, taskAssessments: Type.Array(AssessmentRecordSchema), shortlist: ShortlistViewSchema
   }, o), {
     minItems: 4, maxItems: 4
   })

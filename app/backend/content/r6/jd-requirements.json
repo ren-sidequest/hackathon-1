@@ -1,0 +1,235 @@
+[
+  {
+    "id": "data-quality",
+    "category": "responsibility",
+    "statement": "Collect, validate and document business data and reporting assumptions.",
+    "page": 1,
+    "start": 1436,
+    "end": 1763,
+    "quote": "• Collect, organize and validate data from sales, website and marketing sources. \n• Check datasets for missing values, inconsistencies and obvious data-quality \nissues. \n• Maintain clear documentation of data sources, calculations and analytical \nassumptions. \n• Support reliable and consistent reporting across business teams.",
+    "criterionIds": [
+      "S3",
+      "D3"
+    ]
+  },
+  {
+    "id": "sql-extraction",
+    "category": "responsibility",
+    "statement": "Use basic SQL to extract, filter, group and aggregate appropriate business data.",
+    "page": 2,
+    "start": 1804,
+    "end": 1995,
+    "quote": "• Write basic SQL queries to extract, filter, group and summaries business data. \n• Use aggregation techniques to analyses performance across products, time \nperiods and acquisition channels.",
+    "criterionIds": [
+      "S1",
+      "S2",
+      "S3"
+    ]
+  },
+  {
+    "id": "business-metrics",
+    "category": "responsibility",
+    "statement": "Calculate business metrics and compare periods or customer/channel segments.",
+    "page": 2,
+    "start": 1997,
+    "end": 2192,
+    "quote": "• Calculate and monitor key business metrics such as website traffic, orders and \nconversion rates. \n• Compare results across periods or customer/channel segments to identify \nmeaningful changes.",
+    "criterionIds": [
+      "D1",
+      "D2",
+      "D3"
+    ]
+  },
+  {
+    "id": "business-investigation",
+    "category": "responsibility",
+    "statement": "Investigate business questions, distinguish evidence and uncertainty, and propose supported next steps.",
+    "page": 2,
+    "start": 2233,
+    "end": 2729,
+    "quote": "• Investigate changes in business performance and identify possible explanations \nsupported by available data. \n• Distinguish between what the data directly shows and what remains uncertain. \n• Identify when additional data is required before reaching a business conclusion. \n• Perform ad hoc analysis to support questions raised by Marketing, Product or \nCommercial teams. \n• Translate analytical findings into practical next steps or recommendations where \nthe available evidence supports them.",
+    "criterionIds": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ]
+  },
+  {
+    "id": "reporting-visualisation",
+    "category": "responsibility",
+    "statement": "Create clear recurring reports, tables, dashboards and simple visualisations.",
+    "page": 2,
+    "start": 2760,
+    "end": 3067,
+    "quote": "• Assist in creating recurring reports, tables and dashboards using Excel or \nbusiness-intelligence tools. \n• Present metrics and analytical findings in a clear, structured and accessible \nformat. \n• Support the development of simple visualizations that help stakeholders \nunderstand trends and performance.",
+    "criterionIds": [
+      "D3"
+    ]
+  },
+  {
+    "id": "stakeholder-communication",
+    "category": "responsibility",
+    "statement": "Explain implications and limits accessibly and collaborate on business data requirements.",
+    "page": 2,
+    "start": 3096,
+    "end": 3486,
+    "quote": "• Explain analytical findings clearly to colleagues who may not have a technical \nbackground. \n• Summaries the business implications of an analysis rather than only presenting \ncalculations. \n• Clearly communicate assumptions, limitations and areas where further \ninvestigation is required. \n• Collaborate with cross-functional teams to understand business questions and \ndata requirements.",
+    "criterionIds": [
+      "D3",
+      "B1",
+      "B4"
+    ]
+  },
+  {
+    "id": "relevant-degree",
+    "category": "essential",
+    "statement": "Bachelor’s degree or near completion in a listed or related discipline.",
+    "page": 3,
+    "start": 3538,
+    "end": 3696,
+    "quote": "• Bachelor’s degree, or near completion, in Data Analytics, Business Analytics, \nStatistics, Mathematics, Computer Science, Economics or a related discipline.",
+    "criterionIds": []
+  },
+  {
+    "id": "foundational-sql",
+    "category": "essential",
+    "statement": "Foundational SQL filtering, grouping and aggregation.",
+    "page": 3,
+    "start": 3698,
+    "end": 3784,
+    "quote": "• Foundational knowledge of SQL, including filtering, grouping and basic \naggregation.",
+    "criterionIds": [
+      "S1",
+      "S2",
+      "S3"
+    ]
+  },
+  {
+    "id": "spreadsheets",
+    "category": "essential",
+    "statement": "Strong Excel or spreadsheet skills.",
+    "page": 3,
+    "start": 3786,
+    "end": 3823,
+    "quote": "• Strong Excel or spreadsheet skills.",
+    "criterionIds": []
+  },
+  {
+    "id": "metric-interpretation",
+    "category": "essential",
+    "statement": "Calculate and interpret basic business metrics.",
+    "page": 3,
+    "start": 3825,
+    "end": 3885,
+    "quote": "• Ability to calculate and interpret basic business metrics.",
+    "criterionIds": [
+      "D1",
+      "D2"
+    ]
+  },
+  {
+    "id": "structured-problem-solving",
+    "category": "essential",
+    "statement": "Analytical and structured problem-solving skills.",
+    "page": 3,
+    "start": 3887,
+    "end": 3945,
+    "quote": "• Strong analytical and structured problem-solving skills.",
+    "criterionIds": [
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ]
+  },
+  {
+    "id": "accuracy",
+    "category": "essential",
+    "statement": "Attention to detail and commitment to data accuracy.",
+    "page": 3,
+    "start": 3947,
+    "end": 4006,
+    "quote": "• High attention to detail and commitment to data accuracy.",
+    "criterionIds": [
+      "S3",
+      "D3"
+    ]
+  },
+  {
+    "id": "written-verbal-communication",
+    "category": "essential",
+    "statement": "Explain analytical findings in written and verbal form.",
+    "page": 3,
+    "start": 4008,
+    "end": 4084,
+    "quote": "• Ability to explain analytical findings clearly in written and verbal form.",
+    "criterionIds": [
+      "D3",
+      "B4"
+    ]
+  },
+  {
+    "id": "learning",
+    "category": "essential",
+    "statement": "Willingness to learn and work in a fast-moving startup environment.",
+    "page": 3,
+    "start": 4086,
+    "end": 4155,
+    "quote": "• Willingness to learn and work in a fast-moving startup environment.",
+    "criterionIds": []
+  },
+  {
+    "id": "analysis-experience",
+    "category": "desirable",
+    "statement": "Analysis internship, university project or portfolio experience.",
+    "page": 3,
+    "start": 4168,
+    "end": 4249,
+    "quote": "• Internship, university project or portfolio experience involving data analysis.",
+    "criterionIds": []
+  },
+  {
+    "id": "python-r",
+    "category": "desirable",
+    "statement": "Familiarity with Python or R.",
+    "page": 3,
+    "start": 4251,
+    "end": 4282,
+    "quote": "• Familiarity with Python or R.",
+    "criterionIds": []
+  },
+  {
+    "id": "bi-tools",
+    "category": "desirable",
+    "statement": "Exposure to Power BI, Tableau or another visualisation platform.",
+    "page": 3,
+    "start": 4284,
+    "end": 4355,
+    "quote": "• Exposure to Power BI, Tableau or another data-visualization platform.",
+    "criterionIds": []
+  },
+  {
+    "id": "digital-metrics",
+    "category": "desirable",
+    "statement": "Basic digital analytics, e-commerce or marketing metrics understanding.",
+    "page": 3,
+    "start": 4357,
+    "end": 4446,
+    "quote": "• Basic understanding of digital analytics, e-commerce or marketing performance \nmetrics.",
+    "criterionIds": [
+      "D1",
+      "D2"
+    ]
+  },
+  {
+    "id": "nontechnical-presentation",
+    "category": "desirable",
+    "statement": "Present analytical work to non-technical audiences.",
+    "page": 3,
+    "start": 4448,
+    "end": 4515,
+    "quote": "• Experience presenting analytical work to non-technical audiences.",
+    "criterionIds": []
+  }
+]

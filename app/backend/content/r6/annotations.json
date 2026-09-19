@@ -1,0 +1,555 @@
+{
+  "amy-chen": [
+    {
+      "criterionId": "S1",
+      "mark": 4,
+      "support": "The input grain is explicit; the query aggregates by that grain, requires no join, and proposes a zero-row duplicate check.",
+      "gaps": "No material counting defect is visible in the supplied static query.",
+      "rationale": "The input grain is explicit; the query aggregates by that grain, requires no join, and proposes a zero-row duplicate check. No material counting defect is visible in the supplied static query.",
+      "nextStep": "Inspect the actual export and run the proposed duplicate check before operational use.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": [
+        {
+          "sourceId": "channel_analysis.sql",
+          "quote": "-- Prepared input: channel_period_metrics, one row per (period_start, channel).\n-- period_start identifies a complete four-week reporting window, not a transaction date."
+        }
+      ]
+    },
+    {
+      "criterionId": "S2",
+      "mark": 4,
+      "support": "The non-overlapping four-week windows map to the two exact DATE literals in the filter and matching period/channel groups.",
+      "gaps": "The query trusts prepared period labels; this is disclosed rather than an execution claim.",
+      "rationale": "The non-overlapping four-week windows map to the two exact DATE literals in the filter and matching period/channel groups. The query trusts prepared period labels; this is disclosed rather than an execution claim.",
+      "nextStep": "Check that the upstream exporter assigns the documented boundaries.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": [
+        {
+          "sourceId": "channel_analysis.sql",
+          "quote": "-- Previous: [2026-03-02,2026-03-30); current: [2026-03-30,2026-04-27)."
+        }
+      ]
+    },
+    {
+      "criterionId": "S3",
+      "mark": 4,
+      "support": "Duplicate expectations, invalid counts, zero denominators, reconciliation and time-window verification are actionable and appropriate to the prepared table.",
+      "gaps": "The checks are proposed; no execution result is attached.",
+      "rationale": "Duplicate expectations, invalid counts, zero denominators, reconciliation and time-window verification are actionable and appropriate to the prepared table. The checks are proposed; no execution result is attached.",
+      "nextStep": "Record the check outputs and investigate flagged rows before using a real export.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": [
+        {
+          "sourceId": "channel_analysis.sql",
+          "quote": "-- Proposed pre-report checks (not recorded execution results):\n-- 1. GROUP BY period_start, channel HAVING COUNT(*) > 1 should return zero rows.\n-- 2. Count null or negative counts; investigate every flagged row before publishing.\n-- 3. A zero-session group returns NULL, not a valid zero conversion rate.\n-- 4. Reconcile each period to the prepared totals in channel_analysis.md.\n-- 5. Confirm the upstream export actually uses the stated windows and definitions;\n--    this query trusts period labels and does not verify the raw timestamp mapping."
+        }
+      ]
+    },
+    {
+      "criterionId": "D1",
+      "mark": 4,
+      "support": "The stated orders/sessions formula and integer table reproduce the total growth and both absolute and relative conversion changes.",
+      "gaps": "No material arithmetic or unit error is visible in these calculations.",
+      "rationale": "The stated orders/sessions formula and integer table reproduce the total growth and both absolute and relative conversion changes. No material arithmetic or unit error is visible in these calculations.",
+      "nextStep": "Keep the raw integer counts alongside rounded display values.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "channel_analysis.md",
+          "quote": "- Total sessions: 4,000 to 5,000 (+25.0%).\n- Completed orders: 200 to 225 (+12.5%).\n- Overall conversion: 5.0% to 4.5% (-0.5 percentage points; -10.0% relative)."
+        }
+      ]
+    },
+    {
+      "criterionId": "D2",
+      "mark": 4,
+      "support": "Both channels and their changing weights are compared; the report explicitly avoids averaging rates and double-counting SQL/table populations.",
+      "gaps": "The channel comparison is descriptive; campaign-level behaviour is outside this material.",
+      "rationale": "Both channels and their changing weights are compared; the report explicitly avoids averaging rates and double-counting SQL/table populations. The channel comparison is descriptive; campaign-level behaviour is outside this material.",
+      "nextStep": "Seek an aligned finer-grain breakdown if the business decision needs an explanation of the change.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "channel_analysis.md",
+          "quote": "- Paid Search conversion: 4.0% to 3.0%; its session share rises from 37.5% to 48.0%.\n- Organic conversion: 5.6% to approximately 5.8846%.\n- Aggregate rates use total orders divided by total sessions, not an unweighted average of channel percentages. Round after calculating."
+        }
+      ]
+    },
+    {
+      "criterionId": "D3",
+      "mark": 4,
+      "support": "Prepared counts, definitions and formulas make the worksheet reproducible, with missing export checks and overlapping populations disclosed.",
+      "gaps": "Raw transactions and the original export are absent, so this supports the documented calculation rather than independent extraction quality.",
+      "rationale": "Prepared counts, definitions and formulas make the worksheet reproducible, with missing export checks and overlapping populations disclosed. Raw transactions and the original export are absent, so this supports the documented calculation rather than independent extraction quality.",
+      "nextStep": "Verify the original export definitions and timestamp mapping before adopting the result.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "channel_analysis.md",
+          "quote": "The SQL file and this table describe the same population. They are not two sets of orders. The upstream timestamp mapping and original export checks remain to be inspected."
+        }
+      ]
+    },
+    {
+      "criterionId": "B1",
+      "mark": 2,
+      "support": "The note connects a falling rate and rising order count to investigating paid-traffic composition before interpreting promotion.",
+      "gaps": "The decision to be supported, owner and practical analysis constraint are not explicit.",
+      "rationale": "The note connects a falling rate and rising order count to investigating paid-traffic composition before interpreting promotion. The decision to be supported, owner and practical analysis constraint are not explicit.",
+      "nextStep": "State the decision the operations team needs to make and the available investigation time.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "channel_analysis.md",
+          "quote": "Orders increased even though overall conversion fell. Paid Search brought more sessions and orders, but converted a smaller share of its sessions. Before interpreting an increase in promotional activity, I would look at the paid-traffic composition. Campaign mix is one possible explanation, not a demonstrated cause. I would request campaign and device breakdowns for the same two periods."
+        }
+      ]
+    },
+    {
+      "criterionId": "B2",
+      "mark": 3,
+      "support": "The rate/count observations are kept separate from a campaign-mix hypothesis without claiming a proven cause.",
+      "gaps": "A competing explanation such as a measurement or within-group change is not developed.",
+      "rationale": "The rate/count observations are kept separate from a campaign-mix hypothesis without claiming a proven cause. A competing explanation such as a measurement or within-group change is not developed.",
+      "nextStep": "Describe one plausible competing explanation and what current evidence does not settle.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "channel_analysis.md",
+          "quote": "Campaign mix is one possible explanation, not a demonstrated cause."
+        }
+      ]
+    },
+    {
+      "criterionId": "B3",
+      "mark": 2,
+      "support": "The request names specific dimensions and aligned periods.",
+      "gaps": "It does not describe the comparison or what contrasting results would imply for the explanation.",
+      "rationale": "The request names specific dimensions and aligned periods. It does not describe the comparison or what contrasting results would imply for the explanation.",
+      "nextStep": "Explain how different results from the requested breakdown would change the conclusion.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "channel_analysis.md",
+          "quote": "I would request campaign and device breakdowns for the same two periods."
+        }
+      ]
+    },
+    {
+      "criterionId": "B4",
+      "mark": 2,
+      "support": "A relevant first investigative action is identified before interpreting promotion.",
+      "gaps": "The note lacks an explicit sequence beyond that first look and a way to validate the resulting recommendation.",
+      "rationale": "A relevant first investigative action is identified before interpreting promotion. The note lacks an explicit sequence beyond that first look and a way to validate the resulting recommendation.",
+      "nextStep": "Specify the next step after the comparison and how the operations team will check its result.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "channel_analysis.md",
+          "quote": "Before interpreting an increase in promotional activity, I would look at the paid-traffic composition."
+        }
+      ]
+    }
+  ],
+  "ann-li": [
+    {
+      "criterionId": "S1",
+      "mark": 4,
+      "support": "The query retrieves the documented customer-snapshot grain with an exact snapshot filter and proposes unique-customer checks; no join or aggregation is needed for this extraction.",
+      "gaps": "Feature construction is outside this excerpt, so the mark concerns the visible extraction only.",
+      "rationale": "The query retrieves the documented customer-snapshot grain with an exact snapshot filter and proposes unique-customer checks; no join or aggregation is needed for this extraction. Feature construction is outside this excerpt, so the mark concerns the visible extraction only.",
+      "nextStep": "Inspect the upstream feature table contract before using the extract.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": [
+        {
+          "sourceId": "cohort_extract.sql",
+          "quote": "-- customer_features: one row per (customer_id, snapshot_date)."
+        }
+      ]
+    },
+    {
+      "criterionId": "S2",
+      "mark": 2,
+      "support": "The as-of date and feature/outcome ordering are explicit and the SQL filters the stated snapshot.",
+      "gaps": "The extract does not implement the feature-window boundary, label-window audit or a group/period comparison; only part of the comparison requirement is observable.",
+      "rationale": "The as-of date and feature/outcome ordering are explicit and the SQL filters the stated snapshot. The extract does not implement the feature-window boundary, label-window audit or a group/period comparison; only part of the comparison requirement is observable.",
+      "nextStep": "Supply the feature/label time-window query or a small aligned comparison and explain its boundaries.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": [
+        {
+          "sourceId": "cohort_extract.sql",
+          "quote": "-- The prepared cohort contains 45,000 customers at snapshot_date 2025-12-31.\n-- Feature windows end before 2026-01-01; churn_next_60d is a later outcome label."
+        }
+      ]
+    },
+    {
+      "criterionId": "S3",
+      "mark": 3,
+      "support": "The expected row and class counts, uniqueness, valid-label checks and fold-local missing-value treatment are specific.",
+      "gaps": "Missing-value investigation and time-window audit methods are not fully specified in the query material.",
+      "rationale": "The expected row and class counts, uniqueness, valid-label checks and fold-local missing-value treatment are specific. Missing-value investigation and time-window audit methods are not fully specified in the query material.",
+      "nextStep": "Show a check query and expected result for feature timing and missing-value handling.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": [
+        {
+          "sourceId": "cohort_extract.sql",
+          "quote": "-- Proposed checks: unique customer_id within this snapshot; 45,000 rows;\n-- 6,750 positive labels and 38,250 negative labels; labels in {0,1}.\n-- Inspect missing feature values; learn any imputation only on training folds.\n-- The feature construction SQL and outcome-window audit are not in this extract."
+        }
+      ]
+    },
+    {
+      "criterionId": "D1",
+      "mark": 4,
+      "support": "Customer counts, prevalence, majority-class accuracy and recall are correctly distinguished; these are not website-conversion or hiring percentages.",
+      "gaps": "No measured capstone model-performance result is supplied or inferred from the internship AUC.",
+      "rationale": "Customer counts, prevalence, majority-class accuracy and recall are correctly distinguished; these are not website-conversion or hiring percentages. No measured capstone model-performance result is supplied or inferred from the internship AUC.",
+      "nextStep": "Keep prepared cohort arithmetic separate from any later measured model result.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "churn_method_note.md",
+          "quote": "Positive prevalence is 6,750 / 45,000 = 15.0%. Predicting the majority class for everyone would produce 85.0% accuracy and zero recall of churn cases; accuracy alone is therefore a poor selection criterion for this exercise."
+        }
+      ]
+    },
+    {
+      "criterionId": "D2",
+      "mark": 2,
+      "support": "The procedure proposes a common comparison setup and the note provides a relevant majority-class baseline.",
+      "gaps": "There are no actual model-comparison results or period/segment behaviour comparisons to interpret.",
+      "rationale": "The procedure proposes a common comparison setup and the note provides a relevant majority-class baseline. There are no actual model-comparison results or period/segment behaviour comparisons to interpret.",
+      "nextStep": "Provide a compact, reproducible comparison table with the common evaluation population and baseline.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "churn_method_note.md",
+          "quote": "3. Fit preprocessing within each training fold. Compare logistic regression, random forest and XGBoost with the same folds. Class weighting is applied during training, not by modifying the holdout labels."
+        }
+      ]
+    },
+    {
+      "criterionId": "D3",
+      "mark": 4,
+      "support": "Counts, split allocation, fold-local preprocessing and holdout boundaries form a reviewable procedure, with missing implementation and temporal limits explicitly stated.",
+      "gaps": "This documents a proposed method, not reproducibility of a completed model run.",
+      "rationale": "Counts, split allocation, fold-local preprocessing and holdout boundaries form a reviewable procedure, with missing implementation and temporal limits explicitly stated. This documents a proposed method, not reproducibility of a completed model run.",
+      "nextStep": "Retain the scope label and attach implementation and audit outputs if an executed result is claimed.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "churn_method_note.md",
+          "quote": "These are a prepared cohort and a reviewable procedure, not observed model outputs. Feature-construction code, the label-window audit and execution records would be needed to validate implementation. A customer-random split does not by itself establish performance in a later trading period."
+        }
+      ]
+    },
+    {
+      "criterionId": "B1",
+      "mark": 2,
+      "support": "The note connects a risk score to prioritising follow-up and names relevant operational considerations.",
+      "gaps": "It does not define a particular business question, decision or feasible contact constraint for this project.",
+      "rationale": "The note connects a risk score to prioritising follow-up and names relevant operational considerations. It does not define a particular business question, decision or feasible contact constraint for this project.",
+      "nextStep": "Clarify the decision to support and the practical limit the analyst should use.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "churn_method_note.md",
+          "quote": "A risk score could help a business prioritise follow-up. A contact policy would still need capacity, intervention cost, customer consent and measured outcomes."
+        }
+      ]
+    },
+    {
+      "criterionId": "B2",
+      "mark": 3,
+      "support": "Association, cause and an intervention effect are correctly separated, and the note avoids treating AUC as a business outcome.",
+      "gaps": "Alternative explanations of churn or of model behaviour are not examined.",
+      "rationale": "Association, cause and an intervention effect are correctly separated, and the note avoids treating AUC as a business outcome. Alternative explanations of churn or of model behaviour are not examined.",
+      "nextStep": "Identify a plausible alternative explanation to check before recommending an intervention.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "churn_method_note.md",
+          "quote": "5. SHAP can describe model associations. It does not establish why customers leave or show that changing a feature would prevent churn."
+        }
+      ]
+    },
+    {
+      "criterionId": "B3",
+      "mark": 2,
+      "support": "Specific additional evidence is requested to validate the analytical implementation.",
+      "gaps": "The request does not set out contrasting results that would distinguish a business explanation or intervention choice.",
+      "rationale": "Specific additional evidence is requested to validate the analytical implementation. The request does not set out contrasting results that would distinguish a business explanation or intervention choice.",
+      "nextStep": "Describe the comparison and the different implications expected from the requested evidence.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "churn_method_note.md",
+          "quote": "Feature-construction code, the label-window audit and execution records would be needed to validate implementation."
+        }
+      ]
+    },
+    {
+      "criterionId": "B4",
+      "mark": 2,
+      "support": "The note identifies sensible checks before using scores for customer follow-up and avoids promising an unmeasured gain.",
+      "gaps": "It stops short of an ordered feasible business action and an explicit validation measure.",
+      "rationale": "The note identifies sensible checks before using scores for customer follow-up and avoids promising an unmeasured gain. It stops short of an ordered feasible business action and an explicit validation measure.",
+      "nextStep": "Agree a small next step with a business owner and state how its result would be checked.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "churn_method_note.md",
+          "quote": "A contact policy would still need capacity, intervention cost, customer consent and measured outcomes. This note does not specify a campaign budget, select a retention intervention or claim revenue improvement."
+        }
+      ]
+    }
+  ],
+  "david-liu": [
+    {
+      "criterionId": "S1",
+      "mark": 4,
+      "support": "The task grain, unique user key and left join support one row per task; source-ID and duplicate checks are proposed.",
+      "gaps": "The query is application retrieval, not an analytical aggregation; unnecessary aggregation earns no credit and is not required for this question.",
+      "rationale": "The task grain, unique user key and left join support one row per task; source-ID and duplicate checks are proposed. The query is application retrieval, not an analytical aggregation; unnecessary aggregation earns no credit and is not required for this question.",
+      "nextStep": "Check the actual key constraints and compare returned IDs with the source.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": [
+        {
+          "sourceId": "task_queries.sql",
+          "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+        }
+      ]
+    },
+    {
+      "criterionId": "S2",
+      "mark": "NE",
+      "support": "The CV, application SQL and database note were checked.",
+      "gaps": "The only query is a current user task list; no period or analytical group comparison is supplied.",
+      "rationale": "The CV, application SQL and database note were checked. The only query is a current user task list; no period or analytical group comparison is supplied.",
+      "nextStep": "Provide an existing basic SQL comparison with clear groups or time boundaries.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": []
+    },
+    {
+      "criterionId": "S3",
+      "mark": 4,
+      "support": "Empty results, duplicate risk, source reconciliation and missing display-name behaviour have explicit expected outcomes appropriate to this retrieval query.",
+      "gaps": "No actual run log or authenticated handler is supplied; this is a static checking plan.",
+      "rationale": "Empty results, duplicate risk, source reconciliation and missing display-name behaviour have explicit expected outcomes appropriate to this retrieval query. No actual run log or authenticated handler is supplied; this is a static checking plan.",
+      "nextStep": "Run these cases and inspect access enforcement separately before operational use.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": [
+        {
+          "sourceId": "task_queries.sql",
+          "quote": "-- A user with no tasks receives an empty result.\n-- A task with a valid creator should appear once, not once per other task.\n-- The returned task IDs should match the user's task IDs in the source table.\n-- A missing display name should not remove a task from the result."
+        }
+      ]
+    },
+    {
+      "criterionId": "D1",
+      "mark": "NE",
+      "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+      "gaps": "No business metric, denominator or analytical calculation is supplied.",
+      "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business metric, denominator or analytical calculation is supplied.",
+      "nextStep": "Provide a small existing calculation with definitions, units and working.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": []
+    },
+    {
+      "criterionId": "D2",
+      "mark": "NE",
+      "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+      "gaps": "No period-over-period or analytical segment comparison is supplied.",
+      "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No period-over-period or analytical segment comparison is supplied.",
+      "nextStep": "Provide an aligned period or group comparison and explain its meaning.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": []
+    },
+    {
+      "criterionId": "D3",
+      "mark": "NE",
+      "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+      "gaps": "The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+      "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+      "nextStep": "Supply the working and limitations for a simple business analysis.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": []
+    },
+    {
+      "criterionId": "B1",
+      "mark": "NE",
+      "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+      "gaps": "The software feature scope does not frame a business-analysis decision.",
+      "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software feature scope does not frame a business-analysis decision.",
+      "nextStep": "Describe a business question and the decision it should support.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": []
+    },
+    {
+      "criterionId": "B2",
+      "mark": "NE",
+      "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+      "gaps": "No business-analysis interpretation or causal hypothesis is supplied.",
+      "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business-analysis interpretation or causal hypothesis is supplied.",
+      "nextStep": "Separate observed facts from hypotheses in an existing analysis.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": []
+    },
+    {
+      "criterionId": "B3",
+      "mark": "NE",
+      "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+      "gaps": "No business hypothesis or evidence request to distinguish explanations is supplied.",
+      "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business hypothesis or evidence request to distinguish explanations is supplied.",
+      "nextStep": "Explain what further data would clarify a business question and why.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": []
+    },
+    {
+      "criterionId": "B4",
+      "mark": "NE",
+      "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+      "gaps": "Functional software checks are supplied, but no evidence-led business recommendation is present.",
+      "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. Functional software checks are supplied, but no evidence-led business recommendation is present.",
+      "nextStep": "Provide a practical recommendation and a way to check its outcome.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": []
+    }
+  ],
+  "jamie-parker": [
+    {
+      "criterionId": "S1",
+      "mark": "NE",
+      "support": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence.",
+      "gaps": "No SQL query, aggregation or join material is supplied.",
+      "rationale": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence. No SQL query, aggregation or join material is supplied.",
+      "nextStep": "Provide an existing basic SQL query and explain its input grain.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": []
+    },
+    {
+      "criterionId": "S2",
+      "mark": "NE",
+      "support": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence.",
+      "gaps": "No SQL time-window or group-comparison logic is supplied.",
+      "rationale": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence. No SQL time-window or group-comparison logic is supplied.",
+      "nextStep": "Provide a small SQL comparison with clear filters and boundaries.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": []
+    },
+    {
+      "criterionId": "S3",
+      "mark": "NE",
+      "support": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence.",
+      "gaps": "No SQL validation method or query result check is supplied.",
+      "rationale": "The CV, social tracker and campaign brief were checked. Basic spreadsheet claims are not SQL evidence. No SQL validation method or query result check is supplied.",
+      "nextStep": "Show appropriate checks and expected results beside a SQL example.",
+      "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+      "citations": []
+    },
+    {
+      "criterionId": "D1",
+      "mark": 4,
+      "support": "The formulas reproduce the integer counts, and the source distinguishes action counts, followers and platform-reported reach rather than treating them as orders.",
+      "gaps": "This is a written worksheet illustration, not an inspected Excel workbook.",
+      "rationale": "The formulas reproduce the integer counts, and the source distinguishes action counts, followers and platform-reported reach rather than treating them as orders. This is a written worksheet illustration, not an inspected Excel workbook.",
+      "nextStep": "Check these formulas against the original export or workbook when available.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "social_reporting.md",
+          "quote": "In the worksheet, total interactions use SUM(likes, comments, shares): 400 in May and 520 in June. Net new followers = end - start: 100 and 80."
+        }
+      ]
+    },
+    {
+      "criterionId": "D2",
+      "mark": 2,
+      "support": "The month comparison identifies differing movements and avoids combining overlapping reach into unique people.",
+      "gaps": "A useful overall change is visible but per-post or content-group comparisons and exposure context are missing.",
+      "rationale": "The month comparison identifies differing movements and avoids combining overlapping reach into unique people. A useful overall change is visible but per-post or content-group comparisons and exposure context are missing.",
+      "nextStep": "Supply an aligned per-post or content-group breakdown to inspect the aggregate change.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "social_reporting.md",
+          "quote": "June had more reported reach and interaction actions, while net new followers were lower."
+        }
+      ]
+    },
+    {
+      "criterionId": "D3",
+      "mark": 4,
+      "support": "The table and SUM/subtraction working are reproducible; the source and absent export, finer detail and causal evidence are disclosed.",
+      "gaps": "No workbook, chart artifact or original dashboard export is attached; the mark covers written working only.",
+      "rationale": "The table and SUM/subtraction working are reproducible; the source and absent export, finer detail and causal evidence are disclosed. No workbook, chart artifact or original dashboard export is attached; the mark covers written working only.",
+      "nextStep": "Attach the export and inspect a workbook or chart directly before claiming those tool skills.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "social_reporting.md",
+          "quote": "The figures were copied from platform dashboards. The original export and per-post breakdown are not attached. The worksheet does not test which content caused a change."
+        }
+      ]
+    },
+    {
+      "criterionId": "B1",
+      "mark": 3,
+      "support": "The brief identifies a target audience, campaign purpose, two-week plan and a separately itemised AUD 300 allowance.",
+      "gaps": "Recognition is not operationally defined, so the planning question is clearer than the success decision.",
+      "rationale": "The brief identifies a target audience, campaign purpose, two-week plan and a separately itemised AUD 300 allowance. Recognition is not operationally defined, so the planning question is clearer than the success decision.",
+      "nextStep": "Define what evidence would show progress toward the stated awareness goal.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "campaign_brief.md",
+          "quote": "The concept cafe wants nearby university students to recognise its weekday offering. The team compared three fictional local cafe concepts for message clarity, posting frequency and student offers. The proposed theme is an affordable weekday study break, with two short product posts and one student-oriented post each week for two weeks."
+        }
+      ]
+    },
+    {
+      "criterionId": "B2",
+      "mark": 3,
+      "support": "The planning boundary and social tracker limitations avoid claiming observed sales effects or proven content causation.",
+      "gaps": "Competing explanations for the reporting changes are not developed.",
+      "rationale": "The planning boundary and social tracker limitations avoid claiming observed sales effects or proven content causation. Competing explanations for the reporting changes are not developed.",
+      "nextStep": "Name a plausible alternative explanation before interpreting any campaign effect.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "campaign_brief.md",
+          "quote": "This is a planning artefact, not evidence that a campaign was launched or that sales increased."
+        }
+      ]
+    },
+    {
+      "criterionId": "B3",
+      "mark": 1,
+      "support": "Relevant supplementary material is identified for review.",
+      "gaps": "The request is broad: no aligned comparison or distinguishing result is specified, so support is weaker than a specific data request.",
+      "rationale": "Relevant supplementary material is identified for review. The request is broad: no aligned comparison or distinguishing result is specified, so support is weaker than a specific data request.",
+      "nextStep": "Specify the exact breakdown and what differing results would tell the marketing lead.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "social_reporting.md",
+          "quote": "The content calendar and popular-post examples can be reviewed alongside the platform export."
+        }
+      ]
+    },
+    {
+      "criterionId": "B4",
+      "mark": 2,
+      "support": "Pre-publication checks precede reporting and the brief names observable measures for a follow-up review.",
+      "gaps": "The measures are not linked to a clear awareness success criterion or decision about the next plan.",
+      "rationale": "Pre-publication checks precede reporting and the brief names observable measures for a follow-up review. The measures are not linked to a clear awareness success criterion or decision about the next plan.",
+      "nextStep": "Explain how the review result would change the next action and agree an appropriate comparison.",
+      "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+      "citations": [
+        {
+          "sourceId": "campaign_brief.md",
+          "quote": "Check the offer wording, links and image rights before publishing. Review platform reach and interaction actions after the two-week period; collect common customer questions for the next content plan."
+        }
+      ]
+    }
+  ]
+}

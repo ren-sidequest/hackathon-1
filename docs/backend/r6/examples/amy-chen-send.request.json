@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "4.0",
+  "sessionId": "dcd27813-7e44-40ed-8ced-f9e3552755c8",
+  "candidateId": "amy-chen",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "taskId": "fea5e635-867c-4a4f-b435-2282a8cf194d",
+  "targetRequirementId": "business-problem-solving",
+  "templateId": "harbour-retail-bps-v1",
+  "instructions": "First consider an existing explanation that addresses the selected gap. Investigate the conversion decline using harbour-retail-2026-09-v1. Distinguish observations from hypotheses, request evidence that could distinguish explanations, and recommend a practical next step with a way to check its result. Treat the 20-minute timebox as guidance, not a deadline. Work at a junior analyst level and identify decisions requiring an experienced colleague. Submit findings, hypotheses, missing evidence and next steps; incomplete work may still be reviewed.",
+  "gapReason": "Synthetic example: a human identifies a bounded evidence gap."
+}

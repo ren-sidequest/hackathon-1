@@ -110,3 +110,23 @@
 ## 2026-09-19 双端本地整合补充
 
 基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](docs/FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。
+
+
+## Revision 6 / API4 local implementation (2026-09-19)
+
+Current new-content contract is API4 (`schemaVersion:4.0`), Harbour Retail with Amy Chen, Ann Li, David Liu and Jamie Parker. API3 documents above describe the preserved historical cohort, not aliases for these people. See [R6 handoff](docs/backend/R6_HANDOFF.md). Use an explicit new `evidencebridge-v4.sqlite` path; no automatic migration or reset. Existing API3 frontend awaits Xiaofu's compatible change; this backend delivery does not overwrite frontend source or deploy anything.
+
+Commands from repository root:
+
+```sh
+npm run typecheck --prefix app/backend
+npm run build --prefix app/backend
+npm test --prefix app/backend
+npm run test:r6 --prefix app/backend
+npm run docs:generate --prefix app/backend
+python3 scripts/frontend-types-v4.py --check
+node app/backend/scripts/verify-r6.mjs
+node app/backend/scripts/manage-r6-database.mjs --help
+```
+
+API4 shared types are generated independently in `app/shared/api4-types.ts`. API3 frozen types and OpenAPI stay unchanged. `test:r5` names the reused internal business modules; it is not a claim that current new people use historical API3. `migrate:v3` is deliberately disabled in this new-person version; use the historical code+database together for historical records. Human calibration and real-model experiments are separate from automated tests.
