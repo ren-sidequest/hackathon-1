@@ -73,3 +73,32 @@
 .r5-app .eb-panel>small,.r5-app details small { overflow-wrap:anywhere; }
 @media(max-width:1050px) { .r5-assessment-grid { grid-template-columns:1fr; } .r5-company { gap:24px; } .r5-table-toolbar { align-items:flex-start; flex-direction:column; } }
 @media(max-width:700px) { .r5-preview-banner { flex-direction:column; align-items:flex-start; gap:12px; } .r5-preview-banner label { margin-left:0; } .r5-person-bar { flex-wrap:wrap; } .r5-person-bar label { margin-left:0; flex-basis:100%; } .r5-two,.r5-company { grid-template-columns:1fr; } .r5-company aside { padding:14px 0 0; border-left:0; border-top:1px solid var(--border); } .r5-three { grid-template-columns:1fr; } .r5-summary { grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; padding:16px 8px; } .r5-summary>div { padding-left:6px; } .r5-summary strong { font-size:24px; } .r5-summary span { font-size:10px; } .r5-mode { font-size:9px; padding:4px 6px; } .r5-table-footer { flex-wrap:wrap; } .r5-criterion-toggle { padding:14px; gap:9px; font-size:12px; } .r5-mark { font-size:10px; } }
+/* Keep operational content above the fold without hiding the mock boundary. */
+.r5-preview-banner { padding:10px 14px; margin-bottom:14px; gap:16px; }
+.r5-preview-banner details { border:0; padding:0; margin-top:2px; }
+.r5-preview-banner details summary { font-size:11px; font-weight:400; }
+.r5-person-bar { padding:10px 14px; margin-bottom:14px; }
+.r5-summary { margin:12px 0; padding:12px 16px; }
+.r5-summary strong { display:inline; font-size:20px; margin-right:10px; letter-spacing:0; }
+.r5-app .r5-compare-table td { padding:14px 12px; }
+.r5-comparison { padding-top:16px; }
+.r5-assessment-grid { grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:20px; }
+.r5-assessment-grid>section { grid-column:2; grid-row:1; display:flex; flex-direction:column; }
+.r5-original-pane { grid-column:1; grid-row:1; }
+.r5-criterion:has(button[aria-expanded=true]) { order:-1; }
+.r5-criterion-toggle { padding:12px 16px; }
+.r5-inline-source small { display:block; }
+.r5-inline-source pre { max-height:65vh; overflow:auto; }
+.r5-original-pane .r5-source-card { padding:10px 12px; }
+.r5-original-pane>section:first-child>p { font-size:12px; }
+.r5-assessment-grid .r5-criterion-body { padding:0 16px 14px; }
+@media(max-width:800px) { .r5-assessment-grid { grid-template-columns:1fr; } .r5-original-pane { grid-column:1; grid-row:1; } .r5-assessment-grid>section { grid-column:1; grid-row:2; } }
+@media(max-width:600px) { .r5-preview-banner { flex-direction:row; align-items:center; } .r5-preview-banner strong { font-size:10px; } .r5-summary strong { display:block; margin:0 0 4px; } }
+.r5-app .r5-compare-table { min-width:950px; }
+.r5-assessment-header { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px 20px; }
+.r5-assessment-header>.eb-heading { grid-column:1/-1; margin-bottom:0; }
+.r5-assessment-header>.eb-field { margin:0; }
+.r5-assessment-header>.r5-meta { margin:0; align-content:center; }
+.r5-assessment-header>details,.r5-assessment-header>p { grid-column:1/-1; margin:0; padding-bottom:0; }
+.r5-original-pane .eb-field { margin:0; }
+@media(max-width:700px) { .r5-assessment-header { grid-template-columns:1fr; } }

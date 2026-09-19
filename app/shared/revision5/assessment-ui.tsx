@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Dialog } from '../api-ui';
 import { criteria } from './fixtures';
 import { assessmentKey, quoteSource, rubricVersion, skillName, stageName, submissionSource, type AssessmentEntry, type Mark, type Profile, type Quote, type Source, type Stage } from './model';
@@ -19,7 +19,7 @@ export function SourceDialog({profile,source,quote,close}:{profile:Profile;sourc
 }
 export function AssessmentPanel({profile,controller}:{profile:Profile;controller:PreviewController}) {
   const [stage,setStage]=useState<Stage>('application_review'), [expanded,setExpanded]=useState<string|null>('B3');
-  const [edit,setEdit]=useState(false), [citation,setCitation]=useState<{source:Source|null;quote?:Quote}|null>(null);
+  const [edit,setEdit]=useState(false), [citation,setCitation]=useState<{source:Source|null;quote?:Quote}|null>(()=>{const quote=profile.assessment.entries.find(e=>e.criterionId==='B3')?.citation;return quote?{source:quoteSource(profile,quote)}:null;});
   const task=controller.state.tasks[profile.id];
   const work=stage==='application_review'?null:task?.versions.find(v=>v.version===(stage==='task_v1'?1:2));
   const selectedCriteria=stage==='application_review'?criteria:criteria.filter(c=>c.skill===task?.skill);
@@ -29,27 +29,32 @@ export function AssessmentPanel({profile,controller}:{profile:Profile;controller
   const saved=controller.state.assessmentDrafts[assessmentKey(profile.id,stage)];
   const draft=saved?.snapshotId===snapshot?saved:null;
   return <>
-    <section className="eb-panel"><div className="eb-heading"><div><h2>Evidence before a number</h2><p>Company requirement → original passage → anchored judgment → remaining uncertainty.</p></div><button className="eb-action primary" onClick={()=>setEdit(true)}>Edit human assessment draft</button></div>
-      <label className="eb-field">Material stage<select aria-label="Assessment stage" value={stage} onChange={e=>{setStage(e.target.value as Stage);setExpanded(null);}}><option value="application_review">Application materials · comparison baseline</option>{task?.versions.map(v=><option key={v.id} value={`task_v${v.version}`}>Task V{v.version} · {skillName[task.skill]}</option>)}</select></label>
+    <section className="eb-panel r5-assessment-header"><div className="eb-heading"><div><h2>Evidence before a number</h2></div><button className="eb-action primary" onClick={()=>setEdit(true)}>Edit human assessment draft</button></div>
+      <label className="eb-field">Material stage<select aria-label="Assessment stage" value={stage} onChange={e=>{setStage(e.target.value as Stage);setExpanded(null);setCitation(null);}}><option value="application_review">Application materials · comparison baseline</option>{task?.versions.map(v=><option key={v.id} value={`task_v${v.version}`}>Task V{v.version} · {skillName[task.skill]}</option>)}</select></label>
       <div className="r5-meta"><span>{stageName[stage]}</span><span>{stage==='application_review'?'Illustrative reviewed fixture · revision 1':'Not assessed · target skill only'}</span><span>{rubricVersion}</span></div>
       {work&&<p className="eb-feedback">V{work.version} has no inherited score. {skillName[task!.skill]} awaits a new assessment. Other skills retain application assessment revision 1 as a separate source; this task is excluded from the application comparison.</p>}
       {draft&&<p className="r5-notice">Local assessment draft saved {new Date(draft.savedAt).toLocaleString()}. Awaiting the future assessment API; comparison and reviewed percentages are unchanged.</p>}
       <details><summary>Reviewed history & source binding</summary><p>Application assessment revision 1 is a read-only illustrative fixture. No server assessment revision has been created.</p><small>{profile.id} · {snapshot} · {rubricVersion}</small></details>
     </section>
-    <div className="r5-assessment-grid"><section>{selectedCriteria.map(c=>{
+    <div className="r5-assessment-grid"><section aria-label="Assessment criteria">{selectedCriteria.map(c=>{
       const entry=baseline.find(e=>e.criterionId===c.id)!;
       return <article className="eb-panel r5-criterion" key={c.id}><button className="r5-criterion-toggle" aria-expanded={expanded===c.id} onClick={()=>setExpanded(expanded===c.id?null:c.id)}><span className="r5-criterion-id">{c.id}</span><span><strong>{c.title}</strong><small>{skillName[c.skill]} · 10 points maximum</small></span><span className={`r5-mark ${entry.mark==='NE'||entry.mark===null?'is-unknown':''}`}>{entry.mark===null?'Not assessed':entry.mark==='NE'?'NE':`${entry.mark}/4`}</span></button>
         {expanded===c.id&&<div className="r5-criterion-body"><p><strong>What this role needs:</strong> {c.looksFor}</p><p><strong>Anchor:</strong> {entry.mark===null?'Select a mark only after reviewing the original work.':entry.mark==='NE'?'Insufficient material; not a zero.':entry.mark===3?'Mainly meets the standard, with a small remaining gap.':entry.mark===1?'A relevant attempt with very weak support.':c.anchors[entry.mark]}</p>
-          {entry.citation?<button className="eb-citation" onClick={()=>setCitation({source:quoteSource(profile,entry.citation!,sources),quote:entry.citation!})}>{entry.citation.text}<small>Open exact source ↗</small></button>:<p className="eb-muted">{work?'Open the work source to begin a new assessment.':'No cited passage for this criterion.'}</p>}
+          {entry.citation?<button className="eb-citation" onClick={()=>setCitation({source:quoteSource(profile,entry.citation!,sources),quote:entry.citation!})}>{entry.citation.text}<small>Locate exact source ←</small></button>:<p className="eb-muted">{work?'Open the work source to begin a new assessment.':'No cited passage for this criterion.'}</p>}
           <p><strong>Judgment:</strong> {entry.reason||'No reviewed judgment yet.'}</p><p><strong>Scope:</strong> {entry.scope||'Target work sample, awaiting human assessment.'}</p>
           <div className="r5-formula">{typeof entry.mark==='number'?`${entry.mark} ÷ 4 × 10 = ${entry.mark/4*10}/10 contribution`:entry.mark==='NE'?'NE · no contribution inferred':'No contribution before assessment'}</div>
           <p><strong>Unknown & next step:</strong> {entry.gap||'Review the work against the public anchor.'}</p>
         </div>}
       </article>;
-    })}</section><aside><section className="eb-panel"><h2>Original materials</h2><p>Candidate-authored sample text is separate from the task resources.</p>{sources.map(s=><button className="r5-source-card" key={s.id} onClick={()=>setCitation({source:s})}><strong>{s.name}</strong><small>{s.kind==='application'?'Application sample':'Formal mock work snapshot'} ↗</small></button>)}</section><section className="eb-panel"><h3>Three separate decisions</h3><p><strong>Assess:</strong> judge individual standards.</p><p><strong>Review evidence:</strong> confirm or request a bounded revision.</p><p><strong>Retain:</strong> choose who to discuss further.</p><p className="eb-muted">None of these automatically performs the other two.</p></section></aside></div>
-    {citation&&<SourceDialog profile={profile} {...citation} close={()=>setCitation(null)}/>}
+    })}</section><aside className="r5-original-pane"><section className="eb-panel"><label className="eb-field">Original material<select aria-label="Review source" value={citation?.source?.id??sources[0]?.id??''} onChange={e=>setCitation({source:sources.find(s=>s.id===e.target.value)??null})}>{sources.map(s=><option value={s.id} key={s.id}>{s.name}</option>)}</select></label></section><InlineSource key={`${profile.id}.${stage}`} profile={profile} source={citation?.source ?? sources[0] ?? null} quote={citation?.quote}/><details className="eb-panel"><summary>Three separate decisions</summary><p><strong>Assess:</strong> judge individual standards.</p><p><strong>Review evidence:</strong> confirm or request a bounded revision.</p><p><strong>Retain:</strong> choose who to discuss further.</p><p className="eb-muted">None of these automatically performs the other two.</p></details></aside></div>
     {edit&&<AssessmentEditor key={`${profile.id}.${stage}.${snapshot}`} profile={profile} stage={stage} snapshot={snapshot} sources={sources} initial={draft?.entries??baseline} controller={controller} close={()=>setEdit(false)}/>}
   </>;
+}
+function InlineSource({profile,source,quote}:{profile:Profile;source:Source|null;quote?:Quote}) {
+  const ref=useRef<HTMLElement>(null);
+  const valid=source&&source.candidateId===profile.id&&(!quote||quoteSource(profile,quote,[source]));
+  useEffect(()=>{if(quote)ref.current?.scrollIntoView({block:'center'});},[quote]);
+  return <section tabIndex={-1} className="eb-panel r5-inline-source" aria-label="Original source text"><h2>{profile.name} · original source</h2>{valid&&source?<><strong>{source.name}</strong><small>Snapshot: {source.snapshotId}</small><pre>{quote?<>{source.text.slice(0,quote.start)}<mark ref={ref}>{source.text.slice(quote.start,quote.end)}</mark>{source.text.slice(quote.end)}</>:source.text}</pre><small>Synthetic sample · quotation is not proof of execution</small></>:<p role="alert">This quotation does not match the selected candidate and snapshot.</p>}</section>;
 }
 function AssessmentEditor({profile,stage,snapshot,sources,initial,controller,close}:{profile:Profile;stage:Stage;snapshot:string;sources:Source[];initial:AssessmentEntry[];controller:PreviewController;close:()=>void}) {
   const [entries,setEntries]=useState(()=>structuredClone(initial)), [selected,setSelected]=useState(initial[0].criterionId), [error,setError]=useState('');
