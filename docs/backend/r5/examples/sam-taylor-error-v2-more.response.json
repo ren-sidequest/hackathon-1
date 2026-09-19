@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "REVIEW_LIMIT_REACHED",
+    "message": "V2 requires a terminal decision.",
+    "requestId": "c39994e0-0617-4ff4-85a0-06f5bccf23a1",
+    "retryable": false
+  }
+}

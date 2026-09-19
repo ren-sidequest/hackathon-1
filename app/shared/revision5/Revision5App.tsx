@@ -17,21 +17,22 @@ export default function Revision5App({role:initialRole}:{role:'hr'|'candidate'})
   const [role,setRole]=useState(initialRole), [page,setPage]=useState(initialRole==='hr'?'comparison':'application');
   const [candidateId,setCandidateId]=useState(profiles[0].id), [help,setHelp]=useState(false);
   const controller=usePreview(), sidebar=useSidebar(role);
+  const [dismissedNotice,setDismissedNotice]=useState('');
   const profile=profiles.find(p=>p.id===candidateId)!;
   useEffect(()=>{document.documentElement.dataset.role=role;},[role]);
   const pages=role==='hr'?hrPages:candidatePages;
-  const go=(id:string)=>{setPage(pages.some(p=>p[0]===id)?id:role==='hr'?'comparison':'application');sidebar.closeMobile();window.scrollTo(0,0);};
+  const go=(id:string)=>{setDismissedNotice(controller.notice);setPage(pages.some(p=>p[0]===id)?id:role==='hr'?'comparison':'application');sidebar.closeMobile();window.scrollTo(0,0);};
   const select=(id:string,target?:string)=>{setCandidateId(id);if(target)go(target);};
-  const switchRole=(next:'hr'|'candidate')=>{setRole(next);setPage(next==='hr'?'comparison':'tasks');};
+  const switchRole=(next:'hr'|'candidate')=>{setDismissedNotice(controller.notice);setRole(next);setPage(next==='hr'?'comparison':'tasks');};
   return <div className="eb-connected r5-app">
     <a href="#r5-main" className="eb-skip eb-action" onClick={e=>{e.preventDefault();document.getElementById('r5-main')?.focus();}}>Skip to content</a>
     <Sidebar role={role} controller={sidebar} activePage={page} items={pages.map(([id,label],index)=>({id,label,icon:<NavIcon index={index}/>}))} onNavigate={go} user={{initials:role==='hr'?'HR':profile.initials,name:role==='hr'?'Operations lead':profile.name,title:role==='hr'?'HarbourCart': 'Synthetic candidate'}} helpLabel="Preview guide" onHelp={()=>setHelp(true)}/>
     <div className="eb-main" data-eb-content>
       <header className="eb-api-topbar">{sidebar.menuButton}<span>{role==='hr'?'Hiring workspace':'Candidate workspace'} / {pages.find(p=>p[0]===page)?.[1]}</span><span className="r5-mode">Revision 5 · UI preview</span></header>
       <main id="r5-main" tabIndex={-1} className="eb-content">
-        <section className="r5-preview-banner" aria-label="Preview status"><div><strong>Frontend mock · synthetic materials and illustrative marks</strong><p>No new backend connection, model call or saved hiring decision. Changes stay in this browser origin. The API 2.0 build remains separate.</p></div><label>Preview role<select aria-label="Preview role" value={role} onChange={e=>switchRole(e.target.value as typeof role)}><option value="hr">HR</option><option value="candidate">Candidate</option></select></label></section>
+        <section className="r5-preview-banner" aria-label="Preview status"><div><strong>Frontend mock · synthetic materials and illustrative marks</strong><details><summary>Local preview scope</summary><p>No new backend connection, model call or saved hiring decision. Changes stay in this browser origin. The API 2.0 build remains separate.</p></details></div><label>Preview role<select aria-label="Preview role" value={role} onChange={e=>switchRole(e.target.value as typeof role)}><option value="hr">HR</option><option value="candidate">Candidate</option></select></label></section>
         {controller.error&&<p role="alert" className="eb-feedback">{controller.error}</p>}
-        {controller.notice&&<p role="status" className="r5-notice">{controller.notice}</p>}
+        {controller.notice&&controller.notice!==dismissedNotice&&<p role="status" className="r5-notice">{controller.notice} <button className="eb-action" aria-label="Dismiss notice" onClick={()=>setDismissedNotice(controller.notice)}>×</button></p>}
         {(role==='candidate'||['evidence','tasks'].includes(page))&&<div className="r5-person-bar"><span className="r5-avatar">{profile.initials}</span><div><strong>{profile.name}</strong><small>{profile.subtitle}</small></div><label>Demo identity<select aria-label="Current candidate" value={candidateId} onChange={e=>select(e.target.value)}>{profiles.map(p=><option value={p.id} key={p.id}>{p.name}</option>)}</select></label></div>}
         {role==='hr'?<HRPreview key={candidateId} profile={profile} page={page} go={go} select={select} controller={controller}/>:<CandidatePreview key={`${candidateId}.${controller.state.sessionId}`} profile={profile} page={page} go={go} controller={controller}/>}
         <footer className="eb-footer">EvidenceBridge · Reviewable evidence. Human decisions. · Preview identities are not accounts.</footer>

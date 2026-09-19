@@ -49,39 +49,102 @@ export function saveAssessmentDraft(state: PreviewState, draft: AssessmentDraft)
   // Do not compute or publish scores in the frontend. Comparison remains on its reviewed fixture.
   return {...state,assessmentDrafts:{...state.assessmentDrafts,[assessmentKey(draft.candidateId,draft.stage)]:draft}};
 }
+// Drafts have their own session/person/task/version keys. A keystroke must never
+// serialize an old copy of tasks, assessments or shortlist decisions.
+export const previewDraftPrefix = `${previewStorageKey}.draft.`;
+type PreviewStorage = Pick<Storage, 'getItem' | 'setItem'>;
+function validDraft(d: unknown): d is WorkDraft {
+  if (!d || typeof d !== 'object') return false;
+  const value = d as WorkDraft;
+  return typeof value.summary === 'string' && typeof value.notes === 'string' && typeof value.started === 'boolean' && Array.isArray(value.findings) && Array.isArray(value.events);
+}
+export function readPreview(storage: PreviewStorage, fallback: PreviewState): PreviewState {
+  const raw = storage.getItem(previewStorageKey);
+  const saved: unknown = raw ? JSON.parse(raw) : fallback;
+  if (!validState(saved)) throw new Error('Invalid preview storage. Reload before saving.');
+  const workDrafts = {...saved.workDrafts};
+  for (const [id, task] of Object.entries(saved.tasks)) {
+    if (!task) continue;
+    for (const version of [1, 2]) {
+      const key = draftKey(saved, id, task, version);
+      const draft = storage.getItem(`${previewDraftPrefix}${key}`);
+      if (draft) {
+        const value: unknown = JSON.parse(draft);
+        if (!validDraft(value)) throw new Error('Invalid preview draft. Keep your input and reload before saving.');
+        workDrafts[key] = value;
+      }
+    }
+  }
+  return {...saved, workDrafts};
+}
+export function writePreviewBusiness(storage: PreviewStorage, state: PreviewState) {
+  // One-time migration of old embedded drafts; an existing separate draft wins.
+  for (const [key, draft] of Object.entries(state.workDrafts)) {
+    const storageKey = `${previewDraftPrefix}${key}`;
+    if (!storage.getItem(storageKey)) storage.setItem(storageKey, JSON.stringify(draft));
+  }
+  storage.setItem(previewStorageKey, JSON.stringify({...state, workDrafts:{}}));
+}
+export function changePreviewDraft(storage: PreviewStorage, expected: PreviewState, id: string, change: (draft: WorkDraft) => WorkDraft): PreviewState {
+  const latest = readPreview(storage, expected);
+  const task = latest.tasks[id], version = nextVersion(task);
+  const expectedTask = expected.tasks[id];
+  if (latest.sessionId !== expected.sessionId || task?.id !== expectedTask?.id || version !== nextVersion(expectedTask)) {
+    throw new Error('Preview task changed in another tab. Refresh the current task before editing.');
+  }
+  if (!task || !version) return latest;
+  const key = draftKey(latest, id, task, version);
+  const changed = change(latest.workDrafts[key] ?? emptyDraft());
+  storage.setItem(`${previewDraftPrefix}${key}`, JSON.stringify(changed));
+  return {...latest, workDrafts:{...latest.workDrafts, [key]:changed}};
+}
 export function usePreview() {
   const [initial] = useState(() => {
-    try { const raw=localStorage.getItem(previewStorageKey); if(raw){const parsed=JSON.parse(raw);if(validState(parsed))return {state:parsed,error:''};return {state:initialPreview(),error:'Invalid preview data. A fresh UI fixture has been loaded; no API case was changed.'};} }
+    try { return {state:readPreview(localStorage, initialPreview()),error:''}; }
     catch {return {state:initialPreview(),error:'Preview storage is unavailable or unreadable. Editing is kept in this tab; saving may fail.'};}
-    return {state:initialPreview(),error:''};
   });
   const [state,setState]=useState(initial.state), ref=useRef(state);
   const [error,setError]=useState(initial.error), [notice,setNotice]=useState(''), [busy,setBusy]=useState(false);
   const busyRef=useRef(false);
   const accept=(s:PreviewState)=>{ref.current=s;setState(s);};
   useEffect(()=>{
-    try {if(!localStorage.getItem(previewStorageKey))localStorage.setItem(previewStorageKey,JSON.stringify(ref.current));}catch{/* Warning already shown or surfaced on first save. */}
-    const sync=(e:StorageEvent)=>{if(e.key!==previewStorageKey)return;try{const incoming=JSON.parse(e.newValue??'null');if(validState(incoming))accept(incoming);else setError('Preview state changed outside this tab. Reload before saving.');}catch{setError('Invalid preview state. Reload before saving.');}};
+    try {if(!localStorage.getItem(previewStorageKey))writePreviewBusiness(localStorage,ref.current);}catch{/* Warning surfaced on first save. */}
+    const sync=(e:StorageEvent)=>{
+      if(e.key!==previewStorageKey && !e.key?.startsWith(previewDraftPrefix))return;
+      try {
+        // Read the current value, not a delayed event payload from an older revision.
+        const incoming=readPreview(localStorage,ref.current);
+        if(incoming.sessionId===ref.current.sessionId && incoming.revision<ref.current.revision)return;
+        accept(incoming);
+      } catch {setError('Invalid preview state. Reload before saving.');}
+    };
     window.addEventListener('storage',sync);return()=>window.removeEventListener('storage',sync);
   },[]);
-  const readLatest=()=>{const raw=localStorage.getItem(previewStorageKey);const saved=raw?JSON.parse(raw):ref.current;if(!validState(saved))throw new Error('Invalid preview storage. Reload before saving.');return saved;};
+  const readLatest=()=>readPreview(localStorage,ref.current);
   const draft=(id:string,change:(draft:WorkDraft)=>WorkDraft)=>{
-    const task=ref.current.tasks[id], version=nextVersion(task);if(!task||!version||busyRef.current)return;
-    const key=draftKey(ref.current,id,task,version);
-    const updated={...ref.current,workDrafts:{...ref.current.workDrafts,[key]:change(ref.current.workDrafts[key]??emptyDraft())}};
-    accept(updated);
-    try{localStorage.setItem(previewStorageKey,JSON.stringify(updated));}catch{setError('Draft is in this tab only: browser storage is unavailable. Keep the tab open.');}
+    const expected=ref.current, task=expected.tasks[id], version=nextVersion(task);if(!task||!version||busyRef.current)return;
+    try {accept(changePreviewDraft(localStorage,expected,id,change));}
+    catch(e){
+      // Keep an unsaved edit in memory when browser storage fails; do not publish it
+      // over a different session/task or an already submitted version.
+      let latest:PreviewState;
+      try {latest=readLatest();} catch {latest=expected;}
+      if(latest.sessionId===expected.sessionId && latest.tasks[id]?.id===task.id && nextVersion(latest.tasks[id])===version){
+        const key=draftKey(latest,id,task,version);
+        accept({...latest,workDrafts:{...latest.workDrafts,[key]:change(expected.workDrafts[key]??emptyDraft())}});
+      } else accept(latest);
+      setError(e instanceof Error?e.message:'Draft is in this tab only: browser storage is unavailable. Keep the tab open.');
+    }
   };
   const run=async(change:(s:PreviewState)=>PreviewState,message:string)=>{
     if(busyRef.current)return false;
     const expected=ref.current;busyRef.current=true;setBusy(true);setError('');setNotice('');
     try {
-      // A short async boundary exercises candidate switching and real disabled/loading states.
       await new Promise(resolve=>setTimeout(resolve,180));
       const latest=readLatest();
       if(latest.sessionId!==expected.sessionId||latest.revision!==expected.revision){accept(latest);throw new Error('Preview changed in another tab. Inputs are kept; check the current version and retry.');}
       const updated={...change(latest),revision:latest.revision+1};
-      localStorage.setItem(previewStorageKey,JSON.stringify(updated));accept(updated);setNotice(message);return true;
+      writePreviewBusiness(localStorage,updated);accept(updated);setNotice(message);return true;
     } catch(e){setError(e instanceof Error?e.message:'Preview save failed. Your input is kept.');return false;}
     finally {busyRef.current=false;setBusy(false);}
   };

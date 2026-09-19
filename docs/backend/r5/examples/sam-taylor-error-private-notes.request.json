@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "3.0",
+  "sessionId": "a2d3520b-1cbc-4ddd-ab27-f72e1c41e68a",
+  "candidateId": "sam-taylor",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbourcart-2026-09-v1",
+  "taskId": "54a24f34-d4d1-4467-9157-c24520000508",
+  "targetRequirementId": "data-analysis",
+  "submissionVersion": 1,
+  "previousSubmissionId": null,
+  "previousContentFingerprint": null,
+  "summary": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision.",
+  "findings": [
+    {
+      "id": "finding-1",
+      "section": "Key Findings",
+      "title": "Clarify the denominator",
+      "detail": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+      "source": "website_traffic.csv",
+      "confidence": "Low"
+    }
+  ],
+  "processEvidence": [],
+  "notes": "PRIVATE-MUST-NOT-ENTER"
+}

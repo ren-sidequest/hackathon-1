@@ -1,3 +1,5 @@
+> **修订5新增API3**：四人、rubric、名单见 [新版交接](../../docs/backend/R5_HANDOFF.md)。以下保留API2兼容资料；API2用 `npm run start:legacy`，默认 `npm start` 已切到独立API3新库。两端现有UI仍为API2，四人UI待接入。
+
 # EvidenceBridge 本地共享后端
 
 用户确认方案：**TypeScript strict + Fastify + 原生 SQLite + 自动 OpenAPI**。单案例、同一任务、V1 + 最多一次 V2 补交，每版最多一次人工审核；不修改现有 HR/Candidate 页面。完整合同见 [API](../../docs/backend/API.md)、[小傅接入清单](../../docs/backend/HANDOFF.md)、[唯一数据](../../docs/backend/DATA.md)、[ADR](../../docs/backend/ADR.md)、[实际验证记录](../../docs/backend/TEST_RESULTS.md)。
@@ -118,3 +120,8 @@ verify-revisions 使用临时文件库、独立真实 HTTP 服务与 CLI，保�
 六个业务接口加 `/healthz`；Fastify Swagger 提供 `/docs`、JSON/YAML 及静态资源等自动文档辅助路由，不增加岗位/候选人/文件 CRUD。前端继续由原 Vite 服务运行；不在本轮由后端托管两端构建产物。GitHub Pages 仍是静态备份，不代表新后端已经发布。
 
 公开服务、真实候选人资料、账号/角色权限、付费模型使用与新基础设施另行确认。当前模型键空缺，**真实 AI 效果待验证**；手工模拟与确定性 stub 不计作真实模型实验。双端 UI 联调待小傅接入。
+
+
+## 2026-09-19 双端本地整合补充
+
+基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](../../docs/FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。

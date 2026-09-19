@@ -1,3 +1,5 @@
+> **修订5新增API3**：四人、rubric、名单见 [新版交接](R5_HANDOFF.md)。以下保留API2兼容资料；API2用 `npm run start:legacy`，默认 `npm start` 已切到独立API3新库。两端现有UI仍为API2，四人UI待接入。
+
 # EvidenceBridge 后端接口合同 v2.0
 
 固定 HarbourCart / Junior Data Analyst / Alex Chen；一个任务，V1 首次提交 + 最多一次 V2 补交，每版最多一次人工审核。仅 V1 的 Needs More Evidence 开放 V2；其余结果终结任务，无 V3。修订 3 范围与验收增量见 [REVISION_PLAN](REVISION_PLAN.md)。运行说明见 [README](../../app/backend/README.md)，完整机器合同见 [openapi.json](openapi.json)，实际测试见 [TEST_RESULTS](TEST_RESULTS.md)。

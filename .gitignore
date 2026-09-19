@@ -42,3 +42,7 @@ coverage/
 *.sqlite3-journal
 *.sqlite3.lock
 *.sqlite3.lock.reclaim
+
+# Copy-only SQLite migration diagnostics; never publish data files.
+*.sqlite.migration-*.tmp*
+*.sqlite3.migration-*.tmp*

@@ -40,9 +40,9 @@ test('four-person comparison: scope, NE, skill ordering, ties and the fourth per
 test('anchored B3, exact emoji quotation and isolated source when switching candidate',async({page},info)=>{
   await page.goto('/');await page.getByRole('button',{name:'Open Alex Chen'}).click();
   await expect(page.getByText('2 ÷ 4 × 10 = 5/10 contribution',{exact:true})).toBeVisible();
-  await page.locator('.eb-citation').click();await expect(page.locator('dialog mark')).toHaveText('😀 Evidence request\nRequest campaign × device and checkout-step data.');
-  await page.getByRole('button',{name:'Close dialog'}).click();await page.getByLabel('Current candidate').selectOption({label:'Maya Patel'});
-  await page.locator('.eb-citation').click();await expect(page.getByRole('dialog')).toContainText('Maya Patel');await expect(page.locator('dialog mark')).not.toContainText('😀 Evidence request');await page.getByRole('button',{name:'Close dialog'}).click();
+  await page.locator('.eb-citation').click();await expect(page.locator('.r5-inline-source mark')).toHaveText('😀 Evidence request\nRequest campaign × device and checkout-step data.');await expect(page.locator('.r5-inline-source mark')).toBeInViewport();
+  await page.getByLabel('Current candidate').selectOption({label:'Maya Patel'});
+  await page.locator('.eb-citation').click();await expect(page.getByRole('region',{name:'Original source text'})).toContainText('Maya Patel');await expect(page.locator('.r5-inline-source mark')).not.toContainText('😀 Evidence request');
   await page.getByRole('button',{name:'View ten assessment standards'}).click();await expect(page.getByRole('dialog').locator('details')).toHaveCount(10);await expect(page.getByRole('dialog')).toContainText('One NE means no overall percentage');await page.keyboard.press('Escape');
   await page.getByRole('switch',{name:'Night mode'}).click();await page.screenshot({path:info.outputPath('hr-evidence-dark.png'),fullPage:true,animations:'disabled'});
 });
@@ -95,4 +95,45 @@ test('candidate entry, company standards, dark sidebar and mobile comparison rem
   await page.getByRole('switch',{name:'Night mode'}).click();await page.getByRole('button',{name:'Collapse sidebar',exact:true}).click();await expect(page.locator('[data-eb-content]')).toHaveCSS('margin-left','64px');await page.getByRole('button',{name:'Expand sidebar',exact:true}).click();
   await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Open navigation'}).click();await page.getByRole('dialog').getByRole('button',{name:'Compare candidates',exact:true}).click();await expect(page.getByRole('button',{name:'Open navigation'})).toBeFocused();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:info.outputPath('mobile-comparison-dark.png'),fullPage:true,animations:'disabled'});
+});
+
+test('resource search, numeric sort and row-to-card preserve the exact source and private boundary',async({page},info)=>{
+  await page.goto('/');await task(page,'Alex Chen');await role(page,'candidate');await page.getByRole('button',{name:'Start V1 draft'}).click();
+  await expect(page.getByRole('navigation',{name:'Evidence workflow'}).locator('[aria-current=step]')).toContainText('Investigation');
+  await page.getByLabel('Filter channel',{exact:true}).selectOption('Paid Search');
+  await expect(page.locator('.eb-data-overview tbody tr')).toHaveCount(1);await expect(page.locator('.eb-channel-bars')).toContainText('1.80%');
+  await page.getByLabel('Find a resource',{exact:true}).fill('website');await page.getByRole('button',{name:'website_traffic.csv',exact:true}).click();
+  const dialog=page.getByRole('dialog');await page.getByLabel('Filter resource rows').fill('Paid Search');await expect(dialog.locator('tbody tr')).toHaveCount(2);
+  await page.getByLabel('Sort resource column').selectOption({label:'sessions'});await page.getByRole('button',{name:'Ascending',exact:true}).click();
+  await expect(dialog.locator('tbody tr').first()).toContainText('426000');
+  const row=await dialog.locator('tbody tr').first().locator('td').first().innerText();
+  await dialog.getByRole('button',{name:`Create card from row ${row}`,exact:true}).click();
+  await expect(page.getByLabel('Evidence source',{exact:true})).toHaveValue('website_traffic.csv');
+  await expect(page.getByLabel('Reasoning & supporting evidence')).toContainText(`Source row ${row}`);
+  await page.getByLabel('Observation or idea').fill('Paid Search needs a controlled comparison');await page.getByRole('button',{name:'Save card'}).click();
+  await expect(page.locator('.eb-board')).toContainText('sessions: 426000');
+  await page.getByLabel('Find a resource',{exact:true}).fill('');
+  await page.screenshot({path:info.outputPath('candidate-data-workspace.png'),fullPage:true,animations:'disabled'});
+  await page.setViewportSize({width:390,height:844});await expect(page.locator('[data-eb-content]')).toHaveCSS('margin-left','0px');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.screenshot({path:info.outputPath('candidate-workspace-mobile.png'),fullPage:true,animations:'disabled'});await page.setViewportSize({width:1536,height:1050});
+  await page.getByRole('tab',{name:'Private notebook'}).click();await page.getByLabel('Private notes').fill('DO NOT SHARE ROW NOTES');
+  await submit(page,1,'A limited observation from the supplied data.');await role(page,'hr');await nav(page,'Targeted tasks');
+  await expect(page.locator('.eb-review-grid')).toContainText(`Source row ${row}`);await expect(page.locator('body')).not.toContainText('DO NOT SHARE ROW NOTES');
+});
+
+test('a candidate draft never rolls back a newer same-origin HR shortlist when storage delivery is delayed',async({page,context})=>{
+  await page.goto('/');await task(page,'Alex Chen');
+  const candidate=await context.newPage();
+  await candidate.addInitScript(()=>window.addEventListener('storage',event=>event.stopImmediatePropagation()));
+  await candidate.goto(page.url());await role(candidate,'candidate');await candidate.getByRole('button',{name:'Start V1 draft',exact:true}).click();
+  const key='evidencebridge.revision5.ui-preview.v1';
+  const old=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);
+  await nav(page,'Compare candidates');await page.getByRole('button',{name:'Retain Sam Rivera',exact:true}).click();await page.getByLabel('Human shortlist reason').fill('Keep this newer HR decision.');await page.getByRole('button',{name:'Save local shortlist decision',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);
+  await candidate.getByLabel('Executive summary',{exact:true}).fill('Draft typed from a stale tab');
+  const saved=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);
+  expect(saved.revision).toBe(old.revision+1);expect(saved.shortlist['preview-sam'].retained).toBe(true);expect(saved.workDrafts).toEqual({});
+  await candidate.reload();await role(candidate,'candidate');await candidate.getByRole('button',{name:'Continue V1 draft',exact:true}).click();await expect(candidate.getByLabel('Executive summary',{exact:true})).toHaveValue('Draft typed from a stale tab');
+  // A late event carrying the old payload reads current storage, not that payload.
+  await page.evaluate(({key,old})=>window.dispatchEvent(new StorageEvent('storage',{key,newValue:JSON.stringify(old)})),{key,old});
+  await nav(page,'Retained candidates');await expect(page.locator('section.eb-panel').filter({has:page.getByRole('heading',{name:'Sam Rivera',exact:true})})).toContainText('Keep this newer HR decision.');
 });
