@@ -1,5 +1,7 @@
 # EvidenceBridge Product Blueprint
 
+> **当前演示范围（2026-09-20）**：仅 Harbour Retail 与 Amy Chen、Ann Li、David Liu、Jamie Parker；公开共享交互，无登录入口。旧链接进入当前四人选择页，旧 API3 浏览器草稿／回执不进入当前产品。保留当前作品、评分及审核；下文旧阶段内容仅为历史记录。详见[当前公开演示](../PUBLIC_DEMO.md)。
+
 > **修订 5 范围说明：**用户已批准四人统一流程、公开 rubric、人工评分与规则百分比、同技能比较和人工保留。本文下方修订 3 内容保留为当前 API 2.0 单案例基础的阶段记录，不再以旧“无数值比较”表述覆盖新目标。PR #7 完成接入基础；后续仍按已确认的前端／后端清单实施，具体交付边界见[前端交接](../FRONTEND_API_HANDOFF.md)。新范围获准不等于功能已交付。
 
 ## Repository References / 仓库引用

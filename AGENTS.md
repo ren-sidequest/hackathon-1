@@ -250,3 +250,7 @@ API4 shared types are generated independently in `app/shared/api4-types.ts`. API
 ## API4 integrated regression targets (2026-09-20)
 
 After integrating PR16 with PR14, current frontend and backend both use API4. Earlier pending-frontend statements above are phase history. API4 CI uses the current checkout, not the frozen handoff backend. Historical API3 regression uses `EB_API3_BACKEND_ROOT` pointing to `80d153bc487201c193dd416c606d20f3210766fe`; its build helper probes actual schema 3.0, and the server/analyzer/reset CLI share that root. Preserve every existing test and assertion. Commands and isolation are documented in [API contract testing](docs/API_CONTRACT_TESTING.md). Run constrained local browser suites separately from the backend suite. Verify latest-head CI before merging; production deployment and database changes remain separate.
+
+## Public demo cleanup (2026-09-20)
+
+Current API4 UI no longer probes write-access or offers login controls. Retired/unknown candidate URLs lead to explicit current-person selection before any person-specific fetch; do not alias identities. Remove only retired API3 browser draft/receipt namespaces, preserving API4 work and pending receipts. Current demo and gateway expectations are in [public demo behavior](docs/PUBLIC_DEMO.md). Historical source/regressions remain separate from active product data. Validate with Candidate unit tests, both builds and the full `test:api4` suite (including T33/T37); production checks must not reset or mutate shared cases.

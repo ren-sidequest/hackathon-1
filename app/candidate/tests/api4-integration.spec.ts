@@ -379,13 +379,14 @@ test('T32 task suggestions use current service priority and still require explic
 });
 
 test('T33 legacy identity and content-version drafts cannot silently become new work',async({page,request})=>{
+  await page.addInitScript(()=>localStorage.setItem('evidencebridge.api3.draft.old.alex-chen.task.v1',JSON.stringify({summary:'LEGACY PUBLIC TEXT',notes:'LEGACY PRIVATE NOTES',findings:[]})));
   await page.goto(`${candidateUrl}/?candidateId=alex-chen#application`);
-  await expect(page.getByText(/This link belongs to an old or unknown identity/)).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Choose a candidate',exact:true})).toBeVisible();
   await expect(page.getByRole('heading',{name:'Amy Chen',exact:true})).toHaveCount(0);
-  await page.evaluate(()=>localStorage.setItem('evidencebridge.api3.draft.old.alex-chen.task.v1',JSON.stringify({summary:'LEGACY PUBLIC TEXT',notes:'LEGACY PRIVATE NOTES',findings:[]})));
-  await page.getByRole('button',{name:'Choose current demo identity',exact:true}).click();await expect(page.getByRole('heading',{name:'Amy Chen',exact:true})).toBeVisible();
-  await page.locator('.r6-archived > summary').click();const downloaded=page.waitForEvent('download');await page.getByRole('button',{name:'Export draft 1 public text',exact:true}).click();
-  const file=await downloaded,text=await readFile((await file.path())!,'utf8');expect(text).toContain('LEGACY PUBLIC TEXT');expect(text).not.toContain('LEGACY PRIVATE');
+  expect(await page.evaluate(()=>localStorage.getItem('evidencebridge.api3.draft.old.alex-chen.task.v1'))).toBeNull();
+  await expect(page.locator('.r6-archived')).toHaveCount(0);
+  await page.getByRole('button',{name:'Amy Chen',exact:true}).click();await expect(page.getByRole('heading',{name:'Amy Chen',exact:true})).toBeVisible();
+  await expect(page.locator('body')).not.toContainText('LEGACY PUBLIC TEXT');
   await seedTask(request);await refresh(page);await nav(page,'My task');await page.getByRole('button',{name:'Start V1 draft',exact:true}).click();await page.getByLabel('Executive summary').fill('OLD CONTENT DRAFT');
   await page.route('**/api/demo?candidateId=amy-chen',async route=>{const response=await route.fetch();const json=await response.json();json.data.fixtureVersion='test-new-content-version';await route.fulfill({response,json});});
   await page.route('**/api/demo/comparison',async route=>{const response=await route.fetch();const json=await response.json();json.data.fixtureVersion='test-new-content-version';await route.fulfill({response,json});});
@@ -416,4 +417,30 @@ test('T35 incompatible API3 response is visible and never falls back to a previe
 test('T36 no-ID bootstrap uses the service list rather than a hardcoded default person',async({page})=>{
   await page.route('**/api/demo/comparison',async route=>{const response=await route.fetch();const json=await response.json();json.data.candidates.reverse();await route.fulfill({response,json});});
   await page.goto(candidateUrl);await expect(page.getByRole('heading',{name:'Jamie Parker',exact:true})).toBeVisible();await expect(page).toHaveURL(/candidateId=jamie-parker/);
+});
+
+
+for (const role of ['hr','candidate'] as const) test(`T37 ${role} retired and unknown links open current selection without stale requests or login UI`,async({page,request})=>{
+  const before=await read(request), requests:string[]=[], writes:string[]=[];
+  page.on('request',r=>{requests.push(r.url());if(r.method()==='POST')writes.push(r.url());});
+  for (const id of ['alex-chen','maya-patel','leo-zhang','sam-taylor','unknown-person']) {
+    await page.goto(`${role==='hr'?hrUrl:candidateUrl}/?candidateId=${id}&demo=preserved#${role==='hr'?'comparison':'application'}`);
+    const picker=page.getByRole('region',{name:'Current demo candidates',exact:true});
+    await expect(picker).toBeVisible();
+    await expect(picker.getByRole('button')).toHaveCount(4);
+    await expect(page).not.toHaveURL(/candidateId=/);await expect(page).toHaveURL(/demo=preserved/);
+    await expect(page.locator('body')).not.toContainText('Legacy applicant');
+    await expect(page.locator('body')).not.toContainText('The shared case is unavailable');
+    await expect(page.getByRole('link',{name:'Enable editing',exact:true})).toHaveCount(0);
+    await expect(page.getByRole('button',{name:'Check editing access',exact:true})).toHaveCount(0);
+  }
+  await page.getByRole('button',{name:'Ann Li',exact:true}).click();
+  await expect(page).toHaveURL(/candidateId=ann-li/);
+  await expect(page.getByText('Connected · four-person shared case',{exact:true})).toBeVisible();
+  if(role==='candidate')await expect(page.getByRole('heading',{name:'Ann Li',exact:true})).toBeVisible();
+  else await expect(page.locator('tr[data-candidate="ann-li"]')).toBeVisible();
+  await page.evaluate(()=>window.dispatchEvent(new Event('focus')));
+  expect(requests.filter(url=>url.includes('/write-access'))).toEqual([]);
+  expect(requests.filter(url=>/\/api\/demo\?candidateId=(alex-chen|maya-patel|leo-zhang|sam-taylor|unknown-person)/.test(url))).toEqual([]);
+  expect(writes).toEqual([]);expect(await read(request)).toEqual(before);
 });

@@ -58,7 +58,7 @@ export class Api4Client {
     let response: Response;
     try { response = await this.fetcher(`${this.base}/api/demo${path}`, { ...init, headers: { ...init?.headers, 'X-EvidenceBridge-Schema-Version': '4.0' }, cache: 'no-store', signal: AbortSignal.timeout(init ? 70000 : 12000) }); }
     catch { throw new Api4Error('CONNECTION_UNCERTAIN', 'The shared service did not respond. Your input is kept. Retry an uncertain write with its original receipt.', '', Boolean(init)); }
-    if (response.status === 401) throw new Api4Error('WRITE_AUTH_REQUIRED', 'Enable editing, return to this page and retry your saved action. Your input is kept.', '', false, 401);
+    if (response.status === 401) throw new Api4Error('WRITE_AUTH_REQUIRED', 'The service restricted this action. Ask the host to check demo access, then retry the saved request. Your input is kept.', '', false, 401);
     let result;
     try { result = await response.json(); } catch { throw new Api4Error('INVALID_RESPONSE', 'The service returned an unreadable response. Check the API address.', '', Boolean(init), response.status); }
     if (!response.ok) {
