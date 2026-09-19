@@ -3,6 +3,12 @@ import type { AssessmentItem, Comparison, Demo, RequirementId, SourceRef, Stage,
 export const stageNames: Record<Stage, string> = { application_review: 'Application materials', task_v1: 'Task V1', task_v2: 'Task V2' };
 export const requirementNames: Record<RequirementId, string> = { sql: 'SQL', 'data-analysis': 'Data Analysis', 'business-problem-solving': 'Business Problem Solving' };
 export const requirements: RequirementId[] = ['sql', 'data-analysis', 'business-problem-solving'];
+export function comparisonCounts(comparison: Comparison) {
+  return {
+    reviewed: comparison.candidates.filter(row => row.assessment?.score.assessmentComplete).length,
+    complete: comparison.candidates.filter(row => row.assessment?.score.complete).length,
+  };
+}
 export function annotationLabel(mode: 'preset_human' | 'human' | 'human_reviewed' | null | undefined): string {
   return mode === 'preset_human' ? 'AI-authored preset · human calibration pending' : mode === 'human' || mode === 'human_reviewed' ? 'Human assessment' : 'Not assessed';
 }

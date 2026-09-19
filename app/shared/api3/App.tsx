@@ -1,3 +1,5 @@
+import { PermissionHelp, needsWriteAccess, useWriteAccess } from './access';
+import { savedActionDestination } from './next-step';
 import React, { useEffect, useState } from 'react';
 import { Sidebar, useSidebar } from '../ui';
 import { Dialog } from '../api-ui';
@@ -28,8 +30,27 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
   const [evidenceFocus,setEvidenceFocus]=useState<EvidenceFocus | undefined>();
   const [help, setHelp] = useState(false), [dismissedNotice, setDismissedNotice] = useState('');
   const [dismissedError, setDismissedError] = useState<unknown>(null);
+  useEffect(() => {
+    const syncLocation = () => {
+      const next = location.hash.slice(1);
+      if (pages.some(item => item[0] === next)) setPage(next);
+      const id = new URL(location.href).searchParams.get('candidateId') as CandidateId;
+      if (candidateIds.includes(id)) setCandidateId(id);
+      setEvidenceFocus(undefined);
+    };
+    window.addEventListener('hashchange', syncLocation);
+    window.addEventListener('popstate', syncLocation);
+    return () => { window.removeEventListener('hashchange', syncLocation); window.removeEventListener('popstate', syncLocation); };
+  }, [pages]);
   const controller = useApi3(role, candidateId), sidebar = useSidebar(role);
   const { data, comparison } = controller;
+  const access = useWriteAccess(controller.base, controller.error);
+  const pendingName = (owner: unknown) => comparison?.candidates.find(row => row.candidate.id === owner)?.candidate.name ?? 'the original candidate';
+  const savedNext = controller.completedAction?.candidateId === candidateId ? savedActionDestination(controller.completedAction.path, role) : null;
+  const noticeAction = controller.error ? {
+    label: needsWriteAccess(controller.error) && access.status !== 'enabled' && access.url ? 'Enable editing' : controller.pending ? 'Retry saved request' : controller.analysisPending ? 'Retry analysis' : 'Check latest status',
+    run: () => { if (needsWriteAccess(controller.error) && access.status !== 'enabled' && access.url) window.open(access.url, '_blank', 'noopener,noreferrer'); else void (controller.pending ? controller.retry() : controller.analysisPending ? controller.retryAnalysis() : controller.refresh()); }
+  } : savedNext ? { label: savedNext.label, run: () => go(savedNext.page) } : undefined;
   useEffect(() => { if(!controller.notice) setDismissedNotice(''); }, [controller.notice]);
   const go = (next: string) => {
     if (!pages.some(p => p[0] === next)) return;
@@ -46,16 +67,19 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
   const initials = displayName.split(/\s+/).map(part => part[0]).slice(0, 2).join('');
   return <div className="eb-connected r5-app guide-app">
     <a href="#api3-main" className="eb-skip eb-action" onClick={e => { e.preventDefault(); document.getElementById('api3-main')?.focus(); }}>Skip to content</a>
-    <Sidebar role={role} controller={sidebar} activePage={page} items={pages.map(([id, label], index) => ({ id, label, icon: <NavIcon index={index}/> }))} onNavigate={go} user={{ initials: role === 'hr' ? 'HR' : initials, name: role === 'hr' ? 'Operations lead' : displayName, title: role === 'hr' ? 'HarbourCart' : 'Synthetic candidate' }} helpLabel="Connected guide" onHelp={() => setHelp(true)}/>
-    <div className="eb-main" data-eb-content><header className="eb-api-topbar">{sidebar.menuButton}<span>{role === 'hr' ? 'Hiring workspace' : 'Candidate workspace'} / {pages.find(p => p[0] === page)?.[1]}</span><span className="r5-mode">API3 · shared service</span></header>
+    <Sidebar role={role} controller={sidebar} activePage={page} items={pages.map(([id, label], index) => ({ id, label, icon: <NavIcon index={index}/> }))} onNavigate={go} user={{ initials: role === 'hr' ? 'HR' : initials, name: role === 'hr' ? 'Operations lead' : displayName, title: role === 'hr' ? data?.company.name ?? 'Hiring team' : 'Synthetic candidate' }} helpLabel="How to use this workspace" onHelp={() => setHelp(true)}/>
+    <div className="eb-main" data-eb-content><header className="eb-api-topbar">{sidebar.menuButton}<span>{role === 'hr' ? 'Hiring workspace' : 'Candidate workspace'} / {pages.find(p => p[0] === page)?.[1]}</span><span className="r5-mode">Shared evidence workspace</span></header>
       <main id="api3-main" tabIndex={-1} className="eb-content">
         <section className="eb-api-status" aria-label="Shared service status"><div className="eb-heading"><span>{controller.fresh ? 'Connected · four-person shared case' : controller.loading ? 'Loading shared case…' : 'Refresh required · service data not current'}</span><button className="eb-action" disabled={controller.loading} onClick={() => void controller.refresh()}>{controller.loading ? 'Refreshing…' : 'Refresh shared case'}</button></div><small>Synthetic company and materials · Human judgments, server-calculated scores · Demo identities, not account authentication</small>
-          {controller.error && <p role="alert" className="eb-feedback"><strong>{controller.error.code}</strong> — {controller.error.message}{controller.error.requestId && <small>Request ID: {controller.error.requestId}</small>}</p>}
-          {controller.pending && <p className="eb-feedback">Original {controller.pending.path.slice(1)} receipt for {String(controller.pending.body.candidateId)} is unresolved. <button className="eb-action" disabled={controller.busy} onClick={() => void controller.retry()}>Retry original action</button></p>}
-          {controller.analysisPending && <p className="eb-feedback">Analysis receipt for {String(controller.analysisPending.body.candidateId)} is unresolved. Human review remains available. <button className="eb-action" disabled={controller.analysisBusy} onClick={() => void controller.retryAnalysis()}>Retry original analysis</button></p>}
-          {!data && !controller.loading && <p>Start the matching API3 backend at <code>{controller.base}</code>, then refresh. No local mock has replaced the service.</p>}
+          <div className="guide-access" aria-label="Editing access"><span className="r5-state">{access.status === 'read-only' ? 'Read-only' : access.status === 'enabled' ? 'Editing enabled' : access.status === 'checking' ? 'Checking editing access…' : 'Editing access unverified'}</span>{access.url && <><a className="eb-action" href={access.url} target="_blank" rel="noopener noreferrer">Enable editing</a><button className="eb-action" onClick={() => void access.check()}>Check editing access</button></>}<small>Reading is public. Editing requires access from the host.</small></div>
+          <PermissionHelp base={controller.base} error={controller.error}/>
+          {controller.error && <p role="alert" className="eb-feedback">{controller.error.message}</p>}
+          <details><summary>Connection details & diagnostics</summary><p>API3 · {controller.base}</p><p>Session: {data?.sessionId ?? 'Unavailable'} · Revision: {data?.revision ?? 'Unavailable'}</p><p>Rubric: {data?.rubricVersion ?? 'Unavailable'} · Dataset: {data?.datasetVersion ?? 'Unavailable'}</p>{controller.error && <p>{controller.error.code} · Request ID: {controller.error.requestId || 'Not supplied'}</p>}</details>
+          {controller.pending && <p className="eb-feedback">An original saved action for {pendingName(controller.pending.body.candidateId)} is waiting for confirmation. <button className="eb-action" disabled={controller.busy} onClick={() => void controller.retry()}>Retry original action</button></p>}
+          {controller.analysisPending && <p className="eb-feedback">An analysis request for {pendingName(controller.analysisPending.body.candidateId)} is waiting for confirmation. Human review remains available. <button className="eb-action" disabled={controller.analysisBusy} onClick={() => void controller.retryAnalysis()}>Retry original analysis</button></p>}
+          {!data && !controller.loading && <p>The shared case is unavailable. Check the connection details or contact the host, then refresh.</p>}
         </section>
-        <FloatingNotice message={controller.error && controller.error !== dismissedError ? [controller.error.message,controller.notice].filter(Boolean).join(' ') : controller.notice !== dismissedNotice ? controller.notice : ''} error={!!controller.error && controller.error !== dismissedError} dismiss={() => { setDismissedNotice(controller.notice); setDismissedError(controller.error); }} action={controller.error ? {label:controller.pending ? 'Retry saved request' : 'Check latest status',run:()=>void(controller.pending ? controller.retry() : controller.refresh())} : data && !['company','comparison'].includes(page) ? { label: role === 'candidate' ? 'View work & feedback' : 'View task status', run: () => go(role === 'candidate' ? 'history' : 'tasks') } : undefined}/>
+        <FloatingNotice message={controller.error && controller.error !== dismissedError ? [controller.error.message,controller.notice].filter(Boolean).join(' ') : controller.notice !== dismissedNotice ? controller.notice : ''} error={!!controller.error && controller.error !== dismissedError} dismiss={() => { setDismissedNotice(controller.notice); setDismissedError(controller.error); }} action={noticeAction}/>
         {!['company','comparison'].includes(page) && <div className="r5-person-bar"><span className="r5-avatar">{initials}</span><div><strong>{displayName}</strong><small>{data?.candidate.background ?? 'Select an explicit demo identity'}</small></div><label>Demo identity<GlideSelect ariaLabel="Current candidate" value={candidateId} onChange={value => select(value as CandidateId)} options={candidateIds.map(id => ({value: id, label: comparison?.candidates.find(row => row.candidate.id === id)?.candidate.name ?? id}))}/></label></div>}
         {data && !['company', 'comparison'].includes(page) && <Journey data={data} role={role} page={page} go={go}/>}
         {data && comparison && (role === 'hr'
@@ -64,6 +88,6 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
         <footer className="eb-footer">EvidenceBridge · Reviewable evidence. Human decisions. · Formal state lives in the shared service.</footer>
       </main>
     </div>
-    {help && <Dialog title="Shared API3 workflow" close={() => setHelp(false)}><p>Use the HR and Candidate windows against the same backend. Choose the intended candidate explicitly; refresh to receive the other window’s work.</p><p>Application materials and baseline annotations are synthetic presets. Baseline provenance identifies AI-authored annotation and pending human calibration. Scores use the public rubric and are not hiring probabilities.</p><p>Assessment, evidence review and the retained list are separate decisions. Only V1 More opens one V2; historical work stays read only. Private notes remain browser drafts and are excluded from submitted work and exports.</p><p>Model availability is shown honestly. There is no automatic fallback to mock data, no live SQL execution and no general upload or account system. Administrator reset remains a local script, outside this page.</p></Dialog>}
+    {help && <Dialog title="Using EvidenceBridge" close={() => setHelp(false)}><p>Use the HR and Candidate windows against the same backend. Choose the intended candidate explicitly; refresh to receive the other window’s work.</p><p>Application materials and baseline annotations are synthetic presets. Baseline provenance identifies AI-authored annotation and pending human calibration. Scores use the public rubric and are not hiring probabilities.</p><p>Assessment, evidence review and the retained list are separate decisions. Only V1 More opens one V2; historical work stays read only. Private notes remain browser drafts and are excluded from submitted work and exports.</p><p>Model availability is shown honestly. There is no automatic fallback to mock data, no live SQL execution and no general upload or account system. Administrator reset remains a local script, outside this page.</p></Dialog>}
   </div>;
 }

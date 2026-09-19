@@ -58,6 +58,7 @@ export class Api3Client {
     let response: Response;
     try { response = await this.fetcher(`${this.base}/api/demo${path}`, { ...init, cache: 'no-store', signal: AbortSignal.timeout(init ? 70000 : 12000) }); }
     catch { throw new Api3Error('CONNECTION_UNCERTAIN', 'The shared service did not respond. Your input is kept. Retry an uncertain write with its original receipt.', '', Boolean(init)); }
+    if (response.status === 401) throw new Api3Error('WRITE_AUTH_REQUIRED', 'Enable editing, return to this page and retry your saved action. Your input is kept.', '', false, 401);
     let result;
     try { result = await response.json(); } catch { throw new Api3Error('INVALID_RESPONSE', 'The service returned an unreadable response. Check the API address.', '', Boolean(init), response.status); }
     if (!response.ok) {
@@ -96,7 +97,7 @@ export class Api3Client {
       if (p.path !== '/analysis' || result.data.analysis.status !== 'running') this.save(null);
       return result;
     } catch (error) {
-      if (error instanceof Api3Error && !error.uncertain) this.save(null);
+      if (error instanceof Api3Error && !error.uncertain && error.status !== 401 && error.code !== 'WRITE_AUTH_REQUIRED') this.save(null);
       throw error;
     } finally { this.running = false; }
   }
