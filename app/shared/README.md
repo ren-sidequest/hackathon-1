@@ -133,3 +133,9 @@ Candidate 调查页空状态的 `View task and work` 和反馈页空状态的 `V
 ## 2026-09-19 双端本地整合补充
 
 基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](../../docs/FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。
+
+## 黑金连接版与服务器发布
+
+本轮在已合并 PR10 的 API3 上接入上述黑金组件与审核布局，全部业务数据使用现有 API；部署入口、实际新增／修改文件、恢复和排错方式见 [服务器发布说明](../../docs/FRONTEND_SERVER_RELEASE.md)。默认夜间，保留显式白天偏好。新增 API3 标准/覆盖率概览从服务端 rubric 与 comparison 派生，未引用预览 fixtures，也未更改后端或数据库。
+
+本轮实际验证：Candidate 单元 79/79，HR 8/8，API3 24/24，revision5-preview 20/20，共享 UI 12/12，API2 11/11，旧 Candidate 浏览器 9/9；双端 API3 发布构建及类型/20份文档/diff 检查通过。Windows 下修复测试专用重开信号，API2 reset 测试在原 POST 发出后再重置，以消除自动刷新抢先关闭旧表单的时序竞争。所有写入闭环使用隔离数据库，无线上 reset 或模型调用；线上发布以 PR 与 release manifest 为准。

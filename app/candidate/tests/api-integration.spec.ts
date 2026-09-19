@@ -146,7 +146,10 @@ test('review closes in-flight analysis; late result does not reopen V1 or leak i
   await hr.goto(`${hrUrl}/#review`); await refresh(hr);await hr.getByRole('tab',{name:'Work & observations'}).click();await expect(hr.getByText(/AI_REVIEW_CLOSED/).last()).toBeVisible();await expect(hr.getByRole('button',{name:'Start new analysis attempt'})).toHaveCount(0);
 });
 test('server reset isolates old drafts; stale binding is refreshed without replay into new case',async({page:candidate,context,request})=>{
-  const hr=await context.newPage();await startPair(candidate,hr,'OLD_SESSION_PRIVATE_DRAFT');const {data}=await(await request.get(`${backend}/api/demo`)).json();await request.post(`${backend}/api/demo/reset`,{headers:{'Idempotency-Key':crypto.randomUUID(),'X-Demo-Admin-Token':'api-ui-test-only-reset-token'},data:{schemaVersion:'2.0',sessionId:data.sessionId}});
+  const hr=await context.newPage();await startPair(candidate,hr,'OLD_SESSION_PRIVATE_DRAFT');const {data}=await(await request.get(`${backend}/api/demo`)).json();
+  // Reset exactly after the old-bound POST is issued, before it reaches the service.
+  // Otherwise automatic refresh can legitimately remove the stale form before clicking.
+  await candidate.route('**/api/demo/submission',async route=>{const reset=await request.post(`${backend}/api/demo/reset`,{headers:{'Idempotency-Key':crypto.randomUUID(),'X-Demo-Admin-Token':'api-ui-test-only-reset-token'},data:{schemaVersion:'2.0',sessionId:data.sessionId}});expect(reset.ok()).toBeTruthy();await route.continue();},{times:1});
   await candidate.getByRole('button',{name:'Submit V1 work sample'}).click();await candidate.getByRole('button',{name:'Confirm V1 submission'}).click();await expect(candidate.getByRole('alert')).toContainText('STALE_SESSION');await candidate.goto(`${candidateUrl}/#tasks`);await expect(candidate.getByRole('heading',{name:'Waiting for a targeted task'})).toBeVisible();await expect(candidate.getByText('OLD_SESSION_PRIVATE_DRAFT',{exact:true})).toHaveCount(0);
 });
 test('API dataset, downloads, theme/sidebar and narrow-screen navigation',async({page:candidate,context},info)=>{

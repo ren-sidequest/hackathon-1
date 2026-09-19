@@ -17,9 +17,21 @@ const options = {port:8793,databasePath:join(directory,'test.sqlite'),adminToken
 };
 let app=await createRevision5App(options);
 await app.listen({host:'127.0.0.1',port:8793});
-// This isolated process alone listens to SIGUSR2; tests can reopen the same temp DB.
+// File-based control works on Windows and Linux; only this test temp DB is reopened.
 let restarting=false, closing=false, generation=0;
-process.on('SIGUSR2',()=>{if(restarting||closing)return;restarting=true;void(async()=>{await app.close();app=await createRevision5App(options);await app.listen({host:'127.0.0.1',port:8793});generation++;await writeFile(control,JSON.stringify({pid:process.pid,directory,generation}));restarting=false;})();});
+const restartRequest=join(directory,'restart.request');
+const restartTimer=setInterval(async()=>{
+  if(restarting||closing)return;
+  restarting=true;
+  try {
+    let requested;
+    try {requested=Number(await readFile(restartRequest,'utf8'));}catch(error){if(error.code==='ENOENT')return;throw error;}
+    if(requested!==generation+1)return;
+    await app.close();app=await createRevision5App(options);await app.listen({host:'127.0.0.1',port:8793});
+    generation++;await writeFile(control,JSON.stringify({pid:process.pid,directory,generation}));
+  }catch(error){console.error('Test service restart failed:',error.message);process.exitCode=1;}
+  finally {restarting=false;}
+},100);
 await import('node:fs/promises').then(({mkdir})=>mkdir(new URL('../../../.ci-results/',import.meta.url),{recursive:true}));
 await writeFile(control,JSON.stringify({pid:process.pid,directory,generation}));
-for(const signal of ['SIGINT','SIGTERM'])process.once(signal,()=>{closing=true;void app.close().then(async()=>{await rm(directory,{recursive:true,force:true});try{const state=JSON.parse(await readFile(control,'utf8'));if(state.pid===process.pid)await rm(control,{force:true});}catch{}process.exit(0);});});
+for(const signal of ['SIGINT','SIGTERM'])process.once(signal,()=>{closing=true;clearInterval(restartTimer);void app.close().then(async()=>{await rm(directory,{recursive:true,force:true});try{const state=JSON.parse(await readFile(control,'utf8'));if(state.pid===process.pid)await rm(control,{force:true});}catch{}process.exit(0);});});

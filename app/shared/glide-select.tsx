@@ -91,7 +91,7 @@ export function GlideSelect({ options, value, onChange, ariaLabel, disabled = fa
     setActive(Math.max(0, Math.min(options.length - 1, next)));
   };
   return <span className={`eb-glide ${className}`}>
-    <button ref={trigger} type="button" role="combobox" aria-label={ariaLabel} aria-expanded={open}
+    <button ref={trigger} type="button" role="combobox" aria-label={ariaLabel} aria-expanded={open} data-value={value}
       aria-haspopup="listbox" aria-controls={`${id}-list`} aria-activedescendant={open ? `${id}-${active}` : undefined}
       disabled={disabled || !options.length} className="eb-glide-trigger" onClick={() => open ? close() : show()} onKeyDown={onKey}>
       <span>{options[selected]?.label ?? 'Select…'}</span><span className="eb-glide-chevron" aria-hidden="true" />

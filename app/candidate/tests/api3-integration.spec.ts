@@ -1,5 +1,6 @@
 import { expect, test, type Page, type APIRequestContext } from '@playwright/test';
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
@@ -15,15 +16,43 @@ async function seedTask(request:APIRequestContext,id='alex-chen',target='busines
 async function seedSubmission(request:APIRequestContext,id='alex-chen',summary='Synthetic current work') {const d=await read(request,id);return post(request,'/submission',{...binding(d),submissionVersion:d.workflow.nextSubmissionVersion,previousSubmissionId:d.workflow.nextSubmissionVersion===2?d.submission.submissionId:null,previousContentFingerprint:d.workflow.nextSubmissionVersion===2?d.submission.contentFingerprint:null,summary,findings:[],processEvidence:[]});}
 async function nav(page:Page,name:string) {await page.getByRole('navigation',{name:'Main navigation'}).getByRole('button',{name,exact:true}).click();}
 async function refresh(page:Page) {await page.getByRole('button',{name:'Refresh shared case',exact:true}).click();await expect(page.getByRole('button',{name:'Refresh shared case',exact:true})).toBeEnabled();await expect(page.getByText('Connected · four-person shared case',{exact:true})).toBeVisible();}
-async function open(page:Page,role:'hr'|'candidate',id='alex-chen',section='') {await page.goto(`${role==='hr'?hrUrl:candidateUrl}/?candidateId=${id}${section?`#${section}`:''}`);await expect(page.getByText('Connected · four-person shared case',{exact:true})).toBeVisible();await expect(page.getByLabel('Current candidate',{exact:true})).toHaveValue(id);}
-async function sendTask(page:Page,id:string,target:string) {await open(page,'hr',id,'tasks');await page.getByLabel('Target skill',{exact:true}).selectOption(target);await page.getByLabel('Evidence gap / task reason',{exact:true}).fill('A bounded evidence gap needs verification.');await page.getByRole('button',{name:'Send task',exact:true}).click();await expect(page.getByRole('button',{name:'Send task',exact:true})).toHaveCount(0);}
+async function glide(page:Page,label:string,value:string) {await page.getByRole('combobox',{name:label,exact:true}).click();await page.getByRole('listbox',{name:label,exact:true}).locator(`[data-value="${value}"]`).click();await expect(page.getByRole('combobox',{name:label,exact:true})).toHaveAttribute('data-value',value);}
+async function open(page:Page,role:'hr'|'candidate',id='alex-chen',section='') {await page.goto(`${role==='hr'?hrUrl:candidateUrl}/?candidateId=${id}${section?`#${section}`:''}`);await expect(page.getByText('Connected · four-person shared case',{exact:true})).toBeVisible();await expect(page.getByRole('combobox',{name:'Current candidate',exact:true})).toHaveAttribute('data-value',id);}
+async function sendTask(page:Page,id:string,target:string) {await open(page,'hr',id,'tasks');await glide(page,'Target skill',target);await page.getByLabel('Evidence gap / task reason',{exact:true}).fill('A bounded evidence gap needs verification.');await page.getByRole('button',{name:'Send task',exact:true}).click();await expect(page.getByRole('button',{name:'Send task',exact:true})).toHaveCount(0);}
 async function start(page:Page,id='alex-chen') {await open(page,'candidate',id,'tasks');await page.getByRole('button',{name:'Start V1 draft',exact:true}).click();await expect(page.getByLabel('Executive summary',{exact:true})).toBeVisible();}
 async function submit(page:Page,request:APIRequestContext,id:string,version:number,summary:string) {await page.getByLabel('Executive summary',{exact:true}).fill(summary);await page.getByRole('button',{name:`Submit V${version}`,exact:true}).click();await page.getByRole('button',{name:`Confirm V${version} submission`,exact:true}).click();await expect.poll(async()=>(await read(request,id)).currentSubmissionVersion).toBe(version);await expect(page.getByRole('dialog')).toHaveCount(0);}
 async function review(page:Page,decision:string,comment:string) {await page.getByRole('button',{name:decision,exact:true}).click();await page.getByLabel('Public review comment',{exact:true}).fill(comment);await page.getByRole('button',{name:'Save evidence review',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);}
-async function restart() {const control=new URL('../../../.ci-results/api3-test-control.json',import.meta.url);const old=JSON.parse(await readFile(control,'utf8'));process.kill(old.pid,'SIGUSR2');await expect.poll(async()=>JSON.parse(await readFile(control,'utf8')).generation).toBe(old.generation+1);}
+async function restart() {const control=new URL('../../../.ci-results/api3-test-control.json',import.meta.url);const old=JSON.parse(await readFile(control,'utf8'));await writeFile(join(old.directory,'restart.request'),String(old.generation+1));await expect.poll(async()=>JSON.parse(await readFile(control,'utf8')).generation).toBe(old.generation+1);}
 let runtimeErrors:string[]=[];
 test.beforeEach(async({request,context})=>{runtimeErrors=[];const watch=(page:Page)=>page.on('pageerror',error=>runtimeErrors.push(error.message));context.pages().forEach(watch);context.on('page',watch);await reset(request);});
 test.afterEach(()=>{expect(runtimeErrors).toEqual([]);});
+
+test('T23 server rubric keeps black-gold cards, exact criteria, focus return and both themes',async({page,request},info)=>{
+  const data=await read(request), writes:string[]=[];page.on('request',r=>{if(r.method()==='POST')writes.push(r.url());});
+  await open(page,'hr','alex-chen','company');await expect(page.getByRole('switch',{name:'Night mode'})).toBeChecked();
+  await expect(page.locator('.r5-weight-cell')).toHaveCount(data.rubric.criteria.length);
+  for(const r of data.rubric.requirements)await expect(page.locator('.r5-skill-card').filter({has:page.getByRole('heading',{name:r.title,exact:true})})).toContainText(`${r.maxScore}%`);
+  const cell=page.locator('.r5-weight-cell').filter({hasText:'B3'});await cell.scrollIntoViewIfNeeded();const before=await page.evaluate(()=>scrollY);await cell.click();
+  await expect(page.getByRole('dialog').locator('details[open] summary')).toContainText('B3');await expect(page.getByRole('dialog')).toContainText(data.rubric.criteria.find((c:any)=>c.id==='B3').observableSupport);
+  await page.keyboard.press('Escape');await expect(cell).toBeFocused();expect(await page.evaluate(()=>scrollY)).toBe(before);
+  for(const theme of ['dark','light']) {await page.getByRole('switch',{name:'Night mode'}).setChecked(theme==='dark');await page.evaluate(async()=>{scrollTo(0,0);await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);});await page.screenshot({path:info.outputPath(`api3-standards-${theme}.png`),fullPage:true});}
+  expect(writes).toEqual([]);expect((await read(request)).revision).toBe(data.revision);
+});
+
+test('T24 connected evidence retains stable scrolling, gold selector and responsive two-card layout',async({page,request},info)=>{
+  const data=await read(request);await page.setViewportSize({width:1536,height:1050});await open(page,'hr','alex-chen','evidence');
+  const rail=page.getByRole('navigation',{name:'Evidence criteria'});await expect(rail.getByRole('button')).toHaveCount(10);
+  await rail.scrollIntoViewIfNeeded();const y=await page.evaluate(()=>scrollY);await rail.getByRole('button',{name:/^S1 ·/}).click();expect(await page.evaluate(()=>scrollY)).toBe(y);
+  const ref=data.assessment.application_review.items.find((x:any)=>x.criterionId==='S1').sourceRefs[0];await expect(page.locator('.r5-inline-source mark')).toHaveText(ref.quote);
+  const hovered=rail.getByRole('button',{name:/^D1 ·/});await hovered.hover();await expect(hovered).toHaveCSS('transform','none');
+  expect(await hovered.evaluate(e=>getComputedStyle(e).backgroundColor)).not.toBe(await rail.evaluate(e=>getComputedStyle(e).backgroundColor));
+  const source=await page.locator('.r5-original-pane').boundingBox();
+  const body=await page.locator('.r5-assessment-grid>section').boundingBox();expect(Math.abs(source!.y-body!.y)).toBeLessThan(2);expect(source!.x).toBeLessThan(body!.x);
+  for(const theme of ['dark','light']) {await page.getByRole('switch',{name:'Night mode'}).setChecked(theme==='dark');await page.getByRole('combobox',{name:'Assessment stage',exact:true}).click();await expect(page.getByRole('listbox',{name:'Assessment stage',exact:true})).toBeVisible();await page.screenshot({path:info.outputPath(`api3-stage-${theme}.png`),fullPage:true});await page.keyboard.press('Escape');}
+  await page.setViewportSize({width:390,height:844});await expect(page.locator('[data-eb-content]')).toHaveCSS('margin-left','0px');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  const mobileSource=await page.locator('.r5-original-pane').boundingBox(), mobileBody=await page.locator('.r5-assessment-grid>section').boundingBox();expect(mobileBody!.y).toBeGreaterThan(mobileSource!.y);await page.screenshot({path:info.outputPath('api3-evidence-mobile.png'),fullPage:true});
+  expect((await read(request)).revision).toBe(data.revision);
+});
 
 test('T01 four explicit service identities, actual company/resources and no preview state',async({page,request})=>{
   await open(page,'hr');await expect(page.locator('tbody tr')).toHaveCount(4);
@@ -34,7 +63,7 @@ test('T01 four explicit service identities, actual company/resources and no prev
 test('T02 comparison uses server numbers and owned UTF-16 source quotations',async({page,request})=>{
   await open(page,'hr');const d=await read(request);expect(d.assessment.application_review.score.overallPercentage).toBeNull();await expect(page.locator('tr[data-candidate="alex-chen"]')).toContainText('Needs evidence');
   await page.getByRole('button',{name:'Open Alex Chen',exact:true}).click();await page.locator('.r5-criterion-body .eb-citation').first().click();const ref=d.assessment.application_review.items.find((x:any)=>x.criterionId==='B3').sourceRefs[0];await expect(page.locator('.r5-inline-source mark')).toHaveText(ref.quote);
-  await page.getByLabel('Current candidate').selectOption('maya-patel');await expect(page.getByLabel('Current candidate')).toHaveValue('maya-patel');await expect(page.locator('.r5-inline-source mark')).toHaveCount(0);
+  await glide(page,'Current candidate','maya-patel');await expect(page.getByRole('combobox',{name:'Current candidate',exact:true})).toHaveAttribute('data-value','maya-patel');await expect(page.locator('.r5-inline-source mark')).toHaveCount(0);
 });
 
 test('T03 Alex BPS real V1 → More → V2 → Confirm, private draft exclusion and immutable version history',async({page:candidate,context,request},info)=>{
@@ -87,7 +116,7 @@ test('T12 unavailable service keeps local draft and never substitutes preview da
 
 test('T13 a slow previous candidate response never becomes the newly selected identity',async({page})=>{
   await open(page,'candidate');await page.route('**/api/demo?candidateId=maya-patel',async route=>{const r=await route.fetch();await new Promise(r=>setTimeout(r,800));await route.fulfill({response:r});});
-  await page.getByLabel('Current candidate').selectOption('maya-patel');await page.getByLabel('Current candidate').selectOption('sam-taylor');await expect(page.getByRole('heading',{name:'Sam Taylor',exact:true})).toBeVisible();await page.waitForTimeout(1000);await expect(page.getByRole('heading',{name:'Sam Taylor',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Maya Patel',exact:true})).toHaveCount(0);
+  await glide(page,'Current candidate','maya-patel');await glide(page,'Current candidate','sam-taylor');await expect(page.getByRole('heading',{name:'Sam Taylor',exact:true})).toBeVisible();await page.waitForTimeout(1000);await expect(page.getByRole('heading',{name:'Sam Taylor',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Maya Patel',exact:true})).toHaveCount(0);
 });
 
 test('T14 administrator reset CLI clears four test cases without placing its token in either browser',async({page,request})=>{
@@ -99,7 +128,7 @@ test('T15 temporary SQLite survives service close/reopen and both windows read t
 });
 
 test('T16 candidate drafts survive reload but are isolated by identity and task session',async({page,request})=>{
-  await seedTask(request);await seedTask(request,'maya-patel','sql');await start(page);await page.getByLabel('Executive summary').fill('ALEX-ONLY-DRAFT');await page.getByLabel('Current candidate').selectOption('maya-patel');await nav(page,'My task');await page.getByRole('button',{name:'Start V1 draft',exact:true}).click();await expect(page.getByLabel('Executive summary')).toHaveValue('');await page.getByLabel('Executive summary').fill('MAYA-ONLY-DRAFT');await page.reload();await expect(page.getByLabel('Executive summary')).toHaveValue('MAYA-ONLY-DRAFT');await page.getByLabel('Current candidate').selectOption('alex-chen');await expect(page.getByLabel('Executive summary')).toHaveValue('ALEX-ONLY-DRAFT');expect((await read(request)).submission).toBeNull();
+  await seedTask(request);await seedTask(request,'maya-patel','sql');await start(page);await page.getByLabel('Executive summary').fill('ALEX-ONLY-DRAFT');await glide(page,'Current candidate','maya-patel');await nav(page,'My task');await page.getByRole('button',{name:'Start V1 draft',exact:true}).click();await expect(page.getByLabel('Executive summary')).toHaveValue('');await page.getByLabel('Executive summary').fill('MAYA-ONLY-DRAFT');await page.reload();await expect(page.getByLabel('Executive summary')).toHaveValue('MAYA-ONLY-DRAFT');await glide(page,'Current candidate','alex-chen');await expect(page.getByLabel('Executive summary')).toHaveValue('ALEX-ONLY-DRAFT');expect((await read(request)).submission).toBeNull();
 });
 
 test('T08 shortlist persists independently, turns stale on new work, and preserves all human actions',async({page,request})=>{
@@ -114,7 +143,7 @@ test('T08 shortlist persists independently, turns stale on new work, and preserv
 test('T17 real resources, row-to-card, dark mode and mobile navigation retain the existing UI',async({page,request},info)=>{
   await seedTask(request);await start(page);await expect(page.locator('.eb-metrics').getByText('1,180,000',{exact:true})).toBeVisible();await expect(page.locator('.eb-metrics').getByText('30,680',{exact:true})).toBeVisible();await expect(page.getByText('31,200',{exact:true})).toHaveCount(0);
   await page.getByLabel('Find a resource',{exact:true}).fill('website');await page.getByRole('button',{name:'website_traffic.csv',exact:true}).click();await page.getByLabel('Filter resource rows').fill('Paid Search');await expect(page.getByRole('dialog').locator('tbody tr')).toHaveCount(2);await page.getByRole('dialog').getByRole('button',{name:/Create card from row/}).first().click();await expect(page.getByLabel('Evidence source',{exact:true})).toHaveValue('website_traffic.csv');await page.getByLabel('Observation or idea').fill('A bounded data observation');await page.getByRole('button',{name:'Save card',exact:true}).click();await expect(page.locator('.eb-board')).toContainText('A bounded data observation');
-  await page.getByRole('switch',{name:'Night mode'}).click();await page.reload();await expect(page.getByRole('switch',{name:'Night mode'})).toBeChecked();await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Open navigation'}).click();await page.getByRole('dialog').getByRole('button',{name:'My task',exact:true}).click();await expect(page.getByRole('button',{name:'Open navigation'})).toBeFocused();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:info.outputPath('api3-candidate-mobile-dark.png'),fullPage:true});
+  await page.getByRole('switch',{name:'Night mode'}).uncheck();await page.getByRole('switch',{name:'Night mode'}).check();await page.reload();await expect(page.getByRole('switch',{name:'Night mode'})).toBeChecked();await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'Open navigation'}).click();await page.getByRole('dialog').getByRole('button',{name:'My task',exact:true}).click();await expect(page.getByRole('button',{name:'Open navigation'})).toBeFocused();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:info.outputPath('api3-candidate-mobile-dark.png'),fullPage:true});
 });
 
 test('T18 in-flight analysis does not block human review and its late result never reopens the closed version',async({page:hr,request})=>{
@@ -122,11 +151,11 @@ test('T18 in-flight analysis does not block human review and its late result nev
 });
 
 test('T19 SQL task marks are server-calculated, application reuse is explicit, and V2 starts unassessed',async({page,request})=>{
-  await seedTask(request,'maya-patel','sql');const before=await seedSubmission(request,'maya-patel','😀 SQL checks: unique order IDs, period boundaries and denominator reconciliation.');await open(page,'hr','maya-patel','evidence');await page.getByLabel('Assessment stage').selectOption('task_v1');await page.getByRole('button',{name:'Edit human assessment',exact:true}).click();
+  await seedTask(request,'maya-patel','sql');const before=await seedSubmission(request,'maya-patel','😀 SQL checks: unique order IDs, period boundaries and denominator reconciliation.');await open(page,'hr','maya-patel','evidence');await glide(page,'Assessment stage','task_v1');await page.getByRole('button',{name:'Edit human assessment',exact:true}).click();
   for(const criterion of ['S1','S2','S3']) {await page.getByLabel('Edit criterion').selectOption(criterion);await page.getByLabel('Human mark').selectOption('2');for(const label of ['Judgment reason','Support / checked scope','Missing evidence / counter-evidence','Uncertainty','Next step'])await page.getByLabel(label,{exact:true}).fill(`${criterion}: bounded synthetic review of visible original SQL text.`);await page.getByLabel('Exact source quotation').fill(before.submission.summary);await page.getByRole('button',{name:'Add source quotation',exact:true}).click();}
   await page.getByLabel('Explicitly reuse application assessment').check();await page.getByLabel('Assessment operator label').fill('Synthetic task reviewer');await page.getByRole('button',{name:'Save assessment revision',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);
   const assessed=await read(request,'maya-patel');expect(assessed.assessment.task_v1.score.skills.find((s:any)=>s.requirementId==='sql').percentage).toBe(50);expect(assessed.assessment.task_v1.reusedItems).toHaveLength(7);expect(assessed.assessment.application_review).toEqual(before.assessment.application_review);expect(assessed.review).toBeNull();expect(assessed.shortlist.status).toBe('not_retained');
-  await post(request,'/review',{...binding(assessed),submissionId:assessed.submission.submissionId,contentFingerprint:assessed.submission.contentFingerprint,decision:'needs_more_evidence',comment:'Clarify the join boundary.'});await seedSubmission(request,'maya-patel','V2 adds a bounded join check.');await refresh(page);await page.getByLabel('Assessment stage').selectOption('task_v2');expect((await read(request,'maya-patel')).assessment.task_v2).toBeNull();await expect(page.locator('.r5-criterion .r5-mark').filter({hasText:'Not assessed'})).toHaveCount(10);await page.getByLabel('Assessment stage').selectOption('task_v1');await expect(page.getByRole('button',{name:'Edit human assessment',exact:true})).toBeDisabled();
+  await post(request,'/review',{...binding(assessed),submissionId:assessed.submission.submissionId,contentFingerprint:assessed.submission.contentFingerprint,decision:'needs_more_evidence',comment:'Clarify the join boundary.'});await seedSubmission(request,'maya-patel','V2 adds a bounded join check.');await refresh(page);await glide(page,'Assessment stage','task_v2');expect((await read(request,'maya-patel')).assessment.task_v2).toBeNull();await expect(page.locator('.r5-evidence-rail .r5-mark').filter({hasText:'Not assessed'})).toHaveCount(10);await glide(page,'Assessment stage','task_v1');await expect(page.getByRole('button',{name:'Edit human assessment',exact:true})).toBeDisabled();
 });
 
 test('T20 failed analysis exposes its status and leaves original work and manual review usable',async({page,request})=>{
