@@ -196,3 +196,9 @@ npm run test:api --prefix app/candidate
 ```
 
 API 浏览器测试使用独立内存数据库 / 8789 后端和 5373 / 5386 前端，无外部模型调用；test:e2e 使用 5473 standalone，test:ui 使用 5573 / 5586 standalone，均不复用已运行服务。新共享 TypeScript 与 HR ApiApp 由 Candidate build 一并严格检查；生成的 api-types.ts 来自提交中的 OpenAPI。
+
+## 修订 5 前端预览补充
+
+`VITE_APP_MODE=revision5-preview` 是显式前端模拟模式，默认 `connected` 不变。四人材料和成绩为前端合成示例；人工评分修改只保存草稿，真实计算与 reviewed revision 等待后端合同。不得把本地模拟通过报告为新版后端联调成功。运行、修改文件与后续接口清单见 [修订 5 前端说明](docs/FRONTEND_REVISION5_PREVIEW.md)。
+
+根目录命令 `npm run test:revision5 --prefix app/candidate` 自动启动 5673 / 5686，无后端或模型调用；失败截图和 trace 在 `.ci-results/revision5-ui/`。Candidate build 同时检查两端共享预览的 TypeScript。启动预览前在当前终端设置该模式，再以独立端口运行现有 dev 命令，不替换已运行的 API 演示。

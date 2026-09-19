@@ -32,5 +32,6 @@ jobs:
       - run: npm run test:e2e
       - run: npm ci --prefix ../hr --no-audit --no-fund
       - run: npm run test:ui
+      - run: npm run test:revision5
       - run: npm ci --prefix ../backend --no-audit --no-fund
       - run: npm run test:api

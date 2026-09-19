@@ -13,7 +13,8 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:ui": "playwright test --config playwright.shared.config.ts",
-    "test:api": "playwright test --config playwright.api.config.ts"
+    "test:api": "playwright test --config playwright.api.config.ts",
+    "test:revision5": "playwright test --config playwright.revision5.config.ts"
   },
   "dependencies": {
     "lucide-react": "^1.47.0",
