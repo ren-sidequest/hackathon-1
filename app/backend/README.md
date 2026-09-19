@@ -1,5 +1,7 @@
 > **修订5新增API3**：四人、rubric、名单见 [新版交接](../../docs/backend/R5_HANDOFF.md)。以下保留API2兼容资料；API2用 `npm run start:legacy`，默认 `npm start` 已切到独立API3新库。两端现有UI仍为API2，四人UI待接入。
 
+> **Current new-content backend: Revision 6 / API4.** Start with [R6_HANDOFF](../../docs/backend/R6_HANDOFF.md) and [R6_ACCEPTANCE](../../docs/backend/R6_ACCEPTANCE.md). Earlier API2/API3 sections below are historical; `docs:generate` now emits `docs/backend/r6/`, and current default storage is a separate v4 database. The existing API3 UI requires its pending API4 adaptation. No R6 deployment is implied.
+
 # EvidenceBridge 本地共享后端
 
 用户确认方案：**TypeScript strict + Fastify + 原生 SQLite + 自动 OpenAPI**。单案例、同一任务、V1 + 最多一次 V2 补交，每版最多一次人工审核；不修改现有 HR/Candidate 页面。完整合同见 [API](../../docs/backend/API.md)、[小傅接入清单](../../docs/backend/HANDOFF.md)、[唯一数据](../../docs/backend/DATA.md)、[ADR](../../docs/backend/ADR.md)、[实际验证记录](../../docs/backend/TEST_RESULTS.md)。
@@ -125,3 +127,23 @@ verify-revisions 使用临时文件库、独立真实 HTTP 服务与 CLI，保�
 ## 2026-09-19 双端本地整合补充
 
 基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](../../docs/FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。
+
+
+## Revision 6 / API4 local implementation (2026-09-19)
+
+Current new-content contract is API4 (`schemaVersion:4.0`), Harbour Retail with Amy Chen, Ann Li, David Liu and Jamie Parker. API3 documents above describe the preserved historical cohort, not aliases for these people. See [R6 handoff](../../docs/backend/R6_HANDOFF.md). Use an explicit new `evidencebridge-v4.sqlite` path; no automatic migration or reset. Existing API3 frontend awaits Xiaofu's compatible change; this backend delivery does not overwrite frontend source or deploy anything.
+
+Commands from repository root:
+
+```sh
+npm run typecheck --prefix app/backend
+npm run build --prefix app/backend
+npm test --prefix app/backend
+npm run test:r6 --prefix app/backend
+npm run docs:generate --prefix app/backend
+python3 scripts/frontend-types-v4.py --check
+node app/backend/scripts/verify-r6.mjs
+node app/backend/scripts/manage-r6-database.mjs --help
+```
+
+API4 shared types are generated independently in `app/shared/api4-types.ts`. API3 frozen types and OpenAPI stay unchanged. `test:r5` names the reused internal business modules; it is not a claim that current new people use historical API3. `migrate:v3` is deliberately disabled in this new-person version; use the historical code+database together for historical records. Human calibration and real-model experiments are separate from automated tests.

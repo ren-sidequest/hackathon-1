@@ -366,3 +366,24 @@ test('total timeout includes provider body streaming', async () => {
   await rejectsCode(extract(submission()), 'AI_TIMEOUT');
   assert.equal(abortSignal.aborted, true);
 });
+
+
+test('manual analysis truncates at a whole UTF-16 character when emoji crosses its quote limit', async () => {
+  const input = submission({summary: 'a'.repeat(499) + '😀 edge'});
+  const value = await createAnalyzer({mode:'manual_simulation'})(input);
+  const citation = value.observations[0].citations[0];
+  assert.equal(citation.end, 499);
+  assert.equal(citation.quote, 'a'.repeat(499));
+  assert.ok(citation.quote.isWellFormed());
+  assert.deepEqual(validateAnalysis(value, input), value);
+});
+test('analysis rejects both split-pair start and end offsets but accepts the complete emoji', () => {
+  const input = submission({summary:'中文\n😀 complete'});
+  for (const [start, end, accepted] of [[3,5,true], [3,4,false], [4,5,false]]) {
+    const observation = observed(input);
+    observation.citations = [cite(input, 'summary', start, end-start)];
+    const value = result(input, [observation, ...DIMENSIONS.slice(1).map(notObserved)]);
+    if (accepted) assert.deepEqual(validateAnalysis(value, input), value);
+    else assert.throws(() => validateAnalysis(value, input), {code:'AI_OUTPUT_INVALID'});
+  }
+});

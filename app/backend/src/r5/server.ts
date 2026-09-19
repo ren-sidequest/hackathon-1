@@ -4,15 +4,15 @@ import { loadConfig } from '../config.js';
 let app: Awaited<ReturnType<typeof createRevision5App>> | undefined;
 try {
   process.umask(0o077);
-  const contract = process.env['DEMO_CONTRACT'] ?? '3.0';
+  const contract = process.env['DEMO_CONTRACT'] ?? '4.0';
   if (![
-    '2.0', '3.0'
+    '2.0', '4.0'
   ].includes(contract))
     throw new Error('Invalid DEMO_CONTRACT');
   const config = loadConfig({
     ...process.env, DATABASE_PATH: process.env['DATABASE_PATH'] ?? `./var/evidencebridge-v${contract[0]}.sqlite`
   });
-  const factory = contract === '3.0' ? createRevision5App : createLegacyApp;
+  const factory = contract === '4.0' ? createRevision5App : createLegacyApp;
   app = await factory({
     ...config, log: entry => process.stdout.write(`${JSON.stringify(entry)}\n`)
   });

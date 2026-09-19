@@ -1,0 +1,3222 @@
+{
+  "data": {
+    "schemaVersion": "4.0",
+    "sessionId": "272e996d-6b17-4e4d-aada-ad9eec79f4d9",
+    "revision": 4,
+    "datasetVersion": "harbour-retail-2026-09-v1",
+    "fixtureVersion": "harbour-retail-applications-v1",
+    "jdVersion": "harbour-retail-junior-analyst-jd-v1",
+    "rubricVersion": "harbour-retail-junior-analyst-rubric-v1",
+    "company": {
+      "id": "harbour-retail",
+      "name": "Harbour Retail",
+      "provenance": "user_supplied_demo_jd",
+      "location": "Sydney, NSW",
+      "businessDescription": "A growing Sydney-based e-commerce startup using data to improve customer acquisition, digital shopping experiences and commercial performance.",
+      "profileScope": "JD facts only. Headcount, recruiter structure and named decision-makers are not supplied. Product, campaign and investment details in the company task are synthetic demonstration assumptions, not JD facts."
+    },
+    "job": {
+      "id": "junior-data-analyst",
+      "title": "Junior Data Analyst",
+      "company": "Harbour Retail",
+      "requirements": [
+        {
+          "id": "sql",
+          "title": "SQL",
+          "statement": "Write basic SQL queries to extract, filter, group and summarise business data."
+        },
+        {
+          "id": "data-analysis",
+          "title": "Data Analysis",
+          "statement": "Calculate business metrics and compare appropriate periods or groups."
+        },
+        {
+          "id": "business-problem-solving",
+          "title": "Business Problem Solving",
+          "statement": "Investigate questions, explain uncertainty and recommend evidence-led next steps."
+        }
+      ],
+      "successStages": [
+        "Check definitions and provide reproducible routine reporting.",
+        "Compare relevant groups and explain uncertainty and missing evidence.",
+        "Support an appropriate evidence-led next step with experienced analysts."
+      ],
+      "location": "Sydney, NSW",
+      "employmentType": "Full-time",
+      "experienceLevel": "Entry Level / Junior",
+      "team": "Data & Analytics",
+      "collaboratingTeams": [
+        "Data",
+        "Marketing",
+        "Commercial"
+      ],
+      "supportedByExperiencedAnalysts": true,
+      "jd": {
+        "version": "harbour-retail-junior-analyst-jd-v1",
+        "sourceId": "job-description",
+        "filePath": "app/backend/content/r6/job-description.pdf",
+        "sha256": "93a45567de59b2aa8580b490f9bd7995fcf528246ca5df2cd5438a0939b87e89",
+        "pages": 4,
+        "scope": "The unchanged user-supplied demonstration JD defines the role. Requirements are a traceable implementation interpretation, not extra employer-authored criteria. The ten-item 30/30/40 core rubric is a prior team demo policy; this wider JD evidence matrix has no additional percentage.",
+        "source": {
+          "sourceId": "job-description",
+          "location": "/job/jd/source/text",
+          "text": "--- Page 1 ---\nHarbour Retail — Junior Data Analyst Demo JD \nJunior Data Analyst \nCompany: Harbour Retail \nLocation: Sydney, NSW \nEmployment Type: Full-time \nExperience Level: Entry Level / Junior \nTeam: Data & Analytics \nAbout Harbour Retail \nHarbour Retail is a growing Sydney-based e-commerce startup using data to improve \ncustomer acquisition, digital shopping experiences and commercial performance. \nAs the business grows, we are looking for a Junior Data Analyst to support the team in \nturning website marketing and sales data into clear insights that help teams make \nbetter decisions. \nYou will work with members of the Data, Marketing and Commercial teams and will be \nsupported by more experienced analysts. This role is suited to a recent graduate or \nearly-career analyst who enjoys working with data, investigating business questions and \ncommunicating findings clearly. \nAbout the Role \nAs a Junior Data Analyst, you will help collect, validate, analyses and interpret business \ndata across website traffic, marketing channels and online sales. \nYour work will include routine reporting as well as ad hoc investigations into changes in \nbusiness performance. \nA key part of the role is not only calculating metrics, but understanding what those \nmetrics mean, identifying when further evidence is required, and communicating \nfindings to non-technical stakeholders. \nKey Responsibilities \nData Preparation and Quality \n• Collect, organize and validate data from sales, website and marketing sources. \n• Check datasets for missing values, inconsistencies and obvious data-quality \nissues. \n• Maintain clear documentation of data sources, calculations and analytical \nassumptions. \n• Support reliable and consistent reporting across business teams. \nSQL and Data Analysis \n\n--- Page 2 ---\n• Write basic SQL queries to extract, filter, group and summaries business data. \n• Use aggregation techniques to analyses performance across products, time \nperiods and acquisition channels. \n• Calculate and monitor key business metrics such as website traffic, orders and \nconversion rates. \n• Compare results across periods or customer/channel segments to identify \nmeaningful changes. \nBusiness Analysis and Problem Solving \n• Investigate changes in business performance and identify possible explanations \nsupported by available data. \n• Distinguish between what the data directly shows and what remains uncertain. \n• Identify when additional data is required before reaching a business conclusion. \n• Perform ad hoc analysis to support questions raised by Marketing, Product or \nCommercial teams. \n• Translate analytical findings into practical next steps or recommendations where \nthe available evidence supports them. \nReporting and Visualization \n• Assist in creating recurring reports, tables and dashboards using Excel or \nbusiness-intelligence tools. \n• Present metrics and analytical findings in a clear, structured and accessible \nformat. \n• Support the development of simple visualizations that help stakeholders \nunderstand trends and performance. \nStakeholder Communication \n• Explain analytical findings clearly to colleagues who may not have a technical \nbackground. \n• Summaries the business implications of an analysis rather than only presenting \ncalculations. \n• Clearly communicate assumptions, limitations and areas where further \ninvestigation is required. \n• Collaborate with cross-functional teams to understand business questions and \ndata requirements. \nSkills and Experience \n\n--- Page 3 ---\nEssential \n• Bachelor’s degree, or near completion, in Data Analytics, Business Analytics, \nStatistics, Mathematics, Computer Science, Economics or a related discipline. \n• Foundational knowledge of SQL, including filtering, grouping and basic \naggregation. \n• Strong Excel or spreadsheet skills. \n• Ability to calculate and interpret basic business metrics. \n• Strong analytical and structured problem-solving skills. \n• High attention to detail and commitment to data accuracy. \n• Ability to explain analytical findings clearly in written and verbal form. \n• Willingness to learn and work in a fast-moving startup environment. \nDesirable \n• Internship, university project or portfolio experience involving data analysis. \n• Familiarity with Python or R. \n• Exposure to Power BI, Tableau or another data-visualization platform. \n• Basic understanding of digital analytics, e-commerce or marketing performance \nmetrics. \n• Experience presenting analytical work to non-technical audiences. \nWhat Good Looks Like in This Role \nA successful Junior Data Analyst does more than produce correct calculations. \nYou should be able to: \n• identify the right metric for a business question; \n• analyses data accurately; \n• recognize when a conclusion is or is not supported by the available evidence; \n• explain your reasoning clearly; \n• identify what additional information may be required; and \n• turn analysis into a sensible next step for the business. \nExample Business Questions You May Work On \n• Why has website conversion changed even though traffic has increased? \n• Which acquisition channels appear to be driving changes in customer behavior? \n\n--- Page 4 ---\n• Does the available evidence support changing marketing investment? \n• What additional information would be needed before recommending a \ncommercial action? \n• How should an analytical finding be explained to a Marketing Manager or other \nnon-technical stakeholder? \nTools \nYou may work with: \n• SQL \n• Microsoft Excel / Google Sheets \n• Power BI or similar BI tools \n• Basic Python or R where appropriate \n• Website, marketing and sales datasets \nWhat We Value \nWe value candidates who are curious, evidence-driven and comfortable saying when \nthe available data is not sufficient to support a conclusion. \nFor a junior role, we do not expect you to know everything. We are interested in how \nyou approach a problem, how carefully you work with evidence, and how clearly you \nexplain your reasoning. \n \n",
+          "fingerprint": "7be18eceeab66edc073272bbe5a6cfa296f968658d1be968e0c6fd467cb91735",
+          "sha256": "7dacd04212d36dbe26ef9226280d923e6d1f15a222894c2eec5f3171822a603f",
+          "downloadUrl": "/api/demo/materials/job-description.pdf"
+        },
+        "requirements": [
+          {
+            "id": "data-quality",
+            "category": "responsibility",
+            "statement": "Collect, validate and document business data and reporting assumptions.",
+            "page": 1,
+            "start": 1436,
+            "end": 1763,
+            "quote": "• Collect, organize and validate data from sales, website and marketing sources. \n• Check datasets for missing values, inconsistencies and obvious data-quality \nissues. \n• Maintain clear documentation of data sources, calculations and analytical \nassumptions. \n• Support reliable and consistent reporting across business teams.",
+            "criterionIds": [
+              "S3",
+              "D3"
+            ]
+          },
+          {
+            "id": "sql-extraction",
+            "category": "responsibility",
+            "statement": "Use basic SQL to extract, filter, group and aggregate appropriate business data.",
+            "page": 2,
+            "start": 1804,
+            "end": 1995,
+            "quote": "• Write basic SQL queries to extract, filter, group and summaries business data. \n• Use aggregation techniques to analyses performance across products, time \nperiods and acquisition channels.",
+            "criterionIds": [
+              "S1",
+              "S2",
+              "S3"
+            ]
+          },
+          {
+            "id": "business-metrics",
+            "category": "responsibility",
+            "statement": "Calculate business metrics and compare periods or customer/channel segments.",
+            "page": 2,
+            "start": 1997,
+            "end": 2192,
+            "quote": "• Calculate and monitor key business metrics such as website traffic, orders and \nconversion rates. \n• Compare results across periods or customer/channel segments to identify \nmeaningful changes.",
+            "criterionIds": [
+              "D1",
+              "D2",
+              "D3"
+            ]
+          },
+          {
+            "id": "business-investigation",
+            "category": "responsibility",
+            "statement": "Investigate business questions, distinguish evidence and uncertainty, and propose supported next steps.",
+            "page": 2,
+            "start": 2233,
+            "end": 2729,
+            "quote": "• Investigate changes in business performance and identify possible explanations \nsupported by available data. \n• Distinguish between what the data directly shows and what remains uncertain. \n• Identify when additional data is required before reaching a business conclusion. \n• Perform ad hoc analysis to support questions raised by Marketing, Product or \nCommercial teams. \n• Translate analytical findings into practical next steps or recommendations where \nthe available evidence supports them.",
+            "criterionIds": [
+              "B1",
+              "B2",
+              "B3",
+              "B4"
+            ]
+          },
+          {
+            "id": "reporting-visualisation",
+            "category": "responsibility",
+            "statement": "Create clear recurring reports, tables, dashboards and simple visualisations.",
+            "page": 2,
+            "start": 2760,
+            "end": 3067,
+            "quote": "• Assist in creating recurring reports, tables and dashboards using Excel or \nbusiness-intelligence tools. \n• Present metrics and analytical findings in a clear, structured and accessible \nformat. \n• Support the development of simple visualizations that help stakeholders \nunderstand trends and performance.",
+            "criterionIds": [
+              "D3"
+            ]
+          },
+          {
+            "id": "stakeholder-communication",
+            "category": "responsibility",
+            "statement": "Explain implications and limits accessibly and collaborate on business data requirements.",
+            "page": 2,
+            "start": 3096,
+            "end": 3486,
+            "quote": "• Explain analytical findings clearly to colleagues who may not have a technical \nbackground. \n• Summaries the business implications of an analysis rather than only presenting \ncalculations. \n• Clearly communicate assumptions, limitations and areas where further \ninvestigation is required. \n• Collaborate with cross-functional teams to understand business questions and \ndata requirements.",
+            "criterionIds": [
+              "D3",
+              "B1",
+              "B4"
+            ]
+          },
+          {
+            "id": "relevant-degree",
+            "category": "essential",
+            "statement": "Bachelor’s degree or near completion in a listed or related discipline.",
+            "page": 3,
+            "start": 3538,
+            "end": 3696,
+            "quote": "• Bachelor’s degree, or near completion, in Data Analytics, Business Analytics, \nStatistics, Mathematics, Computer Science, Economics or a related discipline.",
+            "criterionIds": []
+          },
+          {
+            "id": "foundational-sql",
+            "category": "essential",
+            "statement": "Foundational SQL filtering, grouping and aggregation.",
+            "page": 3,
+            "start": 3698,
+            "end": 3784,
+            "quote": "• Foundational knowledge of SQL, including filtering, grouping and basic \naggregation.",
+            "criterionIds": [
+              "S1",
+              "S2",
+              "S3"
+            ]
+          },
+          {
+            "id": "spreadsheets",
+            "category": "essential",
+            "statement": "Strong Excel or spreadsheet skills.",
+            "page": 3,
+            "start": 3786,
+            "end": 3823,
+            "quote": "• Strong Excel or spreadsheet skills.",
+            "criterionIds": []
+          },
+          {
+            "id": "metric-interpretation",
+            "category": "essential",
+            "statement": "Calculate and interpret basic business metrics.",
+            "page": 3,
+            "start": 3825,
+            "end": 3885,
+            "quote": "• Ability to calculate and interpret basic business metrics.",
+            "criterionIds": [
+              "D1",
+              "D2"
+            ]
+          },
+          {
+            "id": "structured-problem-solving",
+            "category": "essential",
+            "statement": "Analytical and structured problem-solving skills.",
+            "page": 3,
+            "start": 3887,
+            "end": 3945,
+            "quote": "• Strong analytical and structured problem-solving skills.",
+            "criterionIds": [
+              "B1",
+              "B2",
+              "B3",
+              "B4"
+            ]
+          },
+          {
+            "id": "accuracy",
+            "category": "essential",
+            "statement": "Attention to detail and commitment to data accuracy.",
+            "page": 3,
+            "start": 3947,
+            "end": 4006,
+            "quote": "• High attention to detail and commitment to data accuracy.",
+            "criterionIds": [
+              "S3",
+              "D3"
+            ]
+          },
+          {
+            "id": "written-verbal-communication",
+            "category": "essential",
+            "statement": "Explain analytical findings in written and verbal form.",
+            "page": 3,
+            "start": 4008,
+            "end": 4084,
+            "quote": "• Ability to explain analytical findings clearly in written and verbal form.",
+            "criterionIds": [
+              "D3",
+              "B4"
+            ]
+          },
+          {
+            "id": "learning",
+            "category": "essential",
+            "statement": "Willingness to learn and work in a fast-moving startup environment.",
+            "page": 3,
+            "start": 4086,
+            "end": 4155,
+            "quote": "• Willingness to learn and work in a fast-moving startup environment.",
+            "criterionIds": []
+          },
+          {
+            "id": "analysis-experience",
+            "category": "desirable",
+            "statement": "Analysis internship, university project or portfolio experience.",
+            "page": 3,
+            "start": 4168,
+            "end": 4249,
+            "quote": "• Internship, university project or portfolio experience involving data analysis.",
+            "criterionIds": []
+          },
+          {
+            "id": "python-r",
+            "category": "desirable",
+            "statement": "Familiarity with Python or R.",
+            "page": 3,
+            "start": 4251,
+            "end": 4282,
+            "quote": "• Familiarity with Python or R.",
+            "criterionIds": []
+          },
+          {
+            "id": "bi-tools",
+            "category": "desirable",
+            "statement": "Exposure to Power BI, Tableau or another visualisation platform.",
+            "page": 3,
+            "start": 4284,
+            "end": 4355,
+            "quote": "• Exposure to Power BI, Tableau or another data-visualization platform.",
+            "criterionIds": []
+          },
+          {
+            "id": "digital-metrics",
+            "category": "desirable",
+            "statement": "Basic digital analytics, e-commerce or marketing metrics understanding.",
+            "page": 3,
+            "start": 4357,
+            "end": 4446,
+            "quote": "• Basic understanding of digital analytics, e-commerce or marketing performance \nmetrics.",
+            "criterionIds": [
+              "D1",
+              "D2"
+            ]
+          },
+          {
+            "id": "nontechnical-presentation",
+            "category": "desirable",
+            "statement": "Present analytical work to non-technical audiences.",
+            "page": 3,
+            "start": 4448,
+            "end": 4515,
+            "quote": "• Experience presenting analytical work to non-technical audiences.",
+            "criterionIds": []
+          }
+        ]
+      }
+    },
+    "rubric": {
+      "version": "harbour-retail-junior-analyst-rubric-v1",
+      "jobId": "junior-data-analyst",
+      "provenance": "synthetic_team_designed",
+      "calibrationStatus": "human_calibration_pending",
+      "label": "Core analytical evidence match",
+      "scope": "SQL, Data Analysis and Business Problem Solving evidence for this junior role. Not all JD requirements, hiring success, personality, population rank or retention probability. SQL is statically reviewed, not executed. The 30/30/40 weights are a prior team demo policy, not JD-specified weights.",
+      "requirements": [
+        {
+          "id": "sql",
+          "title": "SQL",
+          "maxScore": 30,
+          "statement": "Review basic extraction, grain, comparisons and appropriate checks."
+        },
+        {
+          "id": "data-analysis",
+          "title": "Data Analysis",
+          "maxScore": 30,
+          "statement": "Explain metrics and meaningful comparisons with reproducible working."
+        },
+        {
+          "id": "business-problem-solving",
+          "title": "Business Problem Solving",
+          "maxScore": 40,
+          "statement": "Frame a relevant decision, distinguish evidence from hypotheses and propose a sensible next step."
+        }
+      ],
+      "marks": [
+        {
+          "mark": 4,
+          "meaning": "Fully supports the observable requirement with relevant explanations and boundaries."
+        },
+        {
+          "mark": 3,
+          "meaning": "Mostly supports the requirement; the rationale identifies a specific non-critical gap."
+        },
+        {
+          "mark": 2,
+          "meaning": "Partially supports the requirement, with a material gap affecting interpretation."
+        },
+        {
+          "mark": 1,
+          "meaning": "A relevant attempt is visible but specific support is weaker than the mark-2 anchor."
+        },
+        {
+          "mark": 0,
+          "meaning": "A clear, observed problem is supported by the source text; not a substitute for missing evidence."
+        },
+        {
+          "mark": "NE",
+          "meaning": "Not enough evidence to judge. Record the checked scope; never convert this to zero."
+        }
+      ],
+      "criteria": [
+        {
+          "id": "S1",
+          "requirementId": "sql",
+          "title": "Query grain, aggregation and joins",
+          "observableSupport": "Input grain is clear and aggregation or joins answer the stated question without visible double counting. A join is not required when the question does not need one.",
+          "maxScore": 10,
+          "anchors": {
+            "0": "A visibly duplicating join produces incorrect key counts that are presented as correct.",
+            "2": "Readable basic aggregation, but the grain or counting effect of a join is insufficiently explained.",
+            "4": "Clear grain and appropriate aggregation or joins, with duplicate-counting risk checked."
+          }
+        },
+        {
+          "id": "S2",
+          "requirementId": "sql",
+          "title": "Time or group comparison and query traceability",
+          "observableSupport": "The reporting windows and comparison groups are explicit and consistent with the query. Complexity earns no extra credit.",
+          "maxScore": 10,
+          "anchors": {
+            "0": "Different periods or unrelated groups are incorrectly treated as the same comparison.",
+            "2": "A query or period comparison is present, but filters or boundary explanations are incomplete.",
+            "4": "Windows, groups and comparison objects are clear; code and explanation support a reproducible comparison."
+          }
+        },
+        {
+          "id": "S3",
+          "requirementId": "sql",
+          "title": "Validation and relevant edge cases",
+          "observableSupport": "Inspect proposed checks or examples for relevant duplicates, missing values, zero denominators and boundaries. Static review does not establish execution.",
+          "maxScore": 10,
+          "anchors": {
+            "0": "The source claims correctness despite a known failed check, or uses a clearly invalid validation method.",
+            "2": "Checks such as missing values or duplicates are mentioned, but methods or expected results are incomplete.",
+            "4": "Actionable checks cover relevant boundaries and state expected results."
+          }
+        },
+        {
+          "id": "D1",
+          "requirementId": "data-analysis",
+          "title": "Metrics, denominators, units and calculations",
+          "observableSupport": "Numerators, denominators, windows and units agree; calculations are reproducible and percentages are distinguished from percentage points where relevant.",
+          "maxScore": 10,
+          "anchors": {
+            "0": "A wrong denominator drives the main conclusion and is neither identified nor corrected.",
+            "2": "The main calculation is usable but a relevant definition or unit is insufficiently explained.",
+            "4": "Metric definitions, denominators, units, periods and calculations are clear and consistent."
+          }
+        },
+        {
+          "id": "D2",
+          "requirementId": "data-analysis",
+          "title": "Meaningful period or group comparisons",
+          "observableSupport": "Compare appropriate periods or groups beyond repeating totals; consider weights and overlapping populations when applicable.",
+          "maxScore": 10,
+          "anchors": {
+            "0": "Overlapping populations are added or rates are directly averaged to produce a key conclusion.",
+            "2": "One useful change is visible, but a relevant breakdown or baseline is missing.",
+            "4": "Totals and relevant groups are compared appropriately, considering weights and overlapping populations."
+          }
+        },
+        {
+          "id": "D3",
+          "requirementId": "data-analysis",
+          "title": "Reproducibility, sources and limitations",
+          "observableSupport": "Show the calculation process, missing information and scope. Presentation quality alone does not establish analytical correctness.",
+          "maxScore": 10,
+          "anchors": {
+            "0": "Information absent from the materials is used as an observed fact.",
+            "2": "A process or limitation is described, but the other aspect is weak.",
+            "4": "Reproducible working is supplied and missing data and scope are explicit."
+          }
+        },
+        {
+          "id": "B1",
+          "requirementId": "business-problem-solving",
+          "title": "Business question and decision framing",
+          "observableSupport": "Connect the question to a practical business decision and realistic constraints at a junior analyst level; senior strategic ownership is not required.",
+          "maxScore": 10,
+          "anchors": {
+            "0": "An explicitly unrelated question is answered and used as the basis of the current decision.",
+            "2": "A relevant change is described but its connection to a business decision is incomplete.",
+            "4": "The business decision, question to answer and realistic constraints are clear."
+          }
+        },
+        {
+          "id": "B2",
+          "requirementId": "business-problem-solving",
+          "title": "Observations, hypotheses and causal claims",
+          "observableSupport": "Separate observed facts, hypotheses and demonstrated causes, with appropriate inference limits.",
+          "maxScore": 10,
+          "anchors": {
+            "0": "A sole proven cause is explicitly asserted without corresponding evidence.",
+            "2": "Hypothesis awareness is visible, but some statements still imply causation from association.",
+            "4": "Facts and hypotheses are separate; plausible alternatives and inference limits are considered."
+          }
+        },
+        {
+          "id": "B3",
+          "requirementId": "business-problem-solving",
+          "title": "Evidence requests that distinguish explanations",
+          "observableSupport": "Request relevant data and explain what different results would imply for competing explanations.",
+          "maxScore": 10,
+          "anchors": {
+            "0": "A circular or irrelevant method is explicitly presented as verifying the proposed explanation.",
+            "2": "Specific additional data is requested, but how it distinguishes explanations is not explained.",
+            "4": "Specific data, a comparison method and the contrasting implications are clear."
+          }
+        },
+        {
+          "id": "B4",
+          "requirementId": "business-problem-solving",
+          "title": "Practical next steps and validation",
+          "observableSupport": "Propose an appropriate order, reason and way to check a practical next step; ask a senior colleague where decisions exceed the junior role.",
+          "maxScore": 10,
+          "anchors": {
+            "0": "The proposed action contradicts the source's own key evidence without explanation.",
+            "2": "A relevant action exists but its sequence, validation measure or stopping condition is incomplete.",
+            "4": "Priority, rationale, feasible steps and validation measures fit the stated constraints."
+          }
+        }
+      ],
+      "rules": {
+        "maxScore": 100,
+        "criterionContribution": "mark / 4 * 10",
+        "displayDecimalPlaces": 1,
+        "neIsZero": false,
+        "autoPassThreshold": null,
+        "rounding": "Calculate with unrounded values; round only for display."
+      }
+    },
+    "assessmentComplete": true,
+    "gapSuggestions": [
+      {
+        "gapId": "application_review:B1",
+        "stage": "application_review",
+        "assessmentRevision": 1,
+        "evidenceSnapshotId": "david-liu-application-r6-v1",
+        "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+        "criterionId": "B1",
+        "targetRequirementId": "business-problem-solving",
+        "mark": "NE",
+        "severity": "missing_evidence",
+        "priority": 2,
+        "priorityReason": "This core junior-role requirement has been checked but remains unobserved. Request relevant existing material before assigning a task.",
+        "summary": "The software feature scope does not frame a business-analysis decision.",
+        "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software feature scope does not frame a business-analysis decision.",
+        "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+        "nextStep": "Describe a business question and the decision it should support.",
+        "checkedSourceIds": [
+          "cv-public.txt",
+          "project_readme.md",
+          "task_queries.sql"
+        ],
+        "sourceRefs": [],
+        "requiresHumanConfirmation": true,
+        "suggestedFirstAction": "Request the relevant existing explanation or work sample; HR explicitly selects any bounded task."
+      },
+      {
+        "gapId": "application_review:B2",
+        "stage": "application_review",
+        "assessmentRevision": 1,
+        "evidenceSnapshotId": "david-liu-application-r6-v1",
+        "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+        "criterionId": "B2",
+        "targetRequirementId": "business-problem-solving",
+        "mark": "NE",
+        "severity": "missing_evidence",
+        "priority": 2,
+        "priorityReason": "This core junior-role requirement has been checked but remains unobserved. Request relevant existing material before assigning a task.",
+        "summary": "No business-analysis interpretation or causal hypothesis is supplied.",
+        "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business-analysis interpretation or causal hypothesis is supplied.",
+        "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+        "nextStep": "Separate observed facts from hypotheses in an existing analysis.",
+        "checkedSourceIds": [
+          "cv-public.txt",
+          "project_readme.md",
+          "task_queries.sql"
+        ],
+        "sourceRefs": [],
+        "requiresHumanConfirmation": true,
+        "suggestedFirstAction": "Request the relevant existing explanation or work sample; HR explicitly selects any bounded task."
+      },
+      {
+        "gapId": "application_review:B3",
+        "stage": "application_review",
+        "assessmentRevision": 1,
+        "evidenceSnapshotId": "david-liu-application-r6-v1",
+        "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+        "criterionId": "B3",
+        "targetRequirementId": "business-problem-solving",
+        "mark": "NE",
+        "severity": "missing_evidence",
+        "priority": 2,
+        "priorityReason": "This core junior-role requirement has been checked but remains unobserved. Request relevant existing material before assigning a task.",
+        "summary": "No business hypothesis or evidence request to distinguish explanations is supplied.",
+        "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business hypothesis or evidence request to distinguish explanations is supplied.",
+        "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+        "nextStep": "Explain what further data would clarify a business question and why.",
+        "checkedSourceIds": [
+          "cv-public.txt",
+          "project_readme.md",
+          "task_queries.sql"
+        ],
+        "sourceRefs": [],
+        "requiresHumanConfirmation": true,
+        "suggestedFirstAction": "Request the relevant existing explanation or work sample; HR explicitly selects any bounded task."
+      },
+      {
+        "gapId": "application_review:B4",
+        "stage": "application_review",
+        "assessmentRevision": 1,
+        "evidenceSnapshotId": "david-liu-application-r6-v1",
+        "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+        "criterionId": "B4",
+        "targetRequirementId": "business-problem-solving",
+        "mark": "NE",
+        "severity": "missing_evidence",
+        "priority": 2,
+        "priorityReason": "This core junior-role requirement has been checked but remains unobserved. Request relevant existing material before assigning a task.",
+        "summary": "Functional software checks are supplied, but no evidence-led business recommendation is present.",
+        "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. Functional software checks are supplied, but no evidence-led business recommendation is present.",
+        "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+        "nextStep": "Provide a practical recommendation and a way to check its outcome.",
+        "checkedSourceIds": [
+          "cv-public.txt",
+          "project_readme.md",
+          "task_queries.sql"
+        ],
+        "sourceRefs": [],
+        "requiresHumanConfirmation": true,
+        "suggestedFirstAction": "Request the relevant existing explanation or work sample; HR explicitly selects any bounded task."
+      },
+      {
+        "gapId": "application_review:D1",
+        "stage": "application_review",
+        "assessmentRevision": 1,
+        "evidenceSnapshotId": "david-liu-application-r6-v1",
+        "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+        "criterionId": "D1",
+        "targetRequirementId": "data-analysis",
+        "mark": "NE",
+        "severity": "missing_evidence",
+        "priority": 2,
+        "priorityReason": "This core junior-role requirement has been checked but remains unobserved. Request relevant existing material before assigning a task.",
+        "summary": "No business metric, denominator or analytical calculation is supplied.",
+        "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business metric, denominator or analytical calculation is supplied.",
+        "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+        "nextStep": "Provide a small existing calculation with definitions, units and working.",
+        "checkedSourceIds": [
+          "cv-public.txt",
+          "project_readme.md",
+          "task_queries.sql"
+        ],
+        "sourceRefs": [],
+        "requiresHumanConfirmation": true,
+        "suggestedFirstAction": "Request the relevant existing explanation or work sample; HR explicitly selects any bounded task."
+      },
+      {
+        "gapId": "application_review:D2",
+        "stage": "application_review",
+        "assessmentRevision": 1,
+        "evidenceSnapshotId": "david-liu-application-r6-v1",
+        "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+        "criterionId": "D2",
+        "targetRequirementId": "data-analysis",
+        "mark": "NE",
+        "severity": "missing_evidence",
+        "priority": 2,
+        "priorityReason": "This core junior-role requirement has been checked but remains unobserved. Request relevant existing material before assigning a task.",
+        "summary": "No period-over-period or analytical segment comparison is supplied.",
+        "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No period-over-period or analytical segment comparison is supplied.",
+        "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+        "nextStep": "Provide an aligned period or group comparison and explain its meaning.",
+        "checkedSourceIds": [
+          "cv-public.txt",
+          "project_readme.md",
+          "task_queries.sql"
+        ],
+        "sourceRefs": [],
+        "requiresHumanConfirmation": true,
+        "suggestedFirstAction": "Request the relevant existing explanation or work sample; HR explicitly selects any bounded task."
+      },
+      {
+        "gapId": "application_review:D3",
+        "stage": "application_review",
+        "assessmentRevision": 1,
+        "evidenceSnapshotId": "david-liu-application-r6-v1",
+        "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+        "criterionId": "D3",
+        "targetRequirementId": "data-analysis",
+        "mark": "NE",
+        "severity": "missing_evidence",
+        "priority": 2,
+        "priorityReason": "This core junior-role requirement has been checked but remains unobserved. Request relevant existing material before assigning a task.",
+        "summary": "The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+        "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+        "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+        "nextStep": "Supply the working and limitations for a simple business analysis.",
+        "checkedSourceIds": [
+          "cv-public.txt",
+          "project_readme.md",
+          "task_queries.sql"
+        ],
+        "sourceRefs": [],
+        "requiresHumanConfirmation": true,
+        "suggestedFirstAction": "Request the relevant existing explanation or work sample; HR explicitly selects any bounded task."
+      },
+      {
+        "gapId": "application_review:S2",
+        "stage": "application_review",
+        "assessmentRevision": 1,
+        "evidenceSnapshotId": "david-liu-application-r6-v1",
+        "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+        "criterionId": "S2",
+        "targetRequirementId": "sql",
+        "mark": "NE",
+        "severity": "missing_evidence",
+        "priority": 2,
+        "priorityReason": "This core junior-role requirement has been checked but remains unobserved. Request relevant existing material before assigning a task.",
+        "summary": "The only query is a current user task list; no period or analytical group comparison is supplied.",
+        "rationale": "The CV, application SQL and database note were checked. The only query is a current user task list; no period or analytical group comparison is supplied.",
+        "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+        "nextStep": "Provide an existing basic SQL comparison with clear groups or time boundaries.",
+        "checkedSourceIds": [
+          "cv-public.txt",
+          "project_readme.md",
+          "task_queries.sql"
+        ],
+        "sourceRefs": [],
+        "requiresHumanConfirmation": true,
+        "suggestedFirstAction": "Request the relevant existing explanation or work sample; HR explicitly selects any bounded task."
+      }
+    ],
+    "candidate": {
+      "id": "david-liu",
+      "name": "David Liu",
+      "background": "User-supplied fictional CV: computer science and software development; newly authored task-list query and database note, not a completed analytics project."
+    },
+    "application": {
+      "id": "david-liu-demo-application",
+      "candidateId": "david-liu",
+      "jobId": "junior-data-analyst",
+      "evidenceSnapshotId": "david-liu-application-r6-v1",
+      "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+      "fixtureVersion": "harbour-retail-applications-v1",
+      "provenance": "synthetic",
+      "materialVersion": 1,
+      "scope": "Immutable new application materials: user-confirmed fictional CV plus clearly labelled synthetic companions. Original fictional PDF downloads are unredacted; default display text omits contact headers. Past projects are separate from company task data and formal V1/V2 submissions. Static review does not verify authorship, execution, employment or future performance.",
+      "sources": [
+        {
+          "sourceId": "cv-public.txt",
+          "location": "/sources/0/text",
+          "text": "--- Page 1 ---\nDavid Liu\nEducation\nUniversity of New South Wales (UNSW) Feb 2023 - Nov 2026\nBachelor of Computer Science\n• Major: Software Development\n• WAM: 80\n• Relevant study: Object-Oriented Programming, Data Structures, Databases and Web Applications\n• Completed university projects involving Java, JavaScript, SQL and web development\nExperience\nSoftware Development Intern - Nexus Digital Solutions (Shenzhen, China) Dec 2025 - Feb 2026\n• Assisted with the development and maintenance of an internal customer management application.\n• Used Java and Spring Boot to implement REST endpoints for customer records.\n• Wrote SQL queries to retrieve and update application data.\n• Participated in debugging issues reported by the testing team.\n• Helped the team improve application performance and user experience.\nResearch & Projects\nTask Management Web Application - University Project Mar 2026 - May 2026\n• Built a web application using React, Node.js and Express.\n• Implemented user login, task creation, status updates and basic search functions.\n• Connected the application to a MySQL database through REST APIs.\n• Worked with three students and managed project files through GitHub.\nLibrary Management System - Object-Oriented Programming Project Aug 2025 - Oct 2025\n• Developed a Java application for recording books, members and borrowing activity.\n• Applied classes, inheritance and exception handling to organize the program.\n• Tested key functions and corrected errors identified during development.\nVolunteering & Activities\nGeneral Member - University Computing Society Mar 2024 - Nov 2025\n• Attended coding workshops, technology seminars and networking events.\n• Participated in discussions about software development and emerging technologies.\n• Supported several society activities during the academic year.\nTechnology Event Volunteer - University Student Association Feb 2025 - Nov 2025\n• Supported technology-related student events and workshops.\n• Helped participants with registration and basic technical questions.\n• Worked with other volunteers to complete event activities on schedule.\nSkills\n• Technical Skills: Java, Python, JavaScript, React, Node.js, Spring Boot, SQL, Git, GitHub, Basic AWS\n• Software Skills: Object-oriented programming, REST APIs, basic testing, debugging, data structures\n• Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn",
+          "kind": "application",
+          "provenance": {
+            "origin": "user_supplied_fictional_cv",
+            "filePath": "app/backend/content/r6/david-liu/cv-public.txt",
+            "sha256": "64d5440f76f922b834700fc06592a392545b6dc896786cc067731debd06d9853",
+            "pageNumbers": [
+              1
+            ],
+            "disclosure": "User-supplied fictional CV. Public text omits unnecessary contact headers. The explicit Original CV download preserves the unredacted fictional PDF bytes and may include fictional contact details. CV statements are not independently verified.",
+            "downloadUrl": "/api/demo/materials/david-liu/cv.pdf",
+            "redaction": {
+              "removedFields": [
+                "contact_header_email_phone_and_location"
+              ],
+              "originalSha256": "2aa6c97fc472ba97dffa451eee56f297fe917ed8f8906875cd58072559790c78"
+            }
+          }
+        },
+        {
+          "sourceId": "project_readme.md",
+          "location": "/sources/1/text",
+          "text": "> Synthetic demo work sample, newly authored from the project scope described in the supplied fictional CV. It was not attached to the original CV. The figures and text below are demonstration material, not verified employment outcomes.\n\n# Task Management Web Application: database note\n\n## Scope\nCompanion to David's March-May 2026 university project. His CV names React, Node.js, Express, MySQL, login, task creation, status updates and basic search. The attached query illustrates the data-retrieval part of that scope, without adding a new analytics internship or unmentioned business project.\n\n## Data contract and behaviour\nA user can create many tasks. Each task has one creator ID and its own primary key. The task-list endpoint supplies the signed-in user's ID to the parameterised query. Status changes are handled by a separate endpoint; mutation code is not included here.\n\nThe join retrieves the creator display name; it should not multiply tasks. Proposed functional checks are listed beside the SQL. No run log, coverage percentage or performance benchmark is supplied.\n\n## What this sample does and does not cover\nThe material shows a proposed application query and basic checking approach. It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation. The CV's software-development experience should not be relabelled as demonstrated data-analysis results.\n",
+          "kind": "work_sample",
+          "provenance": {
+            "origin": "synthetic_demo_work_sample",
+            "filePath": "app/backend/content/r6/david-liu/project_readme.md",
+            "sha256": "263844fec181cd6baa7167025deafe014ddead7307ce77d08f8a2e7e75d1cdfa",
+            "pageNumbers": [],
+            "disclosure": "Synthetic demo work sample newly authored from the fictional CV scope; not attached to the original CV, not independently recovered work, and not a formal employer-task submission."
+          }
+        },
+        {
+          "sourceId": "task_queries.sql",
+          "location": "/sources/2/text",
+          "text": "-- SYNTHETIC DEMO WORK SAMPLE: Task Management Web Application.\n-- Newly authored illustration of the university project in David Liu's fictional CV.\n-- Static review only. This is application-data retrieval, not a completed analytics project.\n-- users(id PRIMARY KEY, display_name)\n-- tasks(id PRIMARY KEY, creator_id REFERENCES users(id), title, status, created_at)\n-- tasks.status is one of: todo, in_progress, done.\n-- One output row per task; users.id is unique, so this join is many-to-one.\n-- Bind :current_user_id using the application driver's parameter mechanism.\nSELECT t.id, t.title, t.status, t.created_at, u.display_name AS creator_name\nFROM tasks AS t\nLEFT JOIN users AS u ON u.id = t.creator_id\nWHERE t.creator_id = :current_user_id\nORDER BY t.created_at DESC, t.id DESC;\n\n-- Proposed functional checks (not recorded execution results):\n-- A user with no tasks receives an empty result.\n-- A task with a valid creator should appear once, not once per other task.\n-- The returned task IDs should match the user's task IDs in the source table.\n-- A missing display name should not remove a task from the result.\n-- Access enforcement is checked separately in the authenticated API handler;\n-- the named parameter itself is not proof that authorisation was implemented.\n",
+          "kind": "work_sample",
+          "provenance": {
+            "origin": "synthetic_demo_work_sample",
+            "filePath": "app/backend/content/r6/david-liu/task_queries.sql",
+            "sha256": "d205078aaef5a378001d8af2d5d9beb57d5ae329737aaf1bf1becb5cf59789eb",
+            "pageNumbers": [],
+            "disclosure": "Synthetic demo work sample newly authored from the fictional CV scope; not attached to the original CV, not independently recovered work, and not a formal employer-task submission."
+          }
+        }
+      ],
+      "jdAlignment": [
+        {
+          "jdRequirementId": "data-quality",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The query describes key relationships and proposes source-ID, empty-result and duplicate checks.",
+          "remainingUnknowns": "Business data cleaning, metric reconciliation and executed check outputs are absent; no personality inference is made.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 979,
+              "end": 1057,
+              "quote": "-- The returned task IDs should match the user's task IDs in the source table."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "accuracy",
+          "statuses": [
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "The query describes key relationships and proposes source-ID, empty-result and duplicate checks.",
+          "remainingUnknowns": "Business data cleaning, metric reconciliation and executed check outputs are absent; no personality inference is made.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 979,
+              "end": 1057,
+              "quote": "-- The returned task IDs should match the user's task IDs in the source table."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "sql-extraction",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims application SQL; the companion shows a filtered many-to-one join with deterministic ordering.",
+          "remainingUnknowns": "The evidence does not cover grouping, business aggregation or a period/channel comparison.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 619,
+              "end": 677,
+              "quote": "Wrote SQL queries to retrieve and update application data."
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 420,
+              "end": 496,
+              "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "foundational-sql",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims application SQL; the companion shows a filtered many-to-one join with deterministic ordering.",
+          "remainingUnknowns": "The evidence does not cover grouping, business aggregation or a period/channel comparison.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 619,
+              "end": 677,
+              "quote": "Wrote SQL queries to retrieve and update application data."
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 420,
+              "end": 496,
+              "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "business-metrics",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected materials are software retrieval and functional-check examples, not analytical metrics or business-investigation results.",
+          "remainingUnknowns": "Request relevant existing analysis rather than relabelling software features as business evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1207,
+              "end": 1346,
+              "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "metric-interpretation",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected materials are software retrieval and functional-check examples, not analytical metrics or business-investigation results.",
+          "remainingUnknowns": "Request relevant existing analysis rather than relabelling software features as business evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1207,
+              "end": 1346,
+              "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "business-investigation",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected materials are software retrieval and functional-check examples, not analytical metrics or business-investigation results.",
+          "remainingUnknowns": "Request relevant existing analysis rather than relabelling software features as business evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1207,
+              "end": 1346,
+              "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "structured-problem-solving",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected materials are software retrieval and functional-check examples, not analytical metrics or business-investigation results.",
+          "remainingUnknowns": "Request relevant existing analysis rather than relabelling software features as business evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1207,
+              "end": 1346,
+              "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "digital-metrics",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The inspected materials are software retrieval and functional-check examples, not analytical metrics or business-investigation results.",
+          "remainingUnknowns": "Request relevant existing analysis rather than relabelling software features as business evidence.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1207,
+              "end": 1346,
+              "quote": "It contains no period-over-period business comparison, conversion calculation, customer-behaviour investigation or business recommendation."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "reporting-visualisation",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "A database note is supplied, but no analytical report, chart, dashboard or business table is present.",
+          "remainingUnknowns": "An existing analytical reporting artifact is needed.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 1130,
+              "end": 1206,
+              "quote": "The material shows a proposed application query and basic checking approach."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "stakeholder-communication",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims teamwork and communication; the database note is a readable technical explanation.",
+          "remainingUnknowns": "Explaining analytical implications to non-technical stakeholders and spoken performance remain unobserved.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2322,
+              "end": 2418,
+              "quote": "Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn"
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 886,
+              "end": 960,
+              "quote": "The join retrieves the creator display name; it should not multiply tasks."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "written-verbal-communication",
+          "statuses": [
+            "claimed_in_cv",
+            "work_sample_evidence",
+            "further_evidence_needed"
+          ],
+          "summary": "CV claims teamwork and communication; the database note is a readable technical explanation.",
+          "remainingUnknowns": "Explaining analytical implications to non-technical stakeholders and spoken performance remain unobserved.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2322,
+              "end": 2418,
+              "quote": "Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn"
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 886,
+              "end": 960,
+              "quote": "The join retrieves the creator display name; it should not multiply tasks."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "relevant-degree",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV states a Computer Science bachelor degree with expected November 2026 completion.",
+          "remainingUnknowns": "Confirm near-completion status; the software specialism is not automatically an analytical work sample.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 92,
+              "end": 120,
+              "quote": "Bachelor of Computer Science"
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 121,
+              "end": 150,
+              "quote": "• Major: Software Development"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "spreadsheets",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The CV and companions contain no spreadsheet claim or workbook.",
+          "remainingUnknowns": "Request existing spreadsheet evidence rather than assume proficiency or inability.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2221,
+              "end": 2319,
+              "quote": "Software Skills: Object-oriented programming, REST APIs, basic testing, debugging, data structures"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "learning",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "CV lists willingness to learn and coding-workshop attendance.",
+          "remainingUnknowns": "These statements do not establish personal disposition or on-the-job learning.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2322,
+              "end": 2418,
+              "quote": "Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "analysis-experience",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "The CV internship and supplied university sample concern software applications.",
+          "remainingUnknowns": "No completed analysis internship or analytical portfolio artifact is present in the checked scope.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 351,
+              "end": 404,
+              "quote": "Software Development Intern - Nexus Digital Solutions"
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "project_readme.md",
+              "location": "/sources/1/text",
+              "start": 523,
+              "end": 597,
+              "quote": "without adding a new analytics internship or unmentioned business project."
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "python-r",
+          "statuses": [
+            "claimed_in_cv",
+            "further_evidence_needed"
+          ],
+          "summary": "Python appears in the CV skills list.",
+          "remainingUnknowns": "No Python/R analysis sample or execution is supplied.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2118,
+              "end": 2218,
+              "quote": "Technical Skills: Java, Python, JavaScript, React, Node.js, Spring Boot, SQL, Git, GitHub, Basic AWS"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "bi-tools",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "No BI or data-visualisation platform exposure is described in the checked material.",
+          "remainingUnknowns": "Request relevant evidence if available; do not infer a verified deficit.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 2118,
+              "end": 2218,
+              "quote": "Technical Skills: Java, Python, JavaScript, React, Node.js, Spring Boot, SQL, Git, GitHub, Basic AWS"
+            }
+          ]
+        },
+        {
+          "jdRequirementId": "nontechnical-presentation",
+          "statuses": [
+            "further_evidence_needed"
+          ],
+          "summary": "Event assistance and technical-team work are described, but no analytical presentation is supplied.",
+          "remainingUnknowns": "Analytical presentation to a non-technical audience remains unobserved.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "cv-public.txt",
+              "location": "/sources/0/text",
+              "start": 1967,
+              "end": 2035,
+              "quote": "Helped participants with registration and basic technical questions."
+            }
+          ]
+        }
+      ],
+      "baseline": {
+        "candidateId": "david-liu",
+        "jobId": "junior-data-analyst",
+        "evidenceSnapshotId": "david-liu-application-r6-v1",
+        "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+        "fixtureVersion": "harbour-retail-applications-v1",
+        "rubricVersion": "harbour-retail-junior-analyst-rubric-v1",
+        "stage": "application_review",
+        "assessmentRevision": 1,
+        "annotationMode": "ai_authored",
+        "label": "AI-authored demo assessment · Human calibration pending",
+        "status": "reviewed",
+        "assessmentComplete": true,
+        "provenance": {
+          "sampleType": "synthetic",
+          "standardDesign": "team_designed",
+          "actualAnnotation": "ai_agent_authored_fixture",
+          "actualReview": "ai_agent_review",
+          "humanCalibration": "pending",
+          "externalExpertValidation": false,
+          "note": "AI-authored annotations and AI-agent source/range/arithmetic review of user-confirmed fictional CVs and new synthetic companions. This is internal agent review, not independent human approval. Human calibration and external validation remain pending; the core rubric is not an all-JD match rate."
+        },
+        "items": [
+          {
+            "criterionId": "S1",
+            "mark": 4,
+            "rationale": "The task grain, unique user key and left join support one row per task; source-ID and duplicate checks are proposed. The query is application retrieval, not an analytical aggregation; unnecessary aggregation earns no credit and is not required for this question.",
+            "support": "The task grain, unique user key and left join support one row per task; source-ID and duplicate checks are proposed.",
+            "gaps": "The query is application retrieval, not an analytical aggregation; unnecessary aggregation earns no credit and is not required for this question.",
+            "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+            "nextStep": "Check the actual key constraints and compare returned IDs with the source.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "david-liu",
+                "evidenceSnapshotId": "david-liu-application-r6-v1",
+                "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+                "sourceId": "task_queries.sql",
+                "location": "/sources/2/text",
+                "start": 420,
+                "end": 496,
+                "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+              }
+            ]
+          },
+          {
+            "criterionId": "S2",
+            "mark": "NE",
+            "rationale": "The CV, application SQL and database note were checked. The only query is a current user task list; no period or analytical group comparison is supplied.",
+            "support": "The CV, application SQL and database note were checked.",
+            "gaps": "The only query is a current user task list; no period or analytical group comparison is supplied.",
+            "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+            "nextStep": "Provide an existing basic SQL comparison with clear groups or time boundaries.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "S3",
+            "mark": 4,
+            "rationale": "Empty results, duplicate risk, source reconciliation and missing display-name behaviour have explicit expected outcomes appropriate to this retrieval query. No actual run log or authenticated handler is supplied; this is a static checking plan.",
+            "support": "Empty results, duplicate risk, source reconciliation and missing display-name behaviour have explicit expected outcomes appropriate to this retrieval query.",
+            "gaps": "No actual run log or authenticated handler is supplied; this is a static checking plan.",
+            "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+            "nextStep": "Run these cases and inspect access enforcement separately before operational use.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "david-liu",
+                "evidenceSnapshotId": "david-liu-application-r6-v1",
+                "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+                "sourceId": "task_queries.sql",
+                "location": "/sources/2/text",
+                "start": 853,
+                "end": 1125,
+                "quote": "-- A user with no tasks receives an empty result.\n-- A task with a valid creator should appear once, not once per other task.\n-- The returned task IDs should match the user's task IDs in the source table.\n-- A missing display name should not remove a task from the result."
+              }
+            ]
+          },
+          {
+            "criterionId": "D1",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business metric, denominator or analytical calculation is supplied.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "No business metric, denominator or analytical calculation is supplied.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Provide a small existing calculation with definitions, units and working.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "D2",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No period-over-period or analytical segment comparison is supplied.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "No period-over-period or analytical segment comparison is supplied.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Provide an aligned period or group comparison and explain its meaning.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "D3",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Supply the working and limitations for a simple business analysis.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "B1",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software feature scope does not frame a business-analysis decision.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "The software feature scope does not frame a business-analysis decision.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Describe a business question and the decision it should support.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "B2",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business-analysis interpretation or causal hypothesis is supplied.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "No business-analysis interpretation or causal hypothesis is supplied.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Separate observed facts from hypotheses in an existing analysis.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "B3",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business hypothesis or evidence request to distinguish explanations is supplied.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "No business hypothesis or evidence request to distinguish explanations is supplied.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Explain what further data would clarify a business question and why.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "B4",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. Functional software checks are supplied, but no evidence-led business recommendation is present.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "Functional software checks are supplied, but no evidence-led business recommendation is present.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Provide a practical recommendation and a way to check its outcome.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          }
+        ],
+        "score": {
+          "status": "needs_evidence",
+          "assessmentComplete": true,
+          "complete": false,
+          "coveragePercent": 20,
+          "accruedScore": 20,
+          "overallScore": null,
+          "overallPercentage": null,
+          "criteria": [
+            {
+              "criterionId": "S1",
+              "requirementId": "sql",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "S2",
+              "requirementId": "sql",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "S3",
+              "requirementId": "sql",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "D1",
+              "requirementId": "data-analysis",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "D2",
+              "requirementId": "data-analysis",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "D3",
+              "requirementId": "data-analysis",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "B1",
+              "requirementId": "business-problem-solving",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "B2",
+              "requirementId": "business-problem-solving",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "B3",
+              "requirementId": "business-problem-solving",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "B4",
+              "requirementId": "business-problem-solving",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            }
+          ],
+          "skills": [
+            {
+              "requirementId": "sql",
+              "criterionIds": [
+                "S1",
+                "S2",
+                "S3"
+              ],
+              "maxScore": 30,
+              "assessmentComplete": true,
+              "complete": false,
+              "evaluatedCount": 2,
+              "neCount": 1,
+              "pendingCount": 0,
+              "accruedScore": 20,
+              "score": null,
+              "percentage": null
+            },
+            {
+              "requirementId": "data-analysis",
+              "criterionIds": [
+                "D1",
+                "D2",
+                "D3"
+              ],
+              "maxScore": 30,
+              "assessmentComplete": true,
+              "complete": false,
+              "evaluatedCount": 0,
+              "neCount": 3,
+              "pendingCount": 0,
+              "accruedScore": 0,
+              "score": null,
+              "percentage": null
+            },
+            {
+              "requirementId": "business-problem-solving",
+              "criterionIds": [
+                "B1",
+                "B2",
+                "B3",
+                "B4"
+              ],
+              "maxScore": 40,
+              "assessmentComplete": true,
+              "complete": false,
+              "evaluatedCount": 0,
+              "neCount": 4,
+              "pendingCount": 0,
+              "accruedScore": 0,
+              "score": null,
+              "percentage": null
+            }
+          ]
+        }
+      },
+      "initialReport": [
+        {
+          "requirementId": "sql",
+          "status": "uncertain",
+          "displayStatus": "Uncertain",
+          "mode": "preset",
+          "summary": "A soundly described application join and functional checks are visible; analytical comparisons are not supplied.",
+          "uncertainty": "The missing comparison is NE rather than a failed query or an inference of inability.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 420,
+              "end": 496,
+              "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 853,
+              "end": 1125,
+              "quote": "-- A user with no tasks receives an empty result.\n-- A task with a valid creator should appear once, not once per other task.\n-- The returned task IDs should match the user's task IDs in the source table.\n-- A missing display name should not remove a task from the result."
+            }
+          ]
+        },
+        {
+          "requirementId": "data-analysis",
+          "status": "uncertain",
+          "displayStatus": "Uncertain",
+          "mode": "preset",
+          "summary": "No analytical calculation or business period/group comparison is present in the checked software sample.",
+          "uncertainty": "Software documentation is not relabelled as data-analysis evidence.",
+          "sourceRefs": []
+        },
+        {
+          "requirementId": "business-problem-solving",
+          "status": "uncertain",
+          "displayStatus": "Uncertain",
+          "mode": "preset",
+          "summary": "The supplied software scope contains no business investigation or evidence-led recommendation to assess.",
+          "uncertainty": "Missing work evidence is not a personal deficiency or automatic rejection.",
+          "sourceRefs": []
+        }
+      ]
+    },
+    "dataset": {
+      "version": "harbour-retail-2026-09-v1",
+      "provenance": "synthetic",
+      "records": [
+        {
+          "id": "previous-organic",
+          "period": "previous",
+          "channel": "Organic",
+          "sessions": 300000,
+          "orders": 11400,
+          "adSpendCents": 0,
+          "revenueCents": 34200000
+        },
+        {
+          "id": "previous-paid-search",
+          "period": "previous",
+          "channel": "Paid Search",
+          "sessions": 300000,
+          "orders": 9600,
+          "adSpendCents": 3391304,
+          "revenueCents": 28800000
+        },
+        {
+          "id": "previous-social",
+          "period": "previous",
+          "channel": "Social",
+          "sessions": 160000,
+          "orders": 4480,
+          "adSpendCents": 782609,
+          "revenueCents": 13440000
+        },
+        {
+          "id": "previous-email",
+          "period": "previous",
+          "channel": "Email",
+          "sessions": 80000,
+          "orders": 3600,
+          "adSpendCents": 0,
+          "revenueCents": 10800000
+        },
+        {
+          "id": "previous-direct",
+          "period": "previous",
+          "channel": "Direct",
+          "sessions": 160000,
+          "orders": 4920,
+          "adSpendCents": 0,
+          "revenueCents": 14760000
+        },
+        {
+          "id": "current-organic",
+          "period": "current",
+          "channel": "Organic",
+          "sessions": 324000,
+          "orders": 11340,
+          "adSpendCents": 0,
+          "revenueCents": 34020000
+        },
+        {
+          "id": "current-paid-search",
+          "period": "current",
+          "channel": "Paid Search",
+          "sessions": 426000,
+          "orders": 7668,
+          "adSpendCents": 3900000,
+          "revenueCents": 23004000
+        },
+        {
+          "id": "current-social",
+          "period": "current",
+          "channel": "Social",
+          "sessions": 200000,
+          "orders": 4200,
+          "adSpendCents": 900000,
+          "revenueCents": 12600000
+        },
+        {
+          "id": "current-email",
+          "period": "current",
+          "channel": "Email",
+          "sessions": 77600,
+          "orders": 3414,
+          "adSpendCents": 0,
+          "revenueCents": 10242000
+        },
+        {
+          "id": "current-direct",
+          "period": "current",
+          "channel": "Direct",
+          "sessions": 152400,
+          "orders": 4058,
+          "adSpendCents": 0,
+          "revenueCents": 12174000
+        }
+      ],
+      "metrics": {
+        "previous": {
+          "sessions": 1000000,
+          "orders": 34000,
+          "adSpendCents": 4173913,
+          "revenueCents": 102000000,
+          "conversionPct": 3.4
+        },
+        "current": {
+          "sessions": 1180000,
+          "orders": 30680,
+          "adSpendCents": 4800000,
+          "revenueCents": 92040000,
+          "conversionPct": 2.6
+        },
+        "change": {
+          "trafficPct": 18,
+          "ordersPct": -9.764705882352942,
+          "adSpendPct": 15.00000119791668,
+          "conversionPercentagePoints": -0.7999999999999998
+        }
+      },
+      "channels": [
+        {
+          "id": "organic",
+          "channel": "Organic",
+          "traffic": 324000,
+          "growth": 8,
+          "orders": 11340,
+          "conversion": 3.5,
+          "previous": 3.8,
+          "revenue": 340200,
+          "trafficSharePct": 27.45762711864407,
+          "before": {
+            "id": "previous-organic",
+            "period": "previous",
+            "channel": "Organic",
+            "sessions": 300000,
+            "orders": 11400,
+            "adSpendCents": 0,
+            "revenueCents": 34200000
+          },
+          "current": {
+            "id": "current-organic",
+            "period": "current",
+            "channel": "Organic",
+            "sessions": 324000,
+            "orders": 11340,
+            "adSpendCents": 0,
+            "revenueCents": 34020000
+          }
+        },
+        {
+          "id": "paid-search",
+          "channel": "Paid Search",
+          "traffic": 426000,
+          "growth": 42,
+          "orders": 7668,
+          "conversion": 1.8,
+          "previous": 3.2,
+          "revenue": 230040,
+          "trafficSharePct": 36.101694915254235,
+          "before": {
+            "id": "previous-paid-search",
+            "period": "previous",
+            "channel": "Paid Search",
+            "sessions": 300000,
+            "orders": 9600,
+            "adSpendCents": 3391304,
+            "revenueCents": 28800000
+          },
+          "current": {
+            "id": "current-paid-search",
+            "period": "current",
+            "channel": "Paid Search",
+            "sessions": 426000,
+            "orders": 7668,
+            "adSpendCents": 3900000,
+            "revenueCents": 23004000
+          }
+        },
+        {
+          "id": "social",
+          "channel": "Social",
+          "traffic": 200000,
+          "growth": 25,
+          "orders": 4200,
+          "conversion": 2.1,
+          "previous": 2.8,
+          "revenue": 126000,
+          "trafficSharePct": 16.949152542372882,
+          "before": {
+            "id": "previous-social",
+            "period": "previous",
+            "channel": "Social",
+            "sessions": 160000,
+            "orders": 4480,
+            "adSpendCents": 782609,
+            "revenueCents": 13440000
+          },
+          "current": {
+            "id": "current-social",
+            "period": "current",
+            "channel": "Social",
+            "sessions": 200000,
+            "orders": 4200,
+            "adSpendCents": 900000,
+            "revenueCents": 12600000
+          }
+        },
+        {
+          "id": "email",
+          "channel": "Email",
+          "traffic": 77600,
+          "growth": -3,
+          "orders": 3414,
+          "conversion": 4.399484536082475,
+          "previous": 4.5,
+          "revenue": 102420,
+          "trafficSharePct": 6.576271186440678,
+          "before": {
+            "id": "previous-email",
+            "period": "previous",
+            "channel": "Email",
+            "sessions": 80000,
+            "orders": 3600,
+            "adSpendCents": 0,
+            "revenueCents": 10800000
+          },
+          "current": {
+            "id": "current-email",
+            "period": "current",
+            "channel": "Email",
+            "sessions": 77600,
+            "orders": 3414,
+            "adSpendCents": 0,
+            "revenueCents": 10242000
+          }
+        },
+        {
+          "id": "direct",
+          "channel": "Direct",
+          "traffic": 152400,
+          "growth": -4.75,
+          "orders": 4058,
+          "conversion": 2.6627296587926508,
+          "previous": 3.075,
+          "revenue": 121740,
+          "trafficSharePct": 12.915254237288135,
+          "before": {
+            "id": "previous-direct",
+            "period": "previous",
+            "channel": "Direct",
+            "sessions": 160000,
+            "orders": 4920,
+            "adSpendCents": 0,
+            "revenueCents": 14760000
+          },
+          "current": {
+            "id": "current-direct",
+            "period": "current",
+            "channel": "Direct",
+            "sessions": 152400,
+            "orders": 4058,
+            "adSpendCents": 0,
+            "revenueCents": 12174000
+          }
+        }
+      ],
+      "trafficTrend": [
+        {
+          "period": "previous",
+          "label": "Previous 4 weeks",
+          "sessions": 1000000,
+          "traffic": 1000,
+          "orders": 34000,
+          "conversion": 3.4
+        },
+        {
+          "period": "current",
+          "label": "Last 4 weeks",
+          "sessions": 1180000,
+          "traffic": 1180,
+          "orders": 30680,
+          "conversion": 2.6
+        }
+      ],
+      "resources": [
+        {
+          "id": "website_traffic.csv",
+          "name": "website_traffic.csv",
+          "datasetVersion": "harbour-retail-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Canonical channel-period session and order counts; conversion is orders / sessions.",
+          "columns": [
+            "record_id",
+            "period",
+            "channel",
+            "sessions",
+            "orders",
+            "conversion_pct"
+          ],
+          "rows": [
+            [
+              "previous-organic",
+              "previous",
+              "Organic",
+              "300000",
+              "11400",
+              "3.800000"
+            ],
+            [
+              "previous-paid-search",
+              "previous",
+              "Paid Search",
+              "300000",
+              "9600",
+              "3.200000"
+            ],
+            [
+              "previous-social",
+              "previous",
+              "Social",
+              "160000",
+              "4480",
+              "2.800000"
+            ],
+            [
+              "previous-email",
+              "previous",
+              "Email",
+              "80000",
+              "3600",
+              "4.500000"
+            ],
+            [
+              "previous-direct",
+              "previous",
+              "Direct",
+              "160000",
+              "4920",
+              "3.075000"
+            ],
+            [
+              "current-organic",
+              "current",
+              "Organic",
+              "324000",
+              "11340",
+              "3.500000"
+            ],
+            [
+              "current-paid-search",
+              "current",
+              "Paid Search",
+              "426000",
+              "7668",
+              "1.800000"
+            ],
+            [
+              "current-social",
+              "current",
+              "Social",
+              "200000",
+              "4200",
+              "2.100000"
+            ],
+            [
+              "current-email",
+              "current",
+              "Email",
+              "77600",
+              "3414",
+              "4.399485"
+            ],
+            [
+              "current-direct",
+              "current",
+              "Direct",
+              "152400",
+              "4058",
+              "2.662730"
+            ]
+          ],
+          "content": "\"record_id\",\"period\",\"channel\",\"sessions\",\"orders\",\"conversion_pct\"\r\n\"previous-organic\",\"previous\",\"Organic\",\"300000\",\"11400\",\"3.800000\"\r\n\"previous-paid-search\",\"previous\",\"Paid Search\",\"300000\",\"9600\",\"3.200000\"\r\n\"previous-social\",\"previous\",\"Social\",\"160000\",\"4480\",\"2.800000\"\r\n\"previous-email\",\"previous\",\"Email\",\"80000\",\"3600\",\"4.500000\"\r\n\"previous-direct\",\"previous\",\"Direct\",\"160000\",\"4920\",\"3.075000\"\r\n\"current-organic\",\"current\",\"Organic\",\"324000\",\"11340\",\"3.500000\"\r\n\"current-paid-search\",\"current\",\"Paid Search\",\"426000\",\"7668\",\"1.800000\"\r\n\"current-social\",\"current\",\"Social\",\"200000\",\"4200\",\"2.100000\"\r\n\"current-email\",\"current\",\"Email\",\"77600\",\"3414\",\"4.399485\"\r\n\"current-direct\",\"current\",\"Direct\",\"152400\",\"4058\",\"2.662730\"",
+          "sizeBytes": 737
+        },
+        {
+          "id": "channel_comparison.csv",
+          "name": "channel_comparison.csv",
+          "datasetVersion": "harbour-retail-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Derived acquisition-channel comparison, not individual campaign-level data.",
+          "columns": [
+            "channel",
+            "previous_sessions",
+            "current_sessions",
+            "previous_conversion_pct",
+            "current_conversion_pct",
+            "traffic_change_pct",
+            "previous_spend_aud",
+            "current_spend_aud"
+          ],
+          "rows": [
+            [
+              "Organic",
+              "300000",
+              "324000",
+              "3.800000",
+              "3.500000",
+              "8.000000",
+              "0.00",
+              "0.00"
+            ],
+            [
+              "Paid Search",
+              "300000",
+              "426000",
+              "3.200000",
+              "1.800000",
+              "42.000000",
+              "33913.04",
+              "39000.00"
+            ],
+            [
+              "Social",
+              "160000",
+              "200000",
+              "2.800000",
+              "2.100000",
+              "25.000000",
+              "7826.09",
+              "9000.00"
+            ],
+            [
+              "Email",
+              "80000",
+              "77600",
+              "4.500000",
+              "4.399485",
+              "-3.000000",
+              "0.00",
+              "0.00"
+            ],
+            [
+              "Direct",
+              "160000",
+              "152400",
+              "3.075000",
+              "2.662730",
+              "-4.750000",
+              "0.00",
+              "0.00"
+            ]
+          ],
+          "content": "\"channel\",\"previous_sessions\",\"current_sessions\",\"previous_conversion_pct\",\"current_conversion_pct\",\"traffic_change_pct\",\"previous_spend_aud\",\"current_spend_aud\"\r\n\"Organic\",\"300000\",\"324000\",\"3.800000\",\"3.500000\",\"8.000000\",\"0.00\",\"0.00\"\r\n\"Paid Search\",\"300000\",\"426000\",\"3.200000\",\"1.800000\",\"42.000000\",\"33913.04\",\"39000.00\"\r\n\"Social\",\"160000\",\"200000\",\"2.800000\",\"2.100000\",\"25.000000\",\"7826.09\",\"9000.00\"\r\n\"Email\",\"80000\",\"77600\",\"4.500000\",\"4.399485\",\"-3.000000\",\"0.00\",\"0.00\"\r\n\"Direct\",\"160000\",\"152400\",\"3.075000\",\"2.662730\",\"-4.750000\",\"0.00\",\"0.00\"",
+          "sizeBytes": 557
+        },
+        {
+          "id": "orders.csv",
+          "name": "orders.csv",
+          "datasetVersion": "harbour-retail-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Same channel-period aggregates with integer orders, synthetic revenue and advertising spend.",
+          "columns": [
+            "record_id",
+            "period",
+            "channel",
+            "orders",
+            "revenue_aud",
+            "ad_spend_aud"
+          ],
+          "rows": [
+            [
+              "previous-organic",
+              "previous",
+              "Organic",
+              "11400",
+              "342000.00",
+              "0.00"
+            ],
+            [
+              "previous-paid-search",
+              "previous",
+              "Paid Search",
+              "9600",
+              "288000.00",
+              "33913.04"
+            ],
+            [
+              "previous-social",
+              "previous",
+              "Social",
+              "4480",
+              "134400.00",
+              "7826.09"
+            ],
+            [
+              "previous-email",
+              "previous",
+              "Email",
+              "3600",
+              "108000.00",
+              "0.00"
+            ],
+            [
+              "previous-direct",
+              "previous",
+              "Direct",
+              "4920",
+              "147600.00",
+              "0.00"
+            ],
+            [
+              "current-organic",
+              "current",
+              "Organic",
+              "11340",
+              "340200.00",
+              "0.00"
+            ],
+            [
+              "current-paid-search",
+              "current",
+              "Paid Search",
+              "7668",
+              "230040.00",
+              "39000.00"
+            ],
+            [
+              "current-social",
+              "current",
+              "Social",
+              "4200",
+              "126000.00",
+              "9000.00"
+            ],
+            [
+              "current-email",
+              "current",
+              "Email",
+              "3414",
+              "102420.00",
+              "0.00"
+            ],
+            [
+              "current-direct",
+              "current",
+              "Direct",
+              "4058",
+              "121740.00",
+              "0.00"
+            ]
+          ],
+          "content": "\"record_id\",\"period\",\"channel\",\"orders\",\"revenue_aud\",\"ad_spend_aud\"\r\n\"previous-organic\",\"previous\",\"Organic\",\"11400\",\"342000.00\",\"0.00\"\r\n\"previous-paid-search\",\"previous\",\"Paid Search\",\"9600\",\"288000.00\",\"33913.04\"\r\n\"previous-social\",\"previous\",\"Social\",\"4480\",\"134400.00\",\"7826.09\"\r\n\"previous-email\",\"previous\",\"Email\",\"3600\",\"108000.00\",\"0.00\"\r\n\"previous-direct\",\"previous\",\"Direct\",\"4920\",\"147600.00\",\"0.00\"\r\n\"current-organic\",\"current\",\"Organic\",\"11340\",\"340200.00\",\"0.00\"\r\n\"current-paid-search\",\"current\",\"Paid Search\",\"7668\",\"230040.00\",\"39000.00\"\r\n\"current-social\",\"current\",\"Social\",\"4200\",\"126000.00\",\"9000.00\"\r\n\"current-email\",\"current\",\"Email\",\"3414\",\"102420.00\",\"0.00\"\r\n\"current-direct\",\"current\",\"Direct\",\"4058\",\"121740.00\",\"0.00\"",
+          "sizeBytes": 744
+        },
+        {
+          "id": "current_paid_search_devices.csv",
+          "name": "current_paid_search_devices.csv",
+          "datasetVersion": "harbour-retail-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Current Paid Search device partition; page identity, history and speed are not provided.",
+          "columns": [
+            "record_id",
+            "period",
+            "channel",
+            "device",
+            "sessions",
+            "orders",
+            "conversion_pct"
+          ],
+          "rows": [
+            [
+              "current-paid-mobile",
+              "current",
+              "Paid Search",
+              "Mobile",
+              "300000",
+              "4200",
+              "1.400000"
+            ],
+            [
+              "current-paid-desktop",
+              "current",
+              "Paid Search",
+              "Desktop",
+              "126000",
+              "3468",
+              "2.752381"
+            ]
+          ],
+          "content": "\"record_id\",\"period\",\"channel\",\"device\",\"sessions\",\"orders\",\"conversion_pct\"\r\n\"current-paid-mobile\",\"current\",\"Paid Search\",\"Mobile\",\"300000\",\"4200\",\"1.400000\"\r\n\"current-paid-desktop\",\"current\",\"Paid Search\",\"Desktop\",\"126000\",\"3468\",\"2.752381\"",
+          "sizeBytes": 244
+        },
+        {
+          "id": "product_catalog.csv",
+          "name": "product_catalog.csv",
+          "datasetVersion": "harbour-retail-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/csv",
+          "description": "Illustrative product context; availability is not a proven explanation.",
+          "columns": [
+            "product",
+            "category",
+            "price_aud",
+            "availability"
+          ],
+          "rows": [
+            [
+              "Everyday Tote",
+              "Accessories",
+              "30.00",
+              "In stock"
+            ],
+            [
+              "Canvas Carryall",
+              "Accessories",
+              "45.00",
+              "Limited"
+            ],
+            [
+              "Studio Notebook",
+              "Stationery",
+              "18.00",
+              "In stock"
+            ],
+            [
+              "Travel Organiser",
+              "Accessories",
+              "35.00",
+              "In stock"
+            ]
+          ],
+          "content": "\"product\",\"category\",\"price_aud\",\"availability\"\r\n\"Everyday Tote\",\"Accessories\",\"30.00\",\"In stock\"\r\n\"Canvas Carryall\",\"Accessories\",\"45.00\",\"Limited\"\r\n\"Studio Notebook\",\"Stationery\",\"18.00\",\"In stock\"\r\n\"Travel Organiser\",\"Accessories\",\"35.00\",\"In stock\"",
+          "sizeBytes": 252
+        },
+        {
+          "id": "business_context.md",
+          "name": "business_context.md",
+          "datasetVersion": "harbour-retail-2026-09-v1",
+          "provenance": "synthetic",
+          "mimeType": "text/markdown",
+          "description": "Business brief, overlap rules, precision and remaining unknowns.",
+          "columns": [],
+          "rows": [],
+          "content": "# Harbour Retail · Business context\n\nSynthetic company task data, separate from every applicant's past project and not supplied by the JD. Product, campaign and investment details are demonstration assumptions, not JD company facts. Two consecutive, non-overlapping four-week windows use the same session and order definitions. No customer-level data is included.\n\nSessions rose from 1,000,000 to 1,180,000 (+18.00%). Conversion fell from 3.4% to 2.6%. Orders changed from 34,000 to 30,680 (-9.76%). Advertising spend rose from AUD 41739.13 to AUD 48000.00 (+15.00%).\n\nNew Paid Search campaigns launched at the start of the current period. The Spring Sale landing page also changed. These changes are possible explanations, not established causes. The business is considering increasing the advertising budget.\n\nwebsite_traffic.csv and orders.csv contain the same ten channel-period aggregates, not separate populations. channel_comparison.csv is a channel comparison, not individual campaign attribution. current_paid_search_devices.csv contains a current-period Paid Search device partition only: it reconciles to Paid Search but adds no new sessions. It contains no page-specific attribution or speed measurements. product_catalog.csv is context, not evidence of a conversion cause. Revenue uses a synthetic AUD 30 average order value; no order-level product attribution is implied.\n\nCampaign × device × landing-page detail, historical device comparisons, load times and checkout events are still missing. Rates are derived from integer totals; displayed percentages round to two decimals. Do not average channel percentages or add overlapping resources. The chart compares whole four-week periods, not weekly trend points.\n\nInvestigate the strongest signals, separate observations from hypotheses, request discriminating evidence, and recommend a measured next step. No single prescribed conclusion or hiring decision is implied.",
+          "sizeBytes": 1936,
+          "text": "# Harbour Retail · Business context\n\nSynthetic company task data, separate from every applicant's past project and not supplied by the JD. Product, campaign and investment details are demonstration assumptions, not JD company facts. Two consecutive, non-overlapping four-week windows use the same session and order definitions. No customer-level data is included.\n\nSessions rose from 1,000,000 to 1,180,000 (+18.00%). Conversion fell from 3.4% to 2.6%. Orders changed from 34,000 to 30,680 (-9.76%). Advertising spend rose from AUD 41739.13 to AUD 48000.00 (+15.00%).\n\nNew Paid Search campaigns launched at the start of the current period. The Spring Sale landing page also changed. These changes are possible explanations, not established causes. The business is considering increasing the advertising budget.\n\nwebsite_traffic.csv and orders.csv contain the same ten channel-period aggregates, not separate populations. channel_comparison.csv is a channel comparison, not individual campaign attribution. current_paid_search_devices.csv contains a current-period Paid Search device partition only: it reconciles to Paid Search but adds no new sessions. It contains no page-specific attribution or speed measurements. product_catalog.csv is context, not evidence of a conversion cause. Revenue uses a synthetic AUD 30 average order value; no order-level product attribution is implied.\n\nCampaign × device × landing-page detail, historical device comparisons, load times and checkout events are still missing. Rates are derived from integer totals; displayed percentages round to two decimals. Do not average channel percentages or add overlapping resources. The chart compares whole four-week periods, not weekly trend points.\n\nInvestigate the strongest signals, separate observations from hypotheses, request discriminating evidence, and recommend a measured next step. No single prescribed conclusion or hiring decision is implied."
+        }
+      ]
+    },
+    "task": {
+      "taskId": "29143610-910a-4777-bca1-903b9b31659c",
+      "status": "submitted",
+      "targetRequirementId": "sql",
+      "templateId": "harbour-retail-sql-v1",
+      "title": "Conversion Data Query Review",
+      "instructions": "First consider an existing query or explanation that addresses the selected gap. For this short task, use harbour-retail-2026-09-v1 to write a readable query fragment for the two-period conversion comparison. Explain the input grain, time windows, aggregation and any join. Describe practical checks and expected results for relevant duplicates, missing values and zero denominators. Submit text through the work-sample form; this is static review, not SQL execution or a general file upload. Shared resources overlap and are not independent populations.",
+      "gapReason": "Synthetic failure-path test only; a well-supported candidate may skip a task.",
+      "sentAt": "2026-09-19T13:16:10.785Z",
+      "timeboxMinutes": 20
+    },
+    "taskTemplates": {
+      "sql": {
+        "templateId": "harbour-retail-sql-v1",
+        "title": "Conversion Data Query Review",
+        "targetRequirementId": "sql",
+        "instructions": "First consider an existing query or explanation that addresses the selected gap. For this short task, use harbour-retail-2026-09-v1 to write a readable query fragment for the two-period conversion comparison. Explain the input grain, time windows, aggregation and any join. Describe practical checks and expected results for relevant duplicates, missing values and zero denominators. Submit text through the work-sample form; this is static review, not SQL execution or a general file upload. Shared resources overlap and are not independent populations.",
+        "timeboxMinutes": 20,
+        "timeboxEnforced": false,
+        "datasetVersion": "harbour-retail-2026-09-v1",
+        "resourceIds": [
+          "website_traffic.csv",
+          "channel_comparison.csv",
+          "orders.csv",
+          "current_paid_search_devices.csv",
+          "product_catalog.csv",
+          "business_context.md"
+        ],
+        "observationDimensions": [
+          "S1",
+          "S2",
+          "S3"
+        ],
+        "mode": "preset"
+      },
+      "data-analysis": {
+        "templateId": "harbour-retail-data-analysis-v1",
+        "title": "Conversion Metrics and Comparison",
+        "targetRequirementId": "data-analysis",
+        "instructions": "First consider an existing calculation or explanation that addresses the selected gap. Use harbour-retail-2026-09-v1 to define and calculate session, order and conversion changes across two four-week periods. Show numerators, denominators, units and a relevant group comparison with reproducible working. State overlapping populations and missing information. Submit calculation text and limitations, not an executable notebook. Do not invent page-speed measurements, weekly trends or historical device data.",
+        "timeboxMinutes": 20,
+        "timeboxEnforced": false,
+        "datasetVersion": "harbour-retail-2026-09-v1",
+        "resourceIds": [
+          "website_traffic.csv",
+          "channel_comparison.csv",
+          "orders.csv",
+          "current_paid_search_devices.csv",
+          "product_catalog.csv",
+          "business_context.md"
+        ],
+        "observationDimensions": [
+          "D1",
+          "D2",
+          "D3"
+        ],
+        "mode": "preset"
+      },
+      "business-problem-solving": {
+        "templateId": "harbour-retail-bps-v1",
+        "title": "Conversion Drop Investigation",
+        "targetRequirementId": "business-problem-solving",
+        "instructions": "First consider an existing explanation that addresses the selected gap. Investigate the conversion decline using harbour-retail-2026-09-v1. Distinguish observations from hypotheses, request evidence that could distinguish explanations, and recommend a practical next step with a way to check its result. Treat the 20-minute timebox as guidance, not a deadline. Work at a junior analyst level and identify decisions requiring an experienced colleague. Submit findings, hypotheses, missing evidence and next steps; incomplete work may still be reviewed.",
+        "timeboxMinutes": 20,
+        "timeboxEnforced": false,
+        "datasetVersion": "harbour-retail-2026-09-v1",
+        "resourceIds": [
+          "website_traffic.csv",
+          "channel_comparison.csv",
+          "orders.csv",
+          "current_paid_search_devices.csv",
+          "product_catalog.csv",
+          "business_context.md"
+        ],
+        "observationDimensions": [
+          "Problem Framing",
+          "Evidence Navigation",
+          "Hypothesis Formation",
+          "Evidence Seeking",
+          "Decision Making"
+        ],
+        "mode": "preset"
+      }
+    },
+    "versions": [
+      {
+        "submission": {
+          "schemaVersion": "4.0",
+          "sessionId": "272e996d-6b17-4e4d-aada-ad9eec79f4d9",
+          "candidateId": "david-liu",
+          "jobId": "junior-data-analyst",
+          "datasetVersion": "harbour-retail-2026-09-v1",
+          "taskId": "29143610-910a-4777-bca1-903b9b31659c",
+          "targetRequirementId": "sql",
+          "submissionVersion": 1,
+          "previousSubmissionId": null,
+          "previousContentFingerprint": null,
+          "summary": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision.",
+          "findings": [
+            {
+              "id": "finding-1",
+              "section": "Key Findings",
+              "title": "Clarify the denominator",
+              "detail": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+              "source": "website_traffic.csv",
+              "confidence": "Low"
+            }
+          ],
+          "processEvidence": [],
+          "submissionId": "790ceec2-6e88-48f4-9bf7-02df9d140c6f",
+          "submittedAt": "2026-09-19T13:16:12.517Z",
+          "contentFingerprint": "59e32d1be2cdd79051979aedd67d53515bfdd6bd74bcaf6791a882e3550c48e0",
+          "processEvidenceProvenance": "client_reported",
+          "sources": [
+            {
+              "sourceId": "summary",
+              "location": "/summary",
+              "text": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision.",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:finding-1:title",
+              "location": "/findings/0/title",
+              "text": "Clarify the denominator",
+              "kind": "work_sample"
+            },
+            {
+              "sourceId": "finding:finding-1:detail",
+              "location": "/findings/0/detail",
+              "text": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+              "kind": "work_sample"
+            }
+          ]
+        },
+        "evidenceSnapshotId": "submission:790ceec2-6e88-48f4-9bf7-02df9d140c6f",
+        "analysis": {
+          "status": "failed",
+          "attemptId": "64fbd61e-bab8-4670-8ee9-9bc1e12bee14",
+          "submissionId": "790ceec2-6e88-48f4-9bf7-02df9d140c6f",
+          "contentFingerprint": "59e32d1be2cdd79051979aedd67d53515bfdd6bd74bcaf6791a882e3550c48e0",
+          "startedAt": "2026-09-19T13:16:13.838Z",
+          "finishedAt": "2026-09-19T13:16:13.841Z",
+          "errorCode": "AI_DISABLED",
+          "result": null
+        },
+        "review": null
+      }
+    ],
+    "submission": {
+      "schemaVersion": "4.0",
+      "sessionId": "272e996d-6b17-4e4d-aada-ad9eec79f4d9",
+      "candidateId": "david-liu",
+      "jobId": "junior-data-analyst",
+      "datasetVersion": "harbour-retail-2026-09-v1",
+      "taskId": "29143610-910a-4777-bca1-903b9b31659c",
+      "targetRequirementId": "sql",
+      "submissionVersion": 1,
+      "previousSubmissionId": null,
+      "previousContentFingerprint": null,
+      "summary": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision.",
+      "findings": [
+        {
+          "id": "finding-1",
+          "section": "Key Findings",
+          "title": "Clarify the denominator",
+          "detail": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+          "source": "website_traffic.csv",
+          "confidence": "Low"
+        }
+      ],
+      "processEvidence": [],
+      "submissionId": "790ceec2-6e88-48f4-9bf7-02df9d140c6f",
+      "submittedAt": "2026-09-19T13:16:12.517Z",
+      "contentFingerprint": "59e32d1be2cdd79051979aedd67d53515bfdd6bd74bcaf6791a882e3550c48e0",
+      "processEvidenceProvenance": "client_reported",
+      "sources": [
+        {
+          "sourceId": "summary",
+          "location": "/summary",
+          "text": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision.",
+          "kind": "work_sample"
+        },
+        {
+          "sourceId": "finding:finding-1:title",
+          "location": "/findings/0/title",
+          "text": "Clarify the denominator",
+          "kind": "work_sample"
+        },
+        {
+          "sourceId": "finding:finding-1:detail",
+          "location": "/findings/0/detail",
+          "text": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+          "kind": "work_sample"
+        }
+      ]
+    },
+    "analysis": {
+      "status": "failed",
+      "attemptId": "64fbd61e-bab8-4670-8ee9-9bc1e12bee14",
+      "submissionId": "790ceec2-6e88-48f4-9bf7-02df9d140c6f",
+      "contentFingerprint": "59e32d1be2cdd79051979aedd67d53515bfdd6bd74bcaf6791a882e3550c48e0",
+      "startedAt": "2026-09-19T13:16:13.838Z",
+      "finishedAt": "2026-09-19T13:16:13.841Z",
+      "errorCode": "AI_DISABLED",
+      "result": null
+    },
+    "review": null,
+    "currentSubmissionVersion": 1,
+    "workflow": {
+      "maxSubmissions": 2,
+      "submissionsUsed": 1,
+      "remainingSubmissions": 1,
+      "canSubmit": false,
+      "canResubmit": false,
+      "nextSubmissionVersion": null,
+      "allowedReviewDecisions": [
+        "confirm",
+        "needs_more_evidence",
+        "evidence_still_insufficient"
+      ],
+      "isTerminal": false,
+      "canSend": false
+    },
+    "capabilities": {
+      "contract": "4.0",
+      "analysisMode": "disabled",
+      "analysisAvailable": false,
+      "analysisUnavailableReason": "AI_DISABLED",
+      "upload": false,
+      "authentication": false,
+      "authenticationScope": "No application role accounts. Public write access may be protected by the deployment gateway.",
+      "writeAccess": {
+        "enforcement": "deployment_defined",
+        "status": "unknown",
+        "loginPath": "/gateway/write-access"
+      },
+      "analysisModeLabel": "Analysis disabled",
+      "sqlExecution": false
+    },
+    "assessment": {
+      "application_review": {
+        "assessmentId": "preset-david-liu",
+        "candidateId": "david-liu",
+        "jobId": "junior-data-analyst",
+        "rubricVersion": "harbour-retail-junior-analyst-rubric-v1",
+        "stage": "application_review",
+        "evidenceSnapshotId": "david-liu-application-r6-v1",
+        "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+        "submissionId": null,
+        "contentFingerprint": null,
+        "assessmentRevision": 1,
+        "status": "reviewed",
+        "annotationMode": "ai_authored",
+        "operatorLabel": "AI-authored demo assessment · Human calibration pending",
+        "createdAt": "2026-09-19T00:00:00.000Z",
+        "items": [
+          {
+            "criterionId": "S1",
+            "mark": 4,
+            "rationale": "The task grain, unique user key and left join support one row per task; source-ID and duplicate checks are proposed. The query is application retrieval, not an analytical aggregation; unnecessary aggregation earns no credit and is not required for this question.",
+            "support": "The task grain, unique user key and left join support one row per task; source-ID and duplicate checks are proposed.",
+            "gaps": "The query is application retrieval, not an analytical aggregation; unnecessary aggregation earns no credit and is not required for this question.",
+            "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+            "nextStep": "Check the actual key constraints and compare returned IDs with the source.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "david-liu",
+                "evidenceSnapshotId": "david-liu-application-r6-v1",
+                "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+                "sourceId": "task_queries.sql",
+                "location": "/sources/2/text",
+                "start": 420,
+                "end": 496,
+                "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+              }
+            ]
+          },
+          {
+            "criterionId": "S2",
+            "mark": "NE",
+            "rationale": "The CV, application SQL and database note were checked. The only query is a current user task list; no period or analytical group comparison is supplied.",
+            "support": "The CV, application SQL and database note were checked.",
+            "gaps": "The only query is a current user task list; no period or analytical group comparison is supplied.",
+            "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+            "nextStep": "Provide an existing basic SQL comparison with clear groups or time boundaries.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "S3",
+            "mark": 4,
+            "rationale": "Empty results, duplicate risk, source reconciliation and missing display-name behaviour have explicit expected outcomes appropriate to this retrieval query. No actual run log or authenticated handler is supplied; this is a static checking plan.",
+            "support": "Empty results, duplicate risk, source reconciliation and missing display-name behaviour have explicit expected outcomes appropriate to this retrieval query.",
+            "gaps": "No actual run log or authenticated handler is supplied; this is a static checking plan.",
+            "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+            "nextStep": "Run these cases and inspect access enforcement separately before operational use.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": [
+              {
+                "candidateId": "david-liu",
+                "evidenceSnapshotId": "david-liu-application-r6-v1",
+                "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+                "sourceId": "task_queries.sql",
+                "location": "/sources/2/text",
+                "start": 853,
+                "end": 1125,
+                "quote": "-- A user with no tasks receives an empty result.\n-- A task with a valid creator should appear once, not once per other task.\n-- The returned task IDs should match the user's task IDs in the source table.\n-- A missing display name should not remove a task from the result."
+              }
+            ]
+          },
+          {
+            "criterionId": "D1",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business metric, denominator or analytical calculation is supplied.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "No business metric, denominator or analytical calculation is supplied.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Provide a small existing calculation with definitions, units and working.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "D2",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No period-over-period or analytical segment comparison is supplied.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "No period-over-period or analytical segment comparison is supplied.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Provide an aligned period or group comparison and explain its meaning.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "D3",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Supply the working and limitations for a simple business analysis.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "B1",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software feature scope does not frame a business-analysis decision.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "The software feature scope does not frame a business-analysis decision.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Describe a business question and the decision it should support.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "B2",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business-analysis interpretation or causal hypothesis is supplied.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "No business-analysis interpretation or causal hypothesis is supplied.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Separate observed facts from hypotheses in an existing analysis.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "B3",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business hypothesis or evidence request to distinguish explanations is supplied.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "No business hypothesis or evidence request to distinguish explanations is supplied.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Explain what further data would clarify a business question and why.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          },
+          {
+            "criterionId": "B4",
+            "mark": "NE",
+            "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. Functional software checks are supplied, but no evidence-led business recommendation is present.",
+            "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+            "gaps": "Functional software checks are supplied, but no evidence-led business recommendation is present.",
+            "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+            "nextStep": "Provide a practical recommendation and a way to check its outcome.",
+            "checkedSourceIds": [
+              "cv-public.txt",
+              "project_readme.md",
+              "task_queries.sql"
+            ],
+            "sourceRefs": []
+          }
+        ],
+        "reuseApplication": null,
+        "reusedItems": [],
+        "score": {
+          "status": "needs_evidence",
+          "assessmentComplete": true,
+          "complete": false,
+          "coveragePercent": 20,
+          "accruedScore": 20,
+          "overallScore": null,
+          "overallPercentage": null,
+          "criteria": [
+            {
+              "criterionId": "S1",
+              "requirementId": "sql",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "S2",
+              "requirementId": "sql",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "S3",
+              "requirementId": "sql",
+              "mark": 4,
+              "status": "assessed",
+              "contribution": 10
+            },
+            {
+              "criterionId": "D1",
+              "requirementId": "data-analysis",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "D2",
+              "requirementId": "data-analysis",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "D3",
+              "requirementId": "data-analysis",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "B1",
+              "requirementId": "business-problem-solving",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "B2",
+              "requirementId": "business-problem-solving",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "B3",
+              "requirementId": "business-problem-solving",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            },
+            {
+              "criterionId": "B4",
+              "requirementId": "business-problem-solving",
+              "mark": "NE",
+              "status": "needs_evidence",
+              "contribution": null
+            }
+          ],
+          "skills": [
+            {
+              "requirementId": "sql",
+              "criterionIds": [
+                "S1",
+                "S2",
+                "S3"
+              ],
+              "maxScore": 30,
+              "assessmentComplete": true,
+              "complete": false,
+              "evaluatedCount": 2,
+              "neCount": 1,
+              "pendingCount": 0,
+              "accruedScore": 20,
+              "score": null,
+              "percentage": null
+            },
+            {
+              "requirementId": "data-analysis",
+              "criterionIds": [
+                "D1",
+                "D2",
+                "D3"
+              ],
+              "maxScore": 30,
+              "assessmentComplete": true,
+              "complete": false,
+              "evaluatedCount": 0,
+              "neCount": 3,
+              "pendingCount": 0,
+              "accruedScore": 0,
+              "score": null,
+              "percentage": null
+            },
+            {
+              "requirementId": "business-problem-solving",
+              "criterionIds": [
+                "B1",
+                "B2",
+                "B3",
+                "B4"
+              ],
+              "maxScore": 40,
+              "assessmentComplete": true,
+              "complete": false,
+              "evaluatedCount": 0,
+              "neCount": 4,
+              "pendingCount": 0,
+              "accruedScore": 0,
+              "score": null,
+              "percentage": null
+            }
+          ]
+        }
+      },
+      "task_v1": null,
+      "task_v2": null,
+      "history": [
+        {
+          "assessmentId": "preset-david-liu",
+          "candidateId": "david-liu",
+          "jobId": "junior-data-analyst",
+          "rubricVersion": "harbour-retail-junior-analyst-rubric-v1",
+          "stage": "application_review",
+          "evidenceSnapshotId": "david-liu-application-r6-v1",
+          "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+          "submissionId": null,
+          "contentFingerprint": null,
+          "assessmentRevision": 1,
+          "status": "reviewed",
+          "annotationMode": "ai_authored",
+          "operatorLabel": "AI-authored demo assessment · Human calibration pending",
+          "createdAt": "2026-09-19T00:00:00.000Z",
+          "items": [
+            {
+              "criterionId": "S1",
+              "mark": 4,
+              "rationale": "The task grain, unique user key and left join support one row per task; source-ID and duplicate checks are proposed. The query is application retrieval, not an analytical aggregation; unnecessary aggregation earns no credit and is not required for this question.",
+              "support": "The task grain, unique user key and left join support one row per task; source-ID and duplicate checks are proposed.",
+              "gaps": "The query is application retrieval, not an analytical aggregation; unnecessary aggregation earns no credit and is not required for this question.",
+              "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+              "nextStep": "Check the actual key constraints and compare returned IDs with the source.",
+              "checkedSourceIds": [
+                "cv-public.txt",
+                "project_readme.md",
+                "task_queries.sql"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "david-liu",
+                  "evidenceSnapshotId": "david-liu-application-r6-v1",
+                  "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+                  "sourceId": "task_queries.sql",
+                  "location": "/sources/2/text",
+                  "start": 420,
+                  "end": 496,
+                  "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+                }
+              ]
+            },
+            {
+              "criterionId": "S2",
+              "mark": "NE",
+              "rationale": "The CV, application SQL and database note were checked. The only query is a current user task list; no period or analytical group comparison is supplied.",
+              "support": "The CV, application SQL and database note were checked.",
+              "gaps": "The only query is a current user task list; no period or analytical group comparison is supplied.",
+              "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+              "nextStep": "Provide an existing basic SQL comparison with clear groups or time boundaries.",
+              "checkedSourceIds": [
+                "cv-public.txt",
+                "project_readme.md",
+                "task_queries.sql"
+              ],
+              "sourceRefs": []
+            },
+            {
+              "criterionId": "S3",
+              "mark": 4,
+              "rationale": "Empty results, duplicate risk, source reconciliation and missing display-name behaviour have explicit expected outcomes appropriate to this retrieval query. No actual run log or authenticated handler is supplied; this is a static checking plan.",
+              "support": "Empty results, duplicate risk, source reconciliation and missing display-name behaviour have explicit expected outcomes appropriate to this retrieval query.",
+              "gaps": "No actual run log or authenticated handler is supplied; this is a static checking plan.",
+              "uncertainty": "Static source review only; independent authorship, query execution and production behaviour remain unverified.",
+              "nextStep": "Run these cases and inspect access enforcement separately before operational use.",
+              "checkedSourceIds": [
+                "cv-public.txt",
+                "project_readme.md",
+                "task_queries.sql"
+              ],
+              "sourceRefs": [
+                {
+                  "candidateId": "david-liu",
+                  "evidenceSnapshotId": "david-liu-application-r6-v1",
+                  "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+                  "sourceId": "task_queries.sql",
+                  "location": "/sources/2/text",
+                  "start": 853,
+                  "end": 1125,
+                  "quote": "-- A user with no tasks receives an empty result.\n-- A task with a valid creator should appear once, not once per other task.\n-- The returned task IDs should match the user's task IDs in the source table.\n-- A missing display name should not remove a task from the result."
+                }
+              ]
+            },
+            {
+              "criterionId": "D1",
+              "mark": "NE",
+              "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business metric, denominator or analytical calculation is supplied.",
+              "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+              "gaps": "No business metric, denominator or analytical calculation is supplied.",
+              "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+              "nextStep": "Provide a small existing calculation with definitions, units and working.",
+              "checkedSourceIds": [
+                "cv-public.txt",
+                "project_readme.md",
+                "task_queries.sql"
+              ],
+              "sourceRefs": []
+            },
+            {
+              "criterionId": "D2",
+              "mark": "NE",
+              "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No period-over-period or analytical segment comparison is supplied.",
+              "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+              "gaps": "No period-over-period or analytical segment comparison is supplied.",
+              "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+              "nextStep": "Provide an aligned period or group comparison and explain its meaning.",
+              "checkedSourceIds": [
+                "cv-public.txt",
+                "project_readme.md",
+                "task_queries.sql"
+              ],
+              "sourceRefs": []
+            },
+            {
+              "criterionId": "D3",
+              "mark": "NE",
+              "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+              "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+              "gaps": "The software database note documents retrieval, but there is no analytical calculation process to reproduce.",
+              "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+              "nextStep": "Supply the working and limitations for a simple business analysis.",
+              "checkedSourceIds": [
+                "cv-public.txt",
+                "project_readme.md",
+                "task_queries.sql"
+              ],
+              "sourceRefs": []
+            },
+            {
+              "criterionId": "B1",
+              "mark": "NE",
+              "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. The software feature scope does not frame a business-analysis decision.",
+              "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+              "gaps": "The software feature scope does not frame a business-analysis decision.",
+              "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+              "nextStep": "Describe a business question and the decision it should support.",
+              "checkedSourceIds": [
+                "cv-public.txt",
+                "project_readme.md",
+                "task_queries.sql"
+              ],
+              "sourceRefs": []
+            },
+            {
+              "criterionId": "B2",
+              "mark": "NE",
+              "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business-analysis interpretation or causal hypothesis is supplied.",
+              "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+              "gaps": "No business-analysis interpretation or causal hypothesis is supplied.",
+              "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+              "nextStep": "Separate observed facts from hypotheses in an existing analysis.",
+              "checkedSourceIds": [
+                "cv-public.txt",
+                "project_readme.md",
+                "task_queries.sql"
+              ],
+              "sourceRefs": []
+            },
+            {
+              "criterionId": "B3",
+              "mark": "NE",
+              "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. No business hypothesis or evidence request to distinguish explanations is supplied.",
+              "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+              "gaps": "No business hypothesis or evidence request to distinguish explanations is supplied.",
+              "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+              "nextStep": "Explain what further data would clarify a business question and why.",
+              "checkedSourceIds": [
+                "cv-public.txt",
+                "project_readme.md",
+                "task_queries.sql"
+              ],
+              "sourceRefs": []
+            },
+            {
+              "criterionId": "B4",
+              "mark": "NE",
+              "rationale": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output. Functional software checks are supplied, but no evidence-led business recommendation is present.",
+              "support": "The CV, task-list SQL and database note were checked; software experience is not relabelled as analytics output.",
+              "gaps": "Functional software checks are supplied, but no evidence-led business recommendation is present.",
+              "uncertainty": "These synthetic application materials show the stated working or reasoning, not independently verified execution, personal capability or business outcomes.",
+              "nextStep": "Provide a practical recommendation and a way to check its outcome.",
+              "checkedSourceIds": [
+                "cv-public.txt",
+                "project_readme.md",
+                "task_queries.sql"
+              ],
+              "sourceRefs": []
+            }
+          ],
+          "reuseApplication": null,
+          "reusedItems": [],
+          "score": {
+            "status": "needs_evidence",
+            "assessmentComplete": true,
+            "complete": false,
+            "coveragePercent": 20,
+            "accruedScore": 20,
+            "overallScore": null,
+            "overallPercentage": null,
+            "criteria": [
+              {
+                "criterionId": "S1",
+                "requirementId": "sql",
+                "mark": 4,
+                "status": "assessed",
+                "contribution": 10
+              },
+              {
+                "criterionId": "S2",
+                "requirementId": "sql",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              },
+              {
+                "criterionId": "S3",
+                "requirementId": "sql",
+                "mark": 4,
+                "status": "assessed",
+                "contribution": 10
+              },
+              {
+                "criterionId": "D1",
+                "requirementId": "data-analysis",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              },
+              {
+                "criterionId": "D2",
+                "requirementId": "data-analysis",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              },
+              {
+                "criterionId": "D3",
+                "requirementId": "data-analysis",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              },
+              {
+                "criterionId": "B1",
+                "requirementId": "business-problem-solving",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              },
+              {
+                "criterionId": "B2",
+                "requirementId": "business-problem-solving",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              },
+              {
+                "criterionId": "B3",
+                "requirementId": "business-problem-solving",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              },
+              {
+                "criterionId": "B4",
+                "requirementId": "business-problem-solving",
+                "mark": "NE",
+                "status": "needs_evidence",
+                "contribution": null
+              }
+            ],
+            "skills": [
+              {
+                "requirementId": "sql",
+                "criterionIds": [
+                  "S1",
+                  "S2",
+                  "S3"
+                ],
+                "maxScore": 30,
+                "assessmentComplete": true,
+                "complete": false,
+                "evaluatedCount": 2,
+                "neCount": 1,
+                "pendingCount": 0,
+                "accruedScore": 20,
+                "score": null,
+                "percentage": null
+              },
+              {
+                "requirementId": "data-analysis",
+                "criterionIds": [
+                  "D1",
+                  "D2",
+                  "D3"
+                ],
+                "maxScore": 30,
+                "assessmentComplete": true,
+                "complete": false,
+                "evaluatedCount": 0,
+                "neCount": 3,
+                "pendingCount": 0,
+                "accruedScore": 0,
+                "score": null,
+                "percentage": null
+              },
+              {
+                "requirementId": "business-problem-solving",
+                "criterionIds": [
+                  "B1",
+                  "B2",
+                  "B3",
+                  "B4"
+                ],
+                "maxScore": 40,
+                "assessmentComplete": true,
+                "complete": false,
+                "evaluatedCount": 0,
+                "neCount": 4,
+                "pendingCount": 0,
+                "accruedScore": 0,
+                "score": null,
+                "percentage": null
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "shortlist": {
+      "revision": 0,
+      "status": "not_retained",
+      "reason": null,
+      "basis": null,
+      "history": []
+    },
+    "report": {
+      "isHiringDecision": false,
+      "requirements": [
+        {
+          "requirementId": "sql",
+          "title": "SQL",
+          "evidenceSnapshotId": "david-liu-application-r6-v1",
+          "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+          "status": "uncertain",
+          "mode": "preset",
+          "summary": "A soundly described application join and functional checks are visible; analytical comparisons are not supplied.",
+          "uncertainty": "The missing comparison is NE rather than a failed query or an inference of inability.",
+          "sourceRefs": [
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 420,
+              "end": 496,
+              "quote": "-- One output row per task; users.id is unique, so this join is many-to-one."
+            },
+            {
+              "candidateId": "david-liu",
+              "evidenceSnapshotId": "david-liu-application-r6-v1",
+              "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+              "sourceId": "task_queries.sql",
+              "location": "/sources/2/text",
+              "start": 853,
+              "end": 1125,
+              "quote": "-- A user with no tasks receives an empty result.\n-- A task with a valid creator should appear once, not once per other task.\n-- The returned task IDs should match the user's task IDs in the source table.\n-- A missing display name should not remove a task from the result."
+            }
+          ],
+          "review": null,
+          "scope": "Bounded synthetic evidence only; scoring and shortlist are separate."
+        },
+        {
+          "requirementId": "data-analysis",
+          "title": "Data Analysis",
+          "evidenceSnapshotId": "david-liu-application-r6-v1",
+          "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+          "status": "uncertain",
+          "mode": "preset",
+          "summary": "No analytical calculation or business period/group comparison is present in the checked software sample.",
+          "uncertainty": "Software documentation is not relabelled as data-analysis evidence.",
+          "sourceRefs": [],
+          "review": null,
+          "scope": "Bounded synthetic evidence only; scoring and shortlist are separate."
+        },
+        {
+          "requirementId": "business-problem-solving",
+          "title": "Business Problem Solving",
+          "evidenceSnapshotId": "david-liu-application-r6-v1",
+          "fingerprint": "579eebfa56513ede72ae9ab7213fb43ff5520235aef4cf87cf822afbc0f02fbb",
+          "status": "uncertain",
+          "mode": "preset",
+          "summary": "The supplied software scope contains no business investigation or evidence-led recommendation to assess.",
+          "uncertainty": "Missing work evidence is not a personal deficiency or automatic rejection.",
+          "sourceRefs": [],
+          "review": null,
+          "scope": "Bounded synthetic evidence only; scoring and shortlist are separate."
+        }
+      ]
+    }
+  },
+  "meta": {
+    "replayed": false
+  }
+}

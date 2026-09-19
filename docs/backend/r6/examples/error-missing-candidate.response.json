@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "Request does not match the API schema. Check required fields, types and limits.",
+    "requestId": "b65d9f8d-6490-488a-8f5d-72617549e546",
+    "retryable": false
+  }
+}

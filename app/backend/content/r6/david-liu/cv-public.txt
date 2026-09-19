@@ -1,0 +1,39 @@
+--- Page 1 ---
+David Liu
+Education
+University of New South Wales (UNSW) Feb 2023 - Nov 2026
+Bachelor of Computer Science
+• Major: Software Development
+• WAM: 80
+• Relevant study: Object-Oriented Programming, Data Structures, Databases and Web Applications
+• Completed university projects involving Java, JavaScript, SQL and web development
+Experience
+Software Development Intern - Nexus Digital Solutions (Shenzhen, China) Dec 2025 - Feb 2026
+• Assisted with the development and maintenance of an internal customer management application.
+• Used Java and Spring Boot to implement REST endpoints for customer records.
+• Wrote SQL queries to retrieve and update application data.
+• Participated in debugging issues reported by the testing team.
+• Helped the team improve application performance and user experience.
+Research & Projects
+Task Management Web Application - University Project Mar 2026 - May 2026
+• Built a web application using React, Node.js and Express.
+• Implemented user login, task creation, status updates and basic search functions.
+• Connected the application to a MySQL database through REST APIs.
+• Worked with three students and managed project files through GitHub.
+Library Management System - Object-Oriented Programming Project Aug 2025 - Oct 2025
+• Developed a Java application for recording books, members and borrowing activity.
+• Applied classes, inheritance and exception handling to organize the program.
+• Tested key functions and corrected errors identified during development.
+Volunteering & Activities
+General Member - University Computing Society Mar 2024 - Nov 2025
+• Attended coding workshops, technology seminars and networking events.
+• Participated in discussions about software development and emerging technologies.
+• Supported several society activities during the academic year.
+Technology Event Volunteer - University Student Association Feb 2025 - Nov 2025
+• Supported technology-related student events and workshops.
+• Helped participants with registration and basic technical questions.
+• Worked with other volunteers to complete event activities on schedule.
+Skills
+• Technical Skills: Java, Python, JavaScript, React, Node.js, Spring Boot, SQL, Git, GitHub, Basic AWS
+• Software Skills: Object-oriented programming, REST APIs, basic testing, debugging, data structures
+• Core Skills: Problem solving, teamwork, communication, attention to detail, willingness to learn

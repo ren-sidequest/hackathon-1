@@ -1,0 +1,545 @@
+{
+  "schemaVersion": "4.0",
+  "generatedAt": "2026-09-19T13:15:51.963Z",
+  "kind": "executed-in-memory-synthetic-fixtures",
+  "modelCalls": 0,
+  "scope": "Owned four-candidate API 4.0 requests. Random IDs, hashes and times belong to this run; read fresh state in a running service. Preset annotations are AI-authored fixtures, not completed human calibration.",
+  "requests": [
+    {
+      "name": "comparison-initial",
+      "mode": "manual_simulation",
+      "path": "/api/demo/comparison",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "comparison-initial.response.json"
+    },
+    {
+      "name": "initial-amy-chen",
+      "mode": "manual_simulation",
+      "path": "/api/demo?candidateId=amy-chen",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "initial-amy-chen.response.json"
+    },
+    {
+      "name": "initial-ann-li",
+      "mode": "manual_simulation",
+      "path": "/api/demo?candidateId=ann-li",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "initial-ann-li.response.json"
+    },
+    {
+      "name": "initial-david-liu",
+      "mode": "manual_simulation",
+      "path": "/api/demo?candidateId=david-liu",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "initial-david-liu.response.json"
+    },
+    {
+      "name": "initial-jamie-parker",
+      "mode": "manual_simulation",
+      "path": "/api/demo?candidateId=jamie-parker",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "initial-jamie-parker.response.json"
+    },
+    {
+      "name": "error-missing-candidate",
+      "mode": "manual_simulation",
+      "path": "/api/demo",
+      "method": "GET",
+      "status": 400,
+      "responseFile": "error-missing-candidate.response.json"
+    },
+    {
+      "name": "error-old-candidate",
+      "mode": "manual_simulation",
+      "path": "/api/demo?candidateId=alex-chen",
+      "method": "GET",
+      "status": 409,
+      "responseFile": "error-old-candidate.response.json"
+    },
+    {
+      "name": "error-old-contract",
+      "mode": "manual_simulation",
+      "path": "/api/demo/task/send",
+      "method": "POST",
+      "status": 409,
+      "responseFile": "error-old-contract.response.json",
+      "requestFile": "error-old-contract.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-error-old-contract"
+      }
+    },
+    {
+      "name": "shortlist-retain",
+      "mode": "manual_simulation",
+      "path": "/api/demo/shortlist",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "shortlist-retain.response.json",
+      "requestFile": "shortlist-retain.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-shortlist-retain"
+      }
+    },
+    {
+      "name": "application-assessment-revision",
+      "mode": "manual_simulation",
+      "path": "/api/demo/assessment",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "application-assessment-revision.response.json",
+      "requestFile": "application-assessment-revision.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-application-assessment-revision"
+      }
+    },
+    {
+      "name": "shortlist-reconfirm",
+      "mode": "manual_simulation",
+      "path": "/api/demo/shortlist",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "shortlist-reconfirm.response.json",
+      "requestFile": "shortlist-reconfirm.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-shortlist-reconfirm"
+      }
+    },
+    {
+      "name": "amy-chen-send",
+      "mode": "manual_simulation",
+      "path": "/api/demo/task/send",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "amy-chen-send.response.json",
+      "requestFile": "amy-chen-send.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-amy-chen-send"
+      }
+    },
+    {
+      "name": "amy-chen-error-private-notes",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 400,
+      "responseFile": "amy-chen-error-private-notes.response.json",
+      "requestFile": "amy-chen-error-private-notes.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-amy-chen-error-private-notes"
+      }
+    },
+    {
+      "name": "amy-chen-v1-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "amy-chen-v1-submission.response.json",
+      "requestFile": "amy-chen-v1-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-amy-chen-v1-submission"
+      }
+    },
+    {
+      "name": "amy-chen-v1-analysis",
+      "mode": "manual_simulation",
+      "path": "/api/demo/analysis",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "amy-chen-v1-analysis.response.json",
+      "requestFile": "amy-chen-v1-analysis.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-amy-chen-v1-analysis"
+      }
+    },
+    {
+      "name": "amy-chen-v1-assessment",
+      "mode": "manual_simulation",
+      "path": "/api/demo/assessment",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "amy-chen-v1-assessment.response.json",
+      "requestFile": "amy-chen-v1-assessment.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-amy-chen-v1-assessment"
+      }
+    },
+    {
+      "name": "amy-chen-v1-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "amy-chen-v1-more.response.json",
+      "requestFile": "amy-chen-v1-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-amy-chen-v1-more"
+      }
+    },
+    {
+      "name": "amy-chen-v2-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "amy-chen-v2-submission.response.json",
+      "requestFile": "amy-chen-v2-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-amy-chen-v2-submission"
+      }
+    },
+    {
+      "name": "amy-chen-error-v2-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 409,
+      "responseFile": "amy-chen-error-v2-more.response.json",
+      "requestFile": "amy-chen-error-v2-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-amy-chen-error-v2-more"
+      }
+    },
+    {
+      "name": "amy-chen-v2-terminal",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "amy-chen-v2-terminal.response.json",
+      "requestFile": "amy-chen-v2-terminal.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-amy-chen-v2-terminal"
+      }
+    },
+    {
+      "name": "ann-li-send",
+      "mode": "manual_simulation",
+      "path": "/api/demo/task/send",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "ann-li-send.response.json",
+      "requestFile": "ann-li-send.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-ann-li-send"
+      }
+    },
+    {
+      "name": "ann-li-error-private-notes",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 400,
+      "responseFile": "ann-li-error-private-notes.response.json",
+      "requestFile": "ann-li-error-private-notes.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-ann-li-error-private-notes"
+      }
+    },
+    {
+      "name": "ann-li-v1-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "ann-li-v1-submission.response.json",
+      "requestFile": "ann-li-v1-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-ann-li-v1-submission"
+      }
+    },
+    {
+      "name": "ann-li-v1-analysis",
+      "mode": "manual_simulation",
+      "path": "/api/demo/analysis",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "ann-li-v1-analysis.response.json",
+      "requestFile": "ann-li-v1-analysis.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-ann-li-v1-analysis"
+      }
+    },
+    {
+      "name": "ann-li-v1-assessment",
+      "mode": "manual_simulation",
+      "path": "/api/demo/assessment",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "ann-li-v1-assessment.response.json",
+      "requestFile": "ann-li-v1-assessment.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-ann-li-v1-assessment"
+      }
+    },
+    {
+      "name": "ann-li-v1-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "ann-li-v1-more.response.json",
+      "requestFile": "ann-li-v1-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-ann-li-v1-more"
+      }
+    },
+    {
+      "name": "ann-li-v2-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "ann-li-v2-submission.response.json",
+      "requestFile": "ann-li-v2-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-ann-li-v2-submission"
+      }
+    },
+    {
+      "name": "ann-li-error-v2-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 409,
+      "responseFile": "ann-li-error-v2-more.response.json",
+      "requestFile": "ann-li-error-v2-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-ann-li-error-v2-more"
+      }
+    },
+    {
+      "name": "ann-li-v2-terminal",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "ann-li-v2-terminal.response.json",
+      "requestFile": "ann-li-v2-terminal.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-ann-li-v2-terminal"
+      }
+    },
+    {
+      "name": "jamie-parker-send",
+      "mode": "manual_simulation",
+      "path": "/api/demo/task/send",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "jamie-parker-send.response.json",
+      "requestFile": "jamie-parker-send.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-jamie-parker-send"
+      }
+    },
+    {
+      "name": "jamie-parker-error-private-notes",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 400,
+      "responseFile": "jamie-parker-error-private-notes.response.json",
+      "requestFile": "jamie-parker-error-private-notes.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-jamie-parker-error-private-notes"
+      }
+    },
+    {
+      "name": "jamie-parker-v1-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "jamie-parker-v1-submission.response.json",
+      "requestFile": "jamie-parker-v1-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-jamie-parker-v1-submission"
+      }
+    },
+    {
+      "name": "jamie-parker-v1-analysis",
+      "mode": "manual_simulation",
+      "path": "/api/demo/analysis",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "jamie-parker-v1-analysis.response.json",
+      "requestFile": "jamie-parker-v1-analysis.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-jamie-parker-v1-analysis"
+      }
+    },
+    {
+      "name": "jamie-parker-v1-assessment",
+      "mode": "manual_simulation",
+      "path": "/api/demo/assessment",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "jamie-parker-v1-assessment.response.json",
+      "requestFile": "jamie-parker-v1-assessment.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-jamie-parker-v1-assessment"
+      }
+    },
+    {
+      "name": "jamie-parker-v1-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "jamie-parker-v1-more.response.json",
+      "requestFile": "jamie-parker-v1-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-jamie-parker-v1-more"
+      }
+    },
+    {
+      "name": "jamie-parker-v2-submission",
+      "mode": "manual_simulation",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "jamie-parker-v2-submission.response.json",
+      "requestFile": "jamie-parker-v2-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-jamie-parker-v2-submission"
+      }
+    },
+    {
+      "name": "jamie-parker-error-v2-more",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 409,
+      "responseFile": "jamie-parker-error-v2-more.response.json",
+      "requestFile": "jamie-parker-error-v2-more.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-jamie-parker-error-v2-more"
+      }
+    },
+    {
+      "name": "jamie-parker-v2-terminal",
+      "mode": "manual_simulation",
+      "path": "/api/demo/review",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "jamie-parker-v2-terminal.response.json",
+      "requestFile": "jamie-parker-v2-terminal.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-jamie-parker-v2-terminal"
+      }
+    },
+    {
+      "name": "comparison-final",
+      "mode": "manual_simulation",
+      "path": "/api/demo/comparison",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "comparison-final.response.json"
+    },
+    {
+      "name": "admin-reset",
+      "mode": "manual_simulation",
+      "path": "/api/demo/reset",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "admin-reset.response.json",
+      "requestFile": "admin-reset.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-admin-reset",
+        "X-Demo-Admin-Token": "<LOCAL_ADMIN_TOKEN>"
+      }
+    },
+    {
+      "name": "disabled-initial",
+      "mode": "disabled",
+      "path": "/api/demo?candidateId=david-liu",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "disabled-initial.response.json"
+    },
+    {
+      "name": "disabled-send",
+      "mode": "disabled",
+      "path": "/api/demo/task/send",
+      "method": "POST",
+      "status": 200,
+      "responseFile": "disabled-send.response.json",
+      "requestFile": "disabled-send.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-disabled-send"
+      }
+    },
+    {
+      "name": "disabled-submission",
+      "mode": "disabled",
+      "path": "/api/demo/submission",
+      "method": "POST",
+      "status": 201,
+      "responseFile": "disabled-submission.response.json",
+      "requestFile": "disabled-submission.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-disabled-submission"
+      }
+    },
+    {
+      "name": "analysis-disabled-error",
+      "mode": "disabled",
+      "path": "/api/demo/analysis",
+      "method": "POST",
+      "status": 503,
+      "responseFile": "analysis-disabled-error.response.json",
+      "requestFile": "analysis-disabled-error.request.json",
+      "headers": {
+        "Content-Type": "application/json",
+        "Idempotency-Key": "example-analysis-disabled-error"
+      }
+    },
+    {
+      "name": "analysis-failed-state",
+      "mode": "disabled",
+      "path": "/api/demo?candidateId=david-liu",
+      "method": "GET",
+      "status": 200,
+      "responseFile": "analysis-failed-state.response.json"
+    }
+  ]
+}

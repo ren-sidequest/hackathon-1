@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "SCHEMA_MISMATCH",
+    "message": "Legacy applicant IDs belong to API3. Select an API4 applicant explicitly; histories are not renamed.",
+    "requestId": "db8d6fbf-2cc5-4404-a3bd-3a4ea8baa489",
+    "retryable": false
+  }
+}

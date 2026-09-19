@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "SCHEMA_MISMATCH",
+    "message": "Use API 4.0 with a fresh session and the new applicant IDs. Preserve legacy data separately.",
+    "requestId": "e86905ef-b6e6-48fd-8551-ab45e1aba200",
+    "retryable": false
+  }
+}

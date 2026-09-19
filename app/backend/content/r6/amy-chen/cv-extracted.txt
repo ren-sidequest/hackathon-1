@@ -1,0 +1,40 @@
+--- Page 1 ---
+Amy Chen 
+Sydney, NSW | Email: amy.chen@example.com | 04XX XXX XXX 
+ 
+Education  
+University of Technology Sydney (UTS)                                          Jul 2023 – Jun 2026 
+Bachelor of Information Technology 
+•Major: Data Analytics 
+•WAM: 82  
+•Relevant study: Database Fundamentals, Data Analytics, Statistics and Business Information Systems 
+•Completed university projects involving SQL, spreadsheets and business datasets 
+ 
+Experience 
+E-commerce Operations Intern — Bright Cart Commerce Co., Ltd. (Shanghai, China) Dec 2025 – Feb 2026 
+• Assisted with weekly online sales and website performance reporting for the e-commerce operations team. 
+• Used SQL to extract transaction data and summaries orders by sales channel. 
+• Prepared Excel tables showing website traffic, order volume and conversion rates. 
+• Checked data for missing or inconsistent values before weekly reporting. 
+ 
+Research & Projects 
+Online Sales Channel Analysis — University Project                            Mar 2026 – May 2026 
+• Used SQL to analyses online sales and support marketing decisions. 
+• Calculated website traffic, orders and conversion rates across different acquisition channels. 
+• Created summary tables to compare channel performance across reporting periods. 
+• Organized analysis outputs into a short project report. 
+Customer Order Analysis — Database Project                                  Aug 2025 – Oct 2025 
+• Queried a relational database containing customer, order and product information. 
+• Used filtering, grouping and aggregation to summaries transaction data. 
+• Checked query outputs against source data to identify inconsistencies. 
+ 
+Volunteering 
+Student Event Volunteer（University Student Association）                      Feb 2025 – Nov 2025 
+• Supported student events through registration, logistics and participant assistance. 
+• Worked with other volunteers to complete event activities on schedule. 
+ 
+Skills 
+• Technical Skills: SQL, Microsoft Excel, Google Sheets, Basic Python, Basic Power BI 
+• Data Skills: Data cleaning, basic data analysis, descriptive metrics, conversion-rate calculations 
+• Core Skills: Attention to detail, teamwork, organization, willingness to learn 
+ 

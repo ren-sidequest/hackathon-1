@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { fingerprint } from '../dist/fingerprint.js';
-import { createSeed, DATASET_VERSION } from '../dist/seed.js';
+import { createSeed, DATASET_VERSION } from '../dist/r5/task-seed.js';
 import { CRITERIA, CRITERION_IDS, REQUIREMENT_IDS, RUBRIC, RUBRIC_VERSION } from '../dist/r5/rubric.js';
 import { calculateScores, isMark } from '../dist/r5/scoring.js';
 import { B3_EXPLANATION, CANDIDATES, CANDIDATE_IDS, COMPANY, FIXTURE_VERSION, JOB, TASK_TEMPLATES,
@@ -88,10 +88,10 @@ test('R5 rejects invalid marks, duplicate/unknown criteria and incomplete final 
 });
 
 test('R5 company, job and complete fixed rubric expose detailed 4/2/0 anchors', () => {
-  assert.equal(COMPANY.provenance, 'synthetic'); assert.equal(COMPANY.name, 'HarbourCart Pty Ltd');
-  assert.equal(COMPANY.approximateHeadcount, 25); assert.equal(COMPANY.dedicatedRecruitingTeam, false);
+  assert.equal(COMPANY.provenance, 'user_supplied_demo_jd'); assert.equal(COMPANY.name, 'Harbour Retail');
+  assert.equal(Object.hasOwn(COMPANY,'approximateHeadcount'), false); assert.equal(Object.hasOwn(COMPANY,'dedicatedRecruitingTeam'), false);
   assert.equal(JOB.id, 'junior-data-analyst'); assert.deepEqual(JOB.requirements.map(r => r.id), REQUIREMENT_IDS);
-  assert.equal(RUBRIC.version, 'harbourcart-rubric-v1');
+  assert.equal(RUBRIC.version, 'harbour-retail-junior-analyst-rubric-v1');
   assert.deepEqual(CRITERIA.map(c => c.id), CRITERION_IDS);
   assert.deepEqual(RUBRIC.requirements.map(r => r.maxScore), [30, 30, 40]);
   for (const criterion of CRITERIA) {
@@ -105,19 +105,19 @@ test('R5 company, job and complete fixed rubric expose detailed 4/2/0 anchors', 
 });
 
 test('R5 every fixture has distinct owned texts, stable fingerprint and ten fully bound source-backed annotations', () => {
-  assert.deepEqual(CANDIDATES.map(c => c.id), ['alex-chen', 'maya-patel', 'leo-zhang', 'sam-taylor']);
+  assert.deepEqual(CANDIDATES.map(c => c.id), ['amy-chen', 'ann-li', 'david-liu', 'jamie-parker']);
   const snapshots = CANDIDATE_IDS.map(getApplication);
   assert.equal(new Set(snapshots.map(s => s.fingerprint)).size, 4);
   for (const snapshot of snapshots) {
     const { candidateId, jobId, fixtureVersion, materialVersion, evidenceSnapshotId, sources, baseline } = snapshot;
-    assert.equal(snapshot.provenance, 'synthetic'); assert.equal(fixtureVersion, 'harbourcart-applications-v1');
+    assert.equal(snapshot.provenance, 'synthetic'); assert.equal(fixtureVersion, 'harbour-retail-applications-v1');
     assert.equal(snapshot.fingerprint, fingerprint({ candidateId, jobId, fixtureVersion, materialVersion, evidenceSnapshotId, sources }));
-    assert.ok(sources.length >= 3); assert.ok(sources.every(s => s.kind === 'application'));
+    assert.ok(sources.length >= 3); assert.ok(sources.every(s => ['application','work_sample'].includes(s.kind)));
     assert.equal(baseline.candidateId, candidateId); assert.equal(baseline.evidenceSnapshotId, evidenceSnapshotId);
     assert.equal(baseline.fingerprint, snapshot.fingerprint); assert.equal(baseline.rubricVersion, RUBRIC_VERSION);
     assert.equal(baseline.fixtureVersion, FIXTURE_VERSION); assert.equal(baseline.jobId, JOB.id);
     assert.equal(baseline.stage, 'application_review'); assert.equal(baseline.assessmentRevision, 1);
-    assert.equal(baseline.annotationMode, 'preset_human'); assert.equal(baseline.label, '合成案例·预置人工评估');
+    assert.equal(baseline.annotationMode, 'ai_authored'); assert.equal(baseline.label, 'AI-authored demo assessment · Human calibration pending');
     assert.equal(baseline.provenance.actualAnnotation, 'ai_agent_authored_fixture');
     assert.equal(baseline.provenance.actualReview, 'ai_agent_review');
     assert.equal(baseline.provenance.humanCalibration, 'pending'); assert.equal(baseline.provenance.externalExpertValidation, false);
@@ -137,15 +137,15 @@ test('R5 every fixture has distinct owned texts, stable fingerprint and ten full
       assert.ok(report.sourceRefs.every(ref => validateSourceRef(snapshot, ref)));
     }
   }
-  assert.notEqual(snapshots[1].sources.find(s => s.sourceId === 'analysis.md').text, snapshots[2].sources.find(s => s.sourceId === 'analysis.md').text);
+  assert.notEqual(snapshots[1].sources.find(s => s.sourceId === 'cv-public.txt').text, snapshots[2].sources.find(s => s.sourceId === 'cv-public.txt').text);
 });
 
 test('R5 source validation rejects cross-person same-name files, stale snapshots, bad offsets and unbound reasons', () => {
-  const maya = getApplication('maya-patel'); const leo = getApplication('leo-zhang');
-  const sourceRef = maya.baseline.items.find(i => i.criterionId === 'D1').sourceRefs[0];
+  const maya = getApplication('ann-li'); const leo = getApplication('david-liu');
+  const src=maya.sources.find(s=>s.sourceId==='cv-public.txt'); const sourceRef={candidateId:maya.candidateId,evidenceSnapshotId:maya.evidenceSnapshotId,fingerprint:maya.fingerprint,sourceId:src.sourceId,location:src.location,start:0,end:20,quote:src.text.slice(0,20)};
   assert.ok(leo.sources.some(s => s.sourceId === sourceRef.sourceId), 'same source ID is valid in distinct namespaces');
   assert.equal(validateSourceRef(leo, sourceRef), false);
-  for (const patch of [{ candidateId: 'leo-zhang' }, { evidenceSnapshotId: 'stale' }, { fingerprint: '0'.repeat(64) },
+  for (const patch of [{ candidateId: 'david-liu' }, { evidenceSnapshotId: 'stale' }, { fingerprint: '0'.repeat(64) },
     { location: '/wrong' }, { sourceId: 'other.md' }, { start: -1 }, { start: 0.5 }, { end: Infinity }, { end: sourceRef.end + 1 }, { quote: '' }, { quote: `${sourceRef.quote}x` }]) {
     assert.equal(validateSourceRef(maya, { ...sourceRef, ...patch }), false);
   }
@@ -156,31 +156,31 @@ test('R5 source validation rejects cross-person same-name files, stale snapshots
   }
   const ne = structuredClone(base); ne[0].checkedSourceIds = [];
   assert.throws(() => validateAssessmentItems(maya, ne));
-  const mismatch = structuredClone(base); mismatch[0].mark = 0;
+  const mismatch = structuredClone(base); mismatch[0].mark = 0; mismatch[0].sourceRefs=[];
   assert.throws(() => validateAssessmentItems(maya, mismatch), /source binding/);
   assert.throws(() => validateAssessmentItems(maya, [...base, base[0]]));
   assert.throws(() => validateAssessmentItems(maya, base.slice(0, 3), CRITERION_IDS), /expected criterion/);
   validateAssessmentItems(maya, base.slice(0, 3), ['S1', 'S2', 'S3']);
 });
 
-test('R5 actual Alex B3 example includes Chinese, newline and emoji with exact UTF-16 offsets', () => {
-  const application = getApplication('alex-chen');
-  const b3 = application.baseline.items.find(i => i.criterionId === 'B3'); const ref = b3.sourceRefs[0];
-  assert.equal(b3.mark, 2); assert.equal(B3_EXPLANATION.contribution, 5);
-  assert.match(ref.quote, /🔎.*\n.*campaign × device/);
-  assert.ok(ref.quote.length > Array.from(ref.quote).length, 'emoji occupies two UTF-16 code units');
-  const source = application.sources.find(s => s.sourceId === ref.sourceId);
-  assert.equal(source.text.slice(ref.start, ref.end), ref.quote);
-  assert.equal(ref.end - ref.start, ref.quote.length);
-  assert.equal(validateSourceRef(application, { ...ref, end: ref.start + Array.from(ref.quote).length }), false);
-  assert.deepEqual(B3_EXPLANATION.sourceRefs, b3.sourceRefs);
+test('UTF-16 Unicode boundary regression uses a test-only snapshot, not applicant evidence', () => {
+  const text='Prefix 🔎\n中文 campaign × device';
+  const snapshot={candidateId:'amy-chen',evidenceSnapshotId:'test-unicode',fingerprint:'a'.repeat(64),sources:[{sourceId:'unicode.txt',location:'test',text,kind:'application'}]};
+  const start=text.indexOf('🔎'), quote=text.slice(start);
+  const ref={candidateId:snapshot.candidateId,evidenceSnapshotId:snapshot.evidenceSnapshotId,fingerprint:snapshot.fingerprint,sourceId:'unicode.txt',location:'test',start,end:text.length,quote};
+  assert.ok(validateSourceRef(snapshot,ref));
+  assert.ok(quote.length>Array.from(quote).length);
+  assert.equal(validateSourceRef(snapshot,{...ref,end:start+Array.from(quote).length}),false);
+  const b3=getApplication('amy-chen').baseline.items.find(i=>i.criterionId==='B3');
+  assert.deepEqual(B3_EXPLANATION.sourceRefs,b3.sourceRefs);
+  assert.equal(B3_EXPLANATION.contribution,typeof b3.mark==='number'?b3.mark/4*10:null);
 });
 
 test('R5 immutable preset fixtures return detached snapshots and reject implicit Alex selection', () => {
-  const first = getApplication('alex-chen'); const second = getApplication('alex-chen');
+  const first = getApplication('amy-chen'); const second = getApplication('amy-chen');
   assert.deepEqual(first, second);
   first.sources[0].text = 'changed'; first.baseline.items[0].mark = 0;
-  assert.deepEqual(second, getApplication('alex-chen'));
+  assert.deepEqual(second, getApplication('amy-chen'));
   for (const invalid of ['', undefined, null, 'alex', '__proto__']) assert.throws(() => getApplication(invalid), /Unknown candidate/);
   assert.throws(() => { CANDIDATES[0].name = 'changed'; }, TypeError);
 });

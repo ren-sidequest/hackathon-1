@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "4.0",
+  "sessionId": "dcd27813-7e44-40ed-8ced-f9e3552755c8",
+  "candidateId": "jamie-parker",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "stage": "task_v1",
+  "evidenceSnapshotId": "submission:bcac259d-d637-4675-8680-566fbe2ea40e",
+  "fingerprint": "bf4a3b846925f3289fc6da913551047c6d5c084c29701c2b1708a6e03d0d5975",
+  "submissionId": "bcac259d-d637-4675-8680-566fbe2ea40e",
+  "contentFingerprint": "bf4a3b846925f3289fc6da913551047c6d5c084c29701c2b1708a6e03d0d5975",
+  "rubricVersion": "harbour-retail-junior-analyst-rubric-v1",
+  "expectedAssessmentRevision": 0,
+  "items": [
+    {
+      "criterionId": "D1",
+      "mark": "NE",
+      "rationale": "Synthetic request records insufficient material for this criterion.",
+      "support": "Only a short aggregate statement was submitted.",
+      "gaps": "No criterion-specific complete demonstration.",
+      "uncertainty": "Independent work and practical performance remain unknown.",
+      "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+      "checkedSourceIds": [
+        "summary",
+        "finding:finding-1:title",
+        "finding:finding-1:detail"
+      ],
+      "sourceRefs": []
+    },
+    {
+      "criterionId": "D2",
+      "mark": "NE",
+      "rationale": "Synthetic request records insufficient material for this criterion.",
+      "support": "Only a short aggregate statement was submitted.",
+      "gaps": "No criterion-specific complete demonstration.",
+      "uncertainty": "Independent work and practical performance remain unknown.",
+      "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+      "checkedSourceIds": [
+        "summary",
+        "finding:finding-1:title",
+        "finding:finding-1:detail"
+      ],
+      "sourceRefs": []
+    },
+    {
+      "criterionId": "D3",
+      "mark": "NE",
+      "rationale": "Synthetic request records insufficient material for this criterion.",
+      "support": "Only a short aggregate statement was submitted.",
+      "gaps": "No criterion-specific complete demonstration.",
+      "uncertainty": "Independent work and practical performance remain unknown.",
+      "nextStep": "Human reviewer should inspect the submitted text and document remaining gaps.",
+      "checkedSourceIds": [
+        "summary",
+        "finding:finding-1:title",
+        "finding:finding-1:detail"
+      ],
+      "sourceRefs": []
+    }
+  ],
+  "reuseApplication": {
+    "assessmentRevision": 1,
+    "evidenceSnapshotId": "jamie-parker-application-r6-v1",
+    "fingerprint": "d69f26944e8f08d558fe5017c5c66d792520c4565cd2800439bbe26c806533ec"
+  },
+  "operatorLabel": "Synthetic example operator; not an actual human validation"
+}

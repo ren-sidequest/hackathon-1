@@ -5,7 +5,6 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
-import { createHash } from 'node:crypto';
 import { RevisionStore, ReceiptOwnershipError } from '../dist/r5/store.js';
 import { migrateV2Database, MigrationError } from '../dist/r5/migration.js';
 import { Store } from '../dist/store.js';
@@ -22,7 +21,7 @@ function temporary(t) {
 function paths(dir) { return { source: join(dir, 'source-v2.sqlite'), destination: join(dir, 'destination-v3.sqlite'), backup: join(dir, 'backup-v2.sqlite') }; }
 function readDb(path, fn) { const db = new DatabaseSync(path, { readOnly: true }); try { return fn(db); } finally { db.close(); } }
 function version(path) { return readDb(path, db => db.prepare('PRAGMA user_version').get().user_version); }
-const savedState = () => ({ schemaVersion: '3.0', sessionId: 'session', candidates: {
+const savedState = () => ({ schemaVersion: '4.0', sessionId: 'session', candidates: {
   alex: { taskId: 'task-alex', versions: [{ submissionId: 'a-v1', contentFingerprint: 'sha256:a', review: { decision: 'needs_more_evidence' } }] },
   maya: { taskId: 'task-maya', analysis: { attemptId: 'maya-attempt', status: 'running' } },
   jordan: { taskId: 'task-jordan', shortlist: [{ action: 'retain', reason: 'Material reviewed' }] },
@@ -52,17 +51,14 @@ function makeV2(path) {
   db.prepare('UPDATE demo_state SET state_json=? WHERE id=1').run(stateJson); db.close();
   return { state, stateJson, submissions };
 }
-const converter = payload => ({ state: { ...savedState(), sessionId: payload.legacyState.sessionId, legacy: payload.legacyState,
-  legacySubmissions: payload.submissions }, sourceMap: payload.submissions.map(sub => ({ old: sub.submissionId, preservedFingerprint: sub.contentFingerprint })) });
-
-test('format3 aggregate and candidate-owned receipts survive close/restart without aliasing', t => {
+test('format4 aggregate and candidate-owned receipts survive close/restart without aliasing', t => {
   const dir = temporary(t); const path = join(dir, 'state.sqlite'); let store = new RevisionStore(path);
   assert.equal(store.getState(), null); assert.equal(store.health(), true);
   const state = savedState();
   store.transaction(() => { store.setState(state); store.saveReceipt('session', 'alex', '/submit', 'key', 'hash', { status: 201, body: { candidateId: 'alex' } }); });
   store.getState().candidates.alex.taskId = 'not-persisted';
   assert.deepEqual(store.getState(), state); store.close(); store.close(); assert.equal(store.health(), false);
-  assert.equal(version(path), 3); store = new RevisionStore(path); t.after(() => store.close());
+  assert.equal(version(path), 4); store = new RevisionStore(path); t.after(() => store.close());
   assert.deepEqual(store.getState(), state); assert.deepEqual(store.getReceipt('session', 'alex', '/submit', 'key'), { hash: 'hash', status: 201, body: { candidateId: 'alex' } });
 });
 
@@ -116,8 +112,8 @@ for (const [name, sql] of [
   ['future', 'CREATE TABLE future_state(value); PRAGMA user_version=9;'],
   ['unversioned data', 'CREATE TABLE old_state(value);'],
   ['view-only database', 'CREATE VIEW legacy AS SELECT 1;'],
-  ['incomplete v3', 'CREATE TABLE revision_state(id,state_json); PRAGMA user_version=3;'],
-  ['missing v3 columns', 'CREATE TABLE revision_state(id,state_json); CREATE TABLE revision_receipts(session_id); PRAGMA user_version=3;'],
+  ['incomplete v4', 'CREATE TABLE revision_state(id,state_json); PRAGMA user_version=4;'],
+  ['missing v4 columns', 'CREATE TABLE revision_state(id,state_json); CREATE TABLE revision_receipts(session_id); PRAGMA user_version=4;'],
 ]) test(`startup preserves ${name} file byte-for-byte and releases its lock`, t => {
   const dir = temporary(t); const path = join(dir, 'old.sqlite'); const db = new DatabaseSync(path); db.exec(sql); db.close();
   const before = readFileSync(path); assert.throws(() => new RevisionStore(path), /Incompatible|incomplete/);
@@ -143,114 +139,36 @@ test('close retains a replacement lock rather than deleting another owner', t =>
   store.close(); assert.equal(readFileSync(`${path}.lock`, 'utf8'), replacement);
 });
 
-test('explicit v2 migration preserves original state/submission/analysis/review/receipts, immutable archives and rollback path', async t => {
-  const p = paths(temporary(t)); const original = makeV2(p.source); const before = readFileSync(p.source);
-  const report = await migrateV2Database({ ...p, convert: payload => {
-    assert.equal(payload.raw.stateJson, original.stateJson); assert.deepEqual(payload.submissions, original.submissions);
-    assert.equal(payload.receipts[0].hash, 'original-hash'); return converter(payload);
-  } });
-  assert.equal(report.archivedSubmissions, 2); assert.equal(report.archivedReceipts, 1);
-  assert.equal(report.sourceFingerprint, `sha256:${createHash('sha256').update(readFileSync(p.backup)).digest('hex')}`);
-  assert.deepEqual(readFileSync(p.source), before); assert.equal(version(p.source), 2); assert.equal(version(p.backup), 2); assert.equal(version(p.destination), 3);
-  const archive = new DatabaseSync(p.destination);
-  try {
-    assert.equal(archive.prepare('SELECT state_json FROM legacy_v2_demo_state').get().state_json, original.stateJson);
-    assert.deepEqual(archive.prepare('SELECT snapshot_json FROM legacy_v2_submissions ORDER BY submission_version').all().map(row => JSON.parse(row.snapshot_json)), original.submissions);
-    assert.equal(archive.prepare('SELECT count(*) AS n FROM revision_receipts').get().n, 0);
-    assert.equal(JSON.parse(archive.prepare('SELECT source_map_json FROM legacy_v2_migration').get().source_map_json)[0].old, 'legacy-v1');
-    for (const table of ['legacy_v2_demo_state', 'legacy_v2_submissions', 'legacy_v2_idempotency', 'legacy_v2_migration'])
-      assert.throws(() => archive.exec(`DELETE FROM ${table}`), /immutable/);
-    assert.throws(() => archive.exec("UPDATE legacy_v2_demo_state SET state_json='{}'"), /immutable/);
-  } finally { archive.close(); }
-  const revised = new RevisionStore(p.destination); assert.deepEqual(revised.getState().legacySubmissions, original.submissions); revised.close();
-  assert.throws(() => new Store(p.destination), /Incompatible/);
-  const rollback = new Store(p.source); assert.deepEqual(rollback.getState(), original.state); rollback.close();
-});
-
-test('WAL-safe backup includes committed pages from a crashed source without editing the original', async t => {
-  const p = paths(temporary(t)); makeV2(p.source);
-  const child = spawnSync(process.execPath, ['--input-type=module', '-e', `
-    import { DatabaseSync } from 'node:sqlite'; const db = new DatabaseSync(${JSON.stringify(p.source)});
-    db.exec('PRAGMA journal_mode=WAL; PRAGMA wal_autocheckpoint=0;');
-    db.prepare('INSERT INTO idempotency VALUES(?,?,?,?,?,?)').run('legacy-session','/wal-only','wal-key','wal-hash',200,'{"wal":true}');
-    process.exit(0);`], { encoding: 'utf8' });
-  assert.equal(child.status, 0, child.stderr); assert.ok(existsSync(`${p.source}-wal`));
-  const before = readFileSync(p.source); const walBefore = readFileSync(`${p.source}-wal`);
-  const report = await migrateV2Database({ ...p, convert: payload => { assert.equal(payload.receipts.length, 2); return converter(payload); } });
-  assert.equal(report.archivedReceipts, 2); assert.deepEqual(readFileSync(p.source), before); assert.deepEqual(readFileSync(`${p.source}-wal`), walBefore);
-  assert.equal(readDb(p.backup, db => db.prepare("SELECT body_json FROM idempotency WHERE path='/wal-only'").get().body_json), '{"wal":true}');
-});
-
-test('converter failure leaves source intact, valid backup and diagnostic v2 staging copy without destination', async t => {
-  const p = paths(temporary(t)); makeV2(p.source); const before = readFileSync(p.source);
-  await assert.rejects(migrateV2Database({ ...p, convert: () => { throw new Error('converter failure'); } }), error => {
-    assert.ok(error instanceof MigrationError); assert.match(error.message, /converter failure/);
-    const stage = error.diagnosticPaths.find(path => path.startsWith(`${p.destination}.migration-`)); assert.ok(stage); assert.equal(version(stage), 2); return true;
+test('revision6 retires identity migration before touching source, destinations, backups or converter callbacks', async t => {
+  const dir = temporary(t); const p = paths(dir); const original = makeV2(p.source); const before = readFileSync(p.source);
+  let converterCalled = false;
+  await assert.rejects(migrateV2Database({ ...p, convert: () => { converterCalled = true; return { state: {} }; } }), error => {
+    assert.ok(error instanceof MigrationError); assert.match(error.message, /API4|revision.6|retired|new applicant/); assert.deepEqual(error.diagnosticPaths, []); return true;
   });
-  assert.deepEqual(readFileSync(p.source), before); assert.equal(existsSync(p.destination), false); assert.equal(version(p.backup), 2);
-  for (const path of Object.values(p)) assert.equal(existsSync(`${path}.lock`), false);
+  assert.equal(converterCalled, false); assert.deepEqual(readFileSync(p.source), before); assert.deepEqual(readdirSync(dir), ['source-v2.sqlite']);
+  const rollback = new Store(p.source); try { assert.deepEqual(rollback.getState(), original.state); } finally { rollback.close(); }
+  // Early rejection does not even probe missing source paths or replace pre-existing destinations.
+  writeFileSync(p.destination, 'other-owner');
+  await assert.rejects(migrateV2Database({ ...p, source: join(dir, 'missing.sqlite'), convert: () => ({ state: {} }) }));
+  assert.equal(readFileSync(p.destination, 'utf8'), 'other-owner'); assert.equal(existsSync(p.backup), false);
 });
 
-test('a transactional DDL failure rolls back archives and user_version, retaining the complete staging v2 copy', async t => {
-  const p = paths(temporary(t)); makeV2(p.source);
-  const db = new DatabaseSync(p.source);
-  db.exec('CREATE TRIGGER legacy_v2_demo_state_insert_immutable BEFORE INSERT ON demo_state BEGIN SELECT 1; END;'); db.close();
-  const before = readFileSync(p.source);
-  await assert.rejects(migrateV2Database({ ...p, convert: converter }), error => {
-    assert.match(error.message, /already exists/);
-    const stage = error.diagnosticPaths.find(path => path.startsWith(`${p.destination}.migration-`));
-    assert.equal(version(stage), 2);
-    assert.equal(readDb(stage, value => value.prepare("SELECT count(*) AS n FROM sqlite_master WHERE name='legacy_v2_submissions'").get().n), 0);
-    assert.equal(readDb(stage, value => value.prepare('SELECT count(*) AS n FROM submissions').get().n), 2); return true;
-  });
-  assert.deepEqual(readFileSync(p.source), before); assert.equal(existsSync(p.destination), false);
-});
-
-test('migration never overwrites an existing or concurrently appearing destination', async t => {
-  const p = paths(temporary(t)); makeV2(p.source); writeFileSync(p.destination, 'existing-destination');
-  await assert.rejects(migrateV2Database({ ...p, convert: converter }), /already exists/);
-  assert.equal(readFileSync(p.destination, 'utf8'), 'existing-destination'); assert.equal(existsSync(p.backup), false);
-  rmSync(p.destination);
-  await assert.rejects(migrateV2Database({ ...p, convert: payload => { writeFileSync(p.destination, 'concurrent-owner'); return converter(payload); } }), /EEXIST/);
-  assert.equal(readFileSync(p.destination, 'utf8'), 'concurrent-owner'); assert.equal(version(p.source), 2);
-});
-
-test('migration checks live source/destination locks and releases any intermediate acquired lock', async t => {
-  const p = paths(temporary(t)); makeV2(p.source); const live = new Store(p.source);
-  await assert.rejects(migrateV2Database({ ...p, convert: converter }), /live process/);
-  assert.equal(existsSync(p.backup), false); live.close();
-  writeFileSync(`${p.destination}.lock`, JSON.stringify({ pid: process.pid, nonce: 'other' }));
-  await assert.rejects(migrateV2Database({ ...p, convert: converter }), /live process/);
-  assert.equal(existsSync(`${p.backup}.lock`), false); assert.equal(existsSync(`${p.source}.lock`), false);
-  assert.ok(existsSync(`${p.destination}.lock`));
-});
-
-test('migration honors the legacy lock at an explicitly supplied file symlink', async t => {
-  const dir = temporary(t); const p = paths(dir); makeV2(p.source);
-  const alias = join(dir, 'legacy-alias.sqlite'); symlinkSync(p.source, alias);
-  const live = new Store(alias);
-  try { await assert.rejects(migrateV2Database({ ...p, source: alias, convert: converter }), /live process/); }
-  finally { live.close(); }
-  assert.equal(existsSync(p.destination), false); assert.equal(existsSync(p.backup), false);
-  assert.equal(existsSync(`${p.source}.lock`), false); assert.equal(existsSync(`${alias}.lock`), false);
-});
-
-test('migration rejects future formats and CLI requires all explicit paths without opening a default database', async t => {
-  const dir = temporary(t); const p = paths(dir); const db = new DatabaseSync(p.source); db.exec('PRAGMA user_version=4'); db.close();
-  const before = readFileSync(p.source);
-  await assert.rejects(migrateV2Database({ ...p, convert: converter }), /format 2/);
-  assert.deepEqual(readFileSync(p.source), before); assert.deepEqual(readdirSync(dir), ['source-v2.sqlite']);
+test('retired migration CLI rejects empty and explicit legacy invocations without opening default or new databases', t => {
+  const dir = temporary(t); const p = paths(dir); makeV2(p.source); const before = readFileSync(p.source);
   const script = new URL('../scripts/migrate-v3.mjs', import.meta.url);
-  const result = spawnSync(process.execPath, [script.pathname], { cwd: dir, encoding: 'utf8' });
-  assert.equal(result.status, 1); assert.match(result.stderr, /Usage:/); assert.deepEqual(readdirSync(dir), ['source-v2.sqlite']);
+  for (const args of [[], ['--source', p.source, '--destination', p.destination, '--backup', p.backup]]) {
+    const result = spawnSync(process.execPath, [script.pathname, ...args], { cwd: dir, encoding: 'utf8' });
+    assert.equal(result.status, 1); assert.match(result.stderr, /Usage:|API4|revision.6|retired|new applicant/);
+  }
+  assert.deepEqual(readFileSync(p.source), before); assert.deepEqual(readdirSync(dir), ['source-v2.sqlite']);
 });
 
-function ownedBinding(data) { return { schemaVersion: '3.0', sessionId: data.sessionId, candidateId: data.candidate.id,
+function ownedBinding(data) { return { schemaVersion: '4.0', sessionId: data.sessionId, candidateId: data.candidate.id,
   jobId: data.job.id, datasetVersion: data.datasetVersion, taskId: data.task.taskId, targetRequirementId: 'sql' }; }
 async function domainFixture() {
   const store = new RevisionStore(':memory:'); const service = new RevisionService(store, createTargetAnalyzer({ mode: 'manual_simulation' }));
-  let data = service.read('alex-chen').data; const binding = ownedBinding(data);
-  data = service.send({ ...binding, templateId: 'harbourcart-sql-v1', instructions: 'Explain query grain and check the source counts.', gapReason: 'Request direct SQL evidence.' }, 'send').body.data;
+  let data = service.read('amy-chen').data; const binding = ownedBinding(data);
+  data = service.send({ ...binding, templateId: 'harbour-retail-sql-v1', instructions: 'Explain query grain and check the source counts.', gapReason: 'Request direct SQL evidence.' }, 'send').body.data;
   data = service.submit({ ...binding, submissionVersion: 1, previousSubmissionId: null, previousContentFingerprint: null,
     summary: 'I would count the distinct sessions and compare their completed orders.', findings: [], processEvidence: [] }, 'submit').body.data;
   const current = { ...binding, submissionId: data.submission.submissionId, contentFingerprint: data.submission.contentFingerprint };
@@ -276,7 +194,7 @@ test('strict aggregate validation accepts actual task/analysis/assessment/shortl
       previousContentFingerprint: current.contentFingerprint, summary: 'V2 query explanation is still intentionally incomplete.', findings: [], processEvidence: [] }, 'v2');
     validateState(store.getState());
     new RevisionService(store, createTargetAnalyzer({ mode: 'manual_simulation' }));
-    assert.equal(service.read('alex-chen').data.shortlist.status, 'needs_reconfirmation');
+    assert.equal(service.read('amy-chen').data.shortlist.status, 'needs_reconfirmation');
   } finally { store.close(); }
 });
 
@@ -286,27 +204,27 @@ test('strict aggregate guards reject malformed shape, private fields, baseline d
     const good = store.getState();
     const corruptions = [
       state => { state.extraPrivateNotes = 'private'; },
-      state => { state.people['maya-patel'].candidateId = 'alex-chen'; },
-      state => { state.people['alex-chen'].task.taskId = ''; },
-      state => { state.people['alex-chen'].task.templateId = 'harbourcart-bps-v1'; },
-      state => { state.people['alex-chen'].versions[0].submission.notes = 'private'; },
-      state => { state.people['alex-chen'].versions[0].submission.submittedAt = 'yesterday'; },
-      state => { state.people['alex-chen'].versions[0].analysis.status = 'invented'; },
-      state => { state.people['alex-chen'].versions[0].analysis.result.observations[0].citations[0].quote = 'borrowed text'; },
-      state => { state.people['alex-chen'].versions[0].review.candidateId = 'maya-patel'; },
-      state => { state.people['alex-chen'].versions[0].review.jobId = 'other-job'; },
-      state => { state.people['alex-chen'].versions[0].review.datasetVersion = 'other-dataset'; },
-      state => { state.people['alex-chen'].versions[0].review.targetRequirementId = 'business-problem-solving'; },
-      state => { state.people['alex-chen'].assessments = []; },
-      state => { state.people['alex-chen'].assessments[0].operatorLabel = 'rewritten preset'; },
-      state => { state.people['alex-chen'].assessments[1].submissionId = 'another-submission'; },
-      state => { state.people['alex-chen'].assessments[1].contentFingerprint = 'a'.repeat(64); },
-      state => { state.people['alex-chen'].assessments[1].score.overallScore = 100; },
-      state => { state.people['alex-chen'].assessments[1].reusedItems = state.people['maya-patel'].assessments[0].items; },
-      state => { state.people['alex-chen'].shortlist[0].action = 'reconfirm'; },
-      state => { state.people['alex-chen'].shortlist[0].materialRevision = -1; },
-      state => { state.people['alex-chen'].shortlist[0].basis.assessmentRevision = 99; },
-      state => { state.people['alex-chen'].shortlist[0].at = '2020-01-01T00:00:00.000Z'; },
+      state => { state.people['ann-li'].candidateId = 'amy-chen'; },
+      state => { state.people['amy-chen'].task.taskId = ''; },
+      state => { state.people['amy-chen'].task.templateId = 'harbour-retail-bps-v1'; },
+      state => { state.people['amy-chen'].versions[0].submission.notes = 'private'; },
+      state => { state.people['amy-chen'].versions[0].submission.submittedAt = 'yesterday'; },
+      state => { state.people['amy-chen'].versions[0].analysis.status = 'invented'; },
+      state => { state.people['amy-chen'].versions[0].analysis.result.observations[0].citations[0].quote = 'borrowed text'; },
+      state => { state.people['amy-chen'].versions[0].review.candidateId = 'ann-li'; },
+      state => { state.people['amy-chen'].versions[0].review.jobId = 'other-job'; },
+      state => { state.people['amy-chen'].versions[0].review.datasetVersion = 'other-dataset'; },
+      state => { state.people['amy-chen'].versions[0].review.targetRequirementId = 'business-problem-solving'; },
+      state => { state.people['amy-chen'].assessments = []; },
+      state => { state.people['amy-chen'].assessments[0].operatorLabel = 'rewritten preset'; },
+      state => { state.people['amy-chen'].assessments[1].submissionId = 'another-submission'; },
+      state => { state.people['amy-chen'].assessments[1].contentFingerprint = 'a'.repeat(64); },
+      state => { state.people['amy-chen'].assessments[1].score.overallScore = 100; },
+      state => { state.people['amy-chen'].assessments[1].reusedItems = state.people['ann-li'].assessments[0].items; },
+      state => { state.people['amy-chen'].shortlist[0].action = 'reconfirm'; },
+      state => { state.people['amy-chen'].shortlist[0].materialRevision = -1; },
+      state => { state.people['amy-chen'].shortlist[0].basis.assessmentRevision = 99; },
+      state => { state.people['amy-chen'].shortlist[0].at = '2020-01-01T00:00:00.000Z'; },
     ];
     for (const [index, mutate] of corruptions.entries()) {
       const bad = structuredClone(good); mutate(bad); assert.throws(() => validateState(bad), `corruption ${index} must fail`);
@@ -327,29 +245,13 @@ async function actualLegacyDatabase(path) {
   const state = store.getState(); store.close(); return state;
 }
 
-test('domain converter validates original analysis and mapped state before destination publication, including restart', async t => {
+test('old real API2 workflow stays usable and byte-identical after rejected R6 identity conversion', async t => {
   const p = paths(temporary(t)); const original = await actualLegacyDatabase(p.source); const before = readFileSync(p.source);
-  await migrateV2Database({ ...p, convert: convertLegacyState });
-  const store = new RevisionStore(p.destination);
-  try {
-    new RevisionService(store, createTargetAnalyzer({ mode: 'manual_simulation' }));
-    assert.deepEqual(store.getState().people['alex-chen'].versions[0].analysis, original.versions[0].analysis);
-    validateState(store.getState());
-    const bad = store.getState(); bad.people['alex-chen'].versions[0].analysis.result.observations[0].citations[0].quote = 'tampered legacy quote';
-    assert.throws(() => validateState(bad));
-  } finally { store.close(); }
-  assert.deepEqual(readFileSync(p.source), before);
-});
-
-test('invalid legacy workflow or original citations fail migration before publication with a usable v2 backup', async t => {
-  for (const [index, mutate] of [
-    payload => { payload.legacyState.versions[0].analysis.result.observations[0].citations[0].quote = 'tampered legacy quote'; },
-    payload => { payload.legacyState.task.status = 'draft'; },
-    payload => { payload.submissions[0].candidateId = 'maya-patel'; },
-    payload => { payload.legacyState.versions[0].analysis.status = 'invented'; },
-  ].entries()) {
-    const dir = temporary(t); const p = paths(dir); await actualLegacyDatabase(p.source); const before = readFileSync(p.source);
-    await assert.rejects(migrateV2Database({ ...p, convert: payload => { mutate(payload); return convertLegacyState(payload); } }), `legacy corruption ${index}`);
-    assert.equal(existsSync(p.destination), false); assert.equal(version(p.backup), 2); assert.deepEqual(readFileSync(p.source), before);
-  }
+  assert.throws(() => convertLegacyState({ legacyState: original }), /API4|new applicant|never renamed/);
+  await assert.rejects(migrateV2Database({ ...p, convert: convertLegacyState }));
+  assert.deepEqual(readFileSync(p.source), before); assert.equal(version(p.source), 2);
+  assert.equal(existsSync(p.backup), false); assert.equal(existsSync(p.destination), false);
+  const store = new Store(p.source);
+  try { assert.deepEqual(store.getState(), original); new DemoService(store, createAnalyzer({ mode: 'manual_simulation' })); }
+  finally { store.close(); }
 });

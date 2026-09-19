@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "4.0",
+  "sessionId": "dcd27813-7e44-40ed-8ced-f9e3552755c8",
+  "candidateId": "jamie-parker",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "taskId": "d7d94363-b0c2-4bfd-9c40-451500b9812f",
+  "targetRequirementId": "data-analysis",
+  "submissionVersion": 1,
+  "previousSubmissionId": null,
+  "previousContentFingerprint": null,
+  "summary": "Synthetic candidate response: sessions rose to 1,180,000 while orders fell to 30,680; this describes the supplied aggregate, not a verified cause. 🔎\nCheck aligned time windows before a business decision.",
+  "findings": [
+    {
+      "id": "finding-1",
+      "section": "Key Findings",
+      "title": "Clarify the denominator",
+      "detail": "Conversion uses completed orders divided by sessions; missing device history limits causal inference.",
+      "source": "website_traffic.csv",
+      "confidence": "Low"
+    }
+  ],
+  "processEvidence": []
+}

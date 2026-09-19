@@ -1,0 +1,283 @@
+{
+  "packVersion": "harbour-retail-applications-v1",
+  "jdVersion": "harbour-retail-junior-analyst-jd-v1",
+  "rubricVersion": "harbour-retail-junior-analyst-rubric-v1",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "websiteLanguage": "en",
+  "status": "local_implemented_ai_authored_human_calibration_pending",
+  "candidateProvenance": "user_confirmed_fictional",
+  "originalPdfCount": 5,
+  "syntheticCompanionCount": 8,
+  "files": [
+    {
+      "file": "amy-chen/channel_analysis.md",
+      "sha256": "29e478a635d1226fa1fd794e6efd79b1c1fb6f6317ea6f67cbc59f708878f70e",
+      "sizeBytes": 2089,
+      "origin": "synthetic_demo_work_sample",
+      "publication": "public_text_or_metadata",
+      "originalSha256": "6557863cec46953fb7c3b0fffbf167a14645b5ba0a0d621fd0453b2408c18673",
+      "changedFromInput": true
+    },
+    {
+      "file": "amy-chen/channel_analysis.sql",
+      "sha256": "0fd0d3d093b2744a07c2d0229a35b56b60a28b725b237b9e244c14f1ed3e2f62",
+      "sizeBytes": 1533,
+      "origin": "synthetic_demo_work_sample",
+      "publication": "public_text_or_metadata",
+      "originalSha256": "0fd0d3d093b2744a07c2d0229a35b56b60a28b725b237b9e244c14f1ed3e2f62",
+      "changedFromInput": false
+    },
+    {
+      "file": "amy-chen/cv-extracted.txt",
+      "sha256": "6af64b7365eda8036418f907760b0fbb1d3f2197a81db06d2c8f41d549d278dc",
+      "sizeBytes": 2294,
+      "origin": "original_extracted_cv_text",
+      "publication": "repository_only",
+      "originalSha256": "6af64b7365eda8036418f907760b0fbb1d3f2197a81db06d2c8f41d549d278dc",
+      "changedFromInput": false
+    },
+    {
+      "file": "amy-chen/cv-public.txt",
+      "sha256": "f55a088f1f97ce16230677ff7ffafae9e388037405798bd4bb82a5fdaeb9957c",
+      "sizeBytes": 2236,
+      "origin": "redacted_public_cv_text",
+      "publication": "public_text_or_metadata",
+      "redaction": {
+        "removedFields": [
+          "contact_header_email_phone_and_location"
+        ],
+        "originalSha256": "4b7598a5d39bfdb99c0de7e99d088318bf9a6dfbfd606425b28abd1cfde6560c",
+        "note": "Only the public text is minimised. The unchanged fictional original PDF is an explicit download and may include fictional contact details."
+      }
+    },
+    {
+      "file": "amy-chen/cv.pdf",
+      "sha256": "4b7598a5d39bfdb99c0de7e99d088318bf9a6dfbfd606425b28abd1cfde6560c",
+      "sizeBytes": 131083,
+      "origin": "user_supplied_fictional_cv",
+      "publication": "explicit_original_download",
+      "pages": 1,
+      "originalSha256": "4b7598a5d39bfdb99c0de7e99d088318bf9a6dfbfd606425b28abd1cfde6560c",
+      "changedFromInput": false
+    },
+    {
+      "file": "ann-li/churn_method_note.md",
+      "sha256": "8de6a9c09f790cc73d27fbb4ae2f6620f7e05ac94be24a7592333f92a17891a9",
+      "sizeBytes": 2813,
+      "origin": "synthetic_demo_work_sample",
+      "publication": "public_text_or_metadata",
+      "originalSha256": "8de6a9c09f790cc73d27fbb4ae2f6620f7e05ac94be24a7592333f92a17891a9",
+      "changedFromInput": false
+    },
+    {
+      "file": "ann-li/cohort_extract.sql",
+      "sha256": "6f9f50aa2a97ec1aab76af61078427361171f5c1e98abcb137c3d028cf21e448",
+      "sizeBytes": 1123,
+      "origin": "synthetic_demo_work_sample",
+      "publication": "public_text_or_metadata",
+      "originalSha256": "6f9f50aa2a97ec1aab76af61078427361171f5c1e98abcb137c3d028cf21e448",
+      "changedFromInput": false
+    },
+    {
+      "file": "ann-li/cv-extracted.txt",
+      "sha256": "52edb122b1110a38467952e8bbd5b9e305df104acbc65c43826553e3c796b527",
+      "sizeBytes": 3274,
+      "origin": "original_extracted_cv_text",
+      "publication": "repository_only",
+      "originalSha256": "52edb122b1110a38467952e8bbd5b9e305df104acbc65c43826553e3c796b527",
+      "changedFromInput": false
+    },
+    {
+      "file": "ann-li/cv-public.txt",
+      "sha256": "22e23725f900789426298ff3057690da1ae413001428826d4ed4bbb08c4dd6b3",
+      "sizeBytes": 3218,
+      "origin": "redacted_public_cv_text",
+      "publication": "public_text_or_metadata",
+      "redaction": {
+        "removedFields": [
+          "contact_header_email_phone_and_location"
+        ],
+        "originalSha256": "2ea623c0d56a555d379ae4b96b4c3c2f8972b95ec3ce10504ed5b226124169b9",
+        "note": "Only the public text is minimised. The unchanged fictional original PDF is an explicit download and may include fictional contact details."
+      }
+    },
+    {
+      "file": "ann-li/cv.pdf",
+      "sha256": "2ea623c0d56a555d379ae4b96b4c3c2f8972b95ec3ce10504ed5b226124169b9",
+      "sizeBytes": 87153,
+      "origin": "user_supplied_fictional_cv",
+      "publication": "explicit_original_download",
+      "pages": 1,
+      "originalSha256": "2ea623c0d56a555d379ae4b96b4c3c2f8972b95ec3ce10504ed5b226124169b9",
+      "changedFromInput": false
+    },
+    {
+      "file": "annotations.json",
+      "sha256": "0a4b440911e746ac983ef5e2a97f2b3434e09b2b1124c8d666836d1ad3c7795b",
+      "sizeBytes": 41311,
+      "origin": "ai_authored_demo_assessment",
+      "publication": "public_text_or_metadata"
+    },
+    {
+      "file": "david-liu/cv-extracted.txt",
+      "sha256": "016975de5c75c788ad28462fb0b72c443ee1a58ec839941e2bbfcc9ca619f979",
+      "sizeBytes": 2526,
+      "origin": "original_extracted_cv_text",
+      "publication": "repository_only",
+      "originalSha256": "016975de5c75c788ad28462fb0b72c443ee1a58ec839941e2bbfcc9ca619f979",
+      "changedFromInput": false
+    },
+    {
+      "file": "david-liu/cv-public.txt",
+      "sha256": "64d5440f76f922b834700fc06592a392545b6dc896786cc067731debd06d9853",
+      "sizeBytes": 2468,
+      "origin": "redacted_public_cv_text",
+      "publication": "public_text_or_metadata",
+      "redaction": {
+        "removedFields": [
+          "contact_header_email_phone_and_location"
+        ],
+        "originalSha256": "2aa6c97fc472ba97dffa451eee56f297fe917ed8f8906875cd58072559790c78",
+        "note": "Only the public text is minimised. The unchanged fictional original PDF is an explicit download and may include fictional contact details."
+      }
+    },
+    {
+      "file": "david-liu/cv.pdf",
+      "sha256": "2aa6c97fc472ba97dffa451eee56f297fe917ed8f8906875cd58072559790c78",
+      "sizeBytes": 87347,
+      "origin": "user_supplied_fictional_cv",
+      "publication": "explicit_original_download",
+      "pages": 1,
+      "originalSha256": "2aa6c97fc472ba97dffa451eee56f297fe917ed8f8906875cd58072559790c78",
+      "changedFromInput": false
+    },
+    {
+      "file": "david-liu/project_readme.md",
+      "sha256": "263844fec181cd6baa7167025deafe014ddead7307ce77d08f8a2e7e75d1cdfa",
+      "sizeBytes": 1452,
+      "origin": "synthetic_demo_work_sample",
+      "publication": "public_text_or_metadata",
+      "originalSha256": "263844fec181cd6baa7167025deafe014ddead7307ce77d08f8a2e7e75d1cdfa",
+      "changedFromInput": false
+    },
+    {
+      "file": "david-liu/task_queries.sql",
+      "sha256": "d205078aaef5a378001d8af2d5d9beb57d5ae329737aaf1bf1becb5cf59789eb",
+      "sizeBytes": 1283,
+      "origin": "synthetic_demo_work_sample",
+      "publication": "public_text_or_metadata",
+      "originalSha256": "d205078aaef5a378001d8af2d5d9beb57d5ae329737aaf1bf1becb5cf59789eb",
+      "changedFromInput": false
+    },
+    {
+      "file": "harbour-retail-task-dataset.json",
+      "sha256": "7b15a71137003cd23ce8fb3988fc84794362c828b43685dc256764b2b50ab5c6",
+      "sizeBytes": 21563,
+      "origin": "current_task_snapshot",
+      "publication": "public_text_or_metadata"
+    },
+    {
+      "file": "harbourcart-task-dataset.json",
+      "sha256": "5269aed70e4a304b8ed642aec7c49a46ba52f22004cf6753572c4e587321d090",
+      "sizeBytes": 21122,
+      "origin": "legacy_task_snapshot",
+      "publication": "repository_only",
+      "originalSha256": "5269aed70e4a304b8ed642aec7c49a46ba52f22004cf6753572c4e587321d090",
+      "changedFromInput": false
+    },
+    {
+      "file": "jamie-parker/campaign_brief.md",
+      "sha256": "fc5872a569b79ab6b945552608da9f9bf19e25973867e32af16f198926a6bcf3",
+      "sizeBytes": 1623,
+      "origin": "synthetic_demo_work_sample",
+      "publication": "public_text_or_metadata",
+      "originalSha256": "fc5872a569b79ab6b945552608da9f9bf19e25973867e32af16f198926a6bcf3",
+      "changedFromInput": false
+    },
+    {
+      "file": "jamie-parker/cv-extracted.txt",
+      "sha256": "f4892677bf3fc92f26db73ba1ea774e8ad9e69f437b025349d28ee9b1b50a6b4",
+      "sizeBytes": 2577,
+      "origin": "original_extracted_cv_text",
+      "publication": "repository_only",
+      "originalSha256": "f4892677bf3fc92f26db73ba1ea774e8ad9e69f437b025349d28ee9b1b50a6b4",
+      "changedFromInput": false
+    },
+    {
+      "file": "jamie-parker/cv-public.txt",
+      "sha256": "f4892677bf3fc92f26db73ba1ea774e8ad9e69f437b025349d28ee9b1b50a6b4",
+      "sizeBytes": 2577,
+      "origin": "redacted_public_cv_text",
+      "publication": "public_text_or_metadata",
+      "redaction": {
+        "removedFields": [],
+        "originalSha256": "c13b285ba0a0a8d1d53440ea280d5ef55c5d1c288dd57ca36027499b39e85537",
+        "note": "Only the public text is minimised. The unchanged fictional original PDF is an explicit download and may include fictional contact details."
+      }
+    },
+    {
+      "file": "jamie-parker/cv.pdf",
+      "sha256": "c13b285ba0a0a8d1d53440ea280d5ef55c5d1c288dd57ca36027499b39e85537",
+      "sizeBytes": 70799,
+      "origin": "user_supplied_fictional_cv",
+      "publication": "explicit_original_download",
+      "pages": 1,
+      "originalSha256": "c13b285ba0a0a8d1d53440ea280d5ef55c5d1c288dd57ca36027499b39e85537",
+      "changedFromInput": false
+    },
+    {
+      "file": "jamie-parker/social_reporting.md",
+      "sha256": "84ec678726c58e1fdafdbb8ca06cb4148e70fe5e601a8f1459bb2a4a2b4f38b0",
+      "sizeBytes": 1937,
+      "origin": "synthetic_demo_work_sample",
+      "publication": "public_text_or_metadata",
+      "originalSha256": "84ec678726c58e1fdafdbb8ca06cb4148e70fe5e601a8f1459bb2a4a2b4f38b0",
+      "changedFromInput": false
+    },
+    {
+      "file": "jd-alignment.json",
+      "sha256": "aadd35bfaa31dddaa47de42f792e26e71a87b8d15c2880c450faf6bf943c415c",
+      "sizeBytes": 51194,
+      "origin": "ai_authored_demo_assessment",
+      "publication": "public_text_or_metadata"
+    },
+    {
+      "file": "jd-requirements.json",
+      "sha256": "574d59ec91d40951b39f5ae31aaf497952a6235828c03a9f46b8d9dea6d7564a",
+      "sizeBytes": 8044,
+      "origin": "ai_authored_demo_assessment",
+      "publication": "public_text_or_metadata"
+    },
+    {
+      "file": "job-description-extracted.txt",
+      "sha256": "7dacd04212d36dbe26ef9226280d923e6d1f15a222894c2eec5f3171822a603f",
+      "sizeBytes": 6097,
+      "origin": "extracted_jd_text",
+      "publication": "public_text_or_metadata"
+    },
+    {
+      "file": "job-description.pdf",
+      "sha256": "93a45567de59b2aa8580b490f9bd7995fcf528246ca5df2cd5438a0939b87e89",
+      "sizeBytes": 85411,
+      "origin": "user_supplied_demo_jd",
+      "publication": "explicit_original_download",
+      "pages": 4,
+      "originalSha256": "93a45567de59b2aa8580b490f9bd7995fcf528246ca5df2cd5438a0939b87e89",
+      "changedFromInput": false
+    }
+  ],
+  "changes": [
+    {
+      "file": "amy-chen/channel_analysis.md",
+      "reason": "Replace obsolete HarbourCart task boundary with neutral shared-employer wording; no analytical claim, numbers or capability evidence added.",
+      "originalSha256": "6557863cec46953fb7c3b0fffbf167a14645b5ba0a0d621fd0453b2408c18673",
+      "sha256": "29e478a635d1226fa1fd794e6efd79b1c1fb6f6317ea6f67cbc59f708878f70e"
+    }
+  ],
+  "calibration": {
+    "actualAnnotation": "ai_agent_authored_fixture",
+    "actualReview": "ai_agent_review",
+    "humanCalibration": "pending",
+    "externalExpertValidation": false
+  }
+}

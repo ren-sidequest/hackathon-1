@@ -2,16 +2,17 @@ import { randomUUID } from 'node:crypto';
 import { fingerprint } from '../fingerprint.js';
 import { ApiError, invariant } from '../errors.js';
 import { buildSourceIndex, AnalysisError, type AnalysisResult } from '../analysis.js';
-import { createSeed, DATASET_VERSION } from '../seed.js';
+import { createSeed, DATASET_VERSION } from './task-seed.js';
 import { type Submission as LegacySubmission } from '../schema.js';
 import { CANDIDATES, COMPANY, JOB, FIXTURE_VERSION, TASK_TEMPLATES, getApplication, validateAssessmentItems, type EvidenceSnapshot, type AssessmentItem } from './fixtures.js';
+import { gapSuggestions } from './gaps.js';
 import { RUBRIC, RUBRIC_VERSION, CRITERIA, type RequirementId, type CriterionId } from './rubric.js';
 import { calculateScores } from './scoring.js';
 import { RevisionStore } from './store.js';
 import { SCHEMA_VERSION, type PersonId, type Stage, type SendRequest, type SubmitRequest, type AnalyzeRequest, type ReviewRequest, type AssessmentRequest, type ShortlistRequest, type ResetRequest } from './schema.js';
 import { validateTargetAnalysis, type Analyzer, type AnalysisInput } from './analysis.js';
 import type { OldMigrationPayload } from './migration.js';
-import { validateState, validateLegacyPayload } from './state-schema.js';
+import { validateState } from './state-schema.js';
 export type SavedSubmission = LegacySubmission | (SubmitRequest & {
   submissionId: string;
   submittedAt: string;
@@ -51,7 +52,7 @@ export type AssessmentRecord = {
   contentFingerprint: string | null;
   assessmentRevision: number;
   status: 'reviewed';
-  annotationMode: 'preset_human' | 'human';
+  annotationMode: 'ai_authored' | 'human';
   operatorLabel: string;
   createdAt: string;
   items: AssessmentItem[];
@@ -87,7 +88,7 @@ export type PersonState = {
   shortlist: ShortlistEvent[];
 };
 export type State = {
-  schemaVersion: '3.0';
+  schemaVersion: '4.0';
   sessionId: string;
   datasetVersion: string;
   fixtureVersion: string;
@@ -106,7 +107,7 @@ const blank = (): AnalysisState => ({
 });
 function initialAssessment(candidateId: PersonId, application: ReturnType<typeof getApplication>): AssessmentRecord {
   return {
-    assessmentId: `preset-${candidateId}`, candidateId, jobId: JOB.id, rubricVersion: RUBRIC_VERSION, stage: 'application_review', evidenceSnapshotId: application.evidenceSnapshotId, fingerprint: application.fingerprint, submissionId: null, contentFingerprint: null, assessmentRevision: 1, status: 'reviewed', annotationMode: 'preset_human', operatorLabel: 'Synthetic preset; AI-authored fixture, human calibration pending', createdAt: '2026-09-19T00:00:00.000Z', items: structuredClone(application.baseline.items), reuseApplication: null, reusedItems: [], score: calculateScores(application.baseline.items)
+    assessmentId: `preset-${candidateId}`, candidateId, jobId: JOB.id, rubricVersion: RUBRIC_VERSION, stage: 'application_review', evidenceSnapshotId: application.evidenceSnapshotId, fingerprint: application.fingerprint, submissionId: null, contentFingerprint: null, assessmentRevision: 1, status: 'reviewed', annotationMode: 'ai_authored', operatorLabel: 'AI-authored demo assessment · Human calibration pending', createdAt: '2026-09-19T00:00:00.000Z', items: structuredClone(application.baseline.items), reuseApplication: null, reusedItems: [], score: calculateScores(application.baseline.items)
   };
 }
 export function freshState(): State {
@@ -209,7 +210,7 @@ export class RevisionService {
     jobId: string;
     datasetVersion: string;
   }) {
-    invariant(request.schemaVersion === SCHEMA_VERSION, 'SCHEMA_MISMATCH', 'Use the API 3.0 contract.');
+    invariant(request.schemaVersion === SCHEMA_VERSION, 'SCHEMA_MISMATCH', 'Use the API 4.0 contract.');
     invariant(state.sessionId === request.sessionId, 'STALE_SESSION', 'Refresh the current session.');
     invariant(request.jobId === JOB.id, 'JOB_MISMATCH', 'Job does not match.');
     invariant(request.datasetVersion === state.datasetVersion, 'DATASET_MISMATCH', 'Dataset does not match.');
@@ -240,7 +241,7 @@ export class RevisionService {
     const canResubmit = person.task.status === 'awaiting_revision' && versions.length === 1;
     const canSubmit = person.task.status === 'sent' || canResubmit;
     return {
-      schemaVersion: SCHEMA_VERSION, sessionId: state.sessionId, revision: state.revision, datasetVersion: state.datasetVersion, fixtureVersion: state.fixtureVersion, rubricVersion: RUBRIC_VERSION, company: COMPANY, job: JOB, rubric: RUBRIC, candidate: CANDIDATES.find(c => c.id === person.candidateId)!, application: person.application, dataset: this.seed.dataset, task: person.task, taskTemplates: TASK_TEMPLATES, versions, submission: current?.submission ?? null, analysis: current?.analysis ?? blank(), review, currentSubmissionVersion: current?.submission.submissionVersion ?? null,
+      schemaVersion: SCHEMA_VERSION, sessionId: state.sessionId, revision: state.revision, datasetVersion: state.datasetVersion, fixtureVersion: state.fixtureVersion, jdVersion: JOB.jd.version, rubricVersion: RUBRIC_VERSION, company: COMPANY, job: JOB, rubric: RUBRIC, candidate: CANDIDATES.find(c => c.id === person.candidateId)!, application: person.application, dataset: this.seed.dataset, task: person.task, taskTemplates: TASK_TEMPLATES, gapSuggestions: gapSuggestions(latest(person, 'application_review')), assessmentComplete: latest(person, 'application_review')?.score.assessmentComplete ?? false, versions, submission: current?.submission ?? null, analysis: current?.analysis ?? blank(), review, currentSubmissionVersion: current?.submission.submissionVersion ?? null,
       workflow: {
         canSend: person.task.status === 'draft', maxSubmissions: 2, submissionsUsed: versions.length, remainingSubmissions: 2 - versions.length, canSubmit, canResubmit, nextSubmissionVersion: canSubmit ? (canResubmit ? 2 : 1) : null, allowedReviewDecisions: !current || review ? [] : versions.length === 1 ? [
           'confirm', 'needs_more_evidence', 'evidence_still_insufficient'
@@ -249,7 +250,7 @@ export class RevisionService {
         ], isTerminal: person.task.status === 'reviewed'
       },
       capabilities: {
-        contract: '3.0', analysisMode: this.analysisMode, analysisAvailable: this.analysisUnavailableReason === null, analysisUnavailableReason: this.analysisUnavailableReason, upload: false, authentication: false, sqlExecution: false
+        contract: '4.0', analysisMode: this.analysisMode, analysisAvailable: this.analysisUnavailableReason === null, analysisUnavailableReason: this.analysisUnavailableReason, upload: false, authentication: false, authenticationScope: 'No application role accounts. Public write access may be protected by the deployment gateway.', writeAccess: { enforcement: 'deployment_defined', status: 'unknown', loginPath: '/gateway/write-access' }, analysisModeLabel: this.analysisMode === 'manual_simulation' ? 'Rule-based simulation' : this.analysisMode === 'live' ? 'Live model (availability reported separately)' : 'Analysis disabled', sqlExecution: false
       },
       assessment: {
         application_review: latest(person, 'application_review'), task_v1: latest(person, 'task_v1'), task_v2: latest(person, 'task_v2'), history: person.assessments
@@ -283,10 +284,10 @@ export class RevisionService {
     const s = this.state();
     return {
       data: {
-        schemaVersion: SCHEMA_VERSION, sessionId: s.sessionId, revision: s.revision, datasetVersion: s.datasetVersion, fixtureVersion: s.fixtureVersion, rubricVersion: RUBRIC_VERSION, company: COMPANY, job: JOB, rubric: RUBRIC, stage: 'application_review', sortPolicy: 'Compare only complete skills in the same stage and rubric; equal values are ties; missing evidence is unranked.', limitations: 'Different synthetic projects are not standardized tests. No automated hiring rank.', candidates: ids.map(id => {
+        schemaVersion: SCHEMA_VERSION, sessionId: s.sessionId, revision: s.revision, datasetVersion: s.datasetVersion, fixtureVersion: s.fixtureVersion, jdVersion: JOB.jd.version, rubricVersion: RUBRIC_VERSION, company: COMPANY, job: JOB, rubric: RUBRIC, stage: 'application_review', applicationsReviewed: ids.filter(id => latest(s.people[id], 'application_review')?.score.assessmentComplete).length, candidatesWithCompleteCoreEvidence: ids.filter(id => latest(s.people[id], 'application_review')?.score.complete).length, sortPolicy: 'Compare only complete skills in the same stage and rubric; equal values are ties; missing evidence is unranked.', limitations: 'Different synthetic projects are not standardized tests. No automated hiring rank.', candidates: ids.map(id => {
           const p = s.people[id];
           return {
-            candidate: CANDIDATES.find(c => c.id === id)!, application: p.application, assessment: latest(p, 'application_review'), task: p.task, taskAssessments: p.assessments.filter(a => a.stage !== 'application_review'), shortlist: shortlistView(p)
+            candidate: CANDIDATES.find(c => c.id === id)!, application: p.application, assessment: latest(p, 'application_review'), task: p.task, assessmentComplete: latest(p, 'application_review')?.score.assessmentComplete ?? false, gapSuggestions: gapSuggestions(latest(p, 'application_review')), taskAssessments: p.assessments.filter(a => a.stage !== 'application_review'), shortlist: shortlistView(p)
           };
         })
       }, meta: {
@@ -600,28 +601,6 @@ export class RevisionService {
     validateState(state);
   }
 }
-export function convertLegacyState(payload: OldMigrationPayload) {
-  validateLegacyPayload(payload);
-  const state = freshState(), old = payload.legacyState, alex = state.people['alex-chen'];
-  state.sessionId = old.sessionId;
-  state.revision = old.revision;
-  alex.task = {
-    taskId: old.task.taskId, status: old.task.status, targetRequirementId: old.task.status === 'draft' ? null : 'business-problem-solving', templateId: old.task.status === 'draft' ? null : TASK_TEMPLATES['business-problem-solving'].templateId, title: createSeed().task.title, instructions: old.task.instructions, gapReason: 'Preserved API 2.0 targeted BPS task; original application remains in migration archive.', sentAt: old.task.sentAt, timeboxMinutes: 20
-  };
-  alex.versions = old.versions.map(v => {
-    const submission = payload.submissions.find(s => s.submissionId === v.submissionId);
-    if (!submission)
-      throw Error('Legacy submission missing');
-    return {
-      submission: structuredClone(submission), evidenceSnapshotId: `submission:${submission.submissionId}`, analysis: structuredClone(v.analysis) as AnalysisState, review: structuredClone(v.review)
-    };
-  });
-  validateState(state);
-  return {
-    state, sourceMap: {
-      sourceContract: '2.0', targetContract: '3.0', preservedSessionId: old.sessionId, preservedTaskId: old.task.taskId, legacyApplication: createSeed().application, versions: alex.versions.map(v => ({
-        submissionId: v.submission.submissionId, contentFingerprint: v.submission.contentFingerprint, evidenceSnapshotId: v.evidenceSnapshotId
-      })), note: 'Original submission bytes and fingerprints, reviews and analyses are preserved. New application fixtures are explicitly revision5 synthetic fixtures; API2 receipts are archive-only. Task rubric assessments start pending.'
-    }
-  };
+export function convertLegacyState(_payload: OldMigrationPayload): never {
+  throw new Error('API4 uses a new applicant cohort. Preserve the old database and initialize a separate API4 database; legacy identities are never renamed or inherited.');
 }

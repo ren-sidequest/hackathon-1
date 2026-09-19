@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "4.0",
+  "sessionId": "dcd27813-7e44-40ed-8ced-f9e3552755c8",
+  "candidateId": "jamie-parker",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "taskId": "d7d94363-b0c2-4bfd-9c40-451500b9812f",
+  "targetRequirementId": "data-analysis",
+  "templateId": "harbour-retail-data-analysis-v1",
+  "instructions": "First consider an existing calculation or explanation that addresses the selected gap. Use harbour-retail-2026-09-v1 to define and calculate session, order and conversion changes across two four-week periods. Show numerators, denominators, units and a relevant group comparison with reproducible working. State overlapping populations and missing information. Submit calculation text and limitations, not an executable notebook. Do not invent page-speed measurements, weekly trends or historical device data.",
+  "gapReason": "Synthetic example: a human identifies a bounded evidence gap."
+}

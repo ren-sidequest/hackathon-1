@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "4.0",
+  "sessionId": "272e996d-6b17-4e4d-aada-ad9eec79f4d9",
+  "candidateId": "david-liu",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "taskId": "29143610-910a-4777-bca1-903b9b31659c",
+  "targetRequirementId": "sql",
+  "templateId": "harbour-retail-sql-v1",
+  "instructions": "First consider an existing query or explanation that addresses the selected gap. For this short task, use harbour-retail-2026-09-v1 to write a readable query fragment for the two-period conversion comparison. Explain the input grain, time windows, aggregation and any join. Describe practical checks and expected results for relevant duplicates, missing values and zero denominators. Submit text through the work-sample form; this is static review, not SQL execution or a general file upload. Shared resources overlap and are not independent populations.",
+  "gapReason": "Synthetic failure-path test only; a well-supported candidate may skip a task."
+}

@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "4.0",
+  "sessionId": "dcd27813-7e44-40ed-8ced-f9e3552755c8",
+  "candidateId": "jamie-parker",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "taskId": "d7d94363-b0c2-4bfd-9c40-451500b9812f",
+  "targetRequirementId": "data-analysis",
+  "submissionId": "a0e2e08b-faa8-4338-9cfb-fdc9d10f47a6",
+  "contentFingerprint": "eb8abbc4a7193499a77c8d5b1df7124e88194cf34d43973c1168758638423de3",
+  "decision": "evidence_still_insufficient",
+  "comment": "Synthetic terminal review: available evidence remains insufficient; this is not a hiring decision."
+}

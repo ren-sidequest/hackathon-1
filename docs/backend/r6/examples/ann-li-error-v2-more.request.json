@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "4.0",
+  "sessionId": "dcd27813-7e44-40ed-8ced-f9e3552755c8",
+  "candidateId": "ann-li",
+  "jobId": "junior-data-analyst",
+  "datasetVersion": "harbour-retail-2026-09-v1",
+  "taskId": "139b9575-0b07-4d82-9f24-c487cc78218a",
+  "targetRequirementId": "sql",
+  "submissionId": "65324d2c-363b-463f-953c-79bd0d63d273",
+  "contentFingerprint": "987b163447d3ec8bc06a9b105c08c388fb92f132afc685a0b2b07f69776f7a58",
+  "decision": "needs_more_evidence",
+  "comment": "Third version is outside this finite task."
+}

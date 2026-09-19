@@ -1,0 +1,52 @@
+--- Page 1 ---
+Ann Li
+Sydney, NSW | Email: ann.rao@example.com | 04XX XXX XXX
+Education
+University of Sydney Feb 2025 - Nov 2026
+Master of Data Science
+• WAM: 83
+• Relevant study: Machine Learning, Statistical Modelling, Data Management, Data Visualisation and Big Data Analytics
+• Completed projects using Python, R, SQL and machine-learning methods
+University of Mumbai Jul 2021 - May 2024
+Bachelor of Science in Statistics
+• GPA: 8.6/10
+• Relevant study: Probability, Regression Analysis, Statistical Computing and Applied Mathematics
+Experience
+Data Analytics Intern - Meridia Retail Labs (Bengaluru, India) May 2024 - Aug 2024
+• Cleaned and analysed more than 300,000 customer transaction records using Python and pandas.
+• Wrote SQL queries to compare sales, customer retention and repeat-purchase rates across six regional markets.
+• Built a customer churn model using logistic regression and random forest, achieving an AUC of 0.82 on the test dataset.
+• Evaluated model performance using precision, recall, F1-score and cross-validation.
+• Created a Tableau dashboard showing customer segments, churn rates and purchasing trends.
+• Prepared weekly dashboard summaries for the marketing team.
+• Supported the team in investigating a decline in repeat purchases.
+Research & Projects
+Customer Churn Prediction - Capstone Project Mar 2026 - May 2026
+• Analysed a dataset containing 45,000 customer records using Python and SQL.
+• Compared logistic regression, random forest and XGBoost models.
+• Used cross-validation and class-weight adjustment to address class imbalance.
+• Selected the final model based on recall and AUC rather than overall accuracy.
+• Used SHAP values to identify the variables most strongly associated with customer churn.
+• Documented the analysis, model limitations and reproducibility steps in a GitHub repository.
+Retail Demand Forecasting - University Project Aug 2025 - Oct 2025
+• Analysed two years of weekly product sales data using R.
+• Compared moving-average, exponential-smoothing and ARIMA forecasting methods.
+• Evaluated forecast accuracy using MAE and RMSE.
+• Created visualisations comparing predicted and actual demand.
+• Produced a short technical report describing the methodology and limitations.
+Activities
+General Member - University Data Science Society Mar 2025 - Present
+• Attended machine-learning workshops, industry panels and student networking events.
+• Participated in discussions about data science applications and responsible AI.
+• Supported several society activities during the academic year.
+Participant - Data for Social Good Hackathon Sep 2025
+• Worked with a student team on a data project related to public transport accessibility.
+• Assisted with data preparation and development of the final presentation.
+• Contributed to the team's proposed solution.
+Skills
+• Programming: Python, R, SQL
+• Data Analysis: pandas, NumPy, statistical analysis and data cleaning
+• Machine Learning: scikit-learn, XGBoost, regression, classification and model evaluation
+• Visualisation: Tableau, Power BI, matplotlib and ggplot2
+• Tools: Git, GitHub and Jupyter Notebook
+• Core Skills: Problem solving, teamwork, communication and attention to detail
