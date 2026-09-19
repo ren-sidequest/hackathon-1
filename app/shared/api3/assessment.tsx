@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Dialog } from '../api-ui';
 import { GlideSelect } from '../glide-select';
 import type { EvidenceFocus } from './coverage-cell';
@@ -40,14 +40,22 @@ export function AssessmentPanel({ data, controller, initialStage = 'application_
   const [revision, setRevision] = useState<number | null>(null), [edit, setEdit] = useState(false);
   const [citation, setCitation] = useState<{ sourceId: string; quote?: SourceRef; reused?: boolean; reveal?:number } | null>(null);
   const reviewGrid=useRef<HTMLDivElement>(null);
+  const focusedRequest=useRef<number | null>(null);
   useEffect(()=>{
     if(!evidenceFocus)return;
     setStage('application_review');setRevision(null);setExpanded(evidenceFocus.criterion);
     const ref=data.assessment.application_review?.items.find(item=>item.criterionId===evidenceFocus.criterion)?.sourceRefs[0];
     setCitation(ref?{sourceId:ref.sourceId,quote:ref}:null);
-    const frame=requestAnimationFrame(()=>{reviewGrid.current?.scrollIntoView({block:'start'});reviewGrid.current?.querySelector<HTMLButtonElement>('.r5-criterion-toggle[aria-expanded=true]')?.focus({preventScroll:true});});
-    return ()=>cancelAnimationFrame(frame);
   },[evidenceFocus]);
+  useLayoutEffect(()=>{
+    // Focus only after React commits the requested standard, once per navigation.
+    if(!evidenceFocus || focusedRequest.current===evidenceFocus.request || expanded!==evidenceFocus.criterion || stage!=='application_review')return;
+    const button=reviewGrid.current?.querySelector<HTMLButtonElement>('.r5-criterion-toggle[aria-expanded=true]');
+    if(!button)return;
+    focusedRequest.current=evidenceFocus.request;
+    reviewGrid.current?.scrollIntoView({block:'start'});
+    button.focus({preventScroll:true});
+  },[evidenceFocus,expanded,stage]);
   const context = stageContext(data, stage);
   if (!context) return <section className="eb-panel"><p>This material stage is not available.</p></section>;
   const latest = context.assessment;

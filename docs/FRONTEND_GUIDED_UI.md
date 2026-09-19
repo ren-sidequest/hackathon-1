@@ -86,3 +86,8 @@ git diff --check
 实际文件范围：App.tsx、assessment.tsx、candidate.tsx、controller.ts、hr.tsx、guidance.tsx、guidance.css、coverage-cell.tsx；API3浏览器测试与配置、共享README、AGENTS.md和本文。无新增依赖、后端源代码或数据库结构变化。
 
 发布沿用 [服务器发布说明](FRONTEND_SERVER_RELEASE.md)：从合并后的干净提交构建，API指向同源 /gateway；版本化静态目录并原子切换 frontend-current。保留前一版本及旧哈希资源；后端进程和数据库不重启、不清空。发布结果以PR、服务器release manifest和线上只读验收为准。
+
+### CI焦点时序修复
+
+首轮GitHub Linux回归为25/26：T26跨候选人跳转后已选中B4，但requestAnimationFrame可能先于React的选中状态提交，焦点落在旧按钮。assessment.tsx改用提交后的layout effect，仅在请求标准成为当前标准时定位，并按导航request去重，避免普通切换再次拖动页面。保留原焦点断言，未放宽验收。
+修复后本地运行 test:api3 -- --grep "T24|T25|T26" --repeat-each=2 --reporter=line，6/6通过；Candidate构建与diff检查通过。最新提交重新执行GitHub完整CI。
