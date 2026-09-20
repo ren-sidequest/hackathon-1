@@ -238,7 +238,9 @@ test('T25 guided overview, stable review panels, contextual task and themed feed
   await page.getByRole('button',{name:'Open Amy Chen',exact:true}).click();
   const left=page.locator('.guide-review-grid>.r5-original-pane'), right=page.locator('.guide-review-grid>section');
   await expect(left).toBeVisible();await expect(right).toBeVisible();
-  expect(Math.abs((await left.boundingBox())!.height-(await right.boundingBox())!.height)).toBeLessThan(2);
+  // The contextual criterion handoff can replace the assessment panel after navigation.
+  // Measure one settled layout frame rather than dereferencing a detached node.
+  await expect.poll(async()=>{const [a,b]=await Promise.all([left.boundingBox(),right.boundingBox()]);return a&&b?Math.abs(a.height-b.height):Infinity;}).toBeLessThan(2);
   // Make both criterion rows visible before measuring component-induced scroll.
   // Playwright's off-screen click scrolling is not a component layout jump.
   await page.getByRole('navigation',{name:'Evidence criteria',exact:true}).scrollIntoViewIfNeeded();
@@ -682,7 +684,10 @@ test('T46 scalable comparison searches, paginates and previews without fetching 
   await expect(page.getByRole('combobox',{name:'Preview standard',exact:true})).not.toContainText('NE/4');
   expect(calls).toEqual([]);expect(await read(request)).toEqual(before);
   await page.getByRole('button',{name:'Human retain decision',exact:true}).click();
-  await expect(page.locator('.ia-current-choice')).toContainText('David Liu');
+  await expect(page.getByRole('button',{name:'Retained 0',exact:true})).toHaveAttribute('aria-pressed','true');
+  await page.getByRole('button',{name:'All 4',exact:true}).click();
+  await expect(page.locator('.rd-dossier h2')).toHaveText('David Liu');
+  await expect(page.locator('.rd-person[aria-current=true]')).toContainText('David Liu');
   expect((await read(request,'david-liu')).shortlist.status).toBe('not_retained');
 });
 
@@ -694,7 +699,9 @@ test('T47 both workspaces share compact typography and company matrix uses autho
       await open(page,role,'amy-chen',route);
       const heading=page.locator('main h1:visible');await expect(heading).toHaveCount(1);
       const metrics=await heading.evaluate(n=>({font:getComputedStyle(n).fontSize,line:getComputedStyle(n).lineHeight}));
-      expect(metrics.font).toBe('24px');expect(metrics.line).toBe('31.2px');
+      // The approved retention dossier uses a 26px page title; other pages keep 24px.
+      const titleSize=role==='hr'&&route==='shortlist'?26:24;
+      expect(metrics.font).toBe(`${titleSize}px`);expect(parseFloat(metrics.line)).toBeCloseTo(titleSize*1.3,1);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
     }
   }
