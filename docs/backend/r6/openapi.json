@@ -16198,6 +16198,157 @@
         }
       }
     },
+    "/api/demo/rehearsal/restart": {
+      "post": {
+        "summary": "Archive and restart one shared synthetic candidate rehearsal; other candidates are unchanged",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "schemaVersion",
+                  "sessionId",
+                  "candidateId",
+                  "jobId",
+                  "datasetVersion",
+                  "taskId",
+                  "expectedRevision",
+                  "checkpoint"
+                ],
+                "properties": {
+                  "schemaVersion": {
+                    "type": "string",
+                    "enum": [
+                      "4.0"
+                    ]
+                  },
+                  "sessionId": {
+                    "minLength": 1,
+                    "maxLength": 100,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "type": "string"
+                  },
+                  "candidateId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "amy-chen"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "ann-li"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "david-liu"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "jamie-parker"
+                        ]
+                      }
+                    ]
+                  },
+                  "jobId": {
+                    "type": "string",
+                    "enum": [
+                      "junior-data-analyst"
+                    ]
+                  },
+                  "datasetVersion": {
+                    "minLength": 1,
+                    "maxLength": 100,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "type": "string"
+                  },
+                  "taskId": {
+                    "minLength": 1,
+                    "maxLength": 100,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "type": "string"
+                  },
+                  "expectedRevision": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "checkpoint": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "before_task"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "ready_for_v1"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "minLength": 8,
+              "maxLength": 100,
+              "pattern": "^[A-Za-z0-9_-]+$",
+              "type": "string"
+            },
+            "in": "header",
+            "name": "idempotency-key",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/def-0"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/def-2"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/def-2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/demo/reset": {
       "post": {
         "summary": "Reset synthetic case; old submission references become stale",

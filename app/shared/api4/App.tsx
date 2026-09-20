@@ -1,4 +1,5 @@
 import { PermissionHelp } from './access';
+import { RehearsalControls } from './rehearsal-controls';
 import { RoleSwitch } from '../role-switch';
 import { useRoleTransition, RoleLoading } from './role-transition';
 import { workspacePresentation, type WorkspacePresentation } from './workspace-presentation';
@@ -52,6 +53,7 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
   const [retentionFilter,setRetentionFilter]=useState<RetentionFilter>('retained');
   const [evidenceFocus,setEvidenceFocus]=useState<EvidenceFocus | undefined>();
   const [help, setHelp] = useState(false), [dismissedNotice, setDismissedNotice] = useState('');
+  const [rehearsal, setRehearsal] = useState(false);
   const [dismissedError, setDismissedError] = useState<unknown>(null);
   useEffect(() => {
     const syncLocation = () => {
@@ -101,7 +103,7 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
   const initials = shownName.split(/\s+/).map(part => part[0]).slice(0, 2).join('');
   return <div className="eb-connected r5-app guide-app api4-app">
     <a href="#api4-main" className="eb-skip eb-action" onClick={e => { e.preventDefault(); document.getElementById('api4-main')?.focus(); }}>Skip to content</a>
-    <Sidebar role={role} workspaceName={role === 'hr' ? (shownData??data)?.company.name ?? 'Hiring workspace' : 'Candidate'} controller={sidebar} activePage={page} items={pages.map(([id, label], index) => ({ id, label, icon: <NavIcon index={index}/> }))} onNavigate={next => go(next === 'report' ? 'company' : next === 'home' ? 'application' : next)} user={{ initials: role === 'hr' ? 'HR' : initials, name: role === 'hr' ? 'Hiring reviewer' : shownName, title: role === 'hr' ? (shownData??data)?.company.name ?? 'Hiring team' : 'Synthetic candidate' }} helpLabel="How to use this workspace" onHelp={() => setHelp(true)}/>
+    <Sidebar role={role} workspaceName={role === 'hr' ? (shownData??data)?.company.name ?? 'Hiring workspace' : 'Candidate'} controller={sidebar} activePage={page} items={pages.map(([id, label], index) => ({ id, label, icon: <NavIcon index={index}/> }))} onNavigate={next => go(next === 'report' ? 'company' : next === 'home' ? 'application' : next)} user={{ initials: role === 'hr' ? 'HR' : initials, name: role === 'hr' ? 'Hiring reviewer' : shownName, title: role === 'hr' ? (shownData??data)?.company.name ?? 'Hiring team' : 'Synthetic candidate' }} helpLabel="How to use this workspace" onHelp={() => setHelp(true)} onReset={() => setRehearsal(true)}/>
     <div className="eb-main" data-eb-content><header className="eb-api-topbar ia-topbar">{sidebar.menuButton}<span className="ia-breadcrumb">{role === 'hr' ? 'Hiring workspace' : 'Candidate workspace'} / {pages.find(p => p[0] === page)?.[1]}</span>{localReview && <button className="eb-action ia-environment" onClick={()=>setHelp(true)}>Local Chinese review</button>}<WorkspaceStatus controller={controller} info={()=>setHelp(true)}/></header>
       <main id="api4-main" tabIndex={-1} className="eb-content">
         {!shownData && controller.loading && <RoleLoading role={role}/>}
@@ -117,13 +119,14 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
         <FloatingNotice message={controller.error && controller.error !== dismissedError ? [controller.error.message,controller.notice].filter(Boolean).join(' ') : controller.notice !== dismissedNotice ? controller.notice : ''} error={!!controller.error && controller.error !== dismissedError} dismiss={() => { setDismissedNotice(controller.notice); setDismissedError(controller.error); }} action={noticeAction}/>
         {!needsSelection && role === 'candidate' && <div className="r5-person-bar ia-person-bar"><span className="r5-avatar">{initials}</span><div><strong>{shownName}</strong><small className="ia-person-context">{shownData?.job.title}</small></div><label>Switch candidate<GlideSelect ariaLabel="Current candidate" value={candidateId ?? ''} onChange={value => select(value as CandidateId)} options={(comparison?.candidates ?? []).map(row => ({value: row.candidate.id, label: row.candidate.name}))}/></label></div>}
         {shownData && (role==='candidate'||page!=='shortlist') && <IdentitySwitchNotice pending={switching} failed={!!controller.error} requestedName={displayName} displayedName={shownData.candidate.name}/>}
-        {role==='hr' && shownData && shownComparison && <HRConnected key={`${shownData.sessionId}.${shownData.fixtureVersion}.${shownData.jdVersion}.${shownData.rubricVersion}.${shownData.datasetVersion}.${page==='shortlist'?'shortlist':shownData.candidate.id}`} data={shownData} comparison={shownComparison} requestedCandidateId={candidateId} controller={displayController} page={page} go={go} select={select} evidenceFocus={evidenceFocus} retentionFilter={retentionFilter} setRetentionFilter={setRetentionFilter}/>}
+        {role==='hr' && shownData && shownComparison && <HRConnected key={`${shownData.sessionId}.${shownData.fixtureVersion}.${shownData.jdVersion}.${shownData.rubricVersion}.${shownData.datasetVersion}.${shownData.task.taskId}.${page==='shortlist'?'shortlist':shownData.candidate.id}`} data={shownData} comparison={shownComparison} requestedCandidateId={candidateId} controller={displayController} page={page} go={go} select={select} evidenceFocus={evidenceFocus} retentionFilter={retentionFilter} setRetentionFilter={setRetentionFilter}/>}
         {role==='candidate' && shownData && shownComparison && <IdentityRegion pending={switching}><CandidateConnected key={`${shownData.sessionId}.${shownData.fixtureVersion}.${shownData.jdVersion}.${shownData.rubricVersion}.${shownData.datasetVersion}.${shownData.candidate.id}.${shownData.task.taskId}.${shownData.workflow.nextSubmissionVersion ?? shownData.currentSubmissionVersion ?? 1}`} data={shownData} controller={displayController} page={page} go={go}/></IdentityRegion>}
         <footer className="eb-footer">EvidenceBridge · Reviewable evidence. Human decisions. · Formal state lives in the shared service.</footer>
       </main>
     </div>
     <RoleSwitch role={role} candidateName={displayName} disabled={roleTransition.disabled || switching || needsSelection} reason={needsSelection ? 'Choose a current candidate first.' : roleTransition.reason} onSwitch={roleTransition.requestSwitch}/>
     {roleTransition.feedback}
+    {rehearsal && data && !switching && !needsSelection && <RehearsalControls key={`${data.candidate.id}.${data.task.taskId}`} data={data} controller={controller} close={() => setRehearsal(false)} done={() => { setRehearsal(false); go(role === 'hr' ? 'comparison' : 'tasks'); }}/>}
     {help && <Dialog title="Using EvidenceBridge" close={() => setHelp(false)}><WorkspaceInfo controller={controller}/>{localReview && <section className="ia-local-help"><h3>Local Chinese review</h3><p>Chinese text is a reading aid. Original evidence, source offsets and scores are unchanged. This local database is separate from the public website.</p><a href="/review-guide.html" target="_blank" rel="noreferrer">Open Chinese rehearsal guide</a></section>}</Dialog>}
 
   </div>;

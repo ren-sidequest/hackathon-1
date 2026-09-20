@@ -1664,6 +1664,16 @@ export type ResetRequest = {
 "schemaVersion": "4.0";
 "sessionId": string;
 };
+export type RestartRequest = {
+"schemaVersion": "4.0";
+"sessionId": string;
+"candidateId": "amy-chen" | "ann-li" | "david-liu" | "jamie-parker";
+"jobId": "junior-data-analyst";
+"datasetVersion": string;
+"taskId": string;
+"expectedRevision": number;
+"checkpoint": "before_task" | "ready_for_v1";
+};
 export type Demo = Envelope['data'];
 export type Comparison = ComparisonEnvelope['data'];
 export type CandidateId = Demo['candidate']['id'];

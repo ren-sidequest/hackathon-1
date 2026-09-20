@@ -13,6 +13,7 @@ import { SCHEMA_VERSION, type PersonId, type Stage, type SendRequest, type Submi
 import { validateTargetAnalysis, type Analyzer, type AnalysisInput } from './analysis.js';
 import type { OldMigrationPayload } from './migration.js';
 import { validateState } from './state-schema.js';
+import type { RestartRequest } from './schema.js';
 export type SavedSubmission = LegacySubmission | (SubmitRequest & {
   submissionId: string;
   submittedAt: string;
@@ -370,6 +371,25 @@ export class RevisionService {
       };
       this.store.saveReceipt(s.sessionId, p.candidateId, path, key, hash, response);
       return response;
+    });
+  }
+  restart(request: RestartRequest, key: string) {
+    return this.mutate('/rehearsal/restart', key, request, (state, person) => {
+      invariant(request.taskId === person.task.taskId && request.expectedRevision === state.revision,
+        'STALE_REHEARSAL', 'The case changed. Refresh and review the reset again.');
+      invariant(!person.versions.some(v => v.analysis.status === 'running'), 'ANALYSIS_RUNNING', 'Wait for the current analysis to finish before resetting.');
+      this.store.archiveCandidate(state.sessionId, person.candidateId, person);
+      Object.assign(person, freshState().people[person.candidateId]);
+      if (request.checkpoint === 'ready_for_v1') {
+        const template = TASK_TEMPLATES['business-problem-solving'];
+        Object.assign(person.task, {
+          status: 'sent', targetRequirementId: template.targetRequirementId, templateId: template.templateId,
+          title: template.title, instructions: template.instructions, sentAt: now(),
+          gapReason: 'Synthetic rehearsal checkpoint: explain which campaign and device comparisons would distinguish competing explanations (B3).'
+        });
+      }
+      validateState(state);
+      return 200;
     });
   }
   send(request: SendRequest, key: string) {

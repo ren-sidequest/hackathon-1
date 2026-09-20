@@ -1,7 +1,7 @@
 import type { AssessmentRecord, CandidateId, Comparison, Demo, Envelope, Stage } from '../api4-types';
 
 export const candidateIds: CandidateId[] = ['amy-chen', 'ann-li', 'david-liu', 'jamie-parker'];
-const writePaths = ['/task/send', '/submission', '/analysis', '/review', '/assessment', '/shortlist'];
+const writePaths = ['/task/send', '/submission', '/analysis', '/review', '/assessment', '/shortlist', '/rehearsal/restart'];
 export class Api4Error extends Error {
   constructor(public code: string, message: string, public requestId = '', public uncertain = false, public status = 0) { super(message); }
 }

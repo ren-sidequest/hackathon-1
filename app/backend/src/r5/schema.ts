@@ -112,6 +112,11 @@ export const ShortlistSchema = Type.Object({
 export const ResetSchema = Type.Object({
   schemaVersion: Type.Literal(SCHEMA_VERSION), sessionId: id
 }, exact);
+export const RestartSchema = Type.Object({
+  ...Base, taskId: id, expectedRevision: Type.Integer({ minimum: 0 }),
+  checkpoint: enumOf(['before_task', 'ready_for_v1'])
+}, exact);
+export type RestartRequest = Static<typeof RestartSchema>;
 export const QuerySchema = Type.Object({
   candidateId: CandidateSchema
 }, exact);

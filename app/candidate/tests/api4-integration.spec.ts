@@ -32,6 +32,40 @@ async function switchRole(page:Page, name:string) {
   await page.getByRole('button',{name:'Switch demo role',exact:true}).click();
   await page.getByRole('menuitem',{name}).click();
 }
+test('T67 rehearsal: reset, four populated sections, distinct new card, submit, HR review, repeat',async({page,request},info)=>{
+  await open(page,'candidate','amy-chen','tasks');
+  await page.getByRole('button',{name:'Reset demo',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Archive and restart demo'})).toBeDisabled();
+  await page.getByRole('checkbox',{name:/I understand/}).check();
+  await page.getByRole('button',{name:'Archive and restart demo'}).click();
+  await page.getByRole('button',{name:'Start V1 draft',exact:true}).click();
+  await page.getByRole('button',{name:'Fill demo draft',exact:true}).click();
+  for(const name of ['Key Findings','Hypotheses','Additional Evidence Needed','Recommended Next Steps']) await expect(page.getByRole('tab',{name:`${name} (1)`,exact:true})).toBeVisible();
+  await expect(page.getByLabel('Executive summary',{exact:true})).not.toHaveValue('');
+  await page.getByRole('button',{name:'Add Key Findings',exact:true}).click();
+  await expect(page.getByRole('dialog').getByLabel('Observation or idea',{exact:true})).toHaveValue('Paid Search is a priority segment');
+  await page.getByRole('button',{name:'Save card',exact:true}).click();
+  await page.getByRole('button',{name:'Fill demo draft',exact:true}).click();
+  await expect(page.getByRole('tab',{name:'Key Findings (2)',exact:true})).toBeVisible();
+  await page.getByRole('tab',{name:'Additional Evidence Needed (1)',exact:true}).click();
+  await page.screenshot({path:info.outputPath('demo-prefill.png'),fullPage:true});
+  await page.getByRole('button',{name:'Submit V1',exact:true}).click();
+  await expect(page.getByRole('button',{name:'Confirm V1 submission',exact:true})).toBeEnabled();
+  await page.getByRole('button',{name:'Confirm V1 submission',exact:true}).click();
+  await expect.poll(async()=>(await read(request)).currentSubmissionVersion).toBe(1);
+  expect((await read(request)).submission.findings).toHaveLength(5);
+  await switchRole(page,'Return to HR');await expect(page.getByTestId('connection-state')).toHaveAttribute('data-fresh','true');
+  await nav(page,'Tasks & review');await review(page,'Confirm evidence','The sample separates observations from hypotheses and gives contrasting B3 outcomes.');
+  expect((await read(request)).review.decision).toBe('confirm');
+  const oldTask=(await read(request)).task.taskId;
+  await page.getByRole('button',{name:'Reset demo',exact:true}).click();
+  await page.getByRole('radio',{name:/Before HR sends/}).check();await page.getByRole('checkbox',{name:/I understand/}).check();
+  await page.getByRole('button',{name:'Archive and restart demo'}).click();
+  await expect.poll(async()=>(await read(request)).task.status).toBe('draft');
+  expect((await read(request)).task.taskId).not.toBe(oldTask);expect((await read(request)).versions).toHaveLength(0);
+  await switchRole(page,'Open Candidate view');await expect(page.getByTestId('connection-state')).toHaveAttribute('data-fresh','true');
+  await expect(page.getByRole('button',{name:'Start V1 draft',exact:true})).toHaveCount(0);
+});
 test('T61 role round trip retains candidate, theme, sidebar width and HR criterion without writes',async({page,request},info)=>{
   const before=await read(request,'ann-li'), writes:string[]=[];page.on('request',r=>{if(r.method()==='POST')writes.push(r.url());});
   await open(page,'hr','ann-li','evidence');
