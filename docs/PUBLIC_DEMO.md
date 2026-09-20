@@ -25,3 +25,7 @@ The deployment gateway must permit public business operations under `/gateway/ap
 Run Candidate unit tests, both frontend builds, HR tests and the full API4 browser suite. T33 checks removal of retired drafts while retaining current content-version isolation; T37 covers old/unknown URL recovery in both roles, zero retired person requests, zero capability probes, no automatic writes, and unchanged service data. The existing 401 exact-request retry test remains in place.
 
 Publish both frontend bundles from the same reviewed Git commit using `VITE_APP_MODE=api4-connected`, `VITE_API_BASE_URL=/gateway` and the correct `/hr/` / `/candidate/` build bases. Switch the frontend release atomically after validation. No backend restart or database replacement is necessary. Preserve the previous frontend release for rollback, and compare the current four case snapshots before/after non-mutating public browser checks. Keep environment-specific deployment receipts outside Git.
+
+## Candidate-scoped rehearsal restart
+
+The sidebar Reset demo now exposes /gateway/api/demo/rehearsal/restart as an explicitly confirmed shared synthetic operation. It archives and restarts only the selected candidate, with task/revision guards and no running analysis. Other candidates are untouched. Global /gateway/api/demo/reset remains blocked and administrator-only. See [rehearsal design](DEMO_REHEARSAL.md).

@@ -13,6 +13,7 @@ import { appendDraftEvent, event, sections, type CandidateDraft } from './candid
 import { documentBlocks, sourcePeriodMetrics, sourceTitle, taskResources } from './candidate-content';
 import { readingText } from './candidate-reading';
 import './candidate-pages.css';
+import { fillDemoDraft, nextExample, supportsExamples } from './rehearsal';
 
 type Material = Demo['application']['sources'][number];
 type Resource = Demo['dataset']['resources'][number];
@@ -110,10 +111,20 @@ export function CandidateEditor({ data, draft, update, record, disabled, version
   const [modal, setModal] = useState<'resources' | 'notes' | 'explore' | 'previous' | 'resource' | null>(null);
   const [editing, setEditing] = useState<Finding | null>(null);
   const [summaryOpen, setSummaryOpen] = useState(!draft.summary.trim());
+  const demoAvailable = version === 1 && supportsExamples(data);
+  const [useExamples, setUseExamples] = useState(true);
+  const [exampleNotice, setExampleNotice] = useState('');
   const cards = draft.findings.filter(f => f.section === section), card = cards.find(f => f.id === active) ?? cards[0];
   const resource = resources.find(r => r.id === resourceId) ?? resources[0];
   const change = (patch: Partial<Finding>) => { if (card) update(d => ({ ...d, findings: d.findings.map(f => f.id === card.id ? { ...f, ...patch } : f) })); };
-  const add = (target: Finding['section']) => setEditing({ id: crypto.randomUUID(), section: target, title: '', detail: '', source: resource?.id ?? '', confidence: 'Medium' });
+  const add = (target: Finding['section']) => {
+    if (demoAvailable && useExamples) {
+      const sample = nextExample(target, draft.findings);
+      if (!sample) { setExampleNotice('All four distinct examples in this section are already used. Turn off demo examples to add your own card.'); return; }
+      setExampleNotice(''); setEditing(sample); return;
+    }
+    setEditing({ id: crypto.randomUUID(), section: target, title: '', detail: '', source: resource?.id ?? '', confidence: 'Medium' });
+  };
   const save = (finding: Finding) => {
     update(d => appendDraftEvent({ ...d, findings: d.findings.some(f => f.id === finding.id) ? d.findings.map(f => f.id === finding.id ? finding : f) : d.findings.length < 40 ? [...d.findings, finding] : d.findings }, event(`Saved ${finding.section}`, finding.title)));
     setSection(finding.section); setActive(finding.id); if (finding.source) setResourceId(finding.source); setEditing(null);
@@ -122,6 +133,7 @@ export function CandidateEditor({ data, draft, update, record, disabled, version
   return <section className="cp-page cp-workspace">
     <Heading title={data.task.title}><span className="cp-subtitle">{data.rubric.requirements.find(r => r.id === data.task.targetRequirementId)?.title} · V{version} draft</span><LinkButton onClick={() => go('tasks')}>View full task</LinkButton></Heading>
     {version === 2 && previous?.review && <div className="cp-feedback-line cp-feedback-inline"><strong>Recruiter feedback</strong><p>{previous.review.comment}</p></div>}
+    {demoAvailable && <aside className="eb-panel rehearsal-tools" aria-label="Synthetic rehearsal examples"><div><strong>Demo examples · synthetic, editable</strong><p>Fill empty sections and summary without replacing your work. Four distinct examples per section; these are authored samples, not live AI output.</p></div><div className="eb-actions"><button className="eb-action" disabled={disabled || !!editing} onClick={() => { update(fillDemoDraft); setSummaryOpen(true); setUseExamples(true); setExampleNotice('Demo examples loaded where content was missing. Review before submitting.'); }}>Fill demo draft</button><label><input type="checkbox" checked={useExamples} onChange={e => { setUseExamples(e.target.checked); setExampleNotice(''); }}/> Prefill new cards with demo examples</label></div>{exampleNotice && <p role="status">{exampleNotice}</p>}</aside>}
     <div className="eb-panel cp-editor-grid">
       <aside className="cp-reference-rail">
         {version === 2 && previous && <div className="cp-previous"><div className="cp-section-heading"><h2>V1 · submitted, read-only</h2><LinkButton onClick={() => setModal('previous')}>View full V1</LinkButton></div><p className="cp-clamp">{previous.submission.summary}</p></div>}

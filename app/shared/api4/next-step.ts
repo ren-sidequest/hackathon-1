@@ -13,6 +13,7 @@ export function nextStep(data: Demo, role: 'hr' | 'candidate', page: string) {
   return { page: 'evidence', label: 'Inspect application evidence', detail: 'Inspect the source first. Request a task only for a specific gap, or make a shortlist decision.' };
 }
 export function savedActionDestination(path: string, role: 'hr' | 'candidate', stage?: unknown) {
+  if (path === '/rehearsal/restart') return { page: 'tasks', label: 'View new rehearsal task' };
   if (role === 'candidate') return { page: 'history', label: 'View work & feedback' };
   if (path === '/shortlist') return { page: 'shortlist', label: 'View retained decisions' };
   if (path === '/assessment') return stage === 'task_v1' || stage === 'task_v2' ? { page: 'tasks', label: 'View saved task assessment' } : { page: 'evidence', label: 'View saved assessment' };

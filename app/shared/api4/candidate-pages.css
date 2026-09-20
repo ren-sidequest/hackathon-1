@@ -173,3 +173,9 @@
 .cp-material-excerpt { -webkit-line-clamp:3; }
 .api4-app .eb-content .cp-inline-card textarea { font-weight:400; }
 .cp-source-code[data-local-raw] { font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+
+.rehearsal-tools { margin-bottom: 18px; padding: 16px 22px; }
+.rehearsal-tools p { margin: 6px 0 12px; max-width: 90ch; }
+.rehearsal-tools label { display: flex; align-items: center; gap: 8px; }
+.rehearsal-tools input[type="checkbox"] { width: auto; flex: 0 0 auto; }
+.rehearsal-controls input[type="checkbox"], .rehearsal-controls input[type="radio"] { width: auto; margin-right: 8px; }

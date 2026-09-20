@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { CONTENT_MANIFEST } from './content.js';
 import { validateState } from './state-schema.js';
 import { SCHEMA_VERSION } from './schema.js';
+import { RestartSchema, type RestartRequest } from './schema.js';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest, type FastifyError } from 'fastify';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
@@ -295,6 +296,12 @@ export async function createRevision5App(options: AppOptions = {}): Promise<Fast
       summary: 'Save one human evidence decision; only the target requirement changes', headers: WriteHeaders, body: ReviewSchema, response: responses
     }
   }, async (request, reply) => deliver(reply, service.review(request.body, key(request))));
+  app.post<{ Body: RestartRequest }>('/api/demo/rehearsal/restart', {
+    preValidation: preWrite, schema: {
+      summary: 'Archive and restart one shared synthetic candidate rehearsal; other candidates are unchanged',
+      headers: WriteHeaders, body: RestartSchema, response: responses
+    }
+  }, async (request, reply) => deliver(reply, service.restart(request.body, key(request))));
   app.post<{
     Body: ResetRequest;
   }>('/api/demo/reset', {

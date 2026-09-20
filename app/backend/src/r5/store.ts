@@ -184,6 +184,17 @@ export class RevisionStore {
     this.db.prepare(`UPDATE revision_receipts SET status=?,body_json=? WHERE session_id=? AND candidate_id=? AND status=202
       AND json_extract(body_json,'$.data.analysis.attemptId')=?`).run(response.status, json(response.body), sessionId, candidateId, attemptId);
   }
+  archiveCandidate(sessionId: string, candidateId: string, state: unknown): void {
+    if (!this.inTransaction) throw new Error('Archive requires an active transaction');
+    // Additive table: previous releases can still open format 4 during rollback.
+    this.db.exec(`CREATE TABLE IF NOT EXISTS rehearsal_archives (
+      archive_id TEXT PRIMARY KEY, session_id TEXT NOT NULL, candidate_id TEXT NOT NULL,
+      created_at TEXT NOT NULL, state_json TEXT NOT NULL, receipts_json TEXT NOT NULL)`);
+    const receipts = this.db.prepare('SELECT * FROM revision_receipts WHERE session_id=? AND candidate_id=?').all(sessionId, candidateId);
+    this.db.prepare('INSERT INTO rehearsal_archives VALUES(?,?,?,?,?,?)')
+      .run(randomUUID(), sessionId, candidateId, new Date().toISOString(), json(state), json(receipts));
+    this.db.prepare('DELETE FROM revision_receipts WHERE session_id=? AND candidate_id=?').run(sessionId, candidateId);
+  }
   clearReceipts(): void { this.db.exec('DELETE FROM revision_receipts'); }
   health(): boolean { return !this.closed && Boolean(this.db.prepare('SELECT 1 AS ready').get()); }
   close(): void { if (this.closed) return; this.closed = true; try { this.db.close(); } finally { this.releaseLock(); } }
