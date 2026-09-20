@@ -76,3 +76,13 @@ Scope: completed HR company/comparison/evidence/task/retention redesign and shar
 Local verification on the isolated release tree: Candidate unit tests 162/162; HR workflow tests 8/8; Candidate TypeScript/Vite and HR Vite builds passed; repository documentation and API4 generated-type checks passed. Internal CUA checks covered slow candidate reads, identity-bound readonly content, rapid task selection, error/retry recovery, and main navigation on the matching local implementation. New browser regression cases are included; remote CI results must be checked on this exact PR head before merging. No local browser-CLI execution is claimed.
 
 Release procedure: build both English bundles from the merged commit using `VITE_APP_MODE=api4-connected`, `VITE_API_BASE_URL=/gateway`, and `/hr/` / `/candidate/` bases; atomically select a new frontend release, keep the previous release and old hashed assets, preserve the live backend/database, and perform read-only HTTPS checks. Machine-specific deployment receipts stay outside Git.
+
+## Candidate four-page English release — 2026-09-20
+
+- Scope: approved candidate materials, task, investigation workspace and work/feedback compositions. Existing black/gold and light theme tokens retained; no new dependencies or backend contract changes.
+- Materials: role/JD/rubric strip, personal-only source library, friendly display aliases, original bytes/downloads retained. Personal metrics are computed from the selected source, not company task totals.
+- Task: task brief/resources and work guidance in separate columns. Workspace: narrower V1/reference rail, wider editable reasoning, linked source selection, folded summary and private notes dialog. Feedback: four work categories with a separate version-bound review rail.
+- Data boundaries: no preview database, translated fixtures, local Chinese files, server config or seed/reset scripts included. Task/submission/review state remains API4-owned; public submission preview excludes private notes.
+- Automated visual evidence: T60 captures the four actual views and light editor at 1506×1045; T40 retains 1280/1440 layout coverage. Test server creates its own temporary SQLite. No production writes are used for verification.
+- User accepted the local preview before requesting this English publication. Prior design comparisons and local-only artifacts are kept outside this repository.
+- Clean release worktree verification: Candidate 171/171 unit tests, HR 8/8 unit tests, both builds and API4 60/60 in a single full run passed using the standard configuration (no enlarged timeouts). Repository document check and diff whitespace check passed. GitHub CI is verified separately for the eventual release commit.

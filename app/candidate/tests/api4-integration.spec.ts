@@ -21,7 +21,7 @@ async function open(page:Page,role:'hr'|'candidate',id='amy-chen',section='') {a
 async function chooseStage(page:Page,value:string) {await page.getByRole('combobox',{name:'Assessment stage',exact:true}).click();await page.getByRole('option',{name:value==='application_review'?/Application materials/:new RegExp('Task V'+value.slice(-1))}).click();}
 async function sendTask(page:Page,id:string,target:string) {await open(page,'hr',id,'tasks');await glide(page,'Target skill',target);await page.getByLabel('Evidence gap / task reason',{exact:true}).fill('A bounded evidence gap needs verification.');await page.getByRole('button',{name:'Preview work brief',exact:true}).click();await page.getByRole('button',{name:'Continue to confirmation',exact:true}).click();await page.getByRole('button',{name:'Send task',exact:true}).click();await expect(page.getByRole('button',{name:'Send task',exact:true})).toHaveCount(0);}
 async function start(page:Page,id='amy-chen') {await open(page,'candidate',id,'tasks');await page.getByRole('button',{name:'Start V1 draft',exact:true}).click();await expect(page.getByLabel('Executive summary',{exact:true})).toBeVisible();}
-async function submit(page:Page,request:APIRequestContext,id:string,version:number,summary:string) {await page.getByLabel('Executive summary',{exact:true}).fill(summary);await page.getByRole('button',{name:`Submit V${version}`,exact:true}).click();await page.getByRole('button',{name:`Confirm V${version} submission`,exact:true}).click();await expect.poll(async()=>(await read(request,id)).currentSubmissionVersion).toBe(version);await expect(page.getByRole('dialog')).toHaveCount(0);}
+async function submit(page:Page,request:APIRequestContext,id:string,version:number,summary:string) {if(await page.getByRole('dialog',{name:'Private notebook',exact:true}).isVisible())await page.keyboard.press('Escape');if(!await page.getByLabel('Executive summary',{exact:true}).isVisible())await page.locator('.cp-summary > summary').click();await page.getByLabel('Executive summary',{exact:true}).fill(summary);await page.getByRole('button',{name:`Submit V${version}`,exact:true}).click();await page.getByRole('button',{name:`Confirm V${version} submission`,exact:true}).click();await expect.poll(async()=>(await read(request,id)).currentSubmissionVersion).toBe(version);await expect(page.getByRole('dialog')).toHaveCount(0);}
 async function review(page:Page,decision:string,comment:string) {await page.getByRole('button',{name:decision,exact:true}).click();await page.getByLabel('Public review comment',{exact:true}).fill(comment);await page.getByRole('button',{name:'Save evidence review',exact:true}).click();await expect(page.getByRole('dialog')).toHaveCount(0);}
 async function restart() {const control=new URL('../../../.ci-results/api4-test-control.json',import.meta.url);const old=JSON.parse(await readFile(control,'utf8'));await writeFile(join(old.directory,'restart.request'),String(old.generation+1));await expect.poll(async()=>JSON.parse(await readFile(control,'utf8')).generation).toBe(old.generation+1);}
 let runtimeErrors:string[]=[];
@@ -55,14 +55,15 @@ test('T27 assessment selectors work in a modal, preserve empty and NE marks, and
 test('T28 workspace filters, resource sorting and evidence editor share gold selects without losing data',async({page,request},info)=>{
   await seedTask(request);await start(page);
   const dataset=(await read(request)).dataset;
+  await page.getByRole('button',{name:'Explore data & calculations',exact:true}).click();
   await glide(page,'Filter channel',dataset.channels[0].channel);await expect(page.locator('.eb-data-overview tbody tr')).toHaveCount(1);
   await glide(page,'Filter channel','All channels');await glide(page,'Sort channel rows','traffic');
   const sorted=[...dataset.channels].sort((a:any,b:any)=>b.traffic-a.traffic);await expect(page.locator('.eb-data-overview tbody tr').first()).toContainText(sorted[0].channel);
-  await page.getByRole('button',{name:'website_traffic.csv',exact:true}).click();await glide(page,'Sort resource column','0');
+  await page.keyboard.press('Escape');await page.getByRole('button',{name:'Other resources',exact:true}).click();await page.getByRole('button',{name:'Website traffic',exact:true}).click();await glide(page,'Sort resource column','0');
   await page.getByRole('dialog').getByRole('button',{name:/Create card from row/}).first().click();
   await glide(page,'Evidence source','');await glide(page,'Evidence source','website_traffic.csv');await glide(page,'Self-reported confidence','Low');
   await page.getByLabel('Observation or idea').fill('Gold UI regression finding');await page.getByRole('button',{name:'Save card',exact:true}).click();
-  const card=page.locator('.eb-board .eb-spotlight').filter({hasText:'Gold UI regression finding'});await expect(card).toContainText('Self-confidence Low');
+  const card=page.locator('.eb-board .eb-spotlight');await expect(card.getByLabel('Card title')).toHaveValue('Gold UI regression finding');await expect(card).toContainText('Self-confidence Low');
   for(const theme of ['dark','light']) {
     await page.getByRole('switch',{name:'Night mode'}).setChecked(theme==='dark');await card.hover();
     await expect(card).toHaveAttribute('data-spot-active','true');await expect(card).toHaveCSS('transform','none');
@@ -72,7 +73,7 @@ test('T28 workspace filters, resource sorting and evidence editor share gold sel
   await page.emulateMedia({reducedMotion:'reduce'});expect(await card.evaluate(el=>getComputedStyle(el,'::before').display)).toBe('none');
   await expect(page.locator('select')).toHaveCount(0);
   await submit(page,request,'amy-chen',1,'Preserve gold UI finding');await nav(page,'Work & feedback');
-  await expect(page.locator('.eb-finding.eb-spotlight')).toContainText('Gold UI regression finding');await glide(page,'Submission version','1');
+  await expect(page.locator('.eb-finding.eb-spotlight').filter({hasText:'Gold UI regression finding'})).toHaveCount(1);await glide(page,'Submission version','1');
   await open(page,'hr','amy-chen','tasks');await page.getByRole('button',{name:'Version history',exact:true}).click();await page.getByRole('button',{name:'Inspect this version',exact:true}).first().click();await expect(page.locator('select')).toHaveCount(0);
 });
 
@@ -118,7 +119,7 @@ test('T03 Amy BPS real V1 → More → V2 → Confirm, private draft exclusion a
   await sendTask(hr,'amy-chen','business-problem-solving');await start(candidate);
   await candidate.getByRole('tab',{name:'Private notebook',exact:true}).click();await candidate.getByLabel('Private notes',{exact:true}).fill('PRIVATE-API4-ALEX-DO-NOT-SHARE');
   const first='😀中文 API4 Alex V1: Paid Search is a signal, not a proven cause.';await submit(candidate,request,'amy-chen',1,first);
-  await nav(candidate,'Work & feedback');const download=candidate.waitForEvent('download');await candidate.getByRole('button',{name:'Export V1 public work',exact:true}).click();expect(await readFile((await(await download).path())!,'utf8')).not.toContain('PRIVATE');
+  await nav(candidate,'Work & feedback');const download=candidate.waitForEvent('download');await candidate.getByRole('button',{name:'Export work',exact:true}).click();expect(await readFile((await(await download).path())!,'utf8')).not.toContain('PRIVATE');
   await refresh(hr);await expect(hr.getByText(first,{exact:true}).first()).toBeVisible();await hr.getByRole('button',{name:'Run evidence analysis',exact:true}).click();await expect.poll(async()=>(await read(request)).analysis.status).toBe('succeeded');await hr.locator('.eb-review-grid .eb-citation:visible').first().click();await expect(hr.locator('[data-source-version] mark')).toContainText('😀中文 API4 Alex V1');await hr.getByRole('button',{name:'Clear quotation',exact:true}).click();
   await review(hr,'Needs More Evidence','Compare matched cohorts and retain uncertainty.');const frozen=(await read(request)).versions[0];
   await refresh(candidate);await nav(candidate,'My task');await candidate.getByRole('button',{name:'Copy V1 public work into V2',exact:true}).click();await candidate.getByRole('tab',{name:'Private notebook',exact:true}).click();await expect(candidate.getByLabel('Private notes')).toHaveValue('');
@@ -196,8 +197,8 @@ test('T08 shortlist persists independently, turns stale on new work, and preserv
 });
 
 test('T17 real resources, row-to-card, dark mode and desktop navigation retain the existing UI',async({page,request},info)=>{
-  await seedTask(request);await start(page);await expect(page.locator('.eb-metrics').getByText('1,180,000',{exact:true})).toBeVisible();await expect(page.locator('.eb-metrics').getByText('30,680',{exact:true})).toBeVisible();await expect(page.getByText('31,200',{exact:true})).toHaveCount(0);
-  await page.getByLabel('Find a resource',{exact:true}).fill('website');await page.getByRole('button',{name:'website_traffic.csv',exact:true}).click();await page.getByLabel('Filter resource rows').fill('Paid Search');await expect(page.getByRole('dialog').locator('tbody tr')).toHaveCount(2);await page.getByRole('dialog').getByRole('button',{name:/Create card from row/}).first().click();await expect(page.getByRole('combobox',{name:'Evidence source',exact:true})).toHaveAttribute('data-value','website_traffic.csv');await page.getByLabel('Observation or idea').fill('A bounded data observation');await page.getByRole('button',{name:'Save card',exact:true}).click();await expect(page.locator('.eb-board')).toContainText('A bounded data observation');
+  await seedTask(request);await start(page);await expect(page.locator('.cp-task-totals').getByText('1,180,000',{exact:true})).toBeVisible();await expect(page.locator('.cp-task-totals').getByText('30,680',{exact:true})).toBeVisible();await expect(page.getByText('31,200',{exact:true})).toHaveCount(0);
+  await page.getByRole('button',{name:'Other resources',exact:true}).click();await page.getByLabel('Find a resource',{exact:true}).fill('website');await page.getByRole('button',{name:'Website traffic',exact:true}).click();await page.getByLabel('Filter resource rows').fill('Paid Search');await expect(page.getByRole('dialog').locator('tbody tr')).toHaveCount(2);await page.getByRole('dialog').getByRole('button',{name:/Create card from row/}).first().click();await expect(page.getByRole('combobox',{name:'Evidence source',exact:true})).toHaveAttribute('data-value','website_traffic.csv');await page.getByLabel('Observation or idea').fill('A bounded data observation');await page.getByRole('button',{name:'Save card',exact:true}).click();await expect(page.getByLabel('Card title')).toHaveValue('A bounded data observation');
   await expect(page.getByRole('switch',{name:'Night mode'})).toBeChecked();await page.getByRole('switch',{name:'Night mode'}).click();await expect(page.getByRole('switch',{name:'Night mode'})).not.toBeChecked();await page.getByRole('switch',{name:'Night mode'}).click();await page.reload();await expect(page.getByRole('switch',{name:'Night mode'})).toBeChecked();await page.screenshot({path:info.outputPath('api4-workspace-desktop.png'),fullPage:true});
 });
 
@@ -265,7 +266,7 @@ test('T25 guided overview, stable review panels, contextual task and themed feed
   await expect(page.getByLabel('Action feedback')).toContainText('Task sent');
   await expect(page.getByRole('region',{name:'Task review queue'})).toContainText('Awaiting work');
   const candidate=await context.newPage();await start(candidate);
-  await expect(candidate.getByRole('navigation',{name:'Work area shortcuts'})).toBeVisible();
+  await expect(candidate.getByRole('tablist',{name:'Investigation sections'})).toBeVisible();
   await submit(candidate,request,'amy-chen',1,'A bounded comparison with explicitly stated uncertainty.');
   await expect(candidate).toHaveURL(/#history$/);
   await expect(candidate.getByLabel('Action feedback')).toContainText('Work submitted');
@@ -408,12 +409,12 @@ test('T33 legacy identity and content-version drafts cannot silently become new 
 test('T34 original PDF links and downloaded bytes match supplied materials',async({page,request})=>{
   const {createHash}=await import('node:crypto');
   for(const id of people) {
-    const d=await read(request,id);await open(page,'candidate',id,'application');await page.getByRole('button',{name:/Original CV · public extract/}).click();
+    const d=await read(request,id);await open(page,'candidate',id,'application');await page.getByRole('button',{name:/Personal CV Original fictional CV/}).click();await page.getByRole('button',{name:'Read original',exact:true}).click();
     const source=d.application.sources.find((s:any)=>s.provenance?.downloadUrl),link=page.getByRole('link',{name:'Download original CV PDF',exact:true});
     await expect(link).toHaveAttribute('href',backend+source.provenance.downloadUrl);
     const pdf=await request.get((await link.getAttribute('href'))!);expect(pdf.ok()).toBe(true);expect(pdf.headers()['content-type']).toContain('application/pdf');
     expect(createHash('sha256').update(await pdf.body()).digest('hex')).toBe(source.provenance.redaction.originalSha256);
-    await page.keyboard.press('Escape');await page.getByText('Review full JD · 19 requirements',{exact:true}).click();
+    await page.keyboard.press('Escape');await page.getByRole('button',{name:/Job description 19 requirements/}).click();
     const jd=page.getByRole('link',{name:'Download original JD PDF',exact:true});await expect(jd).toHaveAttribute('href',backend+d.job.jd.source.downloadUrl);
     const response=await request.get((await jd.getAttribute('href'))!);expect(createHash('sha256').update(await response.body()).digest('hex')).toBe(d.job.jd.sha256);
   }
@@ -517,9 +518,10 @@ test('T39 direct Investigation entry offers V2 copy and preserves only V1 public
   await expect(page.getByRole('button',{name:'Copy V1 public work into V2',exact:true})).toBeVisible();
   await page.getByRole('button',{name:'Copy V1 public work into V2',exact:true}).click();
   await expect(page.getByLabel('Executive summary',{exact:true})).toHaveValue(summary);
+  await page.getByRole('tab',{name:/^Key Findings/}).click();
   await expect(page.locator('.eb-board .eb-finding')).toHaveCount(first.submission.findings.length);
-  await expect(page.locator('.eb-board .eb-finding')).toContainText(title);
-  await expect(page.locator('.eb-board .eb-finding')).toContainText(detail);
+  await expect(page.getByLabel('Card title')).toHaveValue(title);
+  await expect(page.getByLabel('Card reasoning')).toHaveValue(detail);
   await page.getByRole('tab',{name:'Private notebook',exact:true}).click();
   await expect(page.getByLabel('Private notes',{exact:true})).toHaveValue('');
   const drafts=await page.evaluate(()=>Object.entries(localStorage).filter(([key])=>key.startsWith('evidencebridge.api4.draft.')).map(([key,value])=>({key,value:JSON.parse(value)})));
@@ -575,15 +577,15 @@ for(const width of [1280,1440]) test(`T40 desktop ${width}px keeps criterion nav
   await seedTask(request);await start(page);
   const contentWidth=await page.locator('.api4-app .eb-content').evaluate(node=>node.clientWidth-parseFloat(getComputedStyle(node).paddingLeft)-parseFloat(getComputedStyle(node).paddingRight));
   expect(contentWidth).toBeLessThan(1200);
-  const workbench=page.locator('.eb-workbench'),panels=workbench.locator(':scope > section');
-  await expect(panels).toHaveCount(3);
+  const workbench=page.locator('.cp-editor-grid'),panels=workbench.locator(':scope > aside, :scope > div');
+  await expect(panels).toHaveCount(2);
   const layout=await panels.evaluateAll(nodes=>nodes.map(node=>{const r=node.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom};}));
   expect((await workbench.evaluate(node=>getComputedStyle(node).gridTemplateColumns)).split(' ').filter(Boolean)).toHaveLength(2);
   expect(Math.abs(layout[0].y-layout[1].y)).toBeLessThan(2);
   expect(layout[0].right).toBeLessThanOrEqual(layout[1].x);
-  expect(layout[2].y).toBeGreaterThanOrEqual(Math.max(layout[0].bottom,layout[1].bottom));
-  expect(Math.abs(layout[2].x-layout[0].x)).toBeLessThan(2);
-  expect(Math.abs(layout[2].right-layout[1].right)).toBeLessThan(2);
+  expect(layout[1].width).toBeGreaterThan(layout[0].width);
+  await expect(page.getByRole('tablist',{name:'Investigation sections'})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Submit V1',exact:true})).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1 && document.body.scrollWidth<=window.innerWidth+1)).toBe(true);
   await page.screenshot({path:info.outputPath(`workbench-two-columns-${width}.png`),fullPage:true});
 });
@@ -699,9 +701,8 @@ test('T47 both workspaces share compact typography and company matrix uses autho
       await open(page,role,'amy-chen',route);
       const heading=page.locator('main h1:visible');await expect(heading).toHaveCount(1);
       const metrics=await heading.evaluate(n=>({font:getComputedStyle(n).fontSize,line:getComputedStyle(n).lineHeight}));
-      // The approved retention dossier uses a 26px page title; other pages keep 24px.
       const titleSize=role==='hr'&&route==='shortlist'?26:24;
-      expect(metrics.font).toBe(`${titleSize}px`);expect(parseFloat(metrics.line)).toBeCloseTo(titleSize*1.3,1);
+      expect(metrics.font,`${role}/${route}`).toBe(`${titleSize}px`);expect(parseFloat(metrics.line)).toBeCloseTo(titleSize*1.3,1);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBe(true);
     }
   }
@@ -896,4 +897,37 @@ test('T58 candidate draft stays bound to its owner across a delayed identity cha
   await expect(page.getByLabel('Executive summary',{exact:true})).toHaveValue(summary);
   expect((await read(request,'amy-chen')).currentSubmissionVersion).toBeNull();
   expect((await read(request,'ann-li')).currentSubmissionVersion).toBeNull();
+});
+
+test('T60 approved candidate layouts preserve actual sources, wide editing, four feedback categories and themes',async({page,request},info)=>{
+  await page.setViewportSize({width:1506,height:1045});
+  await open(page,'candidate','amy-chen','application');
+  const notice=page.getByRole('button',{name:'Got it',exact:true});if(await notice.isVisible())await notice.click();
+  await expect(page.locator('.cp-library-item')).toHaveCount(3);
+  await expect(page.locator('.cp-materials')).toContainText('4,000');
+  await expect(page.locator('.cp-materials')).not.toContainText('1,180,000');
+  await expect(page.locator('.cp-role-band')).toContainText('19 requirements');
+  await expect(page.locator('.cp-role-band')).toContainText('10 core standards');
+  await page.screenshot({path:info.outputPath('candidate-materials.png'),fullPage:false});
+  await page.getByRole('button',{name:/Channel analysis SQL Query code/}).click();await expect(page.locator('.cp-source-code')).toContainText('SELECT');
+  await page.getByRole('button',{name:/Channel conversion report Project report/}).click();
+  const d=await seedTask(request);await refresh(page);await nav(page,'My task');
+  await expect(page.locator('.cp-task-grid')).toBeVisible();await expect(page.locator('.cp-resource-list>button')).toHaveCount(3);
+  await page.screenshot({path:info.outputPath('candidate-task.png'),fullPage:false});
+  const cards=[['Key Findings','More visits, fewer orders','Sessions increased, orders fell. This is an observation, not a diagnosis.','website_traffic.csv'],['Hypotheses','Channel mix or page changes','Both are plausible explanations, not established causes.','business_context.md'],['Additional Evidence Needed','Matched-period grouped data','Request campaign, device and landing-page counts for both periods.','current_paid_search_devices.csv'],['Recommended Next Steps','Collect evidence before changing spend','Review consistent definitions and missing data before increasing budget.','business_context.md']].map(([section,title,detail,source])=>({id:crypto.randomUUID(),section,title,detail,source,confidence:'Medium'}));
+  await post(request,'/submission',{...binding(d),submissionVersion:1,previousSubmissionId:null,previousContentFingerprint:null,summary:'Request matched-period evidence before deciding on a budget increase.',findings:cards,processEvidence:[]});
+  const v1=await read(request);await post(request,'/review',{...binding(v1),submissionId:v1.submission.submissionId,contentFingerprint:v1.submission.contentFingerprint,decision:'needs_more_evidence',comment:'Specify comparable periods and groups, and what different outcomes support or weaken.'});
+  const frozenVersion=(await read(request)).versions[0];
+  await refresh(page);await nav(page,'Work & feedback');
+  await expect(page.locator('.cp-work-card')).toHaveCount(4);await expect(page.locator('.cp-review-body')).toContainText('Specify comparable periods');
+  await page.screenshot({path:info.outputPath('candidate-history.png'),fullPage:false});
+  await nav(page,'My task');await page.getByRole('button',{name:'Copy V1 public work into V2',exact:true}).click();
+  const left=await page.locator('.cp-reference-rail').boundingBox(),right=await page.locator('.cp-editor-main').boundingBox();expect(right!.width).toBeGreaterThan(left!.width*1.5);
+  await page.getByLabel('Card title',{exact:true}).fill('A testable comparison method');await page.getByLabel('Card reasoning',{exact:true}).fill('Compare matched groups in both periods using consistent definitions. Reweight the current period to the previous mix.\n\nIf the decline narrows, that supports a mix explanation. If rates still decline within groups, that weakens a mix-only explanation.\n\nThis is a plan, not an observed result. Historical device data remains missing.');
+  await glide(page,'Inline evidence source','business_context.md');await expect(page.getByRole('combobox',{name:'Reference material',exact:true})).toHaveAttribute('data-value','business_context.md');
+  await page.screenshot({path:info.outputPath('candidate-editor.png'),fullPage:false});
+  await page.getByRole('switch',{name:'Night mode'}).setChecked(false);await page.screenshot({path:info.outputPath('candidate-editor-light.png'),fullPage:false});
+  await page.setViewportSize({width:1100,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.getByRole('button',{name:'Submit V2',exact:true}).click();await expect(page.getByRole('dialog')).toContainText('A testable comparison method');await page.keyboard.press('Escape');
+  expect((await read(request)).versions[0]).toEqual(frozenVersion);expect((await read(request)).versions).toHaveLength(1);
 });
