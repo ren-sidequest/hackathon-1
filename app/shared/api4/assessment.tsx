@@ -59,12 +59,11 @@ export function AssessmentPanel({ data, controller, initialStage = 'application_
     setCitation(ref?{sourceId:ref.sourceId,quote:ref}:null);
   },[evidenceFocus]);
   useLayoutEffect(()=>{
-    // Focus only after React commits the requested standard, once per navigation.
+    // Select the requested standard without overriding the page's entry scroll position.
     if(!evidenceFocus || focusedRequest.current===evidenceFocus.request || expanded!==evidenceFocus.criterion || stage!=='application_review')return;
     const button=reviewGrid.current?.querySelector<HTMLButtonElement>('.r5-criterion-toggle[aria-expanded=true]');
     if(!button)return;
     focusedRequest.current=evidenceFocus.request;
-    reviewGrid.current?.scrollIntoView({block:'start'});
     button.focus({preventScroll:true});
   },[evidenceFocus,expanded,stage]);
   const context = stageContext(data, stage);
