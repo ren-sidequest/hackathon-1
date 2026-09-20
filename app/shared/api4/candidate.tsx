@@ -1,4 +1,5 @@
 import { LegacyDrafts } from './legacy-drafts';
+import { useRoleLeaveGuard } from '../role-leave-guard';
 import { PermissionHelp } from './access';
 import React, { useEffect, useRef, useState } from 'react';
 import type { Demo } from '../api4-types';
@@ -21,6 +22,7 @@ function CandidateSession({ data, controller, page, go }: Props) {
   const draftRef = useRef(draft), alive = useRef(true);
   const [storageError, setStorageError] = useState(''), [submitError, setSubmitError] = useState('');
   const [confirm, setConfirm] = useState(false);
+  useRoleLeaveGuard(!!storageError, 'The current candidate draft could not be saved in this browser. Keep this page open to preserve your work.');
   useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
   const latest = data.versions.at(-1), sent = task.status !== 'draft';
   const disabled = controller.busy || Boolean(controller.pending);

@@ -28,6 +28,78 @@ let runtimeErrors:string[]=[];
 test.beforeEach(async({request,context})=>{runtimeErrors=[];const watch=(page:Page)=>page.on('pageerror',error=>runtimeErrors.push(error.message));context.pages().forEach(watch);context.on('page',watch);await reset(request);});
 test.afterEach(()=>{expect(runtimeErrors).toEqual([]);});
 
+async function switchRole(page:Page, name:string) {
+  await page.getByRole('button',{name:'Switch demo role',exact:true}).click();
+  await page.getByRole('menuitem',{name}).click();
+}
+test('T61 role round trip retains candidate, theme, sidebar width and HR criterion without writes',async({page,request},info)=>{
+  const before=await read(request,'ann-li'), writes:string[]=[];page.on('request',r=>{if(r.method()==='POST')writes.push(r.url());});
+  await open(page,'hr','ann-li','evidence');
+  await page.getByRole('navigation',{name:'Evidence criteria'}).getByRole('button',{name:/^D2 ·/}).click();
+  await page.getByRole('switch',{name:'Night mode'}).setChecked(false);
+  await page.getByRole('button',{name:'Collapse sidebar',exact:true}).click();
+  await expect(page.locator('#eb-sidebar')).toHaveCSS('width','64px');
+  const width=await page.locator('#eb-sidebar').evaluate(e=>e.getBoundingClientRect().width);
+  await page.getByRole('button',{name:'Switch demo role',exact:true}).click();
+  await expect(page.getByRole('menu')).toContainText('Ann Li');await page.keyboard.press('Escape');
+  await expect(page.getByRole('button',{name:'Switch demo role',exact:true})).toBeFocused();
+  await switchRole(page,'Open Candidate view');await expect(page).toHaveURL(new RegExp(`${candidateUrl}/\\?candidateId=ann-li#application`));
+  await expect(page.getByTestId('connection-state')).toHaveAttribute('data-fresh','true');
+  await expect(page.locator('html')).toHaveAttribute('data-theme','light');await expect(page.locator('#eb-sidebar')).toHaveClass(/is-collapsed/);
+  expect(await page.locator('#eb-sidebar').evaluate(e=>e.getBoundingClientRect().width)).toBe(width);
+  await page.getByRole('button',{name:'Switch demo role',exact:true}).click();await page.screenshot({path:info.outputPath('role-switch-light.png')});await page.keyboard.press('Escape');
+  await switchRole(page,'Return to HR');await expect(page).toHaveURL(new RegExp(`${hrUrl}/\\?candidateId=ann-li#evidence`));
+  await expect(page.getByRole('navigation',{name:'Evidence criteria'}).getByRole('button',{name:/^D2 ·/})).toHaveAttribute('aria-expanded','true');
+  await page.getByRole('switch',{name:'Night mode'}).setChecked(true);await page.getByRole('button',{name:'Switch demo role',exact:true}).click();await page.screenshot({path:info.outputPath('role-switch-dark.png')});
+  expect(writes).toEqual([]);expect((await read(request,'ann-li')).revision).toBe(before.revision);
+});
+test('T62 saved candidate draft and private notes survive role navigation without entering URL or server',async({page,request})=>{
+  await seedTask(request);await start(page);
+  await page.getByLabel('Executive summary',{exact:true}).fill('Saved public draft for role switching');
+  const notes=page.getByRole('tab',{name:'Private notebook',exact:true});await notes.click();await page.getByLabel('Private notes',{exact:true}).fill('PRIVATE ROLE SWITCH NOTE');await page.keyboard.press('Escape');
+  const writes:string[]=[];page.on('request',r=>{if(r.method()==='POST')writes.push(r.url());});
+  await switchRole(page,'Return to HR');await expect(page.getByTestId('connection-state')).toHaveAttribute('data-fresh','true');
+  expect(page.url()).not.toContain('PRIVATE');await expect(page.locator('body')).not.toContainText('PRIVATE ROLE SWITCH NOTE');
+  await switchRole(page,'Open Candidate view');await expect(page).toHaveURL(/candidateId=amy-chen#workspace$/);
+  await expect(page.getByLabel('Executive summary',{exact:true})).toHaveValue('Saved public draft for role switching');
+  await page.getByRole('tab',{name:'Private notebook',exact:true}).click();await expect(page.getByLabel('Private notes',{exact:true})).toHaveValue('PRIVATE ROLE SWITCH NOTE');
+  expect(writes).toEqual([]);expect((await read(request)).submission).toBeNull();
+});
+test('T63 unsent HR task edits require explicit discard and can be kept',async({page,request})=>{
+  await open(page,'hr','amy-chen','tasks');await glide(page,'Target skill','sql');await page.getByLabel('Evidence gap / task reason',{exact:true}).fill('Unsaved role transition reason');
+  await switchRole(page,'Open Candidate view');await expect(page.getByRole('dialog',{name:'Keep your unsaved changes?'})).toBeVisible();
+  await page.getByRole('button',{name:'Stay here',exact:true}).click();await expect(page.getByLabel('Evidence gap / task reason',{exact:true})).toHaveValue('Unsaved role transition reason');
+  await switchRole(page,'Open Candidate view');await page.getByRole('button',{name:'Discard unsaved edits and switch',exact:true}).click();
+  await expect(page).toHaveURL(new RegExp(candidateUrl));await expect(page.getByTestId('connection-state')).toHaveAttribute('data-fresh','true');expect((await read(request)).task.status).toBe('draft');
+});
+test('T64 slow or failed arrival shows loading/error and disables role switch until current data is ready',async({page})=>{
+  await open(page,'hr','david-liu','evidence');
+  await page.route(`${backend}/api/demo**`,async route=>{await new Promise(resolve=>setTimeout(resolve,1200));await route.abort();});
+  await switchRole(page,'Open Candidate view');await expect(page.getByRole('status',{name:'Loading workspace'})).toBeVisible();
+  await page.getByRole('button',{name:'Switch demo role',exact:true}).click();await expect(page.getByRole('menuitem',{name:'Return to HR'})).toHaveAttribute('aria-disabled','true');
+  await expect(page.getByTestId('connection-error-code')).toBeVisible();await page.keyboard.press('Escape');
+  await page.unroute(`${backend}/api/demo**`);await refresh(page);
+  await page.getByRole('button',{name:'Switch demo role',exact:true}).click();await expect(page.getByRole('menu')).toContainText('David Liu');await expect(page.getByRole('menuitem',{name:'Return to HR'})).toHaveAttribute('aria-disabled','false');
+});
+test('T65 browser draft storage failure blocks silent role departure',async({page,request})=>{
+  await seedTask(request);await start(page);
+  await page.evaluate(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key.startsWith('evidencebridge.api4.draft.'))throw new DOMException('Full','QuotaExceededError');original.call(this,key,value);};});
+  await page.getByLabel('Executive summary',{exact:true}).fill('Unsaved in-memory draft');
+  await switchRole(page,'Return to HR');await expect(page.getByRole('dialog',{name:'Keep your unsaved changes?'})).toContainText('could not be saved');
+  await page.getByRole('button',{name:'Stay here',exact:true}).click();await expect(page.getByLabel('Executive summary',{exact:true})).toHaveValue('Unsaved in-memory draft');
+});
+test('T66 uncertain requests disable switching and submission arrives in the other role after resolution',async({page,request})=>{
+  await seedTask(request);await start(page);
+  // Simulate a lost receipt with the established real backend still untouched by this request.
+  await page.route(`${backend}/api/demo/submission`,route=>route.abort());
+  await page.getByLabel('Executive summary',{exact:true}).fill('A shared role-switch submission');await page.getByRole('button',{name:'Submit V1',exact:true}).click();await page.getByRole('button',{name:'Confirm V1 submission',exact:true}).click();
+  await expect(page.getByTestId('connection-error-code')).toBeVisible();await page.keyboard.press('Escape');
+  await page.getByRole('button',{name:'Switch demo role',exact:true}).click();await expect(page.getByRole('menuitem',{name:'Return to HR'})).toHaveAttribute('aria-disabled','true');await page.keyboard.press('Escape');
+  await page.unroute(`${backend}/api/demo/submission`);await page.getByRole('button',{name:'Retry original action',exact:true}).click();await expect.poll(async()=>(await read(request)).currentSubmissionVersion).toBe(1);
+  await expect(page.getByTestId('connection-state')).toHaveAttribute('data-fresh','true');
+  await switchRole(page,'Return to HR');await expect(page).toHaveURL(/candidateId=amy-chen#tasks$/);await expect(page.locator('body')).toContainText('A shared role-switch submission');
+});
+
 test('T27 assessment selectors work in a modal, preserve empty and NE marks, and initially locate B3',async({page,request},info)=>{
   const before=await read(request);await open(page,'hr','amy-chen','evidence');
   const ref=before.assessment.application_review.items.find((item:any)=>item.criterionId==='B3').sourceRefs[0];

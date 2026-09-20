@@ -1,4 +1,6 @@
 import { materialTitle } from './materials';
+import { isRoleArrival, readRoleView, saveRoleView } from '../role-navigation';
+import { useRoleLeaveGuard } from '../role-leave-guard';
 import { assessmentReport } from './report';
 import { download } from '../api';
 import { PermissionHelp } from './access';
@@ -43,7 +45,9 @@ function InlineSource({ name, candidateId, context, source, quote, reveal }: { n
 }
 
 export function AssessmentPanel({ data, controller, initialStage = 'application_review', onEditingChange, onTask, openTask, evidenceFocus }: { data: Demo; controller: Api4Controller; initialStage?: Stage; onEditingChange?: (editing: boolean) => void; onTask?:(intent:TaskIntent)=>void; openTask?:()=>void; evidenceFocus?:EvidenceFocus }) {
-  const [stage, setStage] = useState<Stage>(initialStage), [expanded, setExpanded] = useState<string | null>('B3');
+  const [restored] = useState(() => isRoleArrival('hr') ? readRoleView(data, 'hr.assessment') : {});
+  const [stage, setStage] = useState<Stage>(() => initialStage === 'application_review' && restored.stage && stageContext(data, restored.stage as Stage) ? restored.stage as Stage : initialStage), [expanded, setExpanded] = useState<string | null>(restored.criterion ?? 'B3');
+  useEffect(() => { saveRoleView(data, 'hr.assessment', { stage, criterion: expanded ?? undefined }); }, [data, stage, expanded]);
   const [revision, setRevision] = useState<number | null>(null), [edit, setEdit] = useState(false);
   const [citation, setCitation] = useState<{ sourceId: string; quote?: SourceRef; reused?: boolean; reveal?:number } | null>(null);
   const reviewGrid=useRef<HTMLDivElement>(null);
@@ -111,6 +115,7 @@ export function AssessmentPanel({ data, controller, initialStage = 'application_
 
 function blankItem(criterionId: AssessmentItem['criterionId']): DraftItem { return { criterionId, mark: null, rationale: '', support: '', gaps: '', uncertainty: '', nextStep: '', checkedSourceIds: [], sourceRefs: [] }; }
 function AssessmentEditor({ data, stage, controller, close }: { data: Demo; stage: Stage; controller: Api4Controller; close: () => void }) {
+  useRoleLeaveGuard(true, 'The human assessment editor is still open. Save or close it before leaving this page.');
   // Freeze the visible basis. A background refresh must not silently rebase this human edit.
   const [snapshot] = useState(() => {
     const context = stageContext(data, stage)!;

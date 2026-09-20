@@ -1,4 +1,6 @@
 import { IdentityRegion } from './identity-transition';
+import { useRoleLeaveGuard } from '../role-leave-guard';
+import { isRoleArrival, readRoleView, saveRoleView } from '../role-navigation';
 import { profileLabels } from './comparison-model';
 import type { RetentionFilter } from './retained-model';
 import { RetainedWorkspace } from './retained-workspace';
@@ -32,9 +34,11 @@ export default function HRConnected({ data, comparison, controller, page, go, se
   const [rubricCriterion,setRubricCriterion]=useState<string | undefined>();
   const [intent, setIntent] = useState<TaskIntent | null>(null);
   const [taskDraft, setTaskDraft] = useState<ComposerDraft|null>(null);
+  useRoleLeaveGuard(data.workflow.canSend && !!taskDraft, 'The targeted task has unsent edits. These edits have not been saved to the shared service.');
   const [assessmentEntry, setAssessmentEntry] = useState<{stage:Stage; visit:number}>({stage:'application_review',visit:0});
   const showAssessment = (stage:Stage) => { setAssessmentEntry(old=>({stage,visit:old.visit+1})); setDetailSection('assessment'); go('evidence'); };
-  const [detailSection, setDetailSection] = useState('assessment');
+  const [detailSection, setDetailSection] = useState(() => isRoleArrival('hr') ? readRoleView(data, 'hr.detail').section ?? 'assessment' : 'assessment');
+  useEffect(() => { saveRoleView(data, 'hr.detail', { section: detailSection }); }, [data, detailSection]);
   useEffect(() => { if (evidenceFocus) { setDetailSection('assessment'); setAssessmentEntry(old=>({stage:'application_review',visit:old.visit+1})); } }, [evidenceFocus]);
   const [evidenceVisited, setEvidenceVisited] = useState(page === 'evidence');
   useEffect(() => { if(page === 'evidence') setEvidenceVisited(true); }, [page]);
@@ -109,6 +113,7 @@ function TaskComposer({ data, controller, intent, draft, saveDraft, back }: { da
 
 function TaskReview({ data, controller, assess }: { data: Demo; controller: Api4Controller; assess:(stage:Stage)=>void }) {
   const [selected,setSelected]=useState(data.currentSubmissionVersion??1),[decision,setDecision]=useState<Decision|null>(null),[comment,setComment]=useState('');
+  useRoleLeaveGuard(!!decision || !!comment, 'The evidence review has unsaved edits. Save or discard them before changing roles.');
   const [reviewBinding,setReviewBinding]=useState<Record<string,unknown>|null>(null),[workTab,setWorkTab]=useState('summary'),[fullWork,setFullWork]=useState(false),[historyOpen,setHistoryOpen]=useState(false),[briefOpen,setBriefOpen]=useState(false);
   const seenVersion=useRef(data.currentSubmissionVersion);
   useEffect(()=>{if(!decision&&data.currentSubmissionVersion&&data.currentSubmissionVersion!==seenVersion.current){setSelected(data.currentSubmissionVersion);seenVersion.current=data.currentSubmissionVersion;}},[data.currentSubmissionVersion,decision]);

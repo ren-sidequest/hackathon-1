@@ -1,0 +1,21 @@
+.eb-demo-switch { position:fixed; right:24px; bottom:20px; z-index:80; }
+.eb-demo-trigger { display:flex; align-items:center; gap:10px; min-height:40px; padding:8px 14px; border:1px solid var(--accent-border); border-radius:24px; background:var(--surface); color:var(--text-link); box-shadow:0 4px 18px #0003; font:inherit; font-size:12px; cursor:pointer; }
+.eb-demo-trigger > span:first-child { color:var(--text-secondary); }
+.eb-demo-trigger:hover { background:var(--surface-hover); }
+.eb-demo-trigger:focus-visible { outline:2px solid var(--accent-border); outline-offset:3px; }
+.api4-app .eb-footer { padding-bottom:76px; }
+.api4-app .guide-toast { bottom:76px; }
+.eb-role-menu { position:fixed; z-index:100; width:240px; padding:16px; border:1px solid var(--accent-border); border-radius:12px; background:var(--surface); color:var(--text-primary); box-shadow:0 16px 40px #0004; font-family:inherit; }
+.eb-role-menu > small { display:block; color:var(--text-link); font-size:10px; letter-spacing:.12em; margin-bottom:8px; }
+.eb-role-menu > strong { display:block; font-size:14px; }
+.eb-role-menu button { display:flex; justify-content:space-between; gap:12px; width:100%; margin-top:14px; padding:12px; border-radius:8px; border:1px solid var(--accent-border); color:var(--text-link); background:var(--accent-soft); font:inherit; text-align:left; cursor:pointer; }
+.eb-role-menu button:hover { background:var(--surface-hover); }
+.eb-role-menu button[aria-disabled=true] { opacity:.6; cursor:not-allowed; }
+.eb-role-menu p { margin:10px 0 0; color:var(--text-secondary); font-size:12px; line-height:1.5; }
+.eb-role-loading { padding:28px; }
+.eb-role-loading .eb-loading-line { height:14px; width:55%; margin:18px 0; border-radius:6px; background:var(--surface-soft); }
+.eb-role-loading .eb-loading-line:nth-child(2) { width:85%; }
+.eb-boot-nav { display:block; height:12px; width:80%; border-radius:6px; background:var(--sidebar-hover); }
+.eb-role-enter { animation:eb-role-enter .16s ease-out; }
+@keyframes eb-role-enter { from { opacity:.65; } to { opacity:1; } }
+@media (prefers-reduced-motion:reduce) { .eb-role-enter { animation:none; } }
