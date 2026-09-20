@@ -1,4 +1,6 @@
 import { PermissionHelp } from './access';
+import { RoleSwitch } from '../role-switch';
+import { useRoleTransition, RoleLoading } from './role-transition';
 import { workspacePresentation, type WorkspacePresentation } from './workspace-presentation';
 import { IdentityRegion, IdentitySwitchNotice } from './identity-transition';
 import './identity-transition.css';
@@ -93,6 +95,7 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
     const url = new URL(location.href); url.searchParams.set('candidateId', id); history.replaceState(null, '', url);
     if (target && target!==page) go(target);
   };
+  const roleTransition = useRoleTransition(role, controller, page, sidebar.collapsed, go);
   const displayName = comparison?.candidates.find(row => row.candidate.id === candidateId)?.candidate.name ?? candidateId ?? 'Choose a candidate';
   const shownName = switching ? shownData!.candidate.name : displayName;
   const initials = shownName.split(/\s+/).map(part => part[0]).slice(0, 2).join('');
@@ -101,6 +104,7 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
     <Sidebar role={role} workspaceName={role === 'hr' ? (shownData??data)?.company.name ?? 'Hiring workspace' : 'Candidate'} controller={sidebar} activePage={page} items={pages.map(([id, label], index) => ({ id, label, icon: <NavIcon index={index}/> }))} onNavigate={next => go(next === 'report' ? 'company' : next === 'home' ? 'application' : next)} user={{ initials: role === 'hr' ? 'HR' : initials, name: role === 'hr' ? 'Hiring reviewer' : shownName, title: role === 'hr' ? (shownData??data)?.company.name ?? 'Hiring team' : 'Synthetic candidate' }} helpLabel="How to use this workspace" onHelp={() => setHelp(true)}/>
     <div className="eb-main" data-eb-content><header className="eb-api-topbar ia-topbar">{sidebar.menuButton}<span className="ia-breadcrumb">{role === 'hr' ? 'Hiring workspace' : 'Candidate workspace'} / {pages.find(p => p[0] === page)?.[1]}</span>{localReview && <button className="eb-action ia-environment" onClick={()=>setHelp(true)}>Local Chinese review</button>}<WorkspaceStatus controller={controller} info={()=>setHelp(true)}/></header>
       <main id="api4-main" tabIndex={-1} className="eb-content">
+        {!shownData && controller.loading && <RoleLoading role={role}/>}
         {noticeVisible && <aside className="eb-panel ia-first-notice" aria-label="Shared demo notice"><span>Shared demo · Saved changes are visible to other visitors. Use sample data only.</span><button className="eb-source-link" onClick={dismissDemoNotice}>Got it</button></aside>}
         {(controller.error || controller.pending || controller.analysisPending || (!data && !needsSelection && !controller.loading)) && <section className="eb-panel ia-connection-alert" aria-label="Connection action required">
           <PermissionHelp base={controller.base} error={controller.error}/>
@@ -118,6 +122,8 @@ export default function ConnectedApp({ role }: { role: 'hr' | 'candidate' }) {
         <footer className="eb-footer">EvidenceBridge · Reviewable evidence. Human decisions. · Formal state lives in the shared service.</footer>
       </main>
     </div>
+    <RoleSwitch role={role} candidateName={displayName} disabled={roleTransition.disabled || switching || needsSelection} reason={needsSelection ? 'Choose a current candidate first.' : roleTransition.reason} onSwitch={roleTransition.requestSwitch}/>
+    {roleTransition.feedback}
     {help && <Dialog title="Using EvidenceBridge" close={() => setHelp(false)}><WorkspaceInfo controller={controller}/>{localReview && <section className="ia-local-help"><h3>Local Chinese review</h3><p>Chinese text is a reading aid. Original evidence, source offsets and scores are unchanged. This local database is separate from the public website.</p><a href="/review-guide.html" target="_blank" rel="noreferrer">Open Chinese rehearsal guide</a></section>}</Dialog>}
 
   </div>;
