@@ -1,0 +1,13 @@
+/* Structure only. Appearance is inherited from the existing shell, panels and buttons. */
+.api4-app .ia-topbar { flex-wrap:wrap; }
+.ia-breadcrumb { margin-right:auto; }
+.ia-service-tools { display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+.ia-sync-state { display:inline-flex; align-items:center; gap:7px; }
+.ia-first-notice { display:flex; gap:14px; align-items:center; justify-content:space-between; }
+.ia-first-notice button { flex-shrink:0; }
+.ia-subnav { margin-bottom:24px; }
+.ia-queue-items { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+.ia-queue-items button { display:flex; flex-direction:column; align-items:flex-start; gap:6px; white-space:normal; text-align:left; }
+.ia-page-actions { display:flex; flex-wrap:wrap; gap:14px; align-items:center; justify-content:space-between; margin-bottom:24px; }
+@container (max-width:900px) { .ia-queue-items { grid-template-columns:repeat(2,minmax(0,1fr)); } .ia-updated { display:none; } }
+@media(max-width:700px) { .ia-service-tools { flex-wrap:wrap; } .ia-person-context { display:none; } .ia-person-bar { flex-wrap:wrap; } }

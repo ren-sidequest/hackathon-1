@@ -5,6 +5,7 @@ import type { Citation, Demo, Resource, Version } from './api-types';
 import { decisionLabel, download, resolveCitation, sections, workMarkdown } from './api';
 import { resourceFinding, resourceRows } from './workspace-model';
 import type { Finding } from './api-types';
+import { isDialogBackdropClick } from './dialog-events';
 
 export function ApiNotice({ api }: { api: ApiState }) {
   return <div className="eb-api-status">
@@ -17,7 +18,7 @@ export function ApiNotice({ api }: { api: ApiState }) {
 export function Dialog({ title, children, close }: { title: string; children: ReactNode; close: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => { const d = ref.current!; d.showModal(); return () => d.close(); }, []);
-  return <dialog ref={ref} className="eb-dialog" aria-label={title} onCancel={close} onClick={e => { if (e.target === ref.current) close(); }}><header><h2>{title}</h2><button className="eb-action" onClick={close} aria-label="Close dialog">×</button></header>{children}</dialog>;
+  return <dialog ref={ref} className="eb-dialog" aria-label={title} onCancel={close} onClick={e => { if (isDialogBackdropClick(e)) close(); }}><header><h2>{title}</h2><button className="eb-action" onClick={close} aria-label="Close dialog">×</button></header>{children}</dialog>;
 }
 export function Heading({ eyebrow, title, children }: { eyebrow?: string; title: string; children?: ReactNode }) {
   return <div className="eb-heading"><div><div className="eyebrow">{eyebrow}</div><h1>{title}</h1></div>{children}</div>;

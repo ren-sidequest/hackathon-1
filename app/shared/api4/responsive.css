@@ -1,0 +1,79 @@
+/* API4 keeps the gold visual system; layout responds to usable width, not
+   viewport width (which includes the expanded or collapsed sidebar). */
+.api4-app .eb-content { container: evidence-workspace / inline-size; }
+.api4-app :is(.r6-material-grid,.eb-workbench,.r5-assessment-grid)>* { min-width:0; }
+
+.api4-app .r6-material-grid { grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr)); }
+.api4-app .r5-source-card { overflow-wrap:break-word; }
+.api4-app .r5-evidence-options { grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+.api4-app .r5-evidence-rail .r5-criterion-toggle { display:grid; grid-template-columns:32px minmax(0,1fr); align-items:start; gap:10px; padding:12px; }
+.api4-app .r5-criterion-id { width:32px; min-width:32px; text-align:center; }
+.api4-app .r5-evidence-rail .r5-criterion-toggle strong { display:block; font-size:12px; line-height:1.5; height:auto; overflow:visible; -webkit-line-clamp:unset; overflow-wrap:normal; }
+.api4-app .r5-evidence-rail .r5-criterion-toggle small { font-size:11px; }
+.api4-app .r5-evidence-nav-heading { flex-wrap:wrap; }
+
+/* Preserve readable score/status columns. Only the named table region scrolls. */
+.api4-app .r5-compare-table { min-width:1260px; }
+.api4-app .r5-compare-table :is(th,td) { overflow-wrap:normal; word-break:normal; }
+.api4-app .r5-compare-table :is(th,td):first-child { width:260px; }
+.api4-app .r5-compare-table th:nth-child(2),
+.api4-app .r5-compare-table th:nth-child(3),
+.api4-app .r5-compare-table th:nth-child(4) { width:100px; }
+.api4-app .r5-compare-table th:nth-child(5) { width:150px; }
+.api4-app .r5-compare-table th:nth-child(6) { width:180px; }
+.api4-app .r5-compare-table th:nth-child(7) { width:180px; }
+.api4-app .r5-compare-table th:nth-child(8) { width:150px; }
+.api4-app .r5-row-actions .eb-action { white-space:normal; min-height:40px; }
+.api4-app .r5-skill-cell { min-width:0; }
+.api4-app .r5-compare-table .eb-source-link { overflow-wrap:break-word; }
+.api4-app .r5-comparison>.eb-table-scroll:focus-visible { outline:2px solid var(--focus-ring); outline-offset:-2px; }
+.api4-app .r6-table-hint { display:none; }
+
+@container evidence-workspace (max-width:1260px) {
+  .api4-app .r6-table-hint { display:block; }
+}
+
+.api4-app .eb-workbench { grid-template-columns:220px minmax(0,1fr) 300px; }
+.api4-app .eb-workbench .eb-board { grid-column:auto; }
+.api4-app .eb-workbench .eb-board>section { display:block; width:auto; margin-right:0; }
+.api4-app .eb-workbench .eb-panel h2 { overflow-wrap:normal; }
+.api4-app .eb-form-row { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.api4-app .eb-board-heading .eb-action { flex-shrink:0; }
+.api4-app .eb-chip { max-width:100%; white-space:normal; }
+
+@container evidence-workspace (max-width:1200px) {
+  .api4-app .eb-workbench { grid-template-columns:220px minmax(0,1fr); }
+  .api4-app .eb-workbench .eb-board { grid-column:1/-1; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:24px; }
+  .api4-app .eb-workbench .eb-board>:not(section) { grid-column:1/-1; }
+}
+
+@container evidence-workspace (min-width:1680px) {
+  .api4-app .r5-evidence-options { grid-template-columns:repeat(10,minmax(0,1fr)); }
+  .api4-app .r5-evidence-rail .r5-criterion-toggle { display:flex; flex-direction:column; }
+}
+
+@container evidence-workspace (max-width:880px) {
+  .api4-app .r5-evidence-options { grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr)); }
+  .api4-app .r5-assessment-grid { grid-template-columns:minmax(0,1fr); }
+  .api4-app .r5-assessment-grid>.r5-original-pane { grid-column:1; grid-row:2; }
+  .api4-app .r5-assessment-grid>section { grid-column:1; grid-row:3; }
+  .api4-app .guide-review-grid>.r5-original-pane,
+  .api4-app .guide-review-grid>section { height:auto; max-height:none; }
+  .api4-app .guide-review-grid .guide-source-scroll { max-height:480px; }
+  .api4-app .guide-review-grid .guide-judgment-scroll { overflow:visible; }
+  .api4-app .r5-two,.api4-app .eb-review-grid,.api4-app .r5-company { grid-template-columns:minmax(0,1fr); }
+  .api4-app .r5-company aside { padding:18px 0 0; border-left:0; border-top:1px solid var(--border); }
+  .api4-app .r5-table-toolbar { align-items:flex-start; flex-direction:column; }
+  .api4-app .r5-person-bar { flex-wrap:wrap; }
+  .api4-app .r5-person-bar>label { flex-basis:100%; margin-left:0; }
+}
+
+@container evidence-workspace (max-width:720px) {
+  .api4-app .eb-workbench { grid-template-columns:minmax(0,1fr); }
+  .api4-app .eb-workbench .eb-board { display:block; }
+  .api4-app .eb-workflow ol,.api4-app .guide-journey ol { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .api4-app .eb-form-row,.api4-app .guide-work-chain,.api4-app .guide-deliverables { grid-template-columns:minmax(0,1fr); }
+  .api4-app .eb-heading,.api4-app .eb-api-status-line { flex-wrap:wrap; }
+  .api4-app .r6-jd-row>summary { align-items:flex-start; flex-direction:column; }
+  .api4-app .r6-statuses { max-width:100%; justify-content:flex-start; }
+}

@@ -1,0 +1,11 @@
+import { expect, it } from 'vitest';
+import type { CompareRow } from '../../shared/api4/hr-model';
+import { comparisonPage } from '../../shared/api4/comparison-model';
+const make=(name:string,percent:number|null,status='not_retained')=>({candidate:{id:name.toLowerCase().replaceAll(' ','-'),name},assessment:{score:{status:percent===null?'needs_evidence':'complete',overallPercentage:percent,skills:[]}},shortlist:{status}} as unknown as CompareRow);
+const rows=[make('Amy Chen',82.5),make('Ann Li',70,'retained'),make('David Liu',null),make('Jamie Parker',null)];
+it('searches names and ids without mutation or ranking by default',()=>{const before=structuredClone(rows);expect(comparisonPage(rows,'AMY','all','default',0,20).rows).toEqual([rows[0]]);expect(comparisonPage(rows,' ann-li ','all','default',0,20).rows).toEqual([rows[1]]);expect(rows).toEqual(before);});
+it('also matches displayed localized names without rewriting the rows',()=>expect(comparisonPage(rows,'艾米','all','default',0,20,n=>n==='Amy Chen'?'艾米·陈':n).rows).toEqual([rows[0]]));
+it('filters retained and evidence-needed candidates independently',()=>{expect(comparisonPage(rows,'','retained','default',0,20).rows).toEqual([rows[1]]);expect(comparisonPage(rows,'','needs_evidence','default',0,20).rows).toEqual(rows.slice(2));});
+it('clamps page after filtering and presents an accurate empty range',()=>{expect(comparisonPage(rows,'missing','all','default',99,20)).toMatchObject({rows:[],page:0,pages:1,start:0,end:0,total:0});expect(comparisonPage(rows,'Amy','all','default',99,3).page).toBe(0);});
+it('paginates without hiding the fourth candidate permanently',()=>{expect(comparisonPage(rows,'','all','default',0,3)).toMatchObject({rows:rows.slice(0,3),start:1,end:3,pages:2});expect(comparisonPage(rows,'','all','default',1,3)).toMatchObject({rows:[rows[3]],start:4,end:4});});
+it('scales to many loaded rows while retaining stable ties and absent scores',()=>{const many=Array.from({length:101},(_,i)=>make(`Synthetic ${i}`,i%3===0?null:70));const last=comparisonPage(many,'','all','default',5,20);expect(last.rows).toEqual(many.slice(100));expect(last).toMatchObject({pages:6,start:101,end:101,total:101});const sorted=comparisonPage(rows,'','all','overall',0,20);expect(sorted.rows).toEqual(rows);});
