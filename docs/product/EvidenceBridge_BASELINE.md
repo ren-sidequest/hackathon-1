@@ -814,3 +814,7 @@ The two independently developed sides should pass these checks:
 ## 2026-09-19 双端本地整合补充
 
 基于PR9前端与本地修订5后端新增真实API3模式，保留原页面成果。默认 `api3-connected` 匹配后端默认3.0；显式 `connected` 仍用于旧API2，`revision5-preview` 仍是独立本地模拟。旧段落中的“新版待接入”是此前阶段记录，当前行为以[API3整合交接](../FRONTEND_API3_INTEGRATION.md)为准。新检查 `python3 scripts/frontend-types-v3.py --check` 与 `npm run test:api3 --prefix app/candidate`；各命令从仓库根执行。API3浏览器用独立端口与临时SQLite，普通页面不持有reset令牌。此轮未提交、推送、合并或部署；实际验收状态以本轮报告为准。
+
+## 2026-09-20 local frontend structure update
+
+The current API4 repair worktree separates page responsibilities and replaces repeated top-level demo panels with a compact status/header and Workspace info. Candidate details owns assessment, source/JD and history sections; Tasks & review owns task dispatch and evidence review, with explicit version-bound assessment navigation. Retained list shows saved selections instead of repeating the whole comparison list. Business rules and data are unchanged. See [page structure and regression scope](../FRONTEND_PAGE_STRUCTURE.md). This note describes local implementation, not a GitHub merge or public deployment.

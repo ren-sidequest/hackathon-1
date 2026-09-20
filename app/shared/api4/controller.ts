@@ -11,6 +11,25 @@ export type Api4Controller = {
 };
 const sameSnapshot = (a: Demo, b: Comparison) => (['sessionId', 'revision', 'fixtureVersion', 'jdVersion', 'rubricVersion', 'datasetVersion'] as const).every(key => a[key] === b[key]);
 const asError = (error: unknown) => error instanceof Api4Error ? error : new Api4Error('CLIENT_ERROR', 'The operation did not complete. Your input has been kept.');
+
+/** Read independent endpoints together once the candidate is explicit. */
+export async function readSharedSnapshot(client: Pick<Api4Client, 'read' | 'comparison'>, person: CandidateId | null, needsSelection = false): Promise<{ next: Demo | null; list: Comparison }> {
+  if (needsSelection) return { next: null, list: await client.comparison() };
+  let next: Demo, list: Comparison;
+  let selected = person;
+  if (selected) {
+    [next, list] = await Promise.all([client.read(selected), client.comparison()]);
+  } else {
+    list = await client.comparison();
+    selected = list.candidates[0].candidate.id;
+    next = await client.read(selected);
+  }
+  // Parallel reads may straddle a write/reset. Never combine different snapshots.
+  if (!sameSnapshot(next, list)) [next, list] = await Promise.all([client.read(selected), client.comparison()]);
+  if (!sameSnapshot(next, list)) throw new Api4Error('REFRESH_CONFLICT', 'The shared case changed while loading. Refresh again.');
+  return { next, list };
+}
+
 export function useApi4(role: 'hr' | 'candidate', candidateId: CandidateId | null, needsSelection = false): Api4Controller {
   const base = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8787').replace(/\/$/, '');
   const client = useMemo(() => new Api4Client(base, `evidencebridge.api4.receipt.${role}.${base}`), [base, role]);
@@ -31,17 +50,12 @@ export function useApi4(role: 'hr' | 'candidate', candidateId: CandidateId | nul
     setLoading(true); setFresh(false);
     if (!preserveError) setError(null);
     try {
-      let list = await client.comparison();
-      if (needsSelection) {
+      const { next, list } = await readSharedSnapshot(client, person, needsSelection);
+      if (!next) {
         if (!mounted.current || request !== sequence.current || person !== identity.current) return false;
         current.current = null; setData(null); setComparison(list); setFresh(false);
         return true;
       }
-      const selected = person ?? list.candidates[0].candidate.id;
-      let next = await client.read(selected);
-      // A reset between the two GETs must not combine old and new sessions.
-      if (!sameSnapshot(next, list)) [next, list] = await Promise.all([client.read(selected), client.comparison()]);
-      if (!sameSnapshot(next, list)) throw new Api4Error('REFRESH_CONFLICT', 'The shared case changed while loading. Refresh again.');
       if (!mounted.current || request !== sequence.current || person !== identity.current) return false;
       if (current.current?.sessionId === next.sessionId && current.current.revision > next.revision) return false;
       client.reconcile(next); analysisClient.reconcile(next); setPending(client.pending); setAnalysisPending(analysisClient.pending);

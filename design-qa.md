@@ -68,3 +68,11 @@ Reviewed actual HR dark/light and Candidate reduced-motion screenshots in `.ci-r
 Verification: revision5 browser suite 16/16 and shared UI suite 12/12 passed. The added browser test verifies pointer transparency, stable panel bounds, dark/light glow tokens, source and queue actions, reduced motion, and absence of spark elements. Candidate TypeScript/default build and both preview builds passed. Chromium was tested; other browser engines were not.
 
 The standards rail now uses a darker backing and brighter unselected cards, with gold border/glow transitions on hover and no geometry transforms. Material stage uses the existing theme-aware GlideSelect instead of the native blue option menu. Regression coverage includes opening the menu in dark/light modes and using task V2 in all four candidate workflows.
+
+## 2026-09-20 — English frontend release candidate
+
+Scope: completed HR company/comparison/evidence/task/retention redesign and shared HR/Candidate identity transitions. The separately in-progress Candidate four-page redesign is excluded. No backend/schema/fixture changes or local Chinese translation assets.
+
+Local verification on the isolated release tree: Candidate unit tests 162/162; HR workflow tests 8/8; Candidate TypeScript/Vite and HR Vite builds passed; repository documentation and API4 generated-type checks passed. Internal CUA checks covered slow candidate reads, identity-bound readonly content, rapid task selection, error/retry recovery, and main navigation on the matching local implementation. New browser regression cases are included; remote CI results must be checked on this exact PR head before merging. No local browser-CLI execution is claimed.
+
+Release procedure: build both English bundles from the merged commit using `VITE_APP_MODE=api4-connected`, `VITE_API_BASE_URL=/gateway`, and `/hr/` / `/candidate/` bases; atomically select a new frontend release, keep the previous release and old hashed assets, preserve the live backend/database, and perform read-only HTTPS checks. Machine-specific deployment receipts stay outside Git.

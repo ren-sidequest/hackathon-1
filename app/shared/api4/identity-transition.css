@@ -1,0 +1,7 @@
+/* Shared switching behavior: no disappearing shell or whole-page fade. */
+.ws-identity-region { display:contents; }
+.api4-app .eb-content { position:relative; }
+.api4-app .ws-switch-notice { position:absolute; z-index:3; right:20px; top:3px; max-width:calc(100% - 40px); margin:0; padding:4px 8px; border-radius:4px; font-size:11px; line-height:1.4; color:var(--text-link); background:var(--ref-panel); pointer-events:none; }
+.api4-app .ws-person-content { min-width:0; }
+.api4-app .ia-queue-items>button,.api4-app .ia-subnav>button,.api4-app .eb-sidebar button { transition:background-color 140ms ease-out,box-shadow 140ms ease-out; }
+@media(prefers-reduced-motion:reduce) { .api4-app .ia-queue-items>button,.api4-app .ia-subnav>button,.api4-app .eb-sidebar button { transition:none; } }

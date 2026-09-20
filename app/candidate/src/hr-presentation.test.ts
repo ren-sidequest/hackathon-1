@@ -1,0 +1,12 @@
+import {expect,it} from 'vitest';
+import {hrPresentation} from '../../shared/api4/hr-presentation';
+import type {Comparison,Demo} from '../../shared/api4-types';
+const scope={sessionId:'session',fixtureVersion:'fixture',jdVersion:'jd',rubricVersion:'rubric',datasetVersion:'dataset',revision:1};
+const old={...scope,candidate:{id:'amy-chen'}} as Demo;
+const list={...scope,candidates:[]} as unknown as Comparison;
+const held={data:old,comparison:list};
+it('holds the last correctly labelled dossier while the controller withholds another identity',()=>{expect(hrPresentation('hr','shortlist',false,null,list,held)).toBe(held);expect(held.data.candidate.id).toBe('amy-chen');});
+it('replaces the held pair together when the new identity is ready',()=>{const next={...old,candidate:{...old.candidate,id:'ann-li'}} as Demo;expect(hrPresentation('hr','shortlist',false,next,list,held)).toEqual({data:next,comparison:list});});
+it('never exposes the hold to Candidate, other pages, or an unknown/retired identity selector',()=>{expect(hrPresentation('candidate','shortlist',false,null,list,held)).toBeNull();expect(hrPresentation('hr','evidence',false,null,list,held)).toBeNull();expect(hrPresentation('hr','shortlist',true,null,list,held)).toBeNull();});
+it('drops a hold on changed shared session, fixture, JD, rubric or dataset',()=>{for(const k of ['sessionId','fixtureVersion','jdVersion','rubricVersion','datasetVersion'])expect(hrPresentation('hr','shortlist',false,null,{...list,[k]:'new'},held)).toBeNull();});
+it('does not invent content before any accepted snapshot or without comparison',()=>{expect(hrPresentation('hr','shortlist',false,null,list,null)).toBeNull();expect(hrPresentation('hr','shortlist',false,null,null,held)).toBeNull();});
