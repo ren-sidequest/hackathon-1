@@ -174,6 +174,26 @@ test('T24 connected evidence retains stable scrolling, gold selector and stable 
   expect((await read(request)).revision).toBe(data.revision);
 });
 
+test('T67 Amy full evidence opens at the page top on first and repeat visits',async({page},info)=>{
+  await open(page,'hr','amy-chen','comparison');
+  for(const theme of ['dark','light']) {
+    await nav(page,'Compare candidates');
+    await page.getByRole('switch',{name:'Night mode'}).setChecked(theme==='dark');
+    await page.getByRole('button',{name:'View full evidence',exact:true}).click();
+    await expect(page).toHaveURL(/#evidence$/);
+    const criterion=page.getByRole('navigation',{name:'Evidence criteria'}).getByRole('button',{name:/^B3 ·/});
+    await expect(criterion).toHaveAttribute('aria-expanded','true');
+    await expect(criterion).toBeFocused();
+    await page.evaluate(()=>new Promise<void>(resolve=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve()))));
+    expect(await page.evaluate(()=>window.scrollY)).toBe(0);
+    await expect(page.locator('.pf-dossier').getByRole('heading',{name:'Amy Chen',exact:true})).toBeInViewport();
+    await expect(page.locator('.r5-inline-source mark')).toHaveText('I would request campaign and device breakdowns for the same two periods.');
+    await page.screenshot({path:info.outputPath(`amy-evidence-entry-${theme}.png`)});
+    await page.getByRole('button',{name:'Locate exact source: channel_analysis.md',exact:true}).click();
+    await expect(page.locator('.r5-inline-source mark')).toBeInViewport();
+  }
+});
+
 test('T01 four explicit service identities, actual company/resources and no preview state',async({page,request})=>{
   await open(page,'hr');await expect(page.locator('tbody tr')).toHaveCount(4);await expect(page.locator('.eb-workspace')).toContainText('Harbour Retail');await expect(page.locator('body')).not.toContainText('HarbourCart');await page.getByRole('link',{name:'EvidenceBridge home'}).click();await expect(page).toHaveURL(/#company$/);await nav(page,'Compare candidates');
   for(const id of people) {await open(page,'candidate',id);const d=await read(request,id);await expect(page.locator('.ia-person-bar > div > strong').getByText(d.candidate.name,{exact:true})).toBeVisible();expect(d.application.candidateId).toBe(id);await expect(page.getByText('Frontend mock · synthetic materials and illustrative marks',{exact:true})).toHaveCount(0);}
